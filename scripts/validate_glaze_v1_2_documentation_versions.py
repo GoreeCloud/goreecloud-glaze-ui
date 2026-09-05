@@ -20,6 +20,10 @@ CURRENT_AUTHORITY_DOCS = {
     "CONFORMANCE.md": ("sole current", "conformance target"),
     "ACCEPTANCE.md": ("current Stable",),
     "ADOPTION.md": ("sole current", "adoption target"),
+    "ENFORCEMENT.md": ("sole current", "consumer-conformance target"),
+    "website/README.md": ("current Stable",),
+    "ICON_CONSTRUCTION.md": ("Current Stable product authority", "subsystem-contract revision"),
+    "ICON_IDENTITY.md": ("Current Stable product authority", "subsystem-contract revision"),
     "MIGRATION_V1_1_TO_V1_2.md": ("Stable authority", "Production migration target"),
     "GLAZE_UI_V1_2_CANDIDATE.md": ("Stable baseline", "Not Stable"),
 }
@@ -28,6 +32,8 @@ HISTORICAL_DOCS = (
     "GLAZE_UI_V1_0.md",
     "GLAZE_UI_V1_1_CANDIDATE.md",
     "releases/1.0.0.md",
+    "acceptance/v1.1-release-candidate.md",
+    "acceptance/v1.1-specification-candidate.md",
 )
 
 KNOWN_STALE_FORMS = (
@@ -43,6 +49,8 @@ HISTORICAL_QUALIFIERS = (
     "at the time",
     "at publication",
     "at candidate publication",
+    "at this recorded",
+    "during recorded",
     "then-current",
     "superseded",
     "not current",
@@ -148,7 +156,7 @@ def main() -> int:
         preamble = text[:1200].lower()
         if "historical" not in preamble and "superseded" not in preamble:
             fail(f"{relative} must identify itself as historical or superseded near its preamble")
-        if stable_label not in text[:1600] or current_stable not in text[:1600]:
+        if stable_label not in text[:1800] or current_stable not in text[:1800]:
             fail(f"{relative} must identify the current Stable successor without overriding history")
 
     markdown = tracked_markdown()
@@ -188,7 +196,7 @@ def main() -> int:
 
     if stale_findings:
         preview = "; ".join(
-            f"{item['path']}:{item.get('line', '?')} {item['text']}" for item in stale_findings[:8]
+            f"{item['path']}:{item.get('line', '?')} {item['text']}" for item in stale_findings[:12]
         )
         fail(f"stale lifecycle/version authority language found: {preview}")
 
@@ -205,6 +213,7 @@ def main() -> int:
         "historicalDocumentsExplicitlyQualified": list(HISTORICAL_DOCS),
         "staleAuthorityFindings": 0,
         "historicalIntegrityRule": "Historical records remain preserved but may not present superseded lifecycle state as current authority without an explicit historical qualifier.",
+        "subsystemVersionRule": "Subsystem contract revisions remain distinct from Glaze UI product lifecycle versions and do not alter currentStable/currentOfficial.",
     }
 
     rendered = json.dumps(report, indent=2, sort_keys=True) + "\n"

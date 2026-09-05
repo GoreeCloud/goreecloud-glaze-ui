@@ -1,12 +1,13 @@
-# GLAZE UI V1.0 — Icon Grid, Geometry, Materials, and Construction Contract
+# GLAZE UI V1.0-Origin — Icon Grid, Geometry, Materials, and Construction Contract
 
-**Product status:** Official V1 baseline; production revalidation required.
+**Contract origin:** Official V1.0 reset baseline; inherited by later V1 releases unless superseded.  
+**Current Stable product authority:** GLAZE UI V1.1 / `1.1.0`.
 
-`tokens/icon-construction.json` retains an internal icon-construction contract revision and baseline of `1.5.0`. That value is a subsystem-contract revision only. It does not define another Glaze UI product release, consumer target, or production-acceptance state. The sole current product identity is GLAZE UI V1.0 (`1.0.0`).
+`tokens/icon-construction.json` retains an internal icon-construction contract revision and baseline of `1.5.0`. That value is a subsystem-contract revision only. It does not define another Glaze UI product release, consumer target, or production-acceptance state. Product lifecycle authority remains separate in `registry/lifecycle.json` and `VERSION`.
 
 ## Purpose
 
-This contract defines how application and service identity assets are constructed, simplified, packaged, validated, and described for tooling under GLAZE UI V1.0.
+This contract defines how application and service identity assets are constructed, simplified, packaged, validated, and described for tooling across the V1 generation. It originated in GLAZE UI V1.0 and remains inherited by the current V1.1 Stable product unless a later governed contract explicitly supersedes it.
 
 ## Master canvas and protected zones
 
@@ -25,7 +26,7 @@ Optical correction and controlled overshoot are permitted where needed for perce
 
 The master grid supports circular, continuous-square, vertical, horizontal, compact-object, and freeform keyline families. Keylines are visual-weight references, not mandatory masks.
 
-GLAZE UI V1.0 uses four conceptual curvature levels: **Subtle**, **Standard**, **Expressive**, and **Full**. Curvature should transition continuously rather than defaulting to unrelated arbitrary radii.
+The V1 construction grammar uses four conceptual curvature levels: **Subtle**, **Standard**, **Expressive**, and **Full**. Curvature should transition continuously rather than defaulting to unrelated arbitrary radii.
 
 ## Material hierarchy and application layers
 
@@ -77,6 +78,6 @@ Glaze UI does **not** plan a dedicated Icon Studio application. Ordinary profess
 
 Live environment preview, automatic production export, icon linting, and a searchable System Icon Registry may remain **Planned** capabilities where they provide clear value. Planned tooling must not be represented as implemented or required for authorship before it exists.
 
-## V1 acceptance boundary
+## V1 inheritance and acceptance boundary
 
-This construction contract is part of the official GLAZE UI V1.0 reset baseline. Machine-contract consistency does not certify rendered artwork or establish production Stable acceptance. Fresh exact-revision visual, accessibility, optical-size, platform, and package validation is required before production acceptance may be claimed.
+This construction contract originated in the official GLAZE UI V1.0 reset baseline and is inherited by V1.1 where not superseded. The internal `1.5.0` icon-construction revision remains a subsystem revision and must not be interpreted as a Glaze UI product version. Machine-contract consistency does not certify rendered artwork or establish production Stable acceptance. Fresh exact-revision visual, accessibility, optical-size, platform, and package validation is required before production acceptance may be claimed.
