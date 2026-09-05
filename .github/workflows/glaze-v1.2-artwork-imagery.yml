@@ -1,0 +1,57 @@
+name: Glaze V1.2 Artwork Illustration and Imagery Candidate
+
+on:
+  pull_request:
+    paths:
+      - "contracts/v1.2/artwork-imagery.candidate.json"
+      - "css/glaze-v1.2-artwork-imagery.candidate.css"
+      - "css/glaze-v1.2.0-candidate.css"
+      - "reference/v1.2/artwork-imagery.html"
+      - "scripts/validate_glaze_v1_2_artwork_imagery_rendered.py"
+      - ".github/workflows/glaze-v1.2-artwork-imagery.yml"
+      - "contracts/v1.2/accessibility-adaptation.candidate.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: glaze-v1-2-artwork-imagery-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  artwork-imagery-rendered:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out exact Candidate revision
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.12"
+
+      - name: Preserve Stable and Candidate authorities
+        run: |
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          python scripts/validate_glaze_v1.py
+          python scripts/validate_glaze_v1_2_candidate.py
+          python scripts/validate_glaze_v1_2_core_tokens.py
+
+      - name: Validate rendered V1.2 Artwork Illustration and Imagery behavior
+        run: python scripts/validate_glaze_v1_2_artwork_imagery_rendered.py
+
+      - name: Compile bounded artwork validator
+        run: python -m py_compile scripts/validate_glaze_v1_2_artwork_imagery_rendered.py
+
+      - name: Upload V1.2 Artwork Illustration and Imagery evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: glaze-v1.2-artwork-imagery-${{ github.event.pull_request.head.sha || github.sha }}
+          path: artifacts/glaze-v1.2-artwork-imagery-*.png
+          if-no-files-found: error
+          retention-days: 14

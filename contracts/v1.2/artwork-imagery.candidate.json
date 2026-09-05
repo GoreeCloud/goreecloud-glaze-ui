@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.artwork-imagery.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-artwork-illustration-imagery-treatment-evidence",
+  "purpose": "Define bounded V1.2 Candidate treatment, provenance, accessibility, and truth-labeling rules for artwork, illustration, and imagery without creating or replacing canonical product artwork or manufacturing product/system state.",
+  "authority": {
+    "companionSpecification": "Glaze UI V1.2 — Artwork, Illustration, and Imagery.docx",
+    "canonicalAssetOwnership": "external-authoritative-asset-source",
+    "candidateMayCreateCanonicalProductArtwork": false,
+    "candidateMayOverrideProductIdentity": false,
+    "principle": "Artwork deepens meaning and atmosphere without competing with interface hierarchy or becoming evidence of system truth."
+  },
+  "categories": [
+    "identity-artwork",
+    "functional-illustration",
+    "atmospheric-artwork",
+    "content-imagery",
+    "technical-visualization",
+    "editorial-imagery"
+  ],
+  "sourceAndProvenance": {
+    "sharedArtworkRequiresCanonicalSource": true,
+    "consumersReferenceApprovedAssetsInsteadOfDriftingCopies": true,
+    "materialIdentityChangesVersionedAndTraceable": true,
+    "remoteStockArtRequiredForGlazeIdentity": false,
+    "firstPartyIdentityArtworkRequiresExplicitOwnershipAndLifecycle": true,
+    "thirdPartyLogosMustPreserveBrandIntegrity": true,
+    "generatedMediaMustBeExplicitlyLabeledWhenConceptual": true,
+    "conceptualMediaMayClaimImplementedReality": false,
+    "screenshotsMustBeActualOrClearlyConceptualAndVersionAligned": true
+  },
+  "truthBoundaries": {
+    "decorativeColorMayEncodeSemanticState": false,
+    "illustrationMayManufactureHealthConnectivitySecurityPrivacyBackupOrRecoveryState": false,
+    "emptyErrorRecoveryArtworkMayImplySuccessBeforeAuthoritativeConfirmation": false,
+    "wallpaperMayDetermineSemanticStatusFocusSecurityPrivacyOrCriticalMeaning": false,
+    "technicalVisualizationMustPreserveAuthoritativeBoundaries": true,
+    "interfaceTaskContentStateInteractionAndInformationHierarchyHavePriority": true
+  },
+  "accessibility": {
+    "artworkMayBeSoleCarrierOfCriticalMeaning": false,
+    "decorativeArtworkMustAvoidAssistiveTechnologyNoise": true,
+    "informativeImageryRequiresEquivalentDescriptionOrSummary": true,
+    "complexVisualizationRequiresTextualOrDataEquivalent": true,
+    "forcedColorsMustRemainUnderstandable": true,
+    "reducedTransparencyMustSuppressDecorativeFrostOverlays": true,
+    "grayscaleMustRemainUnderstandable": true,
+    "largeTextMustNotCauseHorizontalPageOverflow": true
+  },
+  "referenceLibrary": {
+    "containsCanonicalProductArtwork": false,
+    "containsThirdPartyLogoArtwork": false,
+    "containsRemoteImages": false,
+    "containsDocumentaryPhotography": false,
+    "containsConceptualCssGeometryOnly": true,
+    "conceptualLabelRequired": "Conceptual demonstration — not product-state evidence",
+    "assetMetadataExample": {
+      "assetId": "demo.functional-illustration.reference-only",
+      "purpose": "demonstrate treatment metadata without defining a shared asset",
+      "category": "functional-illustration",
+      "appearanceSupport": ["light", "dark", "deep-dark"],
+      "accessibleDescriptionGuidance": "Provide purpose and meaningful content; omit decorative geometry from assistive technology.",
+      "canonicalAsset": false
+    }
+  },
+  "prohibited": {
+    "copiedCanonicalProductArtwork": true,
+    "unlabeledGeneratedDocumentaryMedia": true,
+    "semanticStateByDecorationOnly": true,
+    "decorativeRemoteAssetDependency": true,
+    "thirdPartyLogoRecolorForAestheticFit": true,
+    "blurredTechnicalLabels": true,
+    "fabricatedHardwareCapability": true,
+    "fabricatedSystemState": true
+  },
+  "acceptance": {
+    "conceptualLabelRequired": true,
+    "decorativeArtAriaHiddenRequired": true,
+    "criticalStateHasTextEquivalentRequired": true,
+    "technicalDiagramLabelsRemainReadableRequired": true,
+    "reducedTransparencyRemovesDecorativeOverlayRequired": true,
+    "forcedColorsFallbackRequired": true,
+    "compactViewportPx": 320,
+    "textScalePercent": 200,
+    "horizontalPageOverflowProhibited": true,
+    "screenshotsRequired": true,
+    "humanArtworkReviewRequiredForCanonicalAcceptance": true
+  },
+  "implementation": {
+    "candidateLayer": "css/glaze-v1.2-artwork-imagery.candidate.css",
+    "reference": "reference/v1.2/artwork-imagery.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_artwork_imagery_rendered.py",
+    "workflow": ".github/workflows/glaze-v1.2-artwork-imagery.yml",
+    "candidateEntrypoint": "css/glaze-v1.2.0-candidate.css",
+    "mustLoadBeforeFinalAccessibilityLayer": true
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "bounded-media-treatment-rules",
+      "conceptual-media-labeling",
+      "source-and-provenance-boundaries",
+      "semantic-truth-isolation",
+      "decorative-accessibility-isolation",
+      "reduced-transparency-media-fallback",
+      "forced-colors-media-fallback",
+      "compact-200-percent-text-reference",
+      "exact-head-rendered-browser-acceptance"
+    ],
+    "notEstablished": [
+      "canonical-v1.2-product-artwork-library",
+      "shared-illustration-asset-library",
+      "wallpaper-library",
+      "photography-library",
+      "human-artwork-review",
+      "human-optical-acceptance",
+      "assistive-technology-acceptance",
+      "native-platform-parity",
+      "physical-device-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}
