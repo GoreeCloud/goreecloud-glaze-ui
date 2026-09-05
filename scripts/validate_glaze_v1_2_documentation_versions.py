@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate Glaze lifecycle/version language without erasing historical records."""
+"""Validate Glaze lifecycle/version language across tracked text sources."""
 
 from __future__ import annotations
 
@@ -56,6 +56,8 @@ HISTORICAL_QUALIFIERS = (
     "not current",
     "does not define the current",
     "does not override the current",
+    "was current",
+    "was the current",
 )
 
 STRONG_CURRENT_CLAIMS = (
@@ -68,11 +70,15 @@ STRONG_CURRENT_CLAIMS = (
     "current application target",
     "current adoption target",
     "current conformance target",
+    "current target",
+    "currentstable",
+    "currentofficial",
+    "officialproductlabel",
 )
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"documentation-version-integrity: {message}")
+    raise SystemExit(f"lifecycle-version-integrity: {message}")
 
 
 def read_text(relative: str) -> str:
@@ -82,15 +88,30 @@ def read_text(relative: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def tracked_markdown() -> list[str]:
+def tracked_files() -> list[str]:
     result = subprocess.run(
-        ["git", "ls-files", "*.md"],
+        ["git", "ls-files", "-z"],
         cwd=ROOT,
         check=True,
         capture_output=True,
-        text=True,
     )
-    return sorted(line for line in result.stdout.splitlines() if line)
+    return sorted(part.decode("utf-8") for part in result.stdout.split(b"\0") if part)
+
+
+def tracked_text_sources() -> dict[str, str]:
+    sources: dict[str, str] = {}
+    for relative in tracked_files():
+        path = ROOT / relative
+        if not path.is_file():
+            continue
+        data = path.read_bytes()
+        if b"\0" in data:
+            continue
+        try:
+            sources[relative] = data.decode("utf-8")
+        except UnicodeDecodeError:
+            continue
+    return sources
 
 
 def release_for(lifecycle: dict[str, Any], version: str) -> dict[str, Any]:
@@ -99,6 +120,13 @@ def release_for(lifecycle: dict[str, Any], version: str) -> dict[str, Any]:
             return release
     fail(f"lifecycle release record missing for {version}")
     raise AssertionError("unreachable")
+
+
+def is_explicit_historical_record(relative: str, text: str) -> bool:
+    if relative in HISTORICAL_DOCS:
+        return True
+    preamble = text[:1600].lower()
+    return "historical record" in preamble or "historical status" in preamble or "superseded" in preamble
 
 
 def main() -> int:
@@ -159,17 +187,24 @@ def main() -> int:
         if stable_label not in text[:1800] or current_stable not in text[:1800]:
             fail(f"{relative} must identify the current Stable successor without overriding history")
 
-    markdown = tracked_markdown()
+    text_sources = tracked_text_sources()
+    markdown = sorted(path for path in text_sources if path.endswith(".md"))
     stale_findings: list[dict[str, Any]] = []
-    historical_release_labels = [
-        release.get("label")
-        for release in lifecycle.get("releases", [])
-        if isinstance(release, dict) and release.get("status", "").startswith("historical")
-    ]
-    historical_release_labels = [label for label in historical_release_labels if isinstance(label, str)]
 
-    for relative in markdown:
-        text = read_text(relative)
+    historical_releases = [
+        release
+        for release in lifecycle.get("releases", [])
+        if isinstance(release, dict) and str(release.get("status", "")).startswith("historical")
+    ]
+    historical_markers = [
+        marker.lower()
+        for release in historical_releases
+        for marker in (release.get("label"), release.get("version"))
+        if isinstance(marker, str) and marker
+    ]
+
+    for relative, text in text_sources.items():
+        historical_record = is_explicit_historical_record(relative, text)
         for pattern in KNOWN_STALE_FORMS:
             match = pattern.search(text)
             if match:
@@ -179,11 +214,11 @@ def main() -> int:
 
         for line_number, line in enumerate(text.splitlines(), start=1):
             lowered = line.lower()
-            if not any(label.lower() in lowered for label in historical_release_labels):
+            if not any(marker in lowered for marker in historical_markers):
                 continue
             if not any(claim in lowered for claim in STRONG_CURRENT_CLAIMS):
                 continue
-            if any(qualifier in lowered for qualifier in HISTORICAL_QUALIFIERS):
+            if historical_record or any(qualifier in lowered for qualifier in HISTORICAL_QUALIFIERS):
                 continue
             stale_findings.append(
                 {
@@ -196,12 +231,12 @@ def main() -> int:
 
     if stale_findings:
         preview = "; ".join(
-            f"{item['path']}:{item.get('line', '?')} {item['text']}" for item in stale_findings[:12]
+            f"{item['path']}:{item.get('line', '?')} {item['text']}" for item in stale_findings[:16]
         )
-        fail(f"stale lifecycle/version authority language found: {preview}")
+        fail(f"obsolete lifecycle/version authority language found: {preview}")
 
     report = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "status": "pass",
         "currentOfficial": current_official,
         "currentStable": current_stable,
@@ -209,11 +244,13 @@ def main() -> int:
         "activeCandidate": active_candidate,
         "activeCandidateConsumerEligible": candidate_release.get("consumerEligible"),
         "auditedTrackedMarkdownFiles": len(markdown),
+        "auditedTrackedUtf8TextFiles": len(text_sources),
         "currentAuthorityDocuments": sorted(CURRENT_AUTHORITY_DOCS),
         "historicalDocumentsExplicitlyQualified": list(HISTORICAL_DOCS),
-        "staleAuthorityFindings": 0,
-        "historicalIntegrityRule": "Historical records remain preserved but may not present superseded lifecycle state as current authority without an explicit historical qualifier.",
+        "obsoleteLifecycleAuthorityFindings": 0,
+        "historicalIntegrityRule": "Historical records remain preserved but may not present superseded lifecycle state as current authority unless the record or statement is explicitly historical.",
         "subsystemVersionRule": "Subsystem contract revisions remain distinct from Glaze UI product lifecycle versions and do not alter currentStable/currentOfficial.",
+        "scopeRule": "The audit covers every tracked UTF-8 text source at the exact checked-out Git revision; binary and non-UTF-8 tracked files are excluded from text-language analysis.",
     }
 
     rendered = json.dumps(report, indent=2, sort_keys=True) + "\n"
