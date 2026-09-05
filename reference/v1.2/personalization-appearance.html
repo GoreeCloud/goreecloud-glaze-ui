@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light" data-glz-accent="ice" data-glz-atmosphere="balanced" data-glz-density="standard">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GLAZE UI V1.2 Candidate — Personalization and Appearance</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    *{box-sizing:border-box}html,body{min-inline-size:0}body{margin:0;padding:16px;background:var(--glz1-canvas);color:var(--glz1-text-primary);font-family:var(--glz12-font-sans,system-ui,sans-serif)}
+    main{max-inline-size:920px;margin-inline:auto;display:grid;gap:18px}header p{max-inline-size:72ch}.glz12-personalization-surface>:first-child{margin-block-start:0}.glz12-personalization-surface>:last-child{margin-block-end:0}.glz12-personalization-chip{padding:12px;border:1px solid var(--glz12-structural-border);border-radius:var(--glz12-radius-control,12px)}
+  </style>
+</head>
+<body>
+<main id="personalization-reference">
+  <header>
+    <p>Candidate reference only. V1.1 / 1.1.0 remains Stable. Personalization changes expression, never security/privacy meaning, semantic state, accessibility authority, product identity, or system truth.</p>
+    <h1>Personalization and Appearance</h1>
+  </header>
+  <section id="expression" class="glz12-personalization-surface glz12-personalization-atmosphere" aria-labelledby="expression-title">
+    <h2 id="expression-title">Governed expression</h2>
+    <div id="personal-grid" class="glz12-personalization-grid">
+      <article id="accent-card" class="glz12-personalization-chip glz12-personalization-accent"><strong>Accent expression</strong><p>Governed accents decorate non-semantic presentation only.</p></article>
+      <article id="semantic-warning" class="glz12-semantic-state" data-semantic="warning"><strong>Security review required</strong><p>This semantic warning is producer-owned and must not be recolored by personalization.</p></article>
+      <article class="glz12-personalization-chip"><strong>Density</strong><p>Comfortable, Standard, Productive, and Immersive alter spacing without changing semantics.</p></article>
+      <article class="glz12-personalization-chip"><strong>Appearance</strong><p>Light, Dark, and Deep Dark remain readable; Follow System requires a platform adapter.</p></article>
+    </div>
+    <p><button id="action" class="glz1-button glz12-personalization-action" type="button">Personalization action</button></p>
+  </section>
+  <section class="glz12-personalization-surface">
+    <h2>Boundaries</h2>
+    <p id="boundary-copy">No raw blur, saturation, or shadow sliders. No arbitrary icon packs. No semantic-color remapping. Preference persistence, cross-device sync, and wallpaper sampling are not implemented by this Candidate.</p>
+  </section>
+</main>
+</body>
+</html>

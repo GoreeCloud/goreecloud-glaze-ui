@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.personalization-appearance.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-personalization-and-appearance-evidence",
+  "purpose": "Provide bounded V1.2 Candidate appearance, accent, atmosphere, and density expression without allowing personalization to override semantic truth, accessibility, product identity, security/privacy meaning, or platform authority.",
+  "authority": {
+    "companionSpecification": "Glaze UI V1.2 — Personalization and Appearance.docx",
+    "accessibilityResolution": "contracts/v1.2/accessibility-adaptation.candidate.json",
+    "formFactorTokens": "tokens/glaze-v1.2-form-factor.candidate.json",
+    "spatialTokens": "tokens/glaze-v1.2-spatial-foundation.candidate.json",
+    "principle": "Personalize expression, not truth or control semantics."
+  },
+  "preferencePrecedence": [
+    "accessibility",
+    "platform-system",
+    "goreecloud-user",
+    "application-specific-when-allowed",
+    "glaze-default"
+  ],
+  "appearance": {
+    "modes": ["follow-system", "light", "dark", "deep-dark"],
+    "manualModeMayOverrideSystemFollowing": true,
+    "platformAdapterOwnsSystemResolution": true,
+    "candidateDoesNotPersistPreference": true
+  },
+  "accentProfiles": {
+    "default": "ice",
+    "allowed": ["ice", "slate", "indigo", "aqua", "rose", "amber"],
+    "semanticRoleOverrideAllowed": false,
+    "platformForcedColorsOverrideAllowed": false,
+    "arbitraryUnsafeAccentAllowed": false
+  },
+  "atmosphereProfiles": {
+    "default": "balanced",
+    "allowed": ["calm", "balanced", "expressive"],
+    "semanticRoleOverrideAllowed": false,
+    "wallpaperSampling": {
+      "implementationStatus": "not-implemented",
+      "requiredProperties": ["local", "bounded", "low-intensity", "filtered", "desaturated"],
+      "remoteContentRequired": false
+    }
+  },
+  "densityProfiles": {
+    "default": "standard",
+    "allowed": ["comfortable", "standard", "productive", "immersive"],
+    "minimumInteractiveTargetPx": 48,
+    "mayChangeSemantics": false,
+    "mayHideEssentialNavigation": false
+  },
+  "accessibilityOverrides": {
+    "reducedTransparencyOverridesAtmosphere": true,
+    "reducedMotionOverridesDecorativeMotion": true,
+    "increasedContrastOverridesDecorativeBoundaryStrength": true,
+    "forcedColorsOverridesAccentRendering": true,
+    "largeTextMayRelaxDensity": true,
+    "touchAssistanceRaisesHitAreaFloor": true
+  },
+  "prohibited": {
+    "semanticColorRemapping": true,
+    "securityOrPrivacyMeaningOverride": true,
+    "arbitraryIconPacks": true,
+    "arbitraryComponentGeometry": true,
+    "rawBlurSlider": true,
+    "rawSaturationSlider": true,
+    "rawShadowSlider": true,
+    "telemetryForPersonalization": true,
+    "remoteWallpaperSamplingRequirement": true
+  },
+  "persistenceAndSync": {
+    "persistenceAuthority": "consumer-platform-adapter",
+    "syncAuthority": "separate-governed-goreecloud-sync-integration",
+    "implementedByThisCandidate": false,
+    "privacyReviewRequiredBeforeCrossDeviceSync": true
+  },
+  "acceptance": {
+    "accentDoesNotChangeSemanticStateRequired": true,
+    "atmosphereProfileDifferentiationRequired": true,
+    "reducedTransparencyDisablesDecorativeAtmosphereRequired": true,
+    "densityProfileDifferentiationRequired": true,
+    "minimumInteractiveTargetPx": 48,
+    "lightDarkDeepDarkRequired": true,
+    "compactViewportPx": 320,
+    "textScalePercent": 200,
+    "horizontalPageOverflowProhibited": true,
+    "screenshotsRequired": true
+  },
+  "implementation": {
+    "candidateLayer": "css/glaze-v1.2-personalization-appearance.candidate.css",
+    "reference": "reference/v1.2/personalization-appearance.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_personalization_appearance_rendered.py",
+    "workflow": ".github/workflows/glaze-v1.2-personalization-appearance.yml",
+    "candidateEntrypoint": "css/glaze-v1.2.0-candidate.css",
+    "mustLoadBeforeFinalAccessibilityLayer": true
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "bounded-governed-accent-profiles",
+      "bounded-atmosphere-profiles",
+      "bounded-density-profiles",
+      "manual-light-dark-deep-dark-reference",
+      "semantic-state-isolation",
+      "reduced-transparency-precedence",
+      "compact-200-percent-text-reference",
+      "exact-head-rendered-browser-acceptance"
+    ],
+    "notEstablished": [
+      "follow-system-platform-adapter-acceptance",
+      "preference-persistence",
+      "cross-device-preference-sync",
+      "wallpaper-sampling",
+      "human-visual-review",
+      "assistive-technology-acceptance",
+      "native-platform-parity",
+      "physical-device-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}
