@@ -1,14 +1,18 @@
-# GLAZE UI V1.0 Stability Contract
+# GLAZE UI V1.0 Stability Contract — Historical Record
 
-GLAZE UI V1.0 is the sole current Glaze UI product baseline. Stability means predictable semantics, exact-revision validation, accessibility, recoverability, controlled change management, and evidence-backed downstream adoption.
+**Historical scope:** V1.0 reset-era stability contract  
+**Current Stable authority:** GLAZE UI V1.1 / `1.1.0`  
+**Current lifecycle source:** `registry/lifecycle.json`
 
-## Current boundary
+This document preserves the stability contract established for the V1.0 reset. V1.0 is now a historical reset baseline and is not the current Glaze UI product or consumer-conformance target. `registry/lifecycle.json` and `VERSION` currently identify GLAZE UI V1.1 / `1.1.0` as the Stable authority.
 
-- Official product label: **GLAZE UI V1.0**.
-- Machine version: **1.0.0**.
-- No other Glaze UI version is a current application target.
-- The reset requires fresh exact-revision validation before production-readiness claims are made from the V1.0 namespace.
-- No downstream application is promoted by declaration.
+## Historical V1.0 boundary
+
+- Product label at the V1.0 reset: **GLAZE UI V1.0**.
+- Machine version at the V1.0 reset: **1.0.0**.
+- V1.0 required fresh exact-revision validation before production-readiness claims could be made from the reset namespace.
+- No downstream application was promoted by declaration.
+- Later governed lifecycle promotions supersede V1.0 as the current application target without erasing this historical contract.
 
 ## Stability principles
 
@@ -21,8 +25,10 @@ GLAZE UI V1.0 is the sole current Glaze UI product baseline. Stability means pre
 7. Platform-native claims require platform-native evidence.
 8. Product-specific readiness remains product-specific.
 
-## Reset acceptance
+These principles remain inherited where a later governed Glaze UI contract does not supersede them. Current release and conformance authority must always be read from the active lifecycle records rather than inferred from this historical V1.0 document.
 
-The V1.0 identity reset is authoritative for naming and current-target selection. It is not itself proof that rendered references, native references, performance budgets, or downstream applications have passed V1.0 acceptance. Those claims become valid only when the applicable V1 validators and acceptance records exist for the exact post-reset revision.
+## Historical reset acceptance
 
-Glaze Motion remains separately Experimental unless explicitly promoted by a future V1.x contract.
+The V1.0 identity reset was authoritative for naming and target selection at the time of the reset. It was not itself proof that rendered references, native references, performance budgets, or downstream applications had passed V1.0 acceptance. Those claims became valid only when the applicable V1 validators and acceptance records existed for the exact post-reset revision.
+
+Glaze Motion remains separately governed by its own lifecycle unless an applicable later Glaze UI contract explicitly changes that status.

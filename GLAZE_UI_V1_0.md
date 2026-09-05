@@ -1,11 +1,11 @@
-# GLAZE UI V1.0 — Official Baseline Contract
+# GLAZE UI V1.0 — Historical Baseline Contract
 
-**Official product identity:** GLAZE UI V1.0  
+**Official product identity at reset:** GLAZE UI V1.0  
 **Machine version:** 1.0.0  
-**Status:** Official reset baseline; production revalidation required after the reset  
+**Status:** Historical reset baseline; superseded as current authority by GLAZE UI V1.1 / 1.1.0  
 **Repository:** `GoreeCloud/goreecloud-glaze-ui`
 
-GLAZE UI V1.0 is the sole current Glaze UI product version and the only version that may be named as a current GoreeCloud design-system target.
+At the time of the V1.0 reset, GLAZE UI V1.0 became the sole current Glaze UI product version and the only version that could be named as the current GoreeCloud design-system target. This document preserves that reset-era contract as historical evidence; it does **not** define the current Stable or consumer-conformance target. Current authority is determined by `registry/lifecycle.json` and `VERSION`, which currently identify GLAZE UI V1.1 / `1.1.0` as Stable.
 
 ## Design identity
 
@@ -31,20 +31,20 @@ The V1.0 baseline defines:
 
 ## Authority and verification
 
-This reset establishes the official product identity and current contract namespace. It does not reuse earlier release identities as V1.0 evidence. Current production-readiness, rendered-reference, native, accessibility, performance, and downstream consumer conformance must be revalidated against the V1.0 namespace and exact post-reset revisions.
+The V1.0 reset established the then-official product identity and contract namespace. It did not reuse earlier release identities as V1.0 evidence. Production-readiness, rendered-reference, native, accessibility, performance, and downstream consumer conformance required evidence against exact post-reset revisions.
 
-No downstream application is upgraded by declaration. Each GoreeCloud application or service must independently adopt V1.0 and satisfy its applicable acceptance requirements.
+No downstream application was upgraded by declaration. Each GoreeCloud application or service had to independently adopt V1.0 and satisfy its applicable acceptance requirements. The same evidence-first rule continues to apply to later Stable versions.
 
-## Current entrypoints
+## Historical V1.0 entrypoints
 
-- Version: `VERSION`
-- Official contract: `GLAZE_UI_V1_0.md`
+- Version at V1.0 reset: `VERSION`
+- V1.0 contract: `GLAZE_UI_V1_0.md`
 - Lifecycle authority: `registry/lifecycle.json`
 - Component catalog: `contracts/components/v1/catalog.json`
 - System Shell contract: `contracts/system-shell/glaze-system-shell-v1.json`
-- Web entrypoint: `css/glaze-v1.0.0.css`
-- Runtime entrypoint: `js/glaze-v1.0.0.mjs`
-- Acceptance boundary: `acceptance/v1.0-stable.md`
+- V1.0 web entrypoint: `css/glaze-v1.0.0.css`
+- V1.0 runtime entrypoint: `js/glaze-v1.0.0.mjs`
+- V1.0 acceptance boundary: `acceptance/v1.0-stable.md`
 - V1 validator: `scripts/validate_glaze_v1.py`
 
-Glaze Motion remains a separately governed experimental subsystem unless explicitly incorporated into a future GLAZE UI V1.x contract.
+Glaze Motion remained a separately governed experimental subsystem unless explicitly incorporated into a later governed GLAZE UI V1.x contract.

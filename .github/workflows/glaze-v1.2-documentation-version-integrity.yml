@@ -1,0 +1,59 @@
+name: Glaze V1.2 Documentation Version Integrity Candidate
+
+on:
+  pull_request:
+    paths:
+      - "**/*.md"
+      - "VERSION"
+      - "registry/lifecycle.json"
+      - "scripts/validate_glaze_v1_2_documentation_versions.py"
+      - ".github/workflows/glaze-v1.2-documentation-version-integrity.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: glaze-v1-2-documentation-version-integrity-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  documentation-version-integrity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact Candidate revision
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.12"
+
+      - name: Preserve Stable and Candidate authorities
+        run: |
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          python scripts/validate_glaze_v1.py
+          python scripts/validate_glaze_v1_2_candidate.py
+
+      - name: Audit lifecycle and documentation version integrity
+        run: |
+          python scripts/validate_glaze_v1_2_documentation_versions.py \
+            --output "artifacts/glaze-v1.2-documentation-version-integrity-${{ github.event.pull_request.head.sha || github.sha }}.json"
+
+      - name: Compile documentation-version validator
+        run: python -m py_compile scripts/validate_glaze_v1_2_documentation_versions.py
+
+      - name: Verify validator did not mutate tracked source
+        run: git diff --exit-code
+
+      - name: Upload exact-head documentation-version evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: glaze-v1.2-documentation-version-integrity-${{ github.event.pull_request.head.sha || github.sha }}
+          path: artifacts/glaze-v1.2-documentation-version-integrity-${{ github.event.pull_request.head.sha || github.sha }}.json
+          if-no-files-found: error
+          retention-days: 14
