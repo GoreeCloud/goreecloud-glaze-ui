@@ -29,6 +29,7 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-g
 
 html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"] .glz12-personalization-surface {
   min-inline-size: 0;
+  max-inline-size: 100%;
   padding: var(--glz12-personal-density-pad);
   border: 1px solid var(--glz12-structural-border);
   border-radius: var(--glz12-radius-surface, 20px);
@@ -39,6 +40,11 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"] .glz12
   gap: var(--glz12-personal-density-gap);
   grid-template-columns: repeat(2, minmax(0, 1fr));
   min-inline-size: 0;
+  max-inline-size: 100%;
+}
+html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"] .glz12-personalization-grid > * {
+  min-inline-size: 0;
+  max-inline-size: 100%;
 }
 html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"] .glz12-personalization-accent {
   border-color: color-mix(in srgb, var(--glz12-personal-accent) 52%, var(--glz12-structural-border));
@@ -52,6 +58,7 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"] .glz12
 html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"] .glz12-personalization-action {
   min-block-size: 48px;
   min-inline-size: 48px;
+  max-inline-size: 100%;
 }
 
 /* Accessibility wins over atmosphere. The final accessibility layer remains authoritative. */
@@ -61,8 +68,18 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-g
 html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-glz-text-scale="200"] .glz12-personalization-grid {
   grid-template-columns: minmax(0, 1fr);
 }
-html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-glz-text-scale="200"] .glz12-personalization-surface {
+html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-glz-text-scale="200"] :is(
+  .glz12-personalization-surface,
+  .glz12-personalization-grid,
+  .glz12-personalization-grid > *,
+  .glz12-personalization-chip,
+  .glz12-semantic-state,
+  .glz12-personalization-action
+) {
+  min-inline-size: 0;
+  max-inline-size: 100%;
   overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 @media (forced-colors: active) {
