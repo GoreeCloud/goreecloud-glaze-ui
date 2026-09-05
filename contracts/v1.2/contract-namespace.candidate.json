@@ -17,7 +17,7 @@
   "rules": {
     "candidateFilenameNamespaceUnique": true,
     "contractIdsUniqueWhenPresent": true,
-    "contractIdMustContainFilenameNamespaceWhenPresent": true,
+    "contractIdMustSemanticallyMatchFilenameNamespaceWhenPresent": true,
     "contractIdMustRemainCandidateScopedWhenPresent": true,
     "schemaVersionOneWhenPresent": true,
     "jsonSchema202012WhenDeclared": true,
@@ -31,6 +31,12 @@
     "trackedWorktreeMustMatchHead": true,
     "stableAuthorityMayNotMove": true,
     "validatorMayNotRewriteContracts": true
+  },
+  "idCoherence": {
+    "method": "token-overlap-with-simple-singular-normalization",
+    "requireAllFilenameNamespaceTokens": true,
+    "example": "core-tokens.candidate.json may use core-token-authority in its Candidate-scoped id because core and token remain semantically bound while authority is an additional qualifier.",
+    "prohibits": "unrelated IDs, duplicate IDs, Stable-scoped IDs, or IDs that drop a filename namespace concept"
   },
   "metadataProfiles": {
     "featureOrEvidenceContract": "May expose top-level version/lifecycle/consumerEligible/stableBaseline metadata.",

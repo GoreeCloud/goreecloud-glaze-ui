@@ -68,8 +68,14 @@ def iter_strings(value: Any) -> Iterator[str]:
             yield from iter_strings(child)
 
 
-def normalized(text: str) -> str:
-    return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+def normalized_tokens(text: str) -> list[str]:
+    raw = [token for token in re.split(r"[^a-z0-9]+", text.lower()) if token]
+    normalized: list[str] = []
+    for token in raw:
+        if len(token) > 3 and token.endswith("s") and not token.endswith("ss"):
+            token = token[:-1]
+        normalized.append(token)
+    return normalized
 
 
 def stable_baseline_version(value: Any, path: str) -> str:
@@ -99,7 +105,7 @@ def validate_control(control: dict[str, Any]) -> None:
     rules = control.get("rules", {})
     for key in (
         "candidateFilenameNamespaceUnique", "contractIdsUniqueWhenPresent",
-        "contractIdMustContainFilenameNamespaceWhenPresent",
+        "contractIdMustSemanticallyMatchFilenameNamespaceWhenPresent",
         "contractIdMustRemainCandidateScopedWhenPresent", "schemaVersionOneWhenPresent",
         "jsonSchema202012WhenDeclared", "lifecycleMustRemainCandidateScopedWhenPresent",
         "topLevelCandidateVersionMustRemainCandidateWhenPresent",
@@ -110,6 +116,10 @@ def validate_control(control: dict[str, Any]) -> None:
         "trackedWorktreeMustMatchHead", "stableAuthorityMayNotMove", "validatorMayNotRewriteContracts",
     ):
         require(rules.get(key) is True, f"namespace-control rule drifted: {key}")
+    coherence = control.get("idCoherence", {})
+    require(coherence.get("method") == "token-overlap-with-simple-singular-normalization"
+            and coherence.get("requireAllFilenameNamespaceTokens") is True,
+            "namespace-control id coherence policy drifted")
 
 
 def lifecycle_release(lifecycle: dict[str, Any], version: str) -> dict[str, Any]:
@@ -150,6 +160,14 @@ def candidate_files(tracked: set[str]) -> list[Path]:
     return [ROOT / path for path in names]
 
 
+def validate_id_coherence(namespace: str, contract_id: str, relative: str) -> None:
+    namespace_tokens = normalized_tokens(namespace)
+    id_tokens = set(normalized_tokens(contract_id))
+    missing = [token for token in namespace_tokens if token not in id_tokens]
+    require(not missing,
+            f"{relative}: contract id drops filename namespace concept(s): {', '.join(missing)}")
+
+
 def validate_one(path: Path, data: dict[str, Any], tracked: set[str], seen_ids: dict[str, str]) -> dict[str, Any]:
     relative = path.relative_to(ROOT).as_posix()
     namespace = path.name.removesuffix(CANDIDATE_SUFFIX)
@@ -186,8 +204,7 @@ def validate_one(path: Path, data: dict[str, Any], tracked: set[str], seen_ids: 
         prefixes = ("goreecloud.glaze-ui.v1.2.", "glaze-v1.")
         require(contract_id.startswith(prefixes), f"{relative}: contract id uses an unexpected namespace prefix")
         require("candidate" in contract_id.lower(), f"{relative}: contract id is not Candidate-scoped")
-        require(normalized(namespace) in normalized(contract_id),
-                f"{relative}: contract id does not contain filename namespace {namespace!r}")
+        validate_id_coherence(namespace, contract_id, relative)
         folded = contract_id.casefold()
         require(folded not in seen_ids, f"duplicate contract id in {relative} and {seen_ids.get(folded)}")
         seen_ids[folded] = relative
