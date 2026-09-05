@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.contract-namespace.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "repository": "GoreeCloud/goreecloud-glaze-ui",
+  "purpose": "Validate semantic namespace consistency across immediate Glaze UI V1.2 Candidate contracts without forcing heterogeneous feature and control-plane contracts into one schema.",
+  "scope": {
+    "directory": "contracts/v1.2",
+    "candidateSuffix": ".candidate.json",
+    "immediateFilesOnly": true
+  },
+  "rules": {
+    "candidateFilenameNamespaceUnique": true,
+    "contractIdsUniqueWhenPresent": true,
+    "contractIdMustContainFilenameNamespaceWhenPresent": true,
+    "contractIdMustRemainCandidateScopedWhenPresent": true,
+    "schemaVersionOneWhenPresent": true,
+    "jsonSchema202012WhenDeclared": true,
+    "lifecycleMustRemainCandidateScopedWhenPresent": true,
+    "topLevelCandidateVersionMustRemainCandidateWhenPresent": true,
+    "topLevelConsumerEligibilityMustRemainFalseWhenPresent": true,
+    "stableBaselineMustResolveTo110WhenPresent": true,
+    "nestedMigrationTargetMustRemainCandidateAndNonConsumerEligibleWhenPresent": true,
+    "intraV12CandidateContractReferencesMustResolve": true,
+    "intraV12JsonReferencesMustUseCandidateSuffix": true,
+    "trackedWorktreeMustMatchHead": true,
+    "stableAuthorityMayNotMove": true,
+    "validatorMayNotRewriteContracts": true
+  },
+  "metadataProfiles": {
+    "featureOrEvidenceContract": "May expose top-level version/lifecycle/consumerEligible/stableBaseline metadata.",
+    "controlPlaneContract": "May represent Stable and Candidate authority in nested objects while remaining candidate-scoped; migration.candidate.json is the established example.",
+    "repositoryIntegrityContract": "May omit optional product/id metadata but must preserve Candidate/Stable lifecycle boundaries."
+  },
+  "allowedContractIdPrefixes": [
+    "goreecloud.glaze-ui.v1.2.",
+    "glaze-v1."
+  ],
+  "evidenceBoundary": {
+    "boundedNamespaceValidationEstablished": true,
+    "contractContentApproved": false,
+    "implementationAccepted": false,
+    "runtimeAccepted": false,
+    "nativeParityAccepted": false,
+    "physicalDeviceAccepted": false,
+    "humanAccepted": false,
+    "releaseCandidateAccepted": false,
+    "stableAccepted": false,
+    "consumerConformanceAccepted": false
+  },
+  "implementation": {
+    "validator": "scripts/validate_glaze_v1_2_contract_namespace.py",
+    "workflow": ".github/workflows/glaze-v1.2-contract-namespace.yml",
+    "artifactPattern": "artifacts/glaze-v1.2-contract-namespace-<exact-head>.json"
+  }
+}
