@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light" data-glz-material-performance="full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GLAZE UI V1.2 Foundation Components Candidate</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { min-width: 0; }
+    body { margin: 0; min-height: 100vh; }
+    .foundation-demo { max-width: 1120px; margin-inline: auto; padding: 32px; display: grid; gap: 32px; }
+    .foundation-demo h1, .foundation-demo h2, .foundation-demo p { margin: 0; }
+    .foundation-demo p { overflow-wrap: anywhere; }
+    .intro { display: grid; gap: 12px; max-width: 780px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 24px; }
+    .sample { min-width: 0; padding: 20px; border: 1px solid var(--glz12-structural-border); border-radius: var(--glz12-radius-surface, 20px); display: grid; gap: 16px; align-content: start; }
+    .row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-width: 0; }
+    .fields { display: grid; gap: 16px; }
+    .choice-stack { display: grid; gap: 8px; align-items: start; }
+    .glz1-field, .glz1-slider { inline-size: 100%; }
+    .glz1-select { max-inline-size: 100%; }
+    @media (max-width: 700px) {
+      .foundation-demo { padding: 16px; gap: 24px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+    @media (forced-colors: active) { .sample { border-color: CanvasText; } }
+  </style>
+</head>
+<body>
+  <main class="foundation-demo">
+    <header class="intro">
+      <p data-glz-type="label">Foundation components · Candidate</p>
+      <h1 data-glz-type="display">Clarity before material.</h1>
+      <p data-glz-type="body">Eight native interaction primitives preserve discoverability, keyboard behavior, structural state cues, readable errors, stable loading, and ergonomic targets before Frosted Optical atmosphere is applied.</p>
+    </header>
+
+    <section class="sample" id="buttons-sample">
+      <h2 data-glz-type="heading">GlzButton</h2>
+      <div class="row">
+        <button id="button-primary" class="glz1-button glz12-spatial-action" data-variant="primary" type="button">Primary action</button>
+        <button id="button-secondary" class="glz1-button glz12-spatial-action" data-variant="secondary" type="button">Secondary</button>
+        <button id="button-subtle" class="glz1-button glz12-spatial-action" data-variant="subtle" type="button">Subtle</button>
+        <button id="button-destructive" class="glz1-button glz12-spatial-action" data-variant="destructive" type="button">Delete item</button>
+        <button id="button-selected" class="glz1-button glz12-spatial-action" data-variant="secondary" data-state="selected" aria-pressed="true" type="button">Pinned</button>
+        <button id="button-loading" class="glz1-button glz12-spatial-action" data-variant="secondary" data-loading="true" aria-busy="true" type="button"><span>Save</span><span class="glz12-control-status"><span class="glz12-control-status-mark" aria-hidden="true">…</span><span>Loading</span></span></button>
+        <button id="button-disabled" class="glz1-button glz12-spatial-action" data-variant="secondary" disabled type="button">Disabled</button>
+        <button id="keyboard-button" class="glz1-button glz12-spatial-action" data-variant="secondary" type="button">Keyboard action</button>
+      </div>
+    </section>
+
+    <section class="sample" id="icon-buttons-sample">
+      <h2 data-glz-type="heading">GlzIconButton</h2>
+      <div class="row">
+        <button id="icon-button" class="glz1-icon-button glz12-spatial-action" data-variant="glaze" type="button" aria-label="Open search">⌕</button>
+        <button id="icon-button-selected" class="glz1-icon-button glz12-spatial-action" data-variant="glaze" data-state="selected" aria-pressed="true" type="button" aria-label="Pin item">◆</button>
+        <button id="icon-button-disabled" class="glz1-icon-button glz12-spatial-action" data-variant="glaze" type="button" aria-label="Unavailable action" disabled>×</button>
+      </div>
+    </section>
+
+    <section class="sample fields" id="fields-sample">
+      <h2 data-glz-type="heading">GlzTextField + GlzSelect</h2>
+      <label class="glz1-field" id="field-normal">
+        <span class="glz1-field-label">Account name</span>
+        <span id="field-normal-control" class="glz1-field-control" data-size="md"><input id="field-normal-input" value="GoreeCloud" autocomplete="off"></span>
+        <span class="glz1-field-message">Persistent label and stable helper text.</span>
+      </label>
+
+      <label class="glz1-field" id="field-error" data-state="error">
+        <span class="glz1-field-label">Workspace slug</span>
+        <span id="field-error-control" class="glz1-field-control" data-size="md"><input id="field-error-input" value="bad slug" aria-invalid="true" aria-describedby="field-error-message" autocomplete="off"><span class="glz12-field-status-mark" aria-hidden="true">!</span></span>
+        <span id="field-error-message" class="glz1-field-message glz12-field-status" data-kind="error"><span class="glz12-field-status-mark" aria-hidden="true">!</span><span>Use letters, numbers, or hyphens.</span></span>
+      </label>
+
+      <label class="glz1-field" id="field-readonly">
+        <span class="glz1-field-label">Repository</span>
+        <span id="field-readonly-control" class="glz1-field-control"><input value="goreecloud-glaze-ui" readonly></span>
+      </label>
+
+      <label class="glz1-field" id="field-disabled">
+        <span class="glz1-field-label">Managed value</span>
+        <span id="field-disabled-control" class="glz1-field-control"><input value="Unavailable" disabled></span>
+      </label>
+
+      <label class="glz1-field" for="select-normal">
+        <span class="glz1-field-label">Appearance</span>
+        <select id="select-normal" class="glz1-select" data-size="md"><option value="light">Light</option><option value="dark">Dark</option><option value="deep-dark">Deep Dark</option></select>
+      </label>
+      <label class="glz1-field" for="select-error">
+        <span class="glz1-field-label">Required environment</span>
+        <select id="select-error" class="glz1-select" aria-invalid="true" aria-describedby="select-error-message"><option value="">Choose one</option><option>Production</option></select>
+        <span id="select-error-message" class="glz1-field-message glz12-field-status" data-kind="error"><span class="glz12-field-status-mark" aria-hidden="true">!</span><span>Select an environment.</span></span>
+      </label>
+    </section>
+
+    <section class="sample" id="choices-sample">
+      <h2 data-glz-type="heading">GlzCheckbox + GlzRadio</h2>
+      <div class="choice-stack">
+        <label id="checkbox-label" class="glz1-choice" data-kind="checkbox"><input id="checkbox" type="checkbox" checked><span id="checkbox-control" class="glz1-choice-control"></span><span>Back up this workspace</span></label>
+        <label id="checkbox-indeterminate-label" class="glz1-choice" data-kind="checkbox"><input id="checkbox-indeterminate" type="checkbox" data-indeterminate="true"><span id="checkbox-indeterminate-control" class="glz1-choice-control"></span><span>Some children selected</span></label>
+        <label id="checkbox-disabled-label" class="glz1-choice" data-kind="checkbox"><input id="checkbox-disabled" type="checkbox" disabled><span class="glz1-choice-control"></span><span>Unavailable option</span></label>
+      </div>
+      <fieldset id="radio-group" class="choice-stack"><legend>Sync mode</legend>
+        <label class="glz1-choice" data-kind="radio"><input id="radio-auto" name="sync-mode" type="radio" value="auto" checked><span id="radio-auto-control" class="glz1-choice-control"></span><span>Automatic</span></label>
+        <label class="glz1-choice" data-kind="radio"><input id="radio-manual" name="sync-mode" type="radio" value="manual"><span id="radio-manual-control" class="glz1-choice-control"></span><span>Manual</span></label>
+      </fieldset>
+    </section>
+
+    <section class="sample" id="switches-sample">
+      <h2 data-glz-type="heading">GlzSwitch</h2>
+      <div class="choice-stack">
+        <label id="switch-on-label" class="glz1-switch"><input id="switch-on" type="checkbox" role="switch" checked><span id="switch-on-track" class="glz1-switch-track"><span id="switch-on-thumb" class="glz1-switch-thumb"></span></span><span>Sync enabled</span></label>
+        <label id="switch-off-label" class="glz1-switch"><input id="switch-off" type="checkbox" role="switch"><span id="switch-off-track" class="glz1-switch-track"><span id="switch-off-thumb" class="glz1-switch-thumb"></span></span><span>Offline mode</span></label>
+        <label id="switch-disabled-label" class="glz1-switch"><input id="switch-disabled" type="checkbox" role="switch" disabled><span class="glz1-switch-track"><span class="glz1-switch-thumb"></span></span><span>Managed switch</span></label>
+      </div>
+    </section>
+
+    <section class="sample" id="slider-sample">
+      <h2 data-glz-type="heading">GlzSlider</h2>
+      <label class="glz1-slider" for="slider"><span>Atmosphere intensity</span><span class="glz1-slider-row"><input id="slider" type="range" min="0" max="100" step="5" value="40" aria-describedby="slider-value"><output id="slider-value" class="glz12-slider-value" for="slider">40</output></span></label>
+      <label class="glz1-slider" for="slider-disabled"><span>Managed intensity</span><span class="glz1-slider-row"><input id="slider-disabled" type="range" min="0" max="100" value="25" disabled><output class="glz12-slider-value" for="slider-disabled">25</output></span></label>
+    </section>
+  </main>
+  <script>
+    const indeterminate = document.getElementById('checkbox-indeterminate');
+    indeterminate.indeterminate = true;
+    const slider = document.getElementById('slider');
+    const output = document.getElementById('slider-value');
+    slider.addEventListener('input', () => { output.value = slider.value; output.textContent = slider.value; });
+    const keyboardButton = document.getElementById('keyboard-button');
+    keyboardButton.dataset.activationCount = '0';
+    keyboardButton.addEventListener('click', () => { keyboardButton.dataset.activationCount = String(Number(keyboardButton.dataset.activationCount) + 1); });
+  </script>
+</body>
+</html>

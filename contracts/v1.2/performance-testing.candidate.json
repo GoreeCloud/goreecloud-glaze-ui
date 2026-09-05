@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "id": "glaze-v1.2-performance-testing-candidate",
+  "product": "GLAZE UI",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "stableBaseline": "1.1.0",
+  "consumerEligible": false,
+  "phase": "Phase 5 — Performance Testing",
+  "purpose": "Record exact-revision browser-CI performance observations for representative V1.2 Candidate interactions without inventing numeric production budgets or converting bounded measurements into production acceptance.",
+  "authoritativeInputs": [
+    "contracts/performance/glaze-v1-performance-budget.json",
+    "contracts/v1.2/performance-adaptation.candidate.json",
+    "reference/v1.2/performance-adaptation.html",
+    "reference/v1.2/motion.html",
+    "reference/v1.2/data-visualization.html",
+    "reference/v1.2/productive-interfaces.html"
+  ],
+  "canonicalBudgetBoundary": {
+    "requiredStatus": "revalidation-required",
+    "acceptedNumericRuntimeBudgetRequiredForProductionClaim": true,
+    "acceptedPlatformBudgetRequiredForProductionClaim": true,
+    "numericRuntimeBudgetEstablished": false,
+    "platformBudgetEstablished": false,
+    "productionPerformanceAcceptanceEstablished": false
+  },
+  "measurementScope": [
+    {
+      "id": "interaction-to-next-frame",
+      "authority": "reference/v1.2/motion.html",
+      "description": "Measure a real WebDriver click on the connected Universal Search control from the page-observed click event to the next animation frame while verifying synchronous semantic state change."
+    },
+    {
+      "id": "connected-motion-frame-observation",
+      "authority": "reference/v1.2/motion.html",
+      "description": "Collect requestAnimationFrame intervals during a bounded connected-search transition window; observed timing is evidence only, not an accepted frame-time/FPS budget."
+    },
+    {
+      "id": "frost-profile-switch-observation",
+      "authority": "reference/v1.2/performance-adaptation.html",
+      "description": "Record Full/Reduced/Minimal profile switch-to-frame observations and browser Performance-domain snapshots while preserving semantic content, focus, reading order, and target geometry."
+    },
+    {
+      "id": "visualization-fixture-update-observation",
+      "authority": "reference/v1.2/data-visualization.html",
+      "description": "Measure existing fixture visualization inspection/range state updates to the next frame without treating static fixture behavior as a production chart-update budget."
+    },
+    {
+      "id": "scrolling-observation",
+      "authority": "reference/v1.2/productive-interfaces.html",
+      "description": "Collect requestAnimationFrame intervals while scrolling a deterministic locally expanded fixture log; this is browser-CI scrolling evidence only."
+    },
+    {
+      "id": "expanded-table-workload-observation",
+      "authority": "reference/v1.2/productive-interfaces.html",
+      "description": "Measure sort/filter operations after deterministically cloning fixture rows in the test session. Synthetic expansion is test-only and does not establish production large-dataset or virtualization performance."
+    }
+  ],
+  "rules": {
+    "exactRevisionRequired": true,
+    "measurementsAreObservations": true,
+    "passFailAgainstInventedNumericThresholds": false,
+    "canonicalBudgetMustRemainRevalidationRequired": true,
+    "existingPerformanceAdaptationAuthorityReused": true,
+    "parallelPerformanceTokenOwnerIntroduced": false,
+    "semanticsRemainHigherPriorityThanEffects": true,
+    "accessibilityTargetsRemainProtected": true,
+    "browserCiEqualsProductionPerformance": false,
+    "browserCiEqualsNativePerformance": false,
+    "browserCiEqualsMobileGpuPerformance": false,
+    "androidEmulatorEqualsPhysicalDevicePerformance": false,
+    "headlessBrowserMetricsEqualGpuOrCompositorBudget": false,
+    "testOnlyExpandedRowsEqualProductionLargeDatasetAcceptance": false,
+    "fixtureVisualizationUpdateEqualsProductionChartUpdateAcceptance": false,
+    "telemetryOrAnalyticsRequired": false,
+    "consumerClaimBlocked": true
+  },
+  "environmentEvidenceRequired": [
+    "exact-source-revision",
+    "browser-version",
+    "user-agent",
+    "runner-platform",
+    "viewport",
+    "hardware-concurrency-when-exposed"
+  ],
+  "delegatedValidators": [
+    "scripts/validate_glaze_v1_2_performance_adaptation_rendered.py"
+  ],
+  "implementation": {
+    "validator": "scripts/validate_glaze_v1_2_performance_testing.py",
+    "workflow": ".github/workflows/glaze-v1.2-performance-testing.yml"
+  },
+  "evidenceBoundary": {
+    "boundedBrowserCiMeasurementsEstablished": true,
+    "phase5PerformanceTestingComplete": false,
+    "established": [
+      "exact-head-browser-ci-measurement-capture",
+      "interaction-to-next-frame-observation",
+      "connected-motion-frame-interval-observation",
+      "frost-profile-switch-observation",
+      "visualization-fixture-update-observation",
+      "deterministic-scrolling-observation",
+      "test-only-expanded-table-sort-filter-observation",
+      "semantic-and-accessibility-invariants-during-measurement"
+    ],
+    "notEstablished": [
+      "accepted-numeric-runtime-budget",
+      "accepted-platform-performance-budget",
+      "fps-threshold",
+      "frame-time-threshold",
+      "interaction-latency-threshold",
+      "gpu-budget",
+      "compositor-budget",
+      "memory-budget",
+      "power-budget",
+      "thermal-budget",
+      "mobile-gpu-performance-acceptance",
+      "physical-device-performance-acceptance",
+      "production-large-dataset-performance",
+      "production-chart-update-performance",
+      "production-performance-acceptance",
+      "complete-native-platform-performance-parity",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

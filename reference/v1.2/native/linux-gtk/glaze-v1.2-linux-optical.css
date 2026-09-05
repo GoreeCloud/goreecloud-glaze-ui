@@ -1,0 +1,51 @@
+/* GLAZE UI V1.2 Frosted Optical GTK4 bounded Candidate.
+ * Frost White #F4F8FA; Crystal White #FBFDFE; Ice Blue #DCECF6;
+ * Glacier Blue #8FC4E8; Clear Sky Blue #68AEE0; Cloud Gray #DCE3E8;
+ * Slate Gray #7E8D99; Cool Graphite #151C22; Deep Graphite #0E1419; Blue-Black #070C11.
+ */
+.optical-shell { background:linear-gradient(145deg,rgb(220,227,232),rgb(244,248,250),rgb(220,236,246));color:rgb(21,28,34); }
+.optical-shell.dark { background:linear-gradient(145deg,rgb(21,28,34),rgb(14,20,25),rgb(28,42,53));color:rgb(244,248,250); }
+.optical-shell.deep-dark { background:linear-gradient(145deg,rgb(7,12,17),rgb(14,20,25),rgb(15,27,36));color:rgb(244,248,250); }
+
+.glass,.dense-frost,.opaque-frost,.clear-frost,.setting-tile,.primary-action { border-style:solid;border-width:1px; }
+.glass { background:rgba(244,248,250,.78);border-color:rgba(251,253,254,.72);border-radius:24px;padding:16px; }
+.clear-frost { background:rgba(251,253,254,.76);border-color:rgba(143,196,232,.34);border-radius:999px;min-height:48px;padding:10px 14px; }
+.dense-frost { background:rgba(244,248,250,.90);border-color:rgba(143,196,232,.28);border-radius:26px;padding:16px; }
+.opaque-frost { background:rgb(251,253,254);border-color:rgba(126,141,153,.28);border-radius:22px;padding:16px; }
+.setting-tile { background:rgba(251,253,254,.78);border-color:rgba(251,253,254,.66);border-radius:18px;min-height:76px; }
+.setting-tile.active { background:rgba(220,236,246,.82);border-color:rgba(143,196,232,.88); }
+.primary-action { background:rgb(104,174,224);color:rgb(14,20,25);border-color:rgb(251,253,254);border-radius:999px;min-height:48px; }
+
+.optical-shell.dark .glass,.optical-shell.dark .clear-frost { background:rgba(21,28,34,.84);border-color:rgba(244,248,250,.18); }
+.optical-shell.dark .dense-frost { background:rgba(14,20,25,.92);border-color:rgba(143,196,232,.24); }
+.optical-shell.dark .opaque-frost { background:rgb(14,20,25);border-color:rgba(244,248,250,.20); }
+.optical-shell.dark .setting-tile { background:rgba(14,20,25,.84);border-color:rgba(244,248,250,.16); }
+.optical-shell.dark .setting-tile.active { background:rgba(40,59,73,.94);border-color:rgba(143,196,232,.76); }
+
+.optical-shell.deep-dark .glass,.optical-shell.deep-dark .clear-frost { background:rgba(14,20,25,.88);border-color:rgba(244,248,250,.16); }
+.optical-shell.deep-dark .dense-frost { background:rgba(21,28,34,.94);border-color:rgba(143,196,232,.22); }
+.optical-shell.deep-dark .opaque-frost { background:rgb(14,20,25);border-color:rgba(244,248,250,.18); }
+.optical-shell.deep-dark .setting-tile { background:rgba(21,28,34,.86);border-color:rgba(244,248,250,.14); }
+.optical-shell.deep-dark .setting-tile.active { background:rgba(31,48,60,.96);border-color:rgba(143,196,232,.72); }
+
+/* Reduced: more opaque and lower optical activity. */
+.profile-reduced .glass { background:rgba(244,248,250,.90); }
+.profile-reduced .clear-frost { background:rgba(251,253,254,.90); }
+.profile-reduced .dense-frost { background:rgba(244,248,250,.96); }
+.dark.profile-reduced .glass,.dark.profile-reduced .clear-frost,.dark.profile-reduced .dense-frost { background:rgba(14,20,25,.95); }
+.deep-dark.profile-reduced .glass,.deep-dark.profile-reduced .clear-frost,.deep-dark.profile-reduced .dense-frost { background:rgba(14,20,25,.96); }
+
+/* Minimal / Reduced Transparency: Opaque Frost fallback; no atmospheric dependence. */
+.profile-minimal,.reduced-transparency { background:rgb(220,227,232); }
+.dark.profile-minimal,.dark.reduced-transparency { background:rgb(21,28,34); }
+.deep-dark.profile-minimal,.deep-dark.reduced-transparency { background:rgb(7,12,17); }
+.profile-minimal .glass,.profile-minimal .clear-frost,.profile-minimal .dense-frost,
+.reduced-transparency .glass,.reduced-transparency .clear-frost,.reduced-transparency .dense-frost { background:rgb(244,248,250); }
+.dark.profile-minimal .glass,.dark.profile-minimal .clear-frost,.dark.profile-minimal .dense-frost,
+.dark.reduced-transparency .glass,.dark.reduced-transparency .clear-frost,.dark.reduced-transparency .dense-frost,
+.deep-dark.profile-minimal .glass,.deep-dark.profile-minimal .clear-frost,.deep-dark.profile-minimal .dense-frost,
+.deep-dark.reduced-transparency .glass,.deep-dark.reduced-transparency .clear-frost,.deep-dark.reduced-transparency .dense-frost { background:rgb(14,20,25); }
+
+button:focus,.clear-frost:focus { border-color:rgb(143,196,232);box-shadow:0 0 0 2px rgba(104,174,224,.62); }
+.touch-assistance .clear-frost,.touch-assistance .primary-action { min-height:56px; }
+.large-text { font-size:200%; }

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GLAZE UI V1.2 System Shell and Navigation Candidate</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { min-width: 0; }
+    body { margin: 0; min-height: 100vh; overflow-x: hidden; }
+    .shell-reference { padding: var(--glz12-space-content); }
+    .shell-reference-header { display: flex; flex-wrap: wrap; align-items: center; gap: var(--glz12-space-control); margin-block-end: var(--glz12-space-section); }
+    .shell-reference-header strong { margin-inline-end: auto; }
+    .shell-reference-workspace { display: grid; gap: var(--glz12-space-section); }
+    .shell-reference-content { padding: var(--glz12-space-content); background: var(--glz1-raised); border-radius: var(--glz12-radius-panel); }
+    .shell-reference-side { display: grid; gap: var(--glz12-space-section); }
+    .shell-reference-side > * { min-inline-size: 0; }
+    .shell-reference-control { padding: var(--glz12-space-content); }
+    .shell-reference-critical { padding: var(--glz12-space-content); }
+    .shell-reference-actions { display: flex; flex-wrap: wrap; gap: var(--glz12-space-control); }
+    .shell-reference-search { display: grid; gap: var(--glz12-space-control); }
+    .shell-reference-search-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--glz12-space-control); }
+    .shell-reference-search-row input { flex: 1 1 auto; min-inline-size: 0; min-block-size: var(--glz12-target-min); }
+    .shell-reference-search-row select { min-block-size: var(--glz12-target-min); }
+    .shell-reference-copy { margin: 0; }
+  </style>
+</head>
+<body>
+  <main id="shell-reference" class="shell-reference glz12-system-shell" data-glz-shell-region="workspace" data-glz-layout-class="expanded" aria-labelledby="shell-reference-title">
+    <header class="shell-reference-header glz12-shell-bar">
+      <strong id="shell-reference-title">GoreeCloud · Files</strong>
+      <span aria-label="Application identity">Application: Files</span>
+      <button class="glz12-shell-button glz12-shell-behavior-action" type="button" aria-label="Account for Alex">Account: Alex</button>
+    </header>
+
+    <div class="glz12-shell-behavior-layout">
+      <nav id="shell-navigation" class="glz12-shell-behavior-nav glz12-shell-navigation" data-glz-shell-region="navigation" data-variant="floating" aria-label="Primary navigation">
+        <a class="glz12-shell-destination" data-destination="home" href="#home" aria-current="page"><span aria-hidden="true">⌂</span><span class="glz12-shell-nav-label">Home</span></a>
+        <a class="glz12-shell-destination" data-destination="search" href="#search"><span aria-hidden="true">⌕</span><span class="glz12-shell-nav-label">Search</span></a>
+        <a class="glz12-shell-destination" data-destination="files" href="#files"><span aria-hidden="true">▣</span><span class="glz12-shell-nav-label">Files</span></a>
+        <a class="glz12-shell-destination" data-destination="apps" href="#apps"><span aria-hidden="true">◇</span><span class="glz12-shell-nav-label">Apps</span></a>
+      </nav>
+
+      <section class="glz12-shell-behavior-workspace shell-reference-workspace" aria-label="Application workspace">
+        <section id="search" class="glz1-universal-search shell-reference-search" data-glz-shell-region="universal-search" data-open="true" aria-labelledby="search-heading">
+          <h2 id="search-heading">Universal Search</h2>
+          <div class="shell-reference-search-row">
+            <label class="glz12-shell-search-scope" for="search-scope">Scope</label>
+            <select id="search-scope" class="glz1-select" aria-label="Search scope"><option>Files</option><option>All GoreeCloud</option></select>
+            <input id="shell-search-input" class="glz1-field-control" type="search" value="backup" aria-label="Search query">
+            <button class="glz1-button glz12-shell-behavior-action" type="button">Search</button>
+          </div>
+          <div class="glz1-search-panel" aria-label="Search results">
+            <button class="glz1-search-result" type="button" aria-selected="true"><span aria-hidden="true">▣</span><span><strong>Backup policy</strong><small>System truth · Files</small></span><span></span></button>
+            <button class="glz1-search-result" type="button" aria-selected="false"><span aria-hidden="true">◇</span><span><strong>Suggested recovery guide</strong><small>Generated suggestion · review before use</small></span><span></span></button>
+          </div>
+        </section>
+
+        <article id="home" class="shell-reference-content glz12-durable-reading-zone" aria-labelledby="workspace-heading">
+          <h2 id="workspace-heading">Current workspace</h2>
+          <p class="shell-reference-copy">The shell identifies the application, keeps account identity distinct, and preserves the primary navigation order while composition changes.</p>
+        </article>
+
+        <section id="notifications" class="glz12-shell-notification-history" aria-labelledby="notifications-heading">
+          <h2 id="notifications-heading">Notification history</h2>
+          <article class="glz12-shell-notification" data-priority="routine">
+            <strong>Source: GoreeCloud Sync</strong>
+            <span>Event: Sync completed</span>
+            <time datetime="2026-09-05T00:15:00-05:00">Time: 12:15 AM</time>
+            <span>Priority: Routine</span>
+          </article>
+          <article class="glz12-shell-notification" data-priority="important">
+            <strong>Source: Everkeep</strong>
+            <span>Event: Recovery verification requires review</span>
+            <time datetime="2026-09-05T00:20:00-05:00">Time: 12:20 AM</time>
+            <span>Priority: Important</span>
+            <button class="glz1-button glz12-shell-behavior-action" type="button">Review verification</button>
+          </article>
+        </section>
+      </section>
+
+      <aside class="glz12-shell-behavior-side shell-reference-side" aria-label="System controls and critical state">
+        <section class="glz12-control-center shell-reference-control" data-glz-shell-region="control-center" aria-labelledby="control-heading">
+          <header class="glz12-control-header"><h2 id="control-heading">Control Center</h2><span>System controls</span></header>
+          <div class="glz12-control-grid">
+            <button class="glz12-control-tile glz12-shell-behavior-action" type="button" aria-pressed="true"><strong>Wi-Fi</strong><small>Connected</small></button>
+            <button class="glz12-control-tile glz12-shell-behavior-action" type="button" aria-pressed="false"><strong>Focus</strong><small>Off</small></button>
+          </div>
+        </section>
+
+        <section id="critical" class="glz12-critical-system shell-reference-critical" data-glz-shell-region="critical-system" role="alert" aria-labelledby="critical-heading">
+          <p class="glz12-shell-critical-source">Authoritative source: Wardveil Security</p>
+          <h2 id="critical-heading">Critical protection action required</h2>
+          <p class="shell-reference-copy">A security control requires review. This consequential region remains durable and non-backdrop-dependent.</p>
+          <div class="shell-reference-actions"><button class="glz1-button glz12-shell-behavior-action" type="button">Review required action</button><button class="glz1-button glz12-shell-behavior-action" type="button">Dismiss details</button></div>
+        </section>
+      </aside>
+    </div>
+  </main>
+</body>
+</html>

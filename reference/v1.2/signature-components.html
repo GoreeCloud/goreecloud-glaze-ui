@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GLAZE UI V1.2 Signature Components Candidate</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    body{margin:0;min-height:100vh;padding:28px;background:var(--glz1-canvas);color:var(--glz1-text-primary);font:16px/1.45 system-ui,sans-serif}
+    main{max-inline-size:1100px;margin:auto;display:grid;gap:24px}
+    section{display:grid;gap:12px}
+    .stage{padding:20px;border:1px solid var(--glz1-line);border-radius:28px;background:var(--glz1-base)}
+    .row{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+    .search-host{min-block-size:220px}
+    .sr-only{position:absolute;inline-size:1px;block-size:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+    @media(max-width:700px){body{padding:12px}.stage{padding:14px}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p>Candidate reference — current Stable remains GLAZE UI V1.1 / 1.1.0.</p>
+    <h1>Signature components</h1>
+  </header>
+
+  <section aria-labelledby="capsule-title">
+    <h2 id="capsule-title">GlzCapsule</h2>
+    <div class="stage">
+      <button id="signature-capsule" class="glz1-capsule" type="button" aria-expanded="false" data-expanded="false">
+        <span class="glz1-capsule-main">
+          <span class="glz1-capsule-symbol" aria-hidden="true">✦</span>
+          <span class="glz1-capsule-copy"><strong>Sync ready</strong><span>3 devices available</span></span>
+        </span>
+        <span class="glz1-capsule-expanded">Connection details stay readable without making the glazed capsule the only source of critical status.</span>
+      </button>
+    </div>
+  </section>
+
+  <section aria-labelledby="morph-title">
+    <h2 id="morph-title">GlzMorphCard</h2>
+    <div class="stage">
+      <button id="signature-morph" class="glz1-morph-card" type="button" aria-expanded="false" data-reading="durable">
+        <span class="glz1-morph-media" aria-hidden="true">◫</span>
+        <span class="glz1-morph-copy"><strong>Project brief</strong><span>Durable reading stays on a solid surface by default.</span></span>
+        <span class="glz1-morph-detail">Expanded details remain in the same DOM and focus target; no motion is required to understand the state.</span>
+      </button>
+    </div>
+  </section>
+
+  <section aria-labelledby="rail-title">
+    <h2 id="rail-title">GlzSmartRail</h2>
+    <div class="stage">
+      <nav id="signature-rail" class="glz1-smart-rail" aria-label="Primary">
+        <div class="glz1-rail-zone">
+          <button id="rail-home" class="glz1-rail-item" type="button" aria-current="page"><span aria-hidden="true">⌂</span><span class="glz1-rail-label">Home</span></button>
+          <button id="rail-files" class="glz1-rail-item" type="button"><span aria-hidden="true">□</span><span class="glz1-rail-label">Files</span></button>
+          <button id="rail-settings" class="glz1-rail-item" type="button"><span aria-hidden="true">⚙</span><span class="glz1-rail-label">Settings</span></button>
+        </div>
+      </nav>
+    </div>
+  </section>
+
+  <section aria-labelledby="aurora-title">
+    <h2 id="aurora-title">GlzAuroraSurface</h2>
+    <div class="stage">
+      <article id="signature-aurora" class="glz1-aurora" data-material="live-glaze" data-intensity="standard">
+        <h3>Ambient context</h3>
+        <p>The optical field is decorative. Content, hierarchy, and status remain understandable when transparency and custom color are removed.</p>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="search-title">
+    <h2 id="search-title">GlzUniversalSearch</h2>
+    <div class="stage search-host">
+      <button id="search-invoker" class="glz1-advanced-button" type="button" aria-controls="signature-search">Open search</button>
+      <div id="signature-search" class="glz1-universal-search" hidden aria-hidden="true">
+        <div class="glz1-search-entry">
+          <span aria-hidden="true">⌕</span>
+          <label class="sr-only" for="signature-search-input">Search GoreeCloud</label>
+          <input id="signature-search-input" role="combobox" aria-autocomplete="list" aria-controls="signature-search-results" aria-expanded="false" placeholder="Search apps, files, people, and actions">
+          <span class="glz1-search-shortcut" aria-hidden="true">Ctrl K</span>
+        </div>
+        <div id="signature-search-results" class="glz1-search-panel" role="listbox" aria-label="Search results">
+          <div class="glz1-search-group">
+            <h4>Best match</h4>
+            <button id="search-result-files" class="glz1-search-result" type="button" role="option" aria-selected="false" data-glz1-search-result>
+              <span aria-hidden="true">□</span><span><strong>Files</strong><small>Open GoreeCloud Files</small></span>
+            </button>
+            <button id="search-result-settings" class="glz1-search-result" type="button" role="option" aria-selected="false" data-glz1-search-result>
+              <span aria-hidden="true">⚙</span><span><strong>Settings</strong><small>Open Settings</small></span>
+            </button>
+            <button id="search-result-destructive" class="glz1-search-result" type="button" role="option" aria-selected="false" data-glz1-search-result data-destructive="true">
+              <span aria-hidden="true">×</span><span><strong>Clear recent searches</strong><small>Requires confirmation</small></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <p id="search-status" role="status" aria-live="polite">Search closed</p>
+    </div>
+  </section>
+</main>
+<script type="module">
+  import { bindV12Disclosure, bindV12SmartRail, bindV12UniversalSearch } from "../../js/glaze-v1.2-signature.candidate.mjs";
+  const capsule = bindV12Disclosure({ root: document.querySelector("#signature-capsule") });
+  const morph = bindV12Disclosure({ root: document.querySelector("#signature-morph"), expandedAttribute: "data-expanded" });
+  const rail = bindV12SmartRail({ root: document.querySelector("#signature-rail") });
+  const search = bindV12UniversalSearch({
+    document,
+    searchRoot: document.querySelector("#signature-search"),
+    input: document.querySelector("#signature-search-input"),
+    invoker: document.querySelector("#search-invoker"),
+    status: document.querySelector("#search-status"),
+    onOpen: () => { document.querySelector("#search-status").textContent = "Search open"; },
+    onClose: () => { document.querySelector("#search-status").textContent = "Search closed"; },
+  });
+  window.signatureControllers = { capsule, morph, rail, search };
+  window.signatureReady = true;
+</script>
+</body>
+</html>

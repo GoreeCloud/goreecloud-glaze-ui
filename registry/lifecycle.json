@@ -34,9 +34,12 @@
       "stableBaseline": "1.1.0",
       "contract": "GLAZE_UI_V1_2_CANDIDATE.md",
       "tokens": "tokens/glaze-v1.2-frosted-neutral.candidate.json",
+      "opticalFoundation": "tokens/glaze-v1.2-optical-foundation.candidate.json",
+      "migration": "contracts/v1.2/migration.candidate.json",
+      "promotionGates": "acceptance/v1.2-promotion-gates.candidate.md",
       "webEntrypoint": "css/glaze-v1.2.0-candidate.css",
       "reference": "reference/v1.2/frosted-neutral.html",
-      "note": "Next-upgrade material candidate. Neutral frosted glass is the default substrate; chromatic color is reserved for intentional accents, semantics, focus, selection, progress, and product identity. Stable authority remains V1.1 until governed promotion."
+      "note": "Next-upgrade material candidate. Neutral frosted glass is the substrate; the V1.2 Frosted Optical foundation defines Frost White as the primary material and Ice Blue as restrained atmosphere. Stable authority remains V1.1 until governed promotion."
     }
   ],
   "capabilities": {
@@ -81,6 +84,12 @@
       "implementation": "tokens/glaze-v1.2-frosted-neutral.candidate.json",
       "webPreview": "css/glaze-v1.2.0-candidate.css"
     },
+    "frosted-optical-foundation": {
+      "status": "candidate-contract",
+      "since": "1.2.0-candidate",
+      "implementation": "tokens/glaze-v1.2-optical-foundation.candidate.json",
+      "note": "Contracts Frost White/Ice Blue identity, frost levels, Aura families, visual distribution, performance profiles, accessibility fallbacks, and anti-patterns. Rendered alignment remains separately acceptance-gated."
+    },
     "frosted-neutral-component-materials": {
       "status": "candidate",
       "since": "1.2.0-candidate",
@@ -92,6 +101,14 @@
       "since": "1.2.0-candidate",
       "implementation": "contracts/v1.2/system-shell-materials.candidate.json",
       "webPreview": "reference/v1.2/system-shell.html"
+    },
+    "v1.2-migration-control-plane": {
+      "status": "candidate-contract",
+      "since": "1.2.0-candidate",
+      "implementation": "contracts/v1.2/migration.candidate.json",
+      "plan": "MIGRATION_V1_1_TO_V1_2.md",
+      "acceptance": "acceptance/v1.2-promotion-gates.candidate.md",
+      "validator": "scripts/validate_glaze_v1_2_migration.py"
     }
   }
 }

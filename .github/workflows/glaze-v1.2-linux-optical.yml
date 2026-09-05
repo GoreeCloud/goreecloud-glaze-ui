@@ -1,0 +1,61 @@
+name: Glaze V1.2 Linux GTK Frosted Optical Candidate
+
+on:
+  pull_request:
+    paths:
+      - 'contracts/v1.2/native-optical-parity.candidate.json'
+      - 'reference/v1.2/native/linux-gtk/optical_app.py'
+      - 'reference/v1.2/native/linux-gtk/glaze-v1.2-linux-optical.css'
+      - 'scripts/validate_glaze_v1_2_linux_optical_runtime.py'
+      - 'acceptance/v1.2-linux-optical-candidate.md'
+      - '.github/workflows/glaze-v1.2-linux-optical.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux-optical:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out exact Candidate revision
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Preserve Stable and Candidate source authority
+        run: |
+          python3 scripts/validate_glaze_v1.py
+          python3 scripts/validate_glaze_v1_2_candidate.py
+          python3 scripts/validate_glaze_v1_2_migration.py
+          python3 scripts/validate_glaze_v1_2_native_optical.py
+          python3 -m py_compile reference/v1.2/native/linux-gtk/optical_app.py
+          python3 -m py_compile scripts/validate_glaze_v1_2_linux_optical_runtime.py
+
+      - name: Install GTK4 headless dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends python3-gi gir1.2-gtk-4.0 xvfb xauth dbus-x11 imagemagick
+
+      - name: Run exact-head GTK4 Frosted Optical acceptance
+        env:
+          GLAZE_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+          GDK_BACKEND: x11
+          NO_AT_BRIDGE: '1'
+        run: |
+          dbus-run-session -- xvfb-run -a --server-args='-screen 0 1280x900x24 -nolisten tcp' \
+            python3 scripts/validate_glaze_v1_2_linux_optical_runtime.py
+
+      - name: Upload bounded Linux optical evidence
+        if: success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: glaze-v1.2-linux-optical-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            .artifacts/glaze-v1.2-linux-optical/*.png
+            .artifacts/glaze-v1.2-linux-optical/linux-optical-evidence.json
+            .artifacts/glaze-v1.2-linux-optical/*/runtime.json
+          if-no-files-found: error
+          retention-days: 30

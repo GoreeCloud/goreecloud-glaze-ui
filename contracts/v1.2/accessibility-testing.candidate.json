@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "id": "glaze-v1.2-accessibility-testing-candidate",
+  "product": "GLAZE UI",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "stableBaseline": "1.1.0",
+  "consumerEligible": false,
+  "phase": "Phase 5 — Accessibility Testing",
+  "purpose": "Bind the canonical V1.2 accessibility test scope to exact automated browser evidence without converting machine-observable checks into human or assistive-technology acceptance.",
+  "authoritativeInputs": [
+    "contracts/accessibility/resolution-matrix.json",
+    "contracts/v1.2/accessibility-adaptation.candidate.json",
+    "reference/v1.2/accessibility-adaptation.html",
+    "reference/v1.2/responsive-adaptation.html"
+  ],
+  "canonicalTaskScope": [
+    "keyboard-navigation",
+    "screen-reader-semantics-machine-observable-subset",
+    "accessible-names",
+    "focus-order",
+    "visible-focus",
+    "touch-targets",
+    "text-scale-200-plus",
+    "rtl",
+    "reduced-motion",
+    "reduced-transparency",
+    "increased-contrast",
+    "forced-colors",
+    "grayscale",
+    "color-vision-accessibility-machine-observable-subset",
+    "mobile-accessibility",
+    "far-view-accessibility",
+    "material-readability-machine-observable-subset"
+  ],
+  "automatedCoverage": {
+    "keyboard-navigation": {
+      "reference": "reference/v1.2/accessibility-adaptation.html",
+      "method": "real WebDriver Tab key traversal through visible controls"
+    },
+    "screen-reader-semantics-machine-observable-subset": {
+      "reference": "reference/v1.2/accessibility-adaptation.html",
+      "method": "Chrome accessibility tree role/name inspection",
+      "doesNotEstablish": "screen-reader acceptance"
+    },
+    "accessible-names": {
+      "reference": "reference/v1.2/accessibility-adaptation.html",
+      "method": "accessibility-tree names plus DOM labeling semantics"
+    },
+    "focus-order": {
+      "reference": "reference/v1.2/accessibility-adaptation.html",
+      "method": "actual Tab traversal order"
+    },
+    "visible-focus": {
+      "reference": "reference/v1.2/accessibility-adaptation.html",
+      "method": "rendered focus outline geometry under Increased Contrast"
+    },
+    "touch-targets": {
+      "reference": "reference/v1.2/accessibility-adaptation.html",
+      "method": "48 px default and 56 px Touch Assistance target geometry"
+    },
+    "text-scale-200-plus": {
+      "reference": "reference/v1.2/accessibility-adaptation.html",
+      "method": "320 px-class rendered 200 percent text reflow and clipping checks"
+    },
+    "rtl": {
+      "reference": "reference/v1.2/responsive-adaptation.html",
+      "method": "RTL direction, current-location semantics, containment, and logical layout checks"
+    },
+    "reduced-motion": {
+      "reference": "reference/v1.2/accessibility-adaptation.html",
+      "method": "existing canonical Accessibility Adaptation rendered acceptance"
+    },
+    "reduced-transparency": {
+      "reference": "reference/v1.2/accessibility-adaptation.html",
+      "method": "existing canonical Accessibility Adaptation rendered acceptance"
+    },
+    "increased-contrast": {
+      "reference": "reference/v1.2/accessibility-adaptation.html",
+      "method": "existing canonical Accessibility Adaptation rendered acceptance"
+    },
+    "forced-colors": {
+      "reference": "reference/v1.2/accessibility-adaptation.html",
+      "method": "existing canonical Accessibility Adaptation rendered acceptance"
+    },
+    "grayscale": {
+      "reference": "reference/v1.2/accessibility-adaptation.html",
+      "method": "Chrome achromatopsia simulation with semantic text and structural-state checks"
+    },
+    "color-vision-accessibility-machine-observable-subset": {
+      "reference": "reference/v1.2/accessibility-adaptation.html",
+      "method": "Chrome deuteranopia/protanopia/tritanopia simulation with non-color semantic/structural checks",
+      "doesNotEstablish": "human color-vision optical acceptance"
+    },
+    "mobile-accessibility": {
+      "reference": "reference/v1.2/responsive-adaptation.html",
+      "method": "320 px-class containment plus 48 px target geometry"
+    },
+    "far-view-accessibility": {
+      "reference": "reference/v1.2/responsive-adaptation.html",
+      "method": "far-view semantic scene plus 56 px target geometry"
+    },
+    "material-readability-machine-observable-subset": {
+      "reference": "reference/v1.2/accessibility-adaptation.html",
+      "method": "text remains visible, unblurred, unfiltered and structurally explicit in accessibility fallbacks",
+      "doesNotEstablish": "human optical readability acceptance"
+    }
+  },
+  "delegatedRenderedValidators": [
+    "scripts/validate_glaze_v1_2_accessibility_adaptation_rendered.py",
+    "scripts/validate_glaze_v1_2_responsive_adaptation_rendered.py"
+  ],
+  "implementation": {
+    "validator": "scripts/validate_glaze_v1_2_accessibility_testing.py",
+    "workflow": ".github/workflows/glaze-v1.2-accessibility-testing.yml"
+  },
+  "rules": {
+    "reuseExistingAccessibilityAuthority": true,
+    "introduceParallelAccessibilityTokenOwner": false,
+    "exactRevisionEvidenceRequired": true,
+    "realKeyboardInputRequiredForKeyboardTraversal": true,
+    "browserAccessibilityTreeMaySupportSemanticsTesting": true,
+    "browserAccessibilityTreeEqualsScreenReaderAcceptance": false,
+    "automatedBrowserTestingEqualsHumanAcceptance": false,
+    "automatedBrowserTestingEqualsTalkBackAcceptance": false,
+    "automatedBrowserTestingEqualsVoiceOverAcceptance": false,
+    "automatedBrowserTestingEqualsPhysicalDeviceAcceptance": false,
+    "automatedBrowserTestingEqualsNativePlatformAccessibilityAcceptance": false,
+    "consumerClaimBlocked": true
+  },
+  "evidenceBoundary": {
+    "boundedAutomatedAccessibilityTestingEstablished": true,
+    "phase5AccessibilityTestingComplete": false,
+    "established": [
+      "machine-observable-web-keyboard-navigation",
+      "machine-observable-browser-accessibility-tree-roles-and-names",
+      "machine-observable-focus-order-and-visible-focus",
+      "machine-observable-48-and-56-pixel-target-floors",
+      "machine-observable-200-percent-text-reflow",
+      "machine-observable-rtl-and-responsive-containment",
+      "machine-observable-reduced-motion-transparency-contrast-and-forced-colors",
+      "machine-observable-grayscale-and-color-vision-structural-survival",
+      "machine-observable-mobile-and-far-view-reference-accessibility"
+    ],
+    "notEstablished": [
+      "human-accessibility-acceptance",
+      "manual-interaction-acceptance",
+      "screen-reader-acceptance",
+      "talkback-acceptance",
+      "voiceover-acceptance",
+      "switch-control-acceptance",
+      "physical-device-accessibility-acceptance",
+      "complete-native-platform-accessibility-parity",
+      "human-color-vision-optical-acceptance",
+      "human-rtl-optical-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

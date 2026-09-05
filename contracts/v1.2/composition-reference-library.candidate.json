@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.composition-reference-library.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-composition-reference-library",
+  "purpose": "Implement the cross-confirmed canonical composition references from the V1.2 Layout, Spacing, and Composition companion without duplicating spatial, material, component, state, or form-factor authority.",
+  "authority": {
+    "companionSpecification": "Glaze UI V1.2 — Layout, Spacing, and Composition.docx",
+    "spatialFoundation": "contracts/v1.2/spatial-foundation.candidate.json",
+    "formFactorTokens": "contracts/v1.2/form-factor-tokens.candidate.json",
+    "duplicateCompanionBoundary": "Only requirements cross-confirmed by both accessible companion copies are implemented in this tranche.",
+    "principle": "Space establishes hierarchy before decoration does."
+  },
+  "referenceCompositions": [
+    "home-dashboard",
+    "data-heavy-administration",
+    "settings",
+    "file-browser",
+    "search",
+    "form",
+    "detail-inspector",
+    "media"
+  ],
+  "compositionRules": {
+    "primaryTaskVisuallyDominant": true,
+    "primarySecondaryTertiaryRegionsDistinct": true,
+    "stableNavigationSpatialMemory": true,
+    "durableReadingSurfacesBackdropDependent": false,
+    "floatingInteractionMayUseExistingGlaze": true,
+    "cardOverloadProhibited": true,
+    "spacePreferredBeforeHeavyDividers": true,
+    "responsiveTransformationRequired": true,
+    "desktopSqueezedIntoCompactProhibited": true,
+    "inspectorTransformsWhenSpaceInsufficient": true,
+    "semanticOrderPreservedAcrossComposition": true,
+    "noNewNumericSpatialCalibration": true,
+    "noNewMaterialCalibration": true
+  },
+  "sceneRequirements": {
+    "home-dashboard": ["primary-state-first", "critical-exceptions-before-secondary-metrics", "unequal-visual-weight-allowed"],
+    "data-heavy-administration": ["productive-density", "durable-data-plane", "local-table-overflow-only"],
+    "settings": ["scanable-category-structure", "aligned-controls", "high-risk-separation"],
+    "file-browser": ["stable-navigation", "file-list-primary", "preview-or-inspector-secondary"],
+    "search": ["search-anchor-primary", "results-durable", "transient-search-chrome"],
+    "form": ["readable-vertical-rhythm", "section-grouping", "save-state-clarity"],
+    "detail-inspector": ["primary-content-dominant", "inspector-subordinate", "compact-sheet-transformation"],
+    "media": ["immersive-density", "content-dominant", "chrome-quieter-not-inaccessible"]
+  },
+  "acceptance": {
+    "layoutClasses": ["expanded", "compact"],
+    "compactViewportWidthPx": 390,
+    "textScalePercent": 200,
+    "minimumInteractiveTargetPx": 48,
+    "rtlRequiredWhereApplicable": true,
+    "forcedColorsRequired": true,
+    "reducedTransparencyRequired": true,
+    "horizontalPageOverflowProhibited": true,
+    "durableBackdropBlurProhibited": true
+  },
+  "implementation": {
+    "webLayer": "css/glaze-v1.2-composition-reference.candidate.css",
+    "candidateEntrypoint": "css/glaze-v1.2.0-candidate.css",
+    "reference": "reference/v1.2/composition-reference-library.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_composition_reference_rendered.py",
+    "workflow": ".github/workflows/glaze-v1.2-composition-reference.yml"
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "eight-cross-confirmed-canonical-web-reference-compositions",
+      "expanded-and-compact-composition-transformation",
+      "primary-secondary-tertiary-region-hierarchy",
+      "stable-navigation-order-reference",
+      "durable-versus-floating-material-restraint",
+      "compact-200-percent-text-overflow-gate",
+      "forced-colors-and-reduced-transparency-layout-gates",
+      "exact-head-rendered-acceptance"
+    ],
+    "notEstablished": [
+      "canonical-maximum-reading-width-values",
+      "all-application-composition-patterns",
+      "native-composition-parity",
+      "foldable-tv-wearable-spatial-runtime-acceptance",
+      "human-optical-composition-acceptance",
+      "production-performance-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.typography.candidate",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-web-candidate",
+  "authority": {
+    "proposal": "Glaze UI V1.2 — Iconography and Typography.docx",
+    "principle": "Glass may be soft. Text must remain sharp.",
+    "hierarchy": "Geometry first. Typography second. Material third. Color fourth."
+  },
+  "roles": {
+    "Display": {"purpose": "hero experiences, onboarding, major system states, large feature areas"},
+    "LargeTitle": {"purpose": "primary application or workspace identity"},
+    "Title": {"purpose": "page, panel, and major-section titles"},
+    "Heading": {"purpose": "content hierarchy"},
+    "Subheading": {"purpose": "secondary section hierarchy"},
+    "Body": {"purpose": "normal reading"},
+    "UI": {"purpose": "buttons, navigation, controls, menus, and fields"},
+    "Label": {"purpose": "metadata, compact controls, category labels, supporting information"},
+    "Caption": {"purpose": "secondary contextual information"},
+    "Numeric": {"purpose": "metrics, storage values, percentages, time, monitoring, aligned dashboard data"},
+    "Monospace": {"purpose": "terminal, code, configuration, paths, identifiers, logs, and technical data"}
+  },
+  "sourcePolicy": {
+    "default": "system-platform-native-first",
+    "locallyBundledFontAllowed": true,
+    "thirdPartyRuntimeFontDeliveryAllowed": false,
+    "semanticHierarchySurvivesTypefaceSubstitution": true
+  },
+  "metrics": {
+    "unit": "rem",
+    "roleSpecificSize": true,
+    "roleSpecificLineHeight": true,
+    "roleSpecificTracking": true,
+    "economicalWeightHierarchy": true,
+    "displayUsesScaleBeforeExcessWeight": true,
+    "largeTextReflowRequired": true,
+    "minimumTextScalePercent": 200
+  },
+  "numeric": {
+    "tabularNumeralsRequiredForAlignedOrLiveMetrics": true,
+    "proportionalNumeralsAllowedForNarrativeContexts": true,
+    "stableLiveMetricWidth": true,
+    "decimalAlignmentSupported": true,
+    "unitMayUseLowerEmphasisThanPrimaryValue": true
+  },
+  "monospace": {
+    "governedFallbackStack": true,
+    "mustRemainVisuallyCompatibleWithSans": true,
+    "runtimeRemoteFontDependencyAllowed": false
+  },
+  "alignment": {
+    "iconAndLabelAreOneCompositionalUnit": true,
+    "governIconLabelSpacing": true,
+    "governBaselineRelationship": true,
+    "governVisualCenter": true,
+    "governCapHeightRelationship": true,
+    "mathematicalCenteringAloneIsInsufficient": true
+  },
+  "appearance": {
+    "light": {"primary": "Cool Graphite", "secondary": "Slate Gray", "blueAsDefaultText": false},
+    "dark": {"primary": "Frost White", "secondary": "Silver Gray", "blueAsDefaultText": false},
+    "deepDark": {"primary": "Frost White", "secondary": "Muted Cool Gray", "blueAsDefaultText": false}
+  },
+  "sharpText": {
+    "blurAllowed": false,
+    "diffusionAllowed": false,
+    "normalTextGlowAllowed": false,
+    "atmosphericTintAsPrimaryTextTreatmentAllowed": false,
+    "textShadowAloneMayProtectVariableMedia": false
+  },
+  "accessibility": {
+    "largeText200PercentPlus": true,
+    "reflow": true,
+    "rtl": true,
+    "forcedColors": true,
+    "increasedContrast": true,
+    "reducedTransparency": true,
+    "reducedMotion": true,
+    "assistiveTechnologyAcceptanceRequiredBeforeRelease": true,
+    "userFontPreferencesMustNotBeSuppressed": true
+  },
+  "implementation": {
+    "tokens": "tokens/glaze-v1.2-typography.candidate.json",
+    "webLayer": "css/glaze-v1.2-typography.candidate.css",
+    "webEntrypoint": "css/glaze-v1.2.0-candidate.css",
+    "reference": "reference/v1.2/typography.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_typography_rendered.py"
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "bounded-web-semantic-role-map",
+      "system-native-font-source-policy",
+      "numeric-and-monospace-presentation",
+      "icon-label-alignment-primitive",
+      "light-dark-deep-dark-neutral-text-roles",
+      "200-percent-reflow-browser-gate"
+    ],
+    "notEstablished": [
+      "glaze-sans-font-family-production-asset",
+      "full-language-coverage",
+      "rtl-human-acceptance",
+      "assistive-technology-acceptance",
+      "native-typography-parity",
+      "human-optical-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

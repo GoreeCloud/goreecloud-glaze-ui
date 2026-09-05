@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GLAZE UI V1.2 Candidate — Accessibility Adaptation</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    *{box-sizing:border-box}html,body{min-inline-size:0}body{margin:0;padding:16px;background:var(--glz1-canvas);color:var(--glz1-text-primary);font-family:var(--glz12-font-sans,system-ui,sans-serif);overflow-x:auto}
+    main{max-inline-size:960px;margin-inline:auto;display:grid;gap:var(--glz12-space-section)}
+    header p,.glz12-a11y-scene>p{max-inline-size:70ch}.glz12-a11y-scene{display:grid;gap:var(--glz12-space-standard-cluster);min-inline-size:0;padding:var(--glz12-space-content);border:1px solid var(--glz12-structural-border);border-radius:var(--glz12-radius-surface);background:var(--glz1-base)}
+    .glz12-a11y-scene>:is(h2,p){margin-block:0}.glz12-a11y-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--glz12-space-standard-cluster);min-inline-size:0}.glz12-a11y-region{min-inline-size:0;padding:var(--glz12-space-standard-cluster);border:1px solid var(--glz12-structural-border);border-radius:var(--glz12-radius-control);background:var(--glz1-raised)}
+    .glz12-a11y-action-row{display:flex;flex-wrap:wrap;gap:var(--glz12-space-control);min-inline-size:0}.glz12-a11y-region label{display:block;margin-block-end:var(--glz12-space-control)}.glz12-a11y-region input{inline-size:100%;min-inline-size:0}.glz12-a11y-motion-stack{display:grid;gap:var(--glz12-space-control)}
+  </style>
+</head>
+<body>
+<main id="a11y-reference" class="glz12-a11y-library">
+  <header>
+    <p>Candidate reference only. V1.1 / 1.1.0 remains Stable. Automated browser evidence does not establish human visual, assistive-technology, or native-platform acceptance.</p>
+    <h1>Accessibility Adaptation — canonical combination matrix</h1>
+  </header>
+
+  <section class="glz12-a11y-scene" data-a11y-case="rt-clear" aria-labelledby="rt-title">
+    <h2 id="rt-title">Reduced Transparency + Clear material</h2>
+    <p>Accessibility transparency preference wins over lower-priority material clarity. Hierarchy and protected meaning remain readable on effects-free surfaces.</p>
+    <div class="glz12-a11y-grid">
+      <div class="glz12-a11y-region">
+        <button id="rt-capsule" class="glz1-capsule" type="button" data-material="clear">
+          <span class="glz1-capsule-main"><span class="glz1-capsule-copy"><strong>Sync ready</strong><span>Solid fallback remains complete.</span></span></span>
+        </button>
+      </div>
+      <article id="rt-semantic" class="glz12-semantic-state" data-semantic="warning"><strong>Warning</strong><p>Semantic meaning does not depend on transparency.</p></article>
+    </div>
+  </section>
+
+  <section class="glz12-a11y-scene" data-a11y-case="rm-expressive" aria-labelledby="rm-title">
+    <h2 id="rm-title">Reduced Motion + Expressive appearance</h2>
+    <p>Nonessential press travel is removed rather than merely accelerated. Direct manipulation tracking remains available.</p>
+    <div class="glz12-a11y-motion-stack">
+      <button id="rm-press" class="glz1-button glz12-stateful" type="button" data-variant="primary" data-glz-motion="press" data-pressed="true">Expressive action</button>
+      <div id="rm-direct" class="glz12-a11y-region" data-glz-direct-manipulation="true" style="--glz12-direct-x:var(--glz12-motion-travel-short);--glz12-direct-y:0px">Direct manipulation position probe</div>
+    </div>
+  </section>
+
+  <section class="glz12-a11y-scene" data-a11y-case="fc-accent" aria-labelledby="fc-title">
+    <h2 id="fc-title">Forced Colors + custom accent</h2>
+    <p>Platform Forced Colors supersedes custom accent/material color while selection, focus, and protected semantic structure remain visible.</p>
+    <div class="glz12-a11y-grid">
+      <button id="fc-selected" class="glz1-button glz12-stateful" type="button" aria-pressed="true" data-state="selected">Selected action</button>
+      <article id="fc-protected" class="glz12-semantic-state" data-semantic="danger"><strong>Security action required</strong><p>Protected meaning remains explicit in text and structure.</p></article>
+    </div>
+  </section>
+
+  <section class="glz12-a11y-scene" data-a11y-case="large-compact" data-glz-layout-class="compact" aria-labelledby="large-title">
+    <h2 id="large-title">200% text + Compact density</h2>
+    <p>Compact density yields to readable reflow. Critical labels and values wrap instead of clipping or shrinking.</p>
+    <div id="large-grid" class="glz12-a11y-grid">
+      <div class="glz12-a11y-region">
+        <label id="large-label" for="large-field">Configuration destination with a deliberately long readable label</label>
+        <input id="large-field" class="glz1-field-control" value="Readable" aria-labelledby="large-label">
+      </div>
+      <div class="glz12-a11y-region"><button id="large-action" class="glz1-button glz12-a11y-action" type="button">Review important configuration changes</button></div>
+    </div>
+  </section>
+
+  <section class="glz12-a11y-scene" data-a11y-case="touch-compact" data-glz-layout-class="compact" aria-labelledby="touch-title">
+    <h2 id="touch-title">Touch Assistance + Compact density</h2>
+    <p>The assisted hit-area floor rises to the governed 56 px target while adjacent actions remain unambiguous.</p>
+    <div id="touch-row" class="glz12-a11y-action-row">
+      <button id="touch-primary" class="glz1-button glz12-a11y-action" type="button" data-variant="primary">Save</button>
+      <button id="touch-secondary" class="glz1-button glz12-a11y-action" type="button">Cancel</button>
+      <button id="touch-more" class="glz1-icon-button glz12-a11y-action" type="button" aria-label="More options">⋯</button>
+    </div>
+  </section>
+
+  <section class="glz12-a11y-scene" data-a11y-case="contrast-boundaries" aria-labelledby="contrast-title">
+    <h2 id="contrast-title">Increased Contrast + Show Boundaries</h2>
+    <p>Interactive/floating surfaces gain stronger non-color-only boundaries and focus visibility without flattening protected semantic hierarchy.</p>
+    <div class="glz12-a11y-grid">
+      <div id="contrast-surface" class="glz1-popover glz12-a11y-region" role="group" aria-label="Bounded floating surface"><strong>Visible boundary</strong><p>Surface separation remains structural.</p></div>
+      <div class="glz12-a11y-region"><button id="contrast-focus" class="glz1-button glz12-stateful" type="button">Keyboard focus target</button></div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

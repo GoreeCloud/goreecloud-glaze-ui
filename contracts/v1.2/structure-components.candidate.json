@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.structure-components.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-web-structure-component-implementation",
+  "tier": "structure",
+  "purpose": "Apply bounded V1.2 material, state, interaction, responsive, and accessibility rules to the eight canonical Structure component families without replacing the inherited V1 semantic API or claiming complete component/native parity.",
+  "components": [
+    {"id": "GlzCard", "durableByDefault": true, "interactiveState": ["rest", "focus", "pressed", "selected", "disabled"], "selectionRequiresNonColorCue": true},
+    {"id": "GlzList", "durableByDefault": true, "interaction": ["selection", "keyboard", "metadata", "trailing-actions"], "selectionRequiresNonColorCue": true},
+    {"id": "GlzTable", "durableByDefault": true, "denseDataBackdropBlurProhibited": true, "interaction": ["sort", "selection", "local-horizontal-overflow"], "selectionRequiresNonColorCue": true},
+    {"id": "GlzTabs", "durableByDefault": true, "interaction": ["roving-focus", "arrow-navigation", "home-end", "selection-indicator"], "focusDistinctFromSelection": true},
+    {"id": "GlzSidebar", "durableByDefault": true, "floatingFrostAllowed": true, "interaction": ["current-location", "keyboard", "responsive-collapse"], "currentLocationRequiresNonColorCue": true},
+    {"id": "GlzNavigationRail", "durableByDefault": true, "floatingFrostAllowed": true, "interaction": ["current-location", "keyboard", "responsive-transform"], "currentLocationRequiresNonColorCue": true},
+    {"id": "GlzDock", "durableByDefault": false, "floatingFrostAllowed": true, "interaction": ["current-location", "keyboard", "mobile-navigation"], "currentLocationRequiresNonColorCue": true},
+    {"id": "GlzToolbar", "durableByDefault": true, "floatingFrostAllowed": true, "interaction": ["priority", "overflow", "keyboard"], "priorityOneMustRemainReachable": true}
+  ],
+  "universalRules": {
+    "clarityBeforeMaterial": true,
+    "durableReadingAndDenseDataPreferOpaqueOrNearOpaque": true,
+    "nestedBackdropBlurProhibited": true,
+    "semanticMeaningCannotDependOnlyOnAtmosphericColor": true,
+    "focusDistinctFromCurrentOrSelectedState": true,
+    "minimumTargetPx": 48,
+    "assistedTargetPx": 56,
+    "keyboardRequired": true,
+    "reducedMotionRequired": true,
+    "reducedTransparencyRequired": true,
+    "increasedContrastRequired": true,
+    "forcedColorsPlatformAuthoritative": true,
+    "textScale200Required": true,
+    "rtlWhereApplicable": true,
+    "responsiveTransformationRequired": true,
+    "noNewRuntimeDependency": true
+  },
+  "materialRules": {
+    "card": "durable-by-default; frost only when explicitly floating/temporary/interactive",
+    "list": "durable content surface; row selection does not create per-row backdrop blur",
+    "table": "opaque or near-opaque data plane; local wrapper owns horizontal overflow",
+    "tabs": "durable navigation strip; selected indicator is structural",
+    "sidebar": "durable by default; floating variant may use bounded Frost",
+    "navigationRail": "durable by default; floating variant may use bounded Frost",
+    "dock": "bounded floating Frost is permitted with Reduced Transparency fallback",
+    "toolbar": "durable by default; floating variant may use bounded Frost without reducing action clarity"
+  },
+  "stateTokenBoundary": {
+    "completeV12StateTokenOwnerEstablished": false,
+    "componentLocalStateRefinementOnly": true,
+    "mayImportTokensStatesJsonAsV12Authority": false
+  },
+  "implementation": {
+    "inheritedApi": "css/glaze-v1.structure.css",
+    "webLayer": "css/glaze-v1.2-structure-components.candidate.css",
+    "reference": "reference/v1.2/structure-components.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_structure_components_rendered.py",
+    "workflow": ".github/workflows/glaze-v1.2-structure-components.yml",
+    "catalog": "contracts/components/v1/catalog.json"
+  },
+  "acceptance": {
+    "appearance": ["light", "dark", "deep-dark"],
+    "accessibility": ["reduced-transparency", "reduced-motion", "increased-contrast", "forced-colors", "text-200", "rtl"],
+    "responsiveWidthsPx": [1280, 640, 390],
+    "keyboardScenarios": ["card-toggle", "list-selection", "table-sort", "tabs-roving-selection", "sidebar-current", "navigation-rail-current", "dock-current", "toolbar-priority"]
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "bounded-web-structure-component-reference",
+      "durability-and-material-restraint",
+      "structural-selected-and-current-cues",
+      "keyboard-and-responsive-reference-behavior",
+      "exact-head-rendered-acceptance"
+    ],
+    "notEstablished": [
+      "complete-32-family-component-coverage",
+      "complete-v1.2-state-token-system",
+      "native-structure-component-parity",
+      "human-component-acceptance",
+      "assistive-technology-completeness",
+      "production-performance-acceptance",
+      "rc",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

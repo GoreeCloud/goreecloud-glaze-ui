@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.crystal-icons.candidate",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-web-candidate",
+  "authority": {
+    "proposal": "Glaze UI V1.2 — Iconography and Typography.docx",
+    "name": "Crystal Icon System",
+    "definition": "Crystal means optical clarity and precision, not literal transparent icons.",
+    "relationship": "Soft Frost + Sharp Symbols + Beautiful Typography"
+  },
+  "presentationFamilies": {
+    "outline": {
+      "role": "primary everyday interface style",
+      "traits": ["clean-strokes", "softened-joins", "strong-negative-space", "controlled-stroke-weight", "minimal-decoration"]
+    },
+    "filled": {
+      "role": "stronger visual weight for selected, active, small, far-view, and dense contexts",
+      "preserveUnderlyingGeometry": true
+    },
+    "dimensional": {
+      "role": "restrained high-value identity and presentation contexts",
+      "systemControlDefault": false,
+      "glossyClipArtAllowed": false
+    }
+  },
+  "opticalSizes": {
+    "16": {"purpose": "dense-interfaces", "strokeViewBox": 2.4, "detail": "essential"},
+    "20": {"purpose": "compact-controls", "strokeViewBox": 2.2, "detail": "compact"},
+    "24": {"purpose": "standard-controls", "strokeViewBox": 2.0, "detail": "standard"},
+    "28": {"purpose": "prominent-interaction", "strokeViewBox": 1.85, "detail": "standard"},
+    "32": {"purpose": "navigation-and-high-value-controls", "strokeViewBox": 1.7, "detail": "refined"},
+    "40-48": {"purpose": "feature-symbols", "detail": "feature"},
+    "64+": {"purpose": "hero-and-large-symbols", "detail": "hero"}
+  },
+  "geometry": {
+    "canonicalViewBox": [24, 24],
+    "strongSilhouette": true,
+    "clearPrimaryForm": true,
+    "coordinatedCornerAndJoinTreatment": true,
+    "controlledNegativeSpace": true,
+    "opticalCenteringRequired": true,
+    "mathematicalCenteringAloneIsInsufficient": true,
+    "strokeWidthScalesByOpticalSize": true,
+    "smallerSizeUsesHeavierRelativeStroke": true
+  },
+  "state": {
+    "selectionMayNotRelyOnlyOnBlue": true,
+    "selectedMayUse": ["filled-or-heavier-geometry", "frost-white-illumination", "pale-ice-blue-surrounding-material", "selection-indicator", "increased-surface-luminance", "subtle-depth-adjustment"],
+    "selectedMustRemainRecognizableInMonochrome": true,
+    "disabledDistinctFromUnavailable": true,
+    "semanticMeaningMayNotDependOnAtmosphericColor": true
+  },
+  "motion": {
+    "short": true,
+    "purposeful": true,
+    "interruptible": true,
+    "stateDriven": true,
+    "continuousOnlyWhenActivityMeaningful": true,
+    "reducedMotionAlternativeRequired": true
+  },
+  "accessibility": {
+    "monochrome": true,
+    "forcedColors": true,
+    "increasedContrast": true,
+    "reducedTransparency": true,
+    "reducedMotion": true,
+    "nonColorMeaning": true,
+    "interactiveAccessibleNameRequired": true,
+    "rtlDirectionalReviewRequiredBeforeRelease": true,
+    "smallSizeRecognitionHumanReviewRequiredBeforeRelease": true
+  },
+  "representativeCandidateSet": ["home", "search", "shield", "sync", "controls"],
+  "implementation": {
+    "tokens": "tokens/glaze-v1.2-crystal-icons.candidate.json",
+    "webLayer": "css/glaze-v1.2-crystal-icons.candidate.css",
+    "webEntrypoint": "css/glaze-v1.2.0-candidate.css",
+    "reference": "reference/v1.2/crystal-icons.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_crystal_icons_rendered.py"
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "bounded-web-outline-filled-dimensional-families",
+      "16-20-24-28-32-optical-size-stroke-map",
+      "representative-system-glyph-set",
+      "structural-selected-state",
+      "monochrome-and-forced-colors-browser-gates",
+      "meaningful-activity-reduced-motion-gate"
+    ],
+    "notEstablished": [
+      "complete-system-icon-registry",
+      "all-40-48-and-64-plus-hero-assets",
+      "full-application-service-icon-migration",
+      "small-size-human-recognition-acceptance",
+      "rtl-directional-human-acceptance",
+      "native-crystal-icon-parity",
+      "human-optical-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en"
+  data-glaze-version="1.1"
+  data-glaze-upgrade="v1.2-frosted-neutral"
+  data-glz-appearance="light"
+  data-glz-material-performance="full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GLAZE UI V1.2 — Chrome Optics Candidate</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body { min-height: 100vh; color: var(--glz1-text-primary); }
+    button, input, select { font: inherit; }
+    .glz12-optical-stage { min-height: 100vh; padding: clamp(18px, 4vw, 54px); overflow: hidden; }
+    .chrome-reference { width: min(1180px, 100%); margin: 0 auto; display: grid; gap: 22px; }
+    .chrome-header { display: grid; gap: 8px; }
+    .chrome-header h1 { margin: 0; max-width: 840px; font-size: clamp(30px, 5vw, 58px); line-height: 1; letter-spacing: -.045em; }
+    .chrome-header p { margin: 0; max-width: 820px; color: var(--glz1-text-secondary); line-height: 1.55; }
+    .eyebrow { color: var(--glz1-text-secondary); font-size: 12px; font-weight: 760; letter-spacing: .12em; text-transform: uppercase; }
+    .chrome-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 18px; align-items: start; }
+    .demo-card {
+      min-width: 0;
+      padding: 20px;
+      border: 1px solid var(--glz12-structural-border);
+      border-radius: 26px;
+      background: var(--glz12-optical-durable, var(--glz1-base));
+      box-shadow: 0 12px 34px rgba(0,0,0,.06);
+      display: grid;
+      gap: 14px;
+    }
+    .demo-card > header { display: grid; gap: 4px; }
+    .demo-card h2 { margin: 0; font-size: 19px; letter-spacing: -.02em; }
+    .demo-card p { margin: 0; color: var(--glz1-text-secondary); line-height: 1.5; }
+    .nav-stack, .overlay-stack, .control-stack { display: grid; gap: 12px; min-width: 0; }
+    .nav-pair { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 12px; align-items: stretch; }
+    .glz1-sidebar, .glz1-navigation-rail, .glz1-dock, .glz1-toolbar,
+    .glz1-tooltip, .glz1-popover, .glz1-menu, .glz1-sheet, .glz1-toast,
+    .glz1-capsule, .glz1-smart-rail { border: 1px solid var(--glz12-structural-border); }
+    .glz1-sidebar { padding: 8px; display: grid; gap: 4px; border-radius: 20px; }
+    .glz1-sidebar-item { width: 100%; text-align: start; }
+    .glz1-navigation-rail { padding: 8px; border-radius: 20px; }
+    .glz1-dock { position: relative !important; inset: auto !important; transform: none !important; width: 100%; justify-content: center; }
+    .glz1-toolbar { position: relative !important; inset: auto !important; width: 100%; }
+    .glz1-smart-rail { position: relative !important; inset: auto !important; width: max-content; max-width: 100%; }
+    .glz1-capsule { width: min(100%, 360px); }
+    .chrome-static {
+      display: flex !important;
+      position: relative !important;
+      inset: auto !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      transform: none !important;
+      margin: 0 !important;
+      max-width: 100% !important;
+    }
+    .glz1-popover, .glz1-menu, .glz1-sheet { width: 100%; }
+    .glz1-popover { display: grid !important; gap: 10px; }
+    .glz1-menu { display: grid !important; }
+    .glz1-sheet { display: grid !important; gap: 10px; }
+    .glz1-toast { width: 100%; justify-content: space-between; }
+    .control-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .field-row { display: grid; grid-template-columns: minmax(0,1fr) minmax(150px,.55fr); gap: 10px; }
+    .durable-proof { background: var(--glz12-optical-durable, var(--glz1-base)); }
+    .nested-proof { margin-top: 2px; }
+    @media (max-width: 820px) { .chrome-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 520px) {
+      .nav-pair, .field-row { grid-template-columns: 1fr; }
+      .glz1-navigation-rail { width: 100%; }
+      .glz1-navigation-rail .demo-rail-zone { display: flex; gap: 6px; }
+    }
+    @media (forced-colors: active) {
+      .demo-card { background: Canvas; color: CanvasText; border-color: CanvasText; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="glz12-optical-stage">
+    <div class="chrome-reference">
+      <header class="chrome-header">
+        <span class="eyebrow">GLAZE UI V1.2 Candidate · chrome refinement</span>
+        <h1>Frost is strongest where interface chrome separates task layers.</h1>
+        <p>Persistent navigation stays lighter than transient panels. Ice Blue marks interaction state as restrained atmosphere, while borders, focus, labels, and structure keep meaning independent from color.</p>
+      </header>
+
+      <section class="chrome-grid" aria-label="Chrome optics reference">
+        <article class="demo-card" aria-labelledby="navigation-title">
+          <header>
+            <span class="eyebrow">Floating structure</span>
+            <h2 id="navigation-title">Navigation and command chrome</h2>
+          </header>
+          <div class="nav-stack">
+            <div class="nav-pair">
+              <nav class="glz1-sidebar" data-variant="floating" aria-label="Floating sidebar">
+                <button class="glz1-sidebar-item" aria-current="page">Home</button>
+                <button class="glz1-sidebar-item">Files</button>
+                <button class="glz1-sidebar-item">Shared</button>
+              </nav>
+              <nav class="glz1-navigation-rail" data-variant="floating" aria-label="Floating navigation rail">
+                <div class="demo-rail-zone">
+                  <button class="glz1-rail-item" aria-current="page" aria-label="Home"><span class="glz1-rail-icon" aria-hidden="true">⌂</span></button>
+                  <button class="glz1-rail-item" aria-label="Search"><span class="glz1-rail-icon" aria-hidden="true">⌕</span></button>
+                </div>
+              </nav>
+            </div>
+            <nav class="glz1-dock" aria-label="Dock">
+              <button class="glz1-dock-item" aria-current="page"><span class="glz1-dock-icon" aria-hidden="true">⌂</span><span>Home</span></button>
+              <button class="glz1-dock-item"><span class="glz1-dock-icon" aria-hidden="true">⌕</span><span>Search</span></button>
+            </nav>
+            <div class="glz1-toolbar" data-variant="floating" aria-label="Floating toolbar">
+              <button class="glz1-icon-button" aria-label="Back">←</button>
+              <div class="glz1-toolbar-spacer"></div>
+              <button class="glz1-icon-button" aria-label="More">•••</button>
+            </div>
+            <div class="control-row">
+              <div class="glz1-capsule">
+                <span class="glz1-capsule-symbol" aria-hidden="true">⌕</span>
+                <div class="glz1-capsule-copy"><strong>Search GoreeCloud</strong><span>Apps, files, people</span></div>
+              </div>
+              <nav class="glz1-smart-rail" aria-label="Smart Rail">
+                <div class="glz1-rail-zone"><button class="glz1-rail-item" aria-current="page" aria-label="Home">⌂</button><button class="glz1-rail-item" aria-label="Search">⌕</button></div>
+              </nav>
+            </div>
+          </div>
+        </article>
+
+        <article class="demo-card" aria-labelledby="overlay-title">
+          <header>
+            <span class="eyebrow">Transient hierarchy</span>
+            <h2 id="overlay-title">Overlay depth</h2>
+          </header>
+          <div class="overlay-stack">
+            <div class="glz1-tooltip chrome-static" data-open="true">Open settings</div>
+            <div class="glz1-popover chrome-static" data-open="true">
+              <strong>Share</strong>
+              <p>Parent Frost owns diffusion; nested Glaze controls remain local and non-blurred.</p>
+              <button class="glz1-button nested-proof" data-variant="glaze">Copy link</button>
+            </div>
+            <div class="glz1-menu chrome-static" data-open="true" role="menu">
+              <button class="glz1-menu-item" role="menuitem"><span aria-hidden="true">↗</span><span>Open</span><span>⌘O</span></button>
+              <button class="glz1-menu-item" role="menuitem"><span aria-hidden="true">☆</span><span>Favorite</span><span></span></button>
+            </div>
+            <div class="glz1-sheet chrome-static">
+              <div class="glz1-sheet-handle" aria-hidden="true"></div>
+              <strong>Details</strong>
+              <p>Dense Frost gives priority separation without turning reading content into glass.</p>
+            </div>
+            <div class="glz1-toast chrome-static"><span>✓ Saved to GoreeCloud</span><button>Undo</button></div>
+          </div>
+        </article>
+
+        <article class="demo-card" aria-labelledby="controls-title">
+          <header>
+            <span class="eyebrow">Explicit opt-in</span>
+            <h2 id="controls-title">Glaze control variants</h2>
+          </header>
+          <div class="control-stack">
+            <div class="control-row">
+              <button class="glz1-button" data-variant="glaze">Glaze button</button>
+              <button class="glz1-icon-button" data-variant="glaze" data-state="selected" aria-label="Selected view">◇</button>
+              <button class="glz1-source-chip" data-material="frosted">GoreeCloud Docs</button>
+            </div>
+            <div class="field-row">
+              <label class="glz1-field">
+                <span class="glz1-field-label">Search scope</span>
+                <span class="glz1-field-control" data-variant="glaze"><input value="All GoreeCloud" aria-label="Search scope"></span>
+              </label>
+              <label class="glz1-field">
+                <span class="glz1-field-label">View</span>
+                <select class="glz1-select" data-variant="glaze" aria-label="View"><option>Comfortable</option><option>Compact</option></select>
+              </label>
+            </div>
+          </div>
+        </article>
+
+        <aside class="demo-card durable-proof" aria-labelledby="durable-title">
+          <header>
+            <span class="eyebrow">Protected plane</span>
+            <h2 id="durable-title">Durable content stays solid</h2>
+          </header>
+          <p class="durable-copy">This reference card intentionally has no backdrop filter. Dialogs and consequential-decision surfaces also remain non-backdrop-dependent under the inherited component contract.</p>
+        </aside>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

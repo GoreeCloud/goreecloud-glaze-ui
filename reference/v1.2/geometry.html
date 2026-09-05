@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light" data-glz-material-performance="full" data-glaze-density-profile="standard">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GLAZE UI V1.2 Geometry Candidate</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { min-width: 0; }
+    body { margin: 0; min-height: 100vh; }
+    .geometry-demo { max-width: 1120px; margin-inline: auto; padding: 32px; display: grid; gap: 32px; }
+    .geometry-demo h1, .geometry-demo h2, .geometry-demo p { margin: 0; }
+    .geometry-demo p { overflow-wrap: anywhere; }
+    .intro { display: grid; gap: 12px; max-width: 760px; }
+    .row { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 24px; }
+    .sample { min-width: 0; padding: 20px; border: 1px solid var(--glz11-border-subtle, rgba(95,116,146,.24)); }
+    .sample > * + * { margin-top: 12px; }
+    #popover, #menu, #tooltip, #sheet { position: relative; inset: auto; opacity: 1; transform: none; pointer-events: auto; visibility: visible; }
+    #popover, #menu { inline-size: 100%; max-inline-size: 360px; }
+    #tooltip { display: inline-block; max-inline-size: 280px; }
+    #sheet { max-block-size: none; inline-size: 100%; }
+    #dock { inline-size: min(420px, 100%); }
+    #dialog { position: static; inline-size: 100%; max-block-size: none; }
+    #dialog::backdrop { display: none; }
+    .glz1-morph-card { inline-size: 100%; }
+    .radius-label { font-family: ui-monospace, monospace; font-size: 12px; }
+    @media (max-width: 700px) {
+      .geometry-demo { padding: 16px; gap: 24px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+    @media (forced-colors: active) {
+      .sample { border-color: CanvasText; }
+    }
+  </style>
+</head>
+<body>
+  <main class="geometry-demo">
+    <header class="intro">
+      <p data-glz-type="label">Geometry + Curvature · Candidate</p>
+      <h1 data-glz-type="display">Purpose shapes curvature.</h1>
+      <p data-glz-type="body">V1.2 does not round every object the same way. Compact controls, durable surfaces, floating interaction, high-depth panels, and true capsules keep distinct geometry while nested contours remain related.</p>
+    </header>
+
+    <section class="sample" id="controls-sample">
+      <h2 data-glz-type="heading">Optical control sizes</h2>
+      <div class="row">
+        <button id="button-xs" class="glz1-button glz12-spatial-action" data-size="xs" type="button">XS</button>
+        <button id="button" class="glz1-button glz12-spatial-action" data-size="md" type="button">Standard</button>
+        <button id="button-xl" class="glz1-button glz12-spatial-action" data-size="xl" type="button">XL</button>
+        <label class="glz1-choice" data-kind="checkbox"><input type="checkbox" checked><span id="checkbox" class="glz1-choice-control"></span><span>Checkbox</span></label>
+      </div>
+      <div id="field" class="glz1-field-control" data-size="md"><input aria-label="Geometry field" value="Field geometry"></div>
+      <span id="tooltip" class="glz1-tooltip" data-open="true">Compact explanatory geometry.</span>
+    </section>
+
+    <section class="grid" aria-label="Nested geometry examples">
+      <article id="card" class="glz1-card sample">
+        <p data-glz-type="label">Surface · 20</p>
+        <h2 data-glz-type="title">Durable card</h2>
+        <p data-glz-type="body">The parent surface remains softer than the nested standard action.</p>
+        <button id="card-button" class="glz1-button glz12-spatial-action" type="button">Nested action</button>
+      </article>
+
+      <article id="popover" class="glz1-popover glz1-thick-overlay sample" data-open="true">
+        <p data-glz-type="label">Popover · 20</p>
+        <h2 data-glz-type="title">Anchored task surface</h2>
+        <div id="popover-field" class="glz1-field-control"><input aria-label="Popover field" value="Nested field"></div>
+      </article>
+
+      <nav id="menu" class="glz1-menu glz1-thick-overlay sample" data-open="true" aria-label="Geometry menu">
+        <p data-glz-type="label">Floating control · 16</p>
+        <button id="menu-item" class="glz1-menu-item" type="button">Menu item</button>
+      </nav>
+
+      <dialog id="dialog" class="glz1-dialog sample" open>
+        <div class="glz1-dialog-inner">
+          <p data-glz-type="label">Panel · 24</p>
+          <h2 data-glz-type="title">Decision surface</h2>
+          <p data-glz-type="body">Consequential content remains durable while the panel gets stronger curvature.</p>
+        </div>
+      </dialog>
+    </section>
+
+    <section class="sample">
+      <h2 data-glz-type="heading">Floating and high-depth geometry</h2>
+      <div class="row">
+        <div id="toolbar" class="glz1-toolbar" data-variant="floating"><button class="glz1-icon-button glz12-spatial-action" data-variant="glaze" aria-label="Toolbar action">⌕</button><span>Toolbar</span></div>
+        <div id="dock" class="glz1-dock"><button id="dock-item" class="glz1-dock-item glz12-spatial-action" aria-current="page">Home</button><button class="glz1-dock-item glz12-spatial-action">Files</button></div>
+        <div id="smart-rail" class="glz1-smart-rail"><button class="glz1-rail-item glz12-spatial-action" aria-current="page">⌂</button></div>
+      </div>
+      <section id="sheet" class="glz1-sheet glz1-thick-overlay">
+        <p data-glz-type="label">Sheet · 28</p>
+        <h2 data-glz-type="title">High-depth adaptive surface</h2>
+        <button id="sheet-button" class="glz1-button glz12-spatial-action" type="button">Nested action</button>
+      </section>
+    </section>
+
+    <section class="grid">
+      <article class="sample">
+        <p data-glz-type="label">Capsule state relationship</p>
+        <div id="capsule" class="glz1-capsule"><div class="glz1-capsule-main"><strong>Collapsed pill</strong></div></div>
+        <div id="capsule-expanded" class="glz1-capsule" data-expanded="true"><div class="glz1-capsule-main"><strong>Expanded panel</strong></div><div class="glz1-capsule-expanded">Expanded content follows panel geometry.</div></div>
+      </article>
+      <article class="sample">
+        <p data-glz-type="label">Morph state relationship</p>
+        <button id="morph" class="glz1-morph-card" type="button"><span class="glz1-morph-copy"><strong>Collapsed</strong></span></button>
+        <button id="morph-expanded" class="glz1-morph-card" aria-expanded="true" type="button"><span class="glz1-morph-copy"><strong>Expanded</strong></span><span class="glz1-morph-detail">Expanded detail</span></button>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

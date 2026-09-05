@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.spatial-foundation.tokens.candidate",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "spacePx": {
+    "micro": 2,
+    "hairline": 4,
+    "control": 8,
+    "compactCluster": 12,
+    "standardCluster": 16,
+    "content": 24,
+    "section": 32,
+    "region": 48,
+    "majorRegion": 64,
+    "pageHero": 96
+  },
+  "guttersPx": {
+    "compact": 16,
+    "medium": 24,
+    "expanded": 32,
+    "large": 48
+  },
+  "gridColumns": {
+    "compact": 4,
+    "medium": 8,
+    "expanded": 12,
+    "large": 12
+  },
+  "density": {
+    "comfortable": {"clusterPx": 24, "sectionPx": 48},
+    "standard": {"clusterPx": 16, "sectionPx": 32},
+    "productive": {"clusterPx": 12, "sectionPx": 24},
+    "immersive": {"clusterPx": 24, "sectionPx": 48}
+  },
+  "quietZone": {
+    "blockPx": 48
+  },
+  "targets": {
+    "minimumInteractivePx": 48
+  },
+  "rules": {
+    "arbitrarySpacingValuesAllowed": false,
+    "densityIsScale": false,
+    "spaceBeforeDecoration": true,
+    "durableReadingBackdropDependent": false,
+    "platformAdapterOwnsCapabilityClassSelection": true
+  }
+}

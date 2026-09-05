@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.accessibility-adaptation.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-accessibility-adaptation-combination-evidence",
+  "purpose": "Apply the canonical accessibility resolution matrix across representative V1.2 Candidate surfaces without creating parallel accessibility authority or claiming human, assistive-technology, native-platform, or Stable acceptance.",
+  "authority": {
+    "resolutionMatrix": "contracts/accessibility/resolution-matrix.json",
+    "formFactorTokens": "tokens/glaze-v1.2-form-factor.candidate.json",
+    "motionContract": "contracts/v1.2/motion.candidate.json",
+    "stateContract": "contracts/v1.2/interaction-states.candidate.json",
+    "principle": "Accessibility preferences override lower-priority visual expression while protected semantic meaning remains intact."
+  },
+  "resolutionOrder": [
+    "protected-semantic-meaning",
+    "forced-colors",
+    "reduced-motion",
+    "reduced-transparency",
+    "increased-contrast-and-show-boundaries",
+    "large-text-and-touch-assistance",
+    "material-clarity",
+    "expression-and-accent"
+  ],
+  "bindings": {
+    "reducedMotion": {
+      "canonicalWebAttribute": "data-glz-motion=reduced",
+      "legacyCompatibilityAttribute": "data-mode=reduced-motion",
+      "directManipulationPreserved": true
+    },
+    "reducedTransparency": {
+      "canonicalWebAttribute": "data-glz-transparency=reduced",
+      "effectiveMaterialClarity": "solid",
+      "backdropEffectsAllowed": false
+    },
+    "increasedContrast": {
+      "canonicalWebAttribute": "data-glz-contrast=increased",
+      "legacyCompatibilityAttribute": "data-mode=increased-contrast"
+    },
+    "showBoundaries": {
+      "canonicalWebAttribute": "data-glz-boundaries=show"
+    },
+    "largeText": {
+      "canonicalWebAttribute": "data-glz-text-scale=200",
+      "textScalePercent": 200,
+      "criticalTextClippingAllowed": false
+    },
+    "touchAssistance": {
+      "canonicalWebAttribute": "data-glz-touch-assistance=true",
+      "minimumInteractiveTargetPx": 56
+    },
+    "forcedColors": {
+      "source": "platform-forced-colors",
+      "customAccentMayOverride": false,
+      "effectiveMaterialClarity": "solid"
+    }
+  },
+  "canonicalCases": [
+    {
+      "id": "rt-clear",
+      "inputs": {"reducedTransparency": true, "materialClarity": "clear"},
+      "expected": ["effectiveMaterialClarity=solid", "blur=off", "refraction=off", "distortion=off"]
+    },
+    {
+      "id": "rm-expressive",
+      "inputs": {"reducedMotion": true, "expressionLevel": "expressive"},
+      "expected": ["motionExpression=calm", "nonMotionExpressionMayRemain=expressive"]
+    },
+    {
+      "id": "fc-accent",
+      "inputs": {"forcedColors": true, "accentPersonalization": "custom"},
+      "expected": ["effectiveMaterialClarity=solid", "customSemanticColorMapping=platform", "accentMayNotOverridePlatformForcedColors=true"]
+    },
+    {
+      "id": "large-compact",
+      "inputs": {"largeText": true, "textScalePercent": 200, "density": "compact"},
+      "expected": ["reflowRequired=true", "effectiveDensity=standard-or-comfortable-as-needed", "noCriticalTextClipping=true"]
+    },
+    {
+      "id": "touch-compact",
+      "inputs": {"touchAssistance": true, "density": "compact"},
+      "expected": ["touchHitAreaMinPx=56", "visibleDensityMayRemainCompact=true"]
+    },
+    {
+      "id": "contrast-boundaries",
+      "inputs": {"increasedContrast": true, "showBoundaries": true},
+      "expected": ["focusVisibility=strong", "boundaryStrength=max(accessibility-required,component-required)"]
+    }
+  ],
+  "rules": {
+    "canonicalResolutionMatrixCopiedAsAuthority": false,
+    "finalAccessibilityCascadeResolvesCompatibility": true,
+    "protectedSemanticsMayBeOverriddenByPersonalization": false,
+    "reducedMotionMayOnlySpeedUpOriginalMotion": false,
+    "reducedMotionPreservesDirectManipulation": true,
+    "reducedTransparencyForcesSolidMaterial": true,
+    "largeTextRequiresReflow": true,
+    "touchAssistanceRaisesHitFloorWithoutRequiringVisibleGeometryInflation": true,
+    "forcedColorsUsesPlatformRoles": true,
+    "automatedEvidenceEstablishesHumanAcceptance": false,
+    "automatedEvidenceEstablishesAssistiveTechnologyAcceptance": false,
+    "automatedEvidenceEstablishesNativePlatformAcceptance": false,
+    "consumerClaimBlocked": true
+  },
+  "acceptance": {
+    "canonicalCaseIds": ["rt-clear", "rm-expressive", "fc-accent", "large-compact", "touch-compact", "contrast-boundaries"],
+    "compactViewportPx": 320,
+    "minimumInteractiveTargetPx": 48,
+    "touchAssistanceMinimumInteractiveTargetPx": 56,
+    "textScalePercent": 200,
+    "horizontalPageOverflowProhibited": true,
+    "focusVisibilityRequired": true,
+    "nonColorBoundaryRequired": true,
+    "protectedSemanticStateRequired": true,
+    "screenshotsRequired": true
+  },
+  "implementation": {
+    "finalAccessibilityLayer": "css/glaze-v1.2-accessibility.candidate.css",
+    "reference": "reference/v1.2/accessibility-adaptation.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_accessibility_adaptation_rendered.py",
+    "workflow": ".github/workflows/glaze-v1.2-accessibility-adaptation.yml",
+    "candidateEntrypoint": "css/glaze-v1.2.0-candidate.css"
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "canonical-six-case-source-conformance",
+      "reduced-transparency-solid-rendering-reference",
+      "reduced-motion-nonessential-travel-suppression-reference",
+      "forced-colors-platform-role-reference",
+      "compact-200-percent-text-reflow-reference",
+      "compact-touch-assistance-56px-hit-floor-reference",
+      "increased-contrast-show-boundaries-reference",
+      "exact-head-rendered-browser-acceptance"
+    ],
+    "notEstablished": [
+      "human-visual-review",
+      "screen-reader-acceptance",
+      "talkback-acceptance",
+      "voiceover-acceptance",
+      "switch-control-acceptance",
+      "physical-device-accessibility-acceptance",
+      "complete-native-platform-accessibility-parity",
+      "production-performance-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

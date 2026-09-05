@@ -1,0 +1,134 @@
+name: Glaze V1.2 Android Frosted Optical Candidate
+
+on:
+  pull_request:
+    paths:
+      - 'contracts/v1.2/native-optical-parity.candidate.json'
+      - 'reference/v1.2/native/android/app/src/main/AndroidManifest.xml'
+      - 'reference/v1.2/native/android/app/src/main/java/com/goreecloud/glazeui/reference/v12/Optical*.java'
+      - 'scripts/validate_glaze_v1_2_android_optical_runtime.py'
+      - 'acceptance/v1.2-android-optical-candidate.md'
+      - '.github/workflows/glaze-v1.2-android-optical.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android-optical:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Check out exact Candidate revision
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Preserve Stable and Candidate source authority
+        run: |
+          python3 scripts/validate_glaze_v1.py
+          python3 scripts/validate_glaze_v1_2_candidate.py
+          python3 scripts/validate_glaze_v1_2_migration.py
+          python3 scripts/validate_glaze_v1_2_native_optical.py
+          python3 -m py_compile scripts/validate_glaze_v1_2_android_optical_runtime.py
+
+      - name: Resolve Android SDK image
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDK_ROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-}}"
+          test -n "$SDK_ROOT"
+          SDKMANAGER="$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
+          IMAGE="$("$SDKMANAGER" --list --verbose | grep -E '^system-images;android-[0-9]+(-ext[0-9]+)?;google_apis;x86_64$' | sort -V | tail -n 1)"
+          test -n "$IMAGE"
+          echo "SDK_ROOT=$SDK_ROOT" >> "$GITHUB_ENV"
+          echo "SDKMANAGER=$SDKMANAGER" >> "$GITHUB_ENV"
+          echo "ANDROID_IMAGE=$IMAGE" >> "$GITHUB_ENV"
+
+      - name: Install Android and verified Gradle
+        shell: bash
+        run: |
+          set -euo pipefail
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" platform-tools emulator "platforms;android-36" "$ANDROID_IMAGE"
+          curl -fLsS https://services.gradle.org/distributions/gradle-9.5.0-bin.zip -o /tmp/gradle.zip
+          echo "553c78f50dafcd54d65b9a444649057857469edf836431389695608536d6b746  /tmp/gradle.zip" | sha256sum -c --strict
+          unzip -q /tmp/gradle.zip -d /tmp
+          echo "$SDK_ROOT/platform-tools" >> "$GITHUB_PATH"
+          echo "$SDK_ROOT/emulator" >> "$GITHUB_PATH"
+          echo "/tmp/gradle-9.5.0/bin" >> "$GITHUB_PATH"
+
+      - name: Build Frosted Optical Candidate APK
+        working-directory: reference/v1.2/native/android
+        env:
+          JAVA_HOME: ${{ env.JAVA_HOME_17_X64 }}
+        run: gradle :app:assembleDebug --no-daemon
+
+      - name: Create and boot deterministic handheld
+        shell: bash
+        run: |
+          set -euo pipefail
+          NAME=glaze-v12-optical
+          ROOT="$HOME/.android/avd"
+          DIR="$ROOT/$NAME.avd"
+          REL="${ANDROID_IMAGE//;/\/}/"
+          mkdir -p "$DIR"
+          cat > "$ROOT/$NAME.ini" <<EOF
+          avd.ini.encoding=UTF-8
+          path=$DIR
+          path.rel=avd/$NAME.avd
+          target=android-36
+          EOF
+          cat > "$DIR/config.ini" <<EOF
+          AvdId=$NAME
+          abi.type=x86_64
+          avd.ini.encoding=UTF-8
+          disk.dataPartition.size=4G
+          fastboot.forceColdBoot=yes
+          hw.cpu.arch=x86_64
+          hw.cpu.ncore=2
+          hw.device.manufacturer=GoreeCloud-CI
+          hw.device.name=glaze_v12_optical
+          hw.keyboard=yes
+          hw.lcd.density=420
+          hw.lcd.height=2400
+          hw.lcd.width=1080
+          hw.mainKeys=no
+          hw.ramSize=2048
+          image.sysdir.1=$REL
+          tag.id=google_apis
+          vm.heapSize=512
+          EOF
+          if test -e /dev/kvm; then sudo chmod 666 /dev/kvm; fi
+          nohup "$SDK_ROOT/emulator/emulator" -avd "$NAME" -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -no-metrics >"$RUNNER_TEMP/optical-emulator.log" 2>&1 &
+          echo "$!" > "$RUNNER_TEMP/optical-emulator.pid"
+          adb wait-for-device
+          for _ in $(seq 1 150); do test "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" = 1 && break; sleep 2; done
+          test "$(adb shell getprop sys.boot_completed | tr -d '\r')" = 1
+          adb shell settings put global window_animation_scale 0
+          adb shell settings put global transition_animation_scale 0
+          adb shell settings put global animator_duration_scale 0
+          adb install -r reference/v1.2/native/android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Run exact-head Frosted Optical emulator acceptance
+        env:
+          GLAZE_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python3 scripts/validate_glaze_v1_2_android_optical_runtime.py
+
+      - name: Upload bounded Android optical evidence
+        if: success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: glaze-v1.2-android-optical-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            .artifacts/glaze-v1.2-android-optical/*.png
+            .artifacts/glaze-v1.2-android-optical/android-optical-evidence.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Stop emulator
+        if: always()
+        run: |
+          adb emu kill >/dev/null 2>&1 || true
+          test ! -f "$RUNNER_TEMP/optical-emulator.pid" || kill "$(cat "$RUNNER_TEMP/optical-emulator.pid")" >/dev/null 2>&1 || true

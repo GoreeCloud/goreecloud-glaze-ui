@@ -1,0 +1,34 @@
+name: Glaze V1.2 Structure Components Candidate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  structure-components-rendered:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact Candidate revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Preserve Stable and Candidate source authority
+        run: |
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          python scripts/validate_glaze_v1.py
+          python scripts/validate_glaze_v1_2_candidate.py
+          python scripts/validate_glaze_v1_2_core_tokens.py
+      - name: Validate rendered V1.2 Structure components
+        run: python scripts/validate_glaze_v1_2_structure_components_rendered.py
+      - name: Upload V1.2 Structure component evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glaze-v1.2-structure-components-${{ github.event.pull_request.head.sha || github.sha }}
+          path: artifacts/glaze-v1.2-structure-components-*
+          if-no-files-found: error
+          retention-days: 30

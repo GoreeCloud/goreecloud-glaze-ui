@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.interaction-states.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-web-interaction-state-system",
+  "purpose": "Establish the V1.2 Candidate interaction-state token owner and reference behavior for hover, pressed, selected, disabled, focus, loading, semantic, offline, and recovery states without promoting V1.2 to Stable.",
+  "tokenOwner": "tokens/glaze-v1.2-states.candidate.json",
+  "states": ["hover","pressed","selected","disabled","focus","loading","semantic","offline","recovery"],
+  "requirements": {
+    "keyboard": ["visible-focus","predictable-tab-order","enter-space-where-applicable","escape-and-focus-restoration-for-overlays","home-end-where-applicable"],
+    "pointer": ["hover-nonessential","equivalent-essential-interaction","clear-pressed-state"],
+    "touch": ["48px-minimum","56px-assistance-or-far-view","no-hover-dependency","gesture-alternative-where-needed"],
+    "accessibility": ["reduced-transparency","reduced-motion","increased-contrast","forced-colors","200-percent-text","rtl-where-applicable"],
+    "truth": ["semantic-state-not-color-only","offline-does-not-imply-data-loss","recovery-reflects-authoritative-underlying-state","unknown-not-upgraded-to-positive"]
+  },
+  "implementation": {
+    "tokenOwner": "tokens/glaze-v1.2-states.candidate.json",
+    "webLayer": "css/glaze-v1.2-interaction-states.candidate.css",
+    "reference": "reference/v1.2/interaction-states.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_interaction_states_rendered.py",
+    "workflow": ".github/workflows/glaze-v1.2-interaction-states.yml",
+    "coreTokenContract": "contracts/v1.2/core-tokens.candidate.json",
+    "coreTokenManifest": "tokens/glaze-v1.2-core.candidate.json"
+  },
+  "acceptance": {
+    "visualStates": ["hover","focus","pressed","selected","disabled","loading","success","information","warning","danger","offline","recovery-partial"],
+    "appearance": ["light","dark","deep-dark"],
+    "accessibility": ["reduced-motion","reduced-transparency","increased-contrast","forced-colors","text-200","rtl"],
+    "responsiveWidthsPx": [1280,390]
+  },
+  "evidenceBoundary": {
+    "implemented": ["v1.2-state-token-owner","web-state-reference","focus-selection-distinction","non-color-semantic-companions","offline-and-recovery-truth-reference","exact-head-rendered-acceptance"],
+    "notEstablished": ["native-state-parity","assistive-technology-completeness","human-state-acceptance","complete-form-factor-token-owner","production-state-performance-acceptance","rc","stable","consumer-conformance"]
+  }
+}

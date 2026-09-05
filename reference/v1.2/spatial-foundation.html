@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light" data-glz-material-performance="full" data-glaze-density-profile="standard">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GLAZE UI V1.2 Spatial Foundation Candidate</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { min-width: 0; }
+    body { margin: 0; min-height: 100vh; overflow-x: hidden; }
+    .spatial-demo { max-width: 1180px; margin-inline: auto; padding-block: 24px 64px; }
+    .spatial-demo h1, .spatial-demo h2, .spatial-demo p { margin: 0; }
+    .spatial-demo p { overflow-wrap: anywhere; }
+    .hero-copy { max-width: 46rem; display: grid; gap: 12px; }
+    .eyebrow { letter-spacing: .08em; text-transform: uppercase; }
+    .composition-panel { border: 1px solid var(--glz11-border-subtle, rgba(95,116,146,.24)); border-radius: 24px; }
+    .primary-panel { background: var(--glz11-surface-raised, rgba(255,255,255,.88)); }
+    .secondary-panel { min-height: 100%; display: flex; align-items: flex-start; }
+    .secondary-panel .glz1-toolbar { width: 100%; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .metric-row { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; margin-top: 24px; }
+    .metric { padding: 16px; border-top: 1px solid var(--glz11-border-subtle, rgba(95,116,146,.24)); }
+    .metric strong { display: block; font-size: 1.5em; }
+    .density-proof { border: 1px dashed var(--glz11-border-subtle, rgba(95,116,146,.36)); border-radius: 16px; padding: 16px; }
+    .probe { min-width: 0; padding: 12px 16px; border-radius: 12px; background: var(--glz11-surface-raised, rgba(255,255,255,.76)); }
+    @media (max-width: 520px) {
+      .spatial-demo { padding-block-start: 8px; }
+      .metric-row { grid-template-columns: 1fr; }
+      .composition-panel { border-radius: 18px; }
+    }
+    @media (forced-colors: active) {
+      .composition-panel, .density-proof, .metric { border-color: CanvasText; }
+    }
+  </style>
+</head>
+<body>
+  <main id="layout-frame" class="glz12-layout-frame spatial-demo" data-glz-layout-class="expanded">
+    <div class="glz12-spatial-stack">
+      <section id="quiet-zone" class="glz12-quiet-zone" aria-labelledby="spatial-title">
+        <div class="hero-copy">
+          <p class="eyebrow" data-glz-type="label">Spatial foundation · Candidate</p>
+          <h1 id="spatial-title" data-glz-type="display">Space establishes hierarchy before decoration.</h1>
+          <p data-glz-type="body">The reference keeps the primary task visually dominant through spacing, grouping, and composition before color or material effects.</p>
+          <div id="action-cluster" class="glz12-cluster">
+            <button class="glz1-button glz12-spatial-action" data-variant="glaze" type="button">Primary action</button>
+            <button class="glz1-button glz12-spatial-action" type="button">Secondary action</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="ordinary-section" class="glz12-section-zone" aria-labelledby="composition-title">
+        <h2 id="composition-title" data-glz-type="heading">Responsive composition</h2>
+      </section>
+
+      <div id="composition-grid" class="glz12-layout-grid">
+        <article id="durable-zone" class="glz12-span-primary glz12-durable-reading-zone composition-panel primary-panel">
+          <div class="glz12-spatial-stack">
+            <div>
+              <p data-glz-type="label">Primary region</p>
+              <h2 data-glz-type="title">Durable reading stays stable</h2>
+            </div>
+            <p data-glz-type="body">Documents, tables, forms, settings, and other sustained reading surfaces remain solid or near-solid. The spatial layer does not add backdrop blur to durable content.</p>
+            <div class="metric-row" aria-label="Example metrics">
+              <div class="metric"><span data-glz-type="caption">Availability</span><strong data-glz-type="numeric">99.99%</strong></div>
+              <div class="metric"><span data-glz-type="caption">Latency</span><strong data-glz-type="numeric">38 ms</strong></div>
+              <div class="metric"><span data-glz-type="caption">Storage</span><strong data-glz-type="numeric">4.8 TB</strong></div>
+            </div>
+          </div>
+        </article>
+
+        <aside id="floating-zone" class="glz12-span-secondary secondary-panel" aria-label="Floating interaction region">
+          <div class="glz1-toolbar" data-variant="floating">
+            <button class="glz1-icon-button glz12-spatial-action" data-variant="glaze" aria-label="Search">⌕</button>
+            <button class="glz1-icon-button glz12-spatial-action" data-variant="glaze" aria-label="Filters">≡</button>
+            <span data-glz-type="ui">Floating tools</span>
+          </div>
+        </aside>
+      </div>
+
+      <section id="density-proof" class="density-proof" aria-labelledby="density-title">
+        <div class="glz12-spatial-stack">
+          <div>
+            <p data-glz-type="label">Density proof</p>
+            <h2 id="density-title" data-glz-type="heading">Density changes spacing, not usability.</h2>
+          </div>
+          <div id="density-cluster" class="glz12-cluster">
+            <button class="glz1-button glz12-spatial-action" type="button">One</button>
+            <button class="glz1-button glz12-spatial-action" type="button">Two</button>
+            <button class="glz1-button glz12-spatial-action" type="button">Three</button>
+          </div>
+          <div class="glz12-cluster" aria-label="Semantic spacing examples">
+            <span class="probe" data-space-role="control">Control · 8</span>
+            <span class="probe" data-space-role="content">Content · 24</span>
+            <span class="probe" data-space-role="region">Region · 48</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

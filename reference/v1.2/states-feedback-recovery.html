@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GLAZE UI V1.2 Candidate — States, Feedback, and Recovery</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    body{margin:0;padding:24px;background:var(--glz1-canvas);color:var(--glz1-text-primary);font-family:var(--glz1-font-sans,system-ui,sans-serif)}
+    main{max-inline-size:1120px;margin-inline:auto}.glz12-reference-intro{margin-block-end:24px}.glz12-reference-intro p{max-inline-size:72ch}
+    .glz12-state-scene h2,.glz12-state-scene p{margin:0}.glz12-state-scene code{overflow-wrap:anywhere}
+  </style>
+</head>
+<body>
+<main id="state-reference" class="glz12-state-library" data-glz-states-root data-glz-layout-class="expanded">
+  <header class="glz12-reference-intro">
+    <h1>States, Feedback, and Recovery — Candidate reference</h1>
+    <p>All state on this page is fixture-only. Glaze UI presents state; producer-authoritative GoreeCloud systems remain responsible for security, privacy, identity, connectivity, synchronization, health, availability, resilience, and recovery truth.</p>
+  </header>
+
+  <section class="glz12-state-scene" data-state-scene="loading" data-transition-sequence="loading,content ready">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">…</span><h2>Loading</h2></div>
+    <p>Localized loading preserves expected structure and does not block unrelated interface regions.</p>
+    <div class="glz12-skeleton" aria-hidden="true"><span class="glz12-skeleton-line"></span><span class="glz12-skeleton-line"></span></div>
+    <p><strong>Fixture transition:</strong> <span data-transition-status>loading</span></p>
+    <div class="glz12-state-actions"><button class="glz12-state-action" type="button" data-transition-advance>Apply fixture content-ready state</button></div>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="determinate-progress">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">62</span><h2>Determinate progress</h2></div>
+    <div class="glz12-progress-stack"><progress max="100" value="62" aria-label="Fixture transfer progress: 62 percent"></progress><p>62% · 31 of 50 fixture items · Stage: Transferring</p></div>
+    <div class="glz12-state-box" data-transition-sequence="pending,processing"><p>Queued work remains distinct from active processing.</p><p><strong>Fixture transition:</strong> <span data-transition-status>pending</span></p><div class="glz12-state-actions"><button class="glz12-state-action" type="button" data-transition-advance>Apply fixture processing state</button></div></div>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="indeterminate-progress">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">…</span><h2>Indeterminate progress</h2></div>
+    <p class="glz12-indeterminate">Active · Completion cannot be estimated</p>
+    <p>No percentage is shown because the fixture provides no authoritative completion estimate.</p>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="success">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">✓</span><h2>Success</h2></div>
+    <div class="glz12-state-box" data-state="success" data-transition-sequence="processing,success"><p>Success is shown only after the fixture producer explicitly reports completion.</p><p><strong>Fixture transition:</strong> <span data-transition-status>processing</span></p><div class="glz12-state-actions"><button class="glz12-state-action" type="button" data-transition-advance>Apply fixture producer success</button></div></div>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="warning">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">!</span><h2>Warning</h2></div>
+    <div class="glz12-state-box" data-state="warning"><p>Capacity is approaching the fixture threshold. Action is recommended, but this is not a critical failure.</p></div>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="critical-failure">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">×</span><h2>Critical failure</h2></div>
+    <div class="glz12-state-box" data-state="critical" data-transition-sequence="processing,failure"><p>Critical fixture operation failed. Scope: restore verification. Required action: review recovery details.</p><p><strong>Fixture transition:</strong> <span data-transition-status>processing</span></p><div class="glz12-state-actions"><button class="glz12-state-action" type="button" data-transition-advance>Apply fixture producer failure</button></div></div>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="offline" data-transition-sequence="online,offline">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">↯</span><h2>Offline</h2></div>
+    <div class="glz12-state-box" data-state="offline"><p>Offline means the fixture source reports disconnection. It does not imply failure, data loss, unhealthy state, or lack of protection.</p><p><strong>Fixture transition:</strong> <span data-transition-status>online</span></p><div class="glz12-state-actions"><button class="glz12-state-action" type="button" data-transition-advance>Apply fixture offline state</button></div></div>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="reconnecting" data-transition-sequence="offline,connecting,syncing,current">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">↻</span><h2>Reconnecting</h2></div>
+    <div class="glz12-state-box"><p>Offline → Connecting → Syncing → Current preserves truthful intermediate state.</p><p><strong>Fixture transition:</strong> <span data-transition-status>offline</span></p><div class="glz12-state-actions"><button class="glz12-state-action" type="button" data-transition-advance>Advance fixture reconnection</button></div></div>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="syncing">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">↕</span><h2>Syncing</h2></div>
+    <div class="glz12-state-box"><p>Syncing · 4 fixture changes pending · Last confirmed sync 3 min ago.</p><p>Pending offline changes are not presented as remotely committed.</p></div>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="partial-success">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">±</span><h2>Partial success</h2></div>
+    <div class="glz12-state-box" data-state="warning"><p><strong>18 completed · 2 failed</strong></p><p>Usable results remain visible. Two fixture items require review; remaining scope is explicit.</p></div>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="degraded">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">~</span><h2>Degraded</h2></div>
+    <div class="glz12-state-box" data-state="warning"><p>Service remains functional with reduced fixture capability. Degraded is distinct from Warning, Offline, Unavailable, and Failed.</p></div>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="stale" data-transition-sequence="current,stale">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">⧗</span><h2>Stale</h2></div>
+    <div class="glz12-state-box" data-state="stale"><p>Current → Stale. Last producer fixture update: 18 min ago.</p><p><strong>Fixture transition:</strong> <span data-transition-status>current</span></p><div class="glz12-state-actions"><button class="glz12-state-action" type="button" data-transition-advance>Apply fixture stale state</button></div></div>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="unknown">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">?</span><h2>Unknown</h2></div>
+    <div class="glz12-state-box" data-state="unknown"><p><strong>Unknown is not healthy.</strong> It is also not failed, offline, unavailable, zero, or empty. The fixture has insufficient authoritative information.</p></div>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="empty">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">○</span><h2>Empty</h2></div>
+    <div class="glz12-state-box"><p><strong>Dataset is valid and empty.</strong> No devices are present in this fixture dataset.</p></div>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="no-results">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">⌕</span><h2>No results</h2></div>
+    <div class="glz12-state-box"><p data-query-context>Query: status:warning region:west</p><p data-query-status>Fixture records exist, but current search/filter returns none.</p><div class="glz12-state-actions"><button class="glz12-state-action" type="button" data-clear-query>Clear fixture query</button></div></div>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="recovery" data-recovery-root data-recovery-state="idle">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">↺</span><h2>Recovery</h2></div>
+    <div class="glz12-state-box"><p data-recovery-status>Recovery not started.</p><p data-recovery-verification>Verification: not started.</p><p>Glaze UI must not declare data restored until the authoritative recovery producer confirms completion and required verification.</p><div class="glz12-state-actions"><button class="glz12-state-action" type="button" data-recovery-request>Request fixture recovery</button></div><p class="glz12-state-detail" aria-live="polite" data-recovery-announcement></p></div>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="recovery-failure">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">×</span><h2>Recovery failure</h2></div>
+    <div class="glz12-state-box" data-state="critical" data-transition-sequence="error,retry,recovery"><p><strong>Recovery failed.</strong> 42 fixture items recovered; 3 not recovered; existing destination data unchanged in this fixture.</p><p><strong>Fixture transition:</strong> <span data-transition-status>error</span></p><div class="glz12-state-actions"><button class="glz12-state-action" type="button" data-transition-advance>Advance fixture retry/recovery</button></div></div>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="mobile-feedback">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">M</span><h2>Mobile feedback</h2></div>
+    <div class="glz12-state-box"><p>Compact composition keeps state, consequence, and the next action readable without turning a desktop banner into a compressed mobile surface.</p><div class="glz12-state-actions"><button class="glz12-state-action" type="button">Fixture action</button></div></div>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="deep-dark">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">D</span><h2>Deep Dark</h2></div>
+    <div class="glz12-state-box"><p>Semantic hierarchy and non-color state cues remain legible when the reference is switched to Deep Dark.</p></div>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="reduced-transparency">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">R</span><h2>Reduced Transparency</h2></div>
+    <div class="glz12-state-box"><p>State meaning survives opaque, effects-free presentation; blur is not required for truth or hierarchy.</p></div>
+  </section>
+
+  <section class="glz12-state-scene" data-state-scene="increased-contrast">
+    <div class="glz12-state-heading"><span class="glz12-state-mark" aria-hidden="true">C</span><h2>Increased Contrast</h2></div>
+    <div class="glz12-state-box"><p>Boundaries and focus strengthen without changing semantic meaning or producer state.</p></div>
+  </section>
+</main>
+<script type="module" src="../../js/glaze-v1.2-states-feedback-recovery.candidate.mjs"></script>
+</body>
+</html>

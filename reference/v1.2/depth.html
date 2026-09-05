@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light" data-glz-material-performance="full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GLAZE UI V1.2 Depth and Elevation Candidate</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { min-width: 0; }
+    body { margin: 0; min-height: 100vh; }
+    .depth-demo { max-width: 1120px; margin-inline: auto; padding: 32px; display: grid; gap: 32px; }
+    .depth-demo h1, .depth-demo h2, .depth-demo p { margin: 0; }
+    .depth-demo p { overflow-wrap: anywhere; }
+    .intro { display: grid; gap: 12px; max-width: 780px; }
+    .depth-stack { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: stretch; }
+    .depth-surface {
+      min-width: 0;
+      min-height: 152px;
+      padding: 20px;
+      border: 1px solid var(--glz12-structural-border);
+      border-radius: var(--glz12-radius-surface, 20px);
+      display: grid;
+      align-content: start;
+      gap: 10px;
+    }
+    .depth-surface[data-glz-depth="embedded"] { border-radius: var(--glz12-radius-field, 14px); }
+    .depth-surface[data-glz-depth="floating"] { border-radius: var(--glz12-radius-floating-control, 16px); }
+    .depth-surface[data-glz-depth="overlay"] { border-radius: var(--glz12-radius-panel, 24px); }
+    .depth-surface[data-glz-depth="modal"] { border-radius: var(--glz12-radius-panel, 24px); }
+    .depth-surface[data-glz-depth="spatial-hero"] { border-radius: var(--glz12-radius-sheet, 28px); min-height: 188px; }
+    .depth-meta { font-family: ui-monospace, monospace; font-size: 12px; }
+    .glz12-depth-owner { padding: 20px; }
+    .glz12-depth-child { margin-top: 12px; min-height: 92px; padding: 14px; border: 1px solid var(--glz12-structural-border); border-radius: var(--glz12-radius-control, 12px); }
+    .action-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    @media (max-width: 700px) {
+      .depth-demo { padding: 16px; gap: 24px; }
+      .depth-stack { grid-template-columns: 1fr; }
+    }
+    @media (forced-colors: active) {
+      .depth-surface, .glz12-depth-child { border-color: CanvasText; }
+    }
+  </style>
+</head>
+<body>
+  <main class="depth-demo">
+    <header class="intro">
+      <p data-glz-type="label">Depth + Elevation · Candidate</p>
+      <h1 data-glz-type="display">Depth explains hierarchy.</h1>
+      <p data-glz-type="body">V1.2 uses broad neutral occlusion, restrained upper-edge illumination, role-aware frost, and small connected depth changes. Higher depth does not automatically mean more transparency: durable and consequential surfaces may remain opaque.</p>
+    </header>
+
+    <section class="depth-stack" aria-label="Seven semantic depth roles">
+      <article id="embedded" class="depth-surface" data-glz-depth="embedded" data-glz-depth-material="true">
+        <p data-glz-type="label">Embedded · 0</p>
+        <h2 data-glz-type="title">Inset utility region</h2>
+        <p data-glz-type="body">Local occlusion conveys containment without floating the surface.</p>
+      </article>
+      <article id="base" class="depth-surface" data-glz-depth="base" data-glz-depth-material="true">
+        <p data-glz-type="label">Base · 1</p>
+        <h2 data-glz-type="title">Durable reading plane</h2>
+        <p data-glz-type="body">No drop shadow is required for the stable content foundation.</p>
+      </article>
+      <article id="raised" class="depth-surface" data-glz-depth="raised" data-glz-depth-material="true">
+        <p data-glz-type="label">Raised · 2</p>
+        <h2 data-glz-type="title">Raised interaction region</h2>
+        <p data-glz-type="body">Mist frost and a restrained 8 × 24 separation support local hierarchy.</p>
+      </article>
+      <article id="floating" class="depth-surface" data-glz-depth="floating" data-glz-depth-material="true" data-glz-depth-change="resting">
+        <p data-glz-type="label">Floating · 3</p>
+        <h2 data-glz-type="title">Floating control group</h2>
+        <div class="action-row"><button id="depth-action" class="glz1-button glz12-spatial-action" type="button">Depth action</button></div>
+      </article>
+      <article id="overlay" class="depth-surface" data-glz-depth="overlay" data-glz-depth-material="true">
+        <p data-glz-type="label">Overlay · 4</p>
+        <h2 data-glz-type="title">Transient overlay</h2>
+        <p data-glz-type="body">Standard Frost increases environmental separation for transient chrome.</p>
+      </article>
+      <article id="modal" class="depth-surface" data-glz-depth="modal" data-glz-depth-material="true">
+        <p data-glz-type="label">Modal · 5</p>
+        <h2 data-glz-type="title">Consequential decision plane</h2>
+        <p data-glz-type="body">High visual depth remains opaque so critical reading and decisions never depend on translucency.</p>
+      </article>
+      <article id="hero" class="depth-surface" data-glz-depth="spatial-hero" data-glz-depth-material="true">
+        <p data-glz-type="label">Spatial / Hero · 6</p>
+        <h2 data-glz-type="title">Broad environmental separation</h2>
+        <p data-glz-type="body">Hero depth is rare and ambient. It never authorizes blue shadow pigment or neon glow.</p>
+      </article>
+      <article id="owner" class="depth-surface glz12-depth-owner" data-glz-depth="overlay" data-glz-depth-material="true">
+        <p data-glz-type="label">Single material owner</p>
+        <h2 data-glz-type="title">Nested depth suppression</h2>
+        <div id="nested-child" class="glz12-depth-child" data-glz-depth="floating" data-glz-depth-material="true">
+          Parent owns the shadow and backdrop sample.
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

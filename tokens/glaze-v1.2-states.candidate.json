@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.state.tokens.candidate",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "candidate-state-token-owner",
+  "states": {
+    "hover": {"overlayOpacity": 0.045, "inputRequirement": "hover-capable-fine-pointer", "nonessential": true},
+    "pressed": {"overlayOpacity": 0.095, "scaleAlias": "tokens/glaze-v1.2-motion.candidate.json#/scale/press"},
+    "selected": {"overlayOpacity": 0.12, "semanticRole": "selected", "mustRemainDistinctFromFocus": true},
+    "disabled": {"opacity": 0.55, "interactive": false, "visibleLabelOrNativeDisabledSemanticsRequired": true},
+    "focus": {"widthPx": 3, "offsetPx": 2, "increasedContrastWidthPx": 4, "semanticRole": "focus", "mustRemainDistinctFromSelected": true},
+    "loading": {"ariaBusyRequired": true, "visibleTextOrEquivalentRequired": true, "motionOptional": true, "motionAlias": "tokens/glaze-v1.2-motion.candidate.json#/durationsMs/deliberate"},
+    "semantic": {"roleSource": "tokens/semantic-colors.json#/roles", "colorOnlyMeaningProhibited": true},
+    "offline": {"requiredDistinctions": ["cached-content","unavailable-content","pending-changes","failed-synchronization","retry-behavior"], "dataLossMayBeInferred": false},
+    "recovery": {"requiredStates": ["in-progress","paused","complete","partial","failed","awaiting-action"], "authoritativeUnderlyingStateRequired": true}
+  },
+  "inheritance": {
+    "hoverPressedSelectedDisabledFocusCalibration": "Preserves the established V1 interaction-state calibration already implemented in css/glaze-v1.foundation.css; V1.2 consolidates ownership rather than introducing a new visual scale.",
+    "motion": "tokens/glaze-v1.2-motion.candidate.json",
+    "semanticMeaning": "tokens/semantic-colors.json"
+  },
+  "rules": {
+    "pointerOnlyEssentialFunctionalityProhibited": true,
+    "focusMayNotBeHidden": true,
+    "focusAndSelectionMustRemainDistinct": true,
+    "criticalActionsMayNotDependOnDragOnly": true,
+    "touchTargetMinimumPx": 48,
+    "touchAssistanceTargetPx": 56,
+    "forcedColorsPlatformAuthoritative": true,
+    "reducedMotionPreservesFunction": true,
+    "reducedTransparencyPreservesState": true
+  }
+}

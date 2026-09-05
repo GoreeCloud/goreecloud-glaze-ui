@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.motion.candidate",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-web-reference-implementation",
+  "authority": {
+    "companion": "Glaze UI V1.2 — Motion and Connected Transformation",
+    "companionLifecycle": "proposed",
+    "designPrinciple": "Motion should explain what changed, where it came from, and where it went.",
+    "stableAuthority": "GLAZE UI V1.1 / 1.1.0 remains current Stable until governed V1.2 promotion."
+  },
+  "principles": {
+    "respondImmediately": true,
+    "moveWithPurpose": true,
+    "preserveContinuity": true,
+    "settleQuietly": true,
+    "userControlFirst": true,
+    "stateIndependentOfAnimationCompletion": true,
+    "focusMustNotWaitForMotion": true,
+    "connectedIdentityPreferredWhenRelationshipClear": true,
+    "directManipulationTracksInput": true,
+    "userDrivenMotionInterruptible": true,
+    "reducedMotionPreservesSemanticState": true,
+    "reducedMotionPreservesDirectManipulationTracking": true,
+    "decorativeContinuousMotionAllowed": false,
+    "routineLinearUiMotionAllowed": false,
+    "excessiveBounceAllowed": false
+  },
+  "durationFamilies": {
+    "instant": {"rangeMs": [50, 100], "candidateMs": 80, "uses": ["press acknowledgment", "tiny opacity", "immediate control feedback"]},
+    "fast": {"rangeMs": [100, 180], "candidateMs": 160, "uses": ["popover", "hover/focus treatment", "small icon/state change"]},
+    "standard": {"rangeMs": [180, 280], "candidateMs": 240, "uses": ["selection", "dialog", "tab/local navigation"]},
+    "deliberate": {"rangeMs": [280, 420], "candidateMs": 360, "uses": ["sheet", "connected search", "MorphCard/card-detail"]},
+    "spatial": {"rangeMs": [400, 600], "candidateMs": 480, "uses": ["rare justified large spatial transformation"], "defaultAllowed": false}
+  },
+  "easingFamilies": {
+    "responsive": "cubic-bezier(0.2, 0, 0, 1)",
+    "glide": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "settle": "cubic-bezier(0, 0, 0, 1)",
+    "direct": "linear"
+  },
+  "calibrationProvenance": {
+    "durations": "Bounded Candidate values align with the proposal ranges and existing V1 / Experimental Motion timing families; they are implementation calibration, not universal proposal mandates.",
+    "easing": "Curves reuse existing repository V1 or Experimental Motion curves; no new spring runtime is introduced."
+  },
+  "representativeBindings": {
+    "press": {"duration": "instant", "easing": "responsive", "maxScaleDelta": 0.02, "semanticStateImmediate": true},
+    "selection": {"duration": "standard", "easing": "glide", "indicatorStateIndependentOfTransition": true},
+    "popover": {"duration": "fast", "easing": "responsive", "origin": "anchor", "rowCascadeRequired": false},
+    "dialog": {"duration": "standard", "easing": "settle", "entry": ["small-scale", "opacity", "depth"], "dramaticZoomAllowed": false},
+    "sheet": {"duration": "deliberate", "easing": "settle", "origin": "actual-spatial-edge"},
+    "navigation": {"duration": "standard", "easing": "glide", "sharedShellStable": true},
+    "search": {"duration": "deliberate", "easing": "glide", "sameObjectContinuity": true, "queryAnchored": true, "focusPreserved": true, "reverseOnCloseWherePractical": true},
+    "morphCard": {"duration": "deliberate", "easing": "glide", "sameObjectContinuity": true, "titleIdentityPreserved": true},
+    "icon": {"duration": "fast", "easing": "responsive", "relatedGeometryOnly": true},
+    "directManipulation": {"durationDuringTrackingMs": 0, "easing": "direct", "tracksInputImmediately": true, "optionalSettleOnlyAfterRelease": true}
+  },
+  "profiles": {
+    "full": {"durationScale": 1.0, "travel": "full"},
+    "reduced": {"durationScale": 0.75, "travel": "reduced"},
+    "minimal": {"durationScale": 0.0, "travel": "none"}
+  },
+  "accessibility": {
+    "reducedMotion": {"maxNonessentialFadeMs": 80, "removeNonessentialTranslation": true, "removeNonessentialScale": true, "preserveDirectManipulationTracking": true, "mustNotDelayTaskCompletion": true, "focusImmediate": true},
+    "forcedColors": {"customMotionMayNotDelayStateOrFocus": true},
+    "largeText": {"targetPercent": 200, "mustNotOverflowCriticalContent": true},
+    "targetFloorPx": 48
+  },
+  "performance": {
+    "preferCompositorProperties": ["opacity", "transform"],
+    "persistentWillChangeAllowed": false,
+    "autonomousUiLoopsAllowed": false,
+    "performanceInstrumentationRequiredForThisSlice": false,
+    "spatialDurationRequiresJustification": true
+  },
+  "experimentalSubsystemRelationship": {
+    "record": "GLAZE_MOTION.md",
+    "tokenRecord": "tokens/glaze-motion.json",
+    "requiredStatus": "experimental",
+    "wholesalePromotion": false,
+    "runtimeDependencyIntroduced": false,
+    "incorporatedConcepts": ["interruptible user-driven motion", "semantic state independent of animation completion", "shared object continuity", "direct manipulation survives Reduced Motion", "optional settling never blocks state"]
+  },
+  "implementation": {
+    "tokens": "tokens/glaze-v1.2-motion.candidate.json",
+    "webLayer": "css/glaze-v1.2-motion.candidate.css",
+    "webEntrypoint": "css/glaze-v1.2.0-candidate.css",
+    "reference": "reference/v1.2/motion.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_motion_rendered.py",
+    "workflow": ".github/workflows/glaze-v1.2-motion.yml"
+  },
+  "notEstablished": ["full Section 11 motion implementation", "full 32-component motion coverage", "native motion parity", "physical-device motion acceptance", "assistive-technology motion acceptance", "representative performance/frame-pacing acceptance", "production compositor/window motion integration", "Motion Studio or Motion Spatial", "Glaze Motion Experimental promotion", "human motion/optical acceptance", "Release Candidate status", "Stable status", "downstream consumer conformance"]
+}

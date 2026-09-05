@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.signature-components.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-web-signature-component-implementation",
+  "tier": "signature",
+  "purpose": "Apply bounded V1.2 material, adaptive layout, interaction, search-confirmation, reading-surface, and accessibility rules to the five canonical Signature component families while preserving the current Stable source set and without claiming native, assistive-technology, human, RC, Stable, or consumer parity.",
+  "components": [
+    {
+      "id": "GlzCapsule",
+      "material": "glaze",
+      "interaction": ["expand-collapse", "focus-visible"],
+      "compactChrome": true,
+      "criticalContentExclusiveProhibited": true
+    },
+    {
+      "id": "GlzMorphCard",
+      "material": "solid-by-default",
+      "optionalMaterial": "soft-glaze",
+      "interaction": ["expand-collapse", "focus-visible"],
+      "durableReadingBackdropBlurProhibited": true
+    },
+    {
+      "id": "GlzSmartRail",
+      "material": "glaze",
+      "interaction": ["roving-focus", "arrow-navigation", "home-end", "current-location"],
+      "responsiveTransformationRequired": true,
+      "currentStateDistinctFromFocus": true
+    },
+    {
+      "id": "GlzAuroraSurface",
+      "material": "surface-or-live-glaze",
+      "environmentalAuraMayDefineSubstrate": false,
+      "semanticMeaningMayDependOnAura": false,
+      "reducedTransparencyRemovesAura": true
+    },
+    {
+      "id": "GlzUniversalSearch",
+      "material": {"entry": "glaze", "panel": "deep-glaze"},
+      "interaction": ["open-close", "focus-restore", "arrow-navigation", "enter-execute", "escape-dismiss", "destructive-confirmation", "pointer-confirmation"],
+      "nestedBackdropBlurProhibited": true
+    }
+  ],
+  "universalRules": {
+    "clarityBeforeMaterial": true,
+    "neutralGlassIsMaterialColorIsAccent": true,
+    "nestedBackdropBlurProhibited": true,
+    "durableReadingAndConsequentialContentBackdropDependencyProhibited": true,
+    "semanticMeaningCannotDependOnlyOnAtmosphericColor": true,
+    "focusDistinctFromCurrentOrSelectedState": true,
+    "minimumTargetPx": 48,
+    "assistedTargetPx": 56,
+    "keyboardRequired": true,
+    "reducedMotionRequired": true,
+    "reducedTransparencyRequired": true,
+    "increasedContrastRequired": true,
+    "forcedColorsPlatformAuthoritative": true,
+    "textScale200Required": true,
+    "rtlWhereApplicable": true,
+    "responsiveTransformationRequired": true,
+    "noNewRuntimeDependency": true
+  },
+  "materialAuthority": {
+    "frostedNeutral": "tokens/glaze-v1.2-frosted-neutral.candidate.json",
+    "chromeOptics": "contracts/v1.2/chrome-optics.candidate.json",
+    "componentMaterials": "contracts/v1.2/component-materials.candidate.json",
+    "newNumericMaterialCalibrationIntroduced": false
+  },
+  "runtimeBoundary": {
+    "inheritedStateReducer": "js/glaze-v1.system-interactions.mjs",
+    "candidateRuntime": "js/glaze-v1.2-signature.candidate.mjs",
+    "stableRuntimeModified": false,
+    "pointerDestructiveConfirmationMustNotResetBetweenConsecutiveActivations": true,
+    "searchOpenStateMustSynchronizeDataAndAria": true
+  },
+  "stateTokenBoundary": {
+    "completeV12StateTokenOwnerEstablished": false,
+    "componentLocalStateRefinementOnly": true,
+    "mayImportTokensStatesJsonAsV12Authority": false
+  },
+  "implementation": {
+    "inheritedApi": "css/glaze-v1.advanced.css",
+    "webLayer": "css/glaze-v1.2-signature-components.candidate.css",
+    "candidateRuntime": "js/glaze-v1.2-signature.candidate.mjs",
+    "reference": "reference/v1.2/signature-components.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_signature_components_rendered.py",
+    "workflow": ".github/workflows/glaze-v1.2-signature-components.yml",
+    "catalog": "contracts/components/v1/catalog.json",
+    "candidateEntrypoint": "css/glaze-v1.2.0-candidate.css"
+  },
+  "acceptance": {
+    "appearance": ["light", "dark", "deep-dark"],
+    "accessibility": ["reduced-transparency", "reduced-motion", "increased-contrast", "forced-colors", "text-200", "rtl"],
+    "responsiveWidthsPx": [1280, 390],
+    "keyboardScenarios": ["capsule-toggle", "morph-toggle", "smart-rail-roving-focus", "search-open-arrow-enter-escape-focus-restore"],
+    "pointerScenarios": ["search-destructive-two-step-confirmation"],
+    "materialScenarios": ["durable-morph-solid", "aurora-nonsemantic-atmosphere", "search-no-nested-backdrop"]
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "bounded-web-signature-component-reference",
+      "signature-material-restraint",
+      "signature-responsive-reference-behavior",
+      "search-keyboard-focus-and-pointer-confirmation-reference-behavior",
+      "stable-runtime-preservation-through-candidate-wrapper",
+      "exact-head-rendered-acceptance"
+    ],
+    "notEstablished": [
+      "complete-32-family-component-coverage",
+      "complete-v1.2-state-token-system",
+      "intelligence-tier-v1.2-implementation",
+      "native-signature-component-parity",
+      "assistive-technology-completeness",
+      "human-component-acceptance",
+      "production-signature-performance-acceptance",
+      "rc",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "glaze-v1.1-to-v1.2-migration-candidate",
+  "product": "GLAZE UI",
+  "lifecycle": "candidate-control-plane",
+  "stableBaseline": {
+    "version": "1.1.0",
+    "commit": "15cc76d2bcd4065552dc31c77145b63f34d9e7b2",
+    "tag": "v1.1.0",
+    "consumerEligible": true
+  },
+  "target": {
+    "version": "1.2.0-candidate",
+    "consumerEligible": false,
+    "optInOnly": true,
+    "previewActivation": "data-glaze-upgrade=v1.2-frosted-neutral",
+    "stablePromotionRequiredBeforeProductionMigration": true
+  },
+  "candidateBaselineAtPlanStart": {
+    "commit": "0a3baf4f0413b4ca6009656772df2467059caae3",
+    "date": "2026-09-04",
+    "note": "Exact main revision inspected before the migration control-plane branch was created."
+  },
+  "governance": {
+    "workingBranch": "feat/glaze-v1.2-migration-control-plane",
+    "changeAcceptance": "pull-request-review",
+    "exactHeadValidationRequired": true,
+    "stableAuthorityMayNotMoveInThisChangeSet": true,
+    "versionFileMayNotChangeInThisChangeSet": true,
+    "downstreamConformanceClaimsAllowed": false
+  },
+  "currentCandidateEvidence": {
+    "frostedNeutralSubstrate": "implemented-candidate",
+    "componentMaterialMapping32": "implemented-candidate",
+    "systemShellMapping": "implemented-candidate",
+    "renderedWebReference": "bounded-candidate-evidence",
+    "androidNativeReference": "bounded-candidate-evidence",
+    "linuxGtkNativeReference": "bounded-candidate-evidence",
+    "opticalFoundationContract": "introduced-by-this-change-set",
+    "migrationControlPlane": "introduced-by-this-change-set"
+  },
+  "knownAlignmentDebt": [
+    {
+      "id": "legacy-v11-aura-fields",
+      "state": "open",
+      "description": "The existing Frosted Neutral Candidate token/CSS layer retains V1.1 teal/amber aura compatibility fields. The proposed V1.2 optical architecture requires Frost/Ice aura families and Ice Blue as the primary atmosphere before RC."
+    },
+    {
+      "id": "full-optical-rendering",
+      "state": "open",
+      "description": "The named Frost White/Ice Blue palette, frost-level semantics, and Full/Reduced/Minimal profiles require rendered implementation and acceptance evidence beyond the machine-readable foundation contract."
+    },
+    {
+      "id": "consumer-migration-evidence",
+      "state": "open",
+      "description": "No downstream consumer becomes V1.2 conformant until Stable promotion and fresh repository-local consumer evidence."
+    }
+  ],
+  "implementationStages": [
+    {
+      "id": "M0",
+      "name": "stable-baseline-integrity",
+      "exitGate": "G0",
+      "requirements": [
+        "VERSION remains 1.1.0",
+        "registry currentStable remains 1.1.0",
+        "V1.1 Stable entrypoints remain present and validated",
+        "V1.2 remains non-consumer-eligible"
+      ]
+    },
+    {
+      "id": "M1",
+      "name": "optical-foundation",
+      "exitGate": "G1",
+      "requirements": [
+        "Frost White/Ice Blue optical palette contracted",
+        "Clear/Mist/Frost/Dense Frost/Opaque Frost levels contracted",
+        "Frost/Ice/Crystal/Content aura families contracted",
+        "Full/Reduced/Minimal performance profiles contracted",
+        "anti-patterns and visual distribution limits contracted"
+      ]
+    },
+    {
+      "id": "M2",
+      "name": "component-and-shell-alignment",
+      "exitGate": "G2",
+      "requirements": [
+        "all 32 inherited components retain exact material mappings",
+        "five inherited System Shell regions retain exact mappings",
+        "reading and consequential surfaces remain Solid/Raised by default",
+        "nested backdrop blur remains disabled by default",
+        "Universal Search is explicitly reviewed as a V1.2 showcase"
+      ]
+    },
+    {
+      "id": "M3",
+      "name": "rendered-optical-implementation",
+      "exitGate": "G3",
+      "requirements": [
+        "candidate CSS/runtime consumes optical foundation roles",
+        "legacy teal/amber aura compatibility is retired or mapped to Frost/Ice",
+        "Light, Dark, and Deep Dark reference scenes exist",
+        "visual distribution and gradient restraint are reviewed",
+        "web reference evidence is source-pinned"
+      ]
+    },
+    {
+      "id": "M4",
+      "name": "accessibility-performance-resilience",
+      "exitGate": "G4",
+      "requirements": [
+        "Reduced Transparency is polished and opaque",
+        "Increased Contrast strengthens functional boundaries",
+        "Forced Colors preserves platform semantics",
+        "Reduced Motion preserves task continuity",
+        "200%+ text and RTL are validated where applicable",
+        "Full/Reduced/Minimal performance profiles preserve identity and hierarchy"
+      ]
+    },
+    {
+      "id": "M5",
+      "name": "candidate-to-rc-readiness",
+      "exitGate": "G5",
+      "requirements": [
+        "all release-blocking visual defects are resolved",
+        "required supported-platform evidence is exact-revision and current",
+        "migration documentation and rollback path are current",
+        "human optical review approves the exact candidate",
+        "all required CI checks pass on the exact head"
+      ]
+    },
+    {
+      "id": "M6",
+      "name": "stable-promotion",
+      "exitGate": "G6",
+      "requirements": [
+        "governed lifecycle approval is recorded",
+        "1.2.0 release identity is exact and immutable",
+        "Stable acceptance record is complete",
+        "VERSION and lifecycle registry move together",
+        "V1.1 remains preserved as prior known-good release"
+      ]
+    },
+    {
+      "id": "M7",
+      "name": "controlled-consumer-rollout",
+      "exitGate": "G7",
+      "requirements": [
+        "only Stable 1.2.0 is an eligible production migration target",
+        "each consumer records exact design-system source/release anchor",
+        "each consumer revalidates accessibility, form factor, performance, and product workflows",
+        "migration is staged and independently reversible",
+        "consumer claims are repository-local and evidence-backed"
+      ]
+    }
+  ],
+  "acceptanceGates": [
+    {"id": "G0", "name": "Stable Baseline Integrity", "blocking": true},
+    {"id": "G1", "name": "Optical Foundation Contract", "blocking": true},
+    {"id": "G2", "name": "Component and System Shell Contract Parity", "blocking": true},
+    {"id": "G3", "name": "Rendered Optical Acceptance", "blocking": true},
+    {"id": "G4", "name": "Accessibility, Performance, and Resilience", "blocking": true},
+    {"id": "G5", "name": "RC Exact-Head Acceptance", "blocking": true},
+    {"id": "G6", "name": "Stable Release Promotion", "blocking": true},
+    {"id": "G7", "name": "Consumer Migration Acceptance", "blocking": true}
+  ],
+  "rollout": {
+    "candidateEvaluation": "design-system-repository-and-explicit-non-production-opt-in-only",
+    "rcEvaluation": "bounded-pilot-consumers-after-rc-gates-only",
+    "stableWave1": "small-low-risk-consumer-set-with-fast-rollback",
+    "stableWave2": "representative-mobile-desktop-and-web-consumers",
+    "stableWave3": "remaining-supported-consumers-after-wave-evidence",
+    "broadProductionRule": "no consumer is upgraded by declaration; each must independently pass its own acceptance gates"
+  },
+  "rollback": {
+    "designSystemCandidate": "remove candidate opt-in and continue using V1.1 Stable entrypoints",
+    "consumerBeforeStable": "candidate production migration prohibited",
+    "consumerAfterStable": "restore the consumer's last verified V1.1 integration revision or other recorded known-good revision when rollback criteria are met",
+    "dataMigrationExpected": false,
+    "preserveHistory": true
+  },
+  "promotionProhibitions": [
+    "do-not-set-VERSION-to-1.2.0-before-G6",
+    "do-not-set-currentStable-to-1.2.0-before-G6",
+    "do-not-mark-1.2.0-candidate-consumerEligible",
+    "do-not-claim-downstream-consumer-conformance-from-design-system-evidence",
+    "do-not-treat-rendered-candidate-evidence-as-Stable-release-acceptance"
+  ]
+}

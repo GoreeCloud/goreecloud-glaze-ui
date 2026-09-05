@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light" data-glaze-density-profile="standard">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GLAZE UI V1.2 Composition Reference Library Candidate</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { min-width: 0; }
+    body { margin: 0; min-height: 100vh; overflow-x: hidden; }
+    .reference-frame { padding-block: var(--glz12-space-content) var(--glz12-space-major-region); }
+    .scene-surface { background: var(--glz11-surface-raised, Canvas); border-radius: var(--glz12-radius-panel); }
+    .scene-muted { background: var(--glz11-surface-base, Canvas); }
+    .scene-title, .scene-copy, .scene-label { margin: 0; overflow-wrap: anywhere; }
+    .scene-value { font: inherit; font-variant-numeric: tabular-nums; }
+    table { inline-size: 100%; border-collapse: collapse; }
+    th, td { text-align: start; padding: var(--glz12-space-control); }
+    input, select, textarea, button { font: inherit; }
+    textarea { inline-size: 100%; min-inline-size: 0; }
+  </style>
+</head>
+<body>
+  <main id="composition-library" class="glz12-layout-frame reference-frame glz12-composition-library" data-glz-layout-class="expanded" aria-labelledby="library-title">
+    <header class="glz12-quiet-zone glz12-composition-heading">
+      <p class="scene-label" data-glz-type="label">Composition reference library · Candidate</p>
+      <h1 id="library-title" class="scene-title" data-glz-type="display">Space establishes hierarchy before decoration.</h1>
+      <p class="scene-copy" data-glz-type="body">Eight cross-confirmed reference compositions reuse the V1.2 spatial, component, material, state, and form-factor authority without creating a new calibration.</p>
+    </header>
+
+    <section id="scene-home" class="glz12-composition-scene" data-composition="home-dashboard" data-glz-layout-class="expanded" aria-labelledby="home-title">
+      <header class="glz12-composition-heading">
+        <p class="scene-label" data-glz-type="label">Home dashboard</p>
+        <h2 id="home-title" class="scene-title" data-glz-type="heading">Primary state before secondary metrics</h2>
+      </header>
+      <nav id="home-nav" class="glz12-composition-nav" data-transform="bottom" aria-label="Home destinations">
+        <button class="glz1-button glz12-composition-action" aria-current="page">Home</button>
+        <button class="glz1-button glz12-composition-action">Activity</button>
+        <button class="glz1-button glz12-composition-action">Files</button>
+      </nav>
+      <div class="glz12-layout-grid">
+        <article class="glz12-span-primary glz12-durable-reading-zone glz12-composition-primary glz12-composition-region scene-surface">
+          <div class="glz12-composition-stack">
+            <p class="scene-label" data-glz-type="label">Primary state</p>
+            <h3 class="scene-title" data-glz-type="title">All core services healthy</h3>
+            <p class="scene-copy" data-glz-type="body">The primary system state receives the strongest placement and Quiet Zone before supporting metrics.</p>
+            <div class="glz12-composition-metrics" aria-label="Key metrics">
+              <div class="glz12-composition-metric-primary"><span data-glz-type="caption">Availability</span> <strong class="scene-value" data-glz-type="numeric">99.99%</strong></div>
+              <div class="glz12-composition-metric-secondary"><span data-glz-type="caption">Alerts</span> <strong class="scene-value" data-glz-type="numeric">0</strong></div>
+            </div>
+          </div>
+        </article>
+        <aside class="glz12-span-secondary glz12-composition-secondary glz12-composition-region scene-muted" aria-label="Supporting activity">
+          <div class="glz12-composition-stack"><strong>Recent activity</strong><span>Backup verified</span><span>Sync current</span></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="scene-admin" class="glz12-composition-scene" data-composition="data-heavy-administration" data-glz-layout-class="expanded" data-glaze-density-profile="productive" aria-labelledby="admin-title">
+      <header class="glz12-composition-heading"><p class="scene-label" data-glz-type="label">Data-heavy administration</p><h2 id="admin-title" class="scene-title" data-glz-type="heading">Dense data stays on a durable plane</h2></header>
+      <div class="glz1-toolbar glz12-composition-inline" data-variant="floating" role="toolbar" aria-label="Administration actions">
+        <button class="glz1-button glz12-composition-action">Filter</button><button class="glz1-button glz12-composition-action">Export</button>
+      </div>
+      <div class="glz12-layout-grid">
+        <article class="glz12-span-primary glz12-durable-reading-zone glz12-composition-primary glz12-composition-data-plane glz12-composition-region scene-surface">
+          <div class="glz1-table-wrap" tabindex="0" aria-label="Resource table scroll area">
+            <table class="glz1-table"><thead><tr><th>Resource</th><th>Status</th><th>Latency</th></tr></thead><tbody><tr><td>Gateway</td><td>Healthy</td><td>18 ms</td></tr><tr><td>Storage</td><td>Healthy</td><td>24 ms</td></tr><tr><td>Identity</td><td>Healthy</td><td>21 ms</td></tr></tbody></table>
+          </div>
+        </article>
+        <aside class="glz12-span-secondary glz12-composition-tertiary glz12-composition-region scene-muted" aria-label="Administration context"><div class="glz12-composition-stack"><strong>Context</strong><span>3 resources selected</span><span>Policy scope: production</span></div></aside>
+      </div>
+    </section>
+
+    <section id="scene-settings" class="glz12-composition-scene" data-composition="settings" data-glz-layout-class="expanded" aria-labelledby="settings-title">
+      <header class="glz12-composition-heading"><p class="scene-label" data-glz-type="label">Settings</p><h2 id="settings-title" class="scene-title" data-glz-type="heading">Scanable categories and separated risk</h2></header>
+      <div class="glz12-layout-grid">
+        <nav class="glz12-span-secondary glz12-composition-secondary glz12-composition-region scene-muted" aria-label="Settings categories"><div class="glz12-composition-stack"><a href="#settings-general" aria-current="page">General</a><a href="#settings-security">Security</a><a href="#settings-danger">Advanced</a></div></nav>
+        <article class="glz12-span-primary glz12-durable-reading-zone glz12-composition-primary glz12-composition-reading glz12-composition-region scene-surface">
+          <div class="glz12-composition-stack" id="settings-general"><label for="theme">Appearance</label><select id="theme" class="glz1-select"><option>System</option></select><label class="glz12-composition-inline"><span>Automatic updates</span><input type="checkbox" checked></label><section id="settings-danger" aria-labelledby="danger-title"><h3 id="danger-title">High-risk settings</h3><p>Destructive choices remain separated from routine preferences.</p><button class="glz1-button glz12-composition-action" data-variant="destructive">Reset configuration</button></section></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="scene-files" class="glz12-composition-scene" data-composition="file-browser" data-glz-layout-class="expanded" aria-labelledby="files-title">
+      <header class="glz12-composition-heading"><p class="scene-label" data-glz-type="label">File browser</p><h2 id="files-title" class="scene-title" data-glz-type="heading">Stable navigation, primary list, subordinate preview</h2></header>
+      <nav id="files-nav" class="glz12-composition-nav" data-transform="bottom" aria-label="File destinations"><button class="glz1-button glz12-composition-action" aria-current="page">Files</button><button class="glz1-button glz12-composition-action">Shared</button><button class="glz1-button glz12-composition-action">Recent</button></nav>
+      <div class="glz12-layout-grid">
+        <article class="glz12-span-primary glz12-durable-reading-zone glz12-composition-primary glz12-composition-region scene-surface"><ul class="glz1-list" role="listbox" aria-label="Files"><li role="option" aria-selected="true">Roadmap.pdf</li><li role="option">Budget.ods</li><li role="option">Photos</li></ul></article>
+        <aside class="glz12-span-secondary glz12-composition-inspector glz12-composition-tertiary glz12-composition-region scene-muted" aria-label="File preview"><div class="glz12-composition-stack"><strong>Roadmap.pdf</strong><span>PDF document</span><span>Updated today</span></div></aside>
+      </div>
+    </section>
+
+    <section id="scene-search" class="glz12-composition-scene" data-composition="search" data-glz-layout-class="expanded" aria-labelledby="search-title">
+      <header class="glz12-composition-heading"><p class="scene-label" data-glz-type="label">Search</p><h2 id="search-title" class="scene-title" data-glz-type="heading">Search is the anchor; results remain readable</h2></header>
+      <form class="glz1-capsule glz12-composition-inline" role="search"><label for="composition-search">Search GoreeCloud</label><input id="composition-search" class="glz1-field-control" type="search" value="backup"><button class="glz1-button glz12-composition-action" type="submit">Search</button></form>
+      <article class="glz12-durable-reading-zone glz12-composition-primary glz12-composition-reading glz12-composition-region scene-surface" aria-label="Search results"><div class="glz12-composition-stack"><button class="glz1-button">Backup policy</button><button class="glz1-button">Backup history</button><button class="glz1-button">Recovery guide</button></div></article>
+    </section>
+
+    <section id="scene-form" class="glz12-composition-scene" data-composition="form" data-glz-layout-class="expanded" aria-labelledby="form-title">
+      <header class="glz12-composition-heading"><p class="scene-label" data-glz-type="label">Form</p><h2 id="form-title" class="scene-title" data-glz-type="heading">Readable rhythm, sections, and save-state clarity</h2></header>
+      <form class="glz12-durable-reading-zone glz12-composition-primary glz12-composition-reading glz12-composition-region scene-surface">
+        <div class="glz12-composition-stack"><section aria-labelledby="profile-section"><h3 id="profile-section">Profile</h3><label for="display-name">Display name</label><input id="display-name" class="glz1-field-control" value="GoreeCloud"><label for="locale">Locale</label><select id="locale" class="glz1-select"><option>English</option></select></section><section aria-labelledby="notification-section"><h3 id="notification-section">Notifications</h3><label class="glz12-composition-inline"><span>Service alerts</span><input type="checkbox" checked></label></section><div class="glz12-composition-inline"><button class="glz1-button glz12-composition-action" data-variant="primary" type="submit">Save changes</button><span role="status">All changes saved</span></div></div>
+      </form>
+    </section>
+
+    <section id="scene-inspector" class="glz12-composition-scene" data-composition="detail-inspector" data-glz-layout-class="expanded" aria-labelledby="inspector-title">
+      <header class="glz12-composition-heading"><p class="scene-label" data-glz-type="label">Detail inspector</p><h2 id="inspector-title" class="scene-title" data-glz-type="heading">Context stays subordinate to the current task</h2></header>
+      <div class="glz12-layout-grid">
+        <article class="glz12-span-primary glz12-durable-reading-zone glz12-composition-primary glz12-composition-region scene-surface"><div class="glz12-composition-stack"><h3>Active document</h3><p>The main content remains first in semantic and visual order.</p><p>Inspector details follow and transform below the task in compact composition.</p></div></article>
+        <aside id="detail-inspector" class="glz12-span-secondary glz12-composition-inspector glz12-composition-tertiary glz12-composition-region scene-muted" aria-label="Document inspector"><div class="glz12-composition-stack"><strong>Details</strong><span>Owner: GoreeCloud</span><span>Version: 12</span><button class="glz1-button glz12-composition-action">More details</button></div></aside>
+      </div>
+    </section>
+
+    <section id="scene-media" class="glz12-composition-scene" data-composition="media" data-glz-layout-class="expanded" data-glaze-density-profile="immersive" aria-labelledby="media-title">
+      <header class="glz12-composition-heading"><p class="scene-label" data-glz-type="label">Media</p><h2 id="media-title" class="scene-title" data-glz-type="heading">Content dominates while controls remain reachable</h2></header>
+      <article class="glz12-durable-reading-zone glz12-composition-primary glz12-composition-region scene-surface" aria-label="Media content"><div class="glz12-quiet-zone"><strong data-glz-type="display">Gallery focus</strong><p>Immersive density reduces chrome prominence without removing accessible controls.</p></div></article>
+      <div class="glz1-toolbar glz12-composition-secondary glz12-composition-inline" data-variant="floating" role="toolbar" aria-label="Media controls"><button class="glz1-button glz12-composition-action" aria-label="Previous">Previous</button><button class="glz1-button glz12-composition-action" aria-label="Play">Play</button><button class="glz1-button glz12-composition-action" aria-label="Next">Next</button></div>
+    </section>
+  </main>
+</body>
+</html>

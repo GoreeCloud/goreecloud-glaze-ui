@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.depth.tokens.candidate",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "depth": {
+    "embedded": {"rank": 0, "yPx": 0, "blurPx": 4, "frostBlurPx": 0, "edgeOpacity": 0.03, "motionMs": 0},
+    "base": {"rank": 1, "yPx": 0, "blurPx": 0, "frostBlurPx": 0, "edgeOpacity": 0.04, "motionMs": 0},
+    "raised": {"rank": 2, "yPx": 8, "blurPx": 24, "frostBlurPx": 18, "edgeOpacity": 0.10, "motionMs": 140},
+    "floating": {"rank": 3, "yPx": 14, "blurPx": 38, "frostBlurPx": 18, "edgeOpacity": 0.16, "motionMs": 160},
+    "overlay": {"rank": 4, "yPx": 18, "blurPx": 52, "frostBlurPx": 28, "edgeOpacity": 0.20, "motionMs": 180},
+    "modal": {"rank": 5, "yPx": 28, "blurPx": 80, "frostBlurPx": 0, "edgeOpacity": 0.22, "motionMs": 220},
+    "spatialHero": {"rank": 6, "yPx": 36, "blurPx": 110, "frostBlurPx": 28, "edgeOpacity": 0.18, "motionMs": 260}
+  },
+  "notes": {
+    "calibration": "Numeric values are bounded Candidate implementation calibration derived from current repository shadows.",
+    "frost": "Frost is role-aware and intentionally non-monotonic; modal and durable surfaces may remain opaque even at higher visual depth.",
+    "hero": "Spatial/Hero uses broader lower-pigment environmental separation and does not authorize decorative glow."
+  }
+}

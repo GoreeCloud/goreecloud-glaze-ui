@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "id": "glaze-v1.2-performance-adaptation-candidate",
+  "product": "GLAZE UI",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "stableBaseline": "1.1.0",
+  "consumerEligible": false,
+  "purpose": "Bounded reference acceptance for graceful V1.2 presentation degradation without changing semantics, interaction structure, target floors, or release authority.",
+  "authority": {
+    "performanceBudget": "contracts/performance/glaze-v1-performance-budget.json",
+    "opticalImplementation": "css/glaze-v1.2-optical.candidate.css",
+    "motionImplementation": "css/glaze-v1.2-motion.candidate.css",
+    "depthFallbackImplementation": "css/glaze-v1.2-depth-fallbacks.candidate.css",
+    "accessibilityResolution": "contracts/accessibility/resolution-matrix.json",
+    "finalAccessibilityCascade": "css/glaze-v1.2-accessibility.candidate.css"
+  },
+  "budgetBoundary": {
+    "requiredSourceStatus": "revalidation-required",
+    "numericRuntimeBudgetsEstablished": false,
+    "platformBudgetsEstablished": false,
+    "productionPerformanceAcceptanceEstablished": false,
+    "rule": "Do not invent FPS, frame-time, memory, GPU, blur-count, paint-time, or other production thresholds while the canonical performance budget remains revalidation-required."
+  },
+  "profiles": {
+    "full": {
+      "meaning": "Candidate reference presentation profile.",
+      "required": [
+        "material profile resolves to full",
+        "semantic content and interaction structure remain authoritative"
+      ]
+    },
+    "reduced": {
+      "meaning": "Lower-cost presentation profile that reduces optical and motion complexity while preserving identity and hierarchy.",
+      "required": [
+        "material profile resolves to reduced",
+        "blur and Aura are lower than the full Candidate reference values",
+        "adaptive optical presentation is disabled",
+        "motion duration and travel are reduced rather than changing semantic state"
+      ]
+    },
+    "minimal": {
+      "meaning": "Effects-minimized presentation profile for constrained rendering paths.",
+      "required": [
+        "material profile resolves to minimal",
+        "backdrop blur is removed from governed frosted targets",
+        "Aura opacity and Aura blur resolve to zero",
+        "nonessential motion duration and travel resolve to zero",
+        "depth transition and transform effects are removed where the depth fallback owns them",
+        "durable surfaces, labels, semantic state, focus, reading order, and actions remain present"
+      ]
+    }
+  },
+  "precedence": [
+    "protected-semantic-meaning",
+    "platform-forced-colors",
+    "accessibility-preferences",
+    "performance-profile",
+    "material-and-expression"
+  ],
+  "rules": {
+    "presentationMayDegradeBeforeSemantics": true,
+    "readableContentMayRequireTransparency": false,
+    "nestedBackdropBlurAllowed": false,
+    "performanceProfileMayChangeSemanticMeaning": false,
+    "performanceProfileMayChangeReadingOrder": false,
+    "performanceProfileMayShrinkInteractiveTargets": false,
+    "performanceProfileMayHideRequiredActions": false,
+    "accessibilityMayBeWeakenedByPerformanceProfile": false,
+    "telemetryOrAnalyticsRequired": false,
+    "automatedReferenceEvidenceEstablishesProductionPerformance": false,
+    "automatedReferenceEvidenceEstablishesNativePerformanceParity": false,
+    "consumerClaimBlocked": true
+  },
+  "acceptance": {
+    "profiles": ["full", "reduced", "minimal"],
+    "minimumInteractiveTargetPx": 48,
+    "assistedInteractiveTargetPx": 56,
+    "observations": [
+      "computed material profile",
+      "computed blur and Aura variables",
+      "computed backdrop-filter on representative frosted material",
+      "computed motion duration and travel variables",
+      "representative semantic-state visibility",
+      "representative focus visibility",
+      "interactive target geometry",
+      "document horizontal containment"
+    ],
+    "combinationCases": [
+      "minimal-plus-reduced-transparency",
+      "minimal-plus-forced-colors"
+    ],
+    "measurementPolicy": "Record deterministic browser observations only. They are evidence of fallback behavior, not production performance thresholds or benchmark acceptance."
+  },
+  "evidenceBoundary": {
+    "establishedByThisTranche": [
+      "bounded-web-reference-full-reduced-minimal-profile-behavior",
+      "bounded-web-reference-semantic-and-target-continuity",
+      "bounded-web-reference-accessibility-precedence-compatibility"
+    ],
+    "notEstablished": [
+      "numeric-runtime-performance-budget",
+      "platform-performance-budget",
+      "production-performance-acceptance",
+      "physical-device-performance",
+      "gpu-or-compositor-budget",
+      "power-or-thermal-budget",
+      "memory-budget",
+      "complete-native-platform-performance-parity",
+      "human-optical-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

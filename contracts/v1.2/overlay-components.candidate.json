@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.overlay-components.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-web-overlay-component-implementation",
+  "tier": "overlay",
+  "purpose": "Apply bounded V1.2 material, dismissal, focus-restoration, keyboard, responsive, feedback, and accessibility rules to the six canonical Overlay component families without replacing the inherited V1 semantic API or claiming native, assistive-technology, human, or production parity.",
+  "components": [
+    {"id": "GlzTooltip", "material": "glaze", "frost": "clear", "interactive": false, "criticalContentExclusiveProhibited": true, "dismissalPredictable": true},
+    {"id": "GlzPopover", "material": "glaze", "frost": "frost", "interaction": ["anchor-relation", "escape-dismiss", "outside-dismiss", "focus-restore"], "nestedBackdropBlurProhibited": true},
+    {"id": "GlzMenu", "material": "glaze", "frost": "frost", "interaction": ["roving-focus", "arrow-navigation", "home-end", "checkable", "radio-group", "disabled", "destructive", "escape-dismiss", "focus-restore"], "denseTextRequiresReadability": true},
+    {"id": "GlzDialog", "material": "opaque-or-near-opaque", "frost": "opaque-frost", "interaction": ["native-modal", "escape-cancel", "safe-cancel", "initial-focus", "focus-restore"], "consequentialDecisionBackdropDependencyProhibited": true},
+    {"id": "GlzSheet", "material": "deep-glaze", "frost": "dense-frost", "interaction": ["bottom-sheet-compact", "side-sheet-wide", "rtl-side", "escape-dismiss", "focus-restore"], "responsiveTransformationRequired": true},
+    {"id": "GlzToast", "material": "glaze", "frost": "frost", "interaction": ["polite-status", "optional-action", "bounded-stack"], "maxVisibleCount": 3, "criticalFailureToastOnlyProhibited": true}
+  ],
+  "universalRules": {
+    "clarityBeforeMaterial": true,
+    "nestedBackdropBlurProhibited": true,
+    "consequentialDecisionSurfacesRemainNonBackdropDependent": true,
+    "semanticMeaningCannotDependOnlyOnAtmosphericColor": true,
+    "focusRestorationRequired": true,
+    "escapeDismissalWhereApplicable": true,
+    "minimumTargetPx": 48,
+    "assistedTargetPx": 56,
+    "keyboardRequired": true,
+    "reducedMotionRequired": true,
+    "reducedTransparencyRequired": true,
+    "increasedContrastRequired": true,
+    "forcedColorsPlatformAuthoritative": true,
+    "textScale200Required": true,
+    "rtlWhereApplicable": true,
+    "responsiveTransformationRequired": true,
+    "noNewRuntimeDependency": true
+  },
+  "materialAuthority": {
+    "chromeOptics": "contracts/v1.2/chrome-optics.candidate.json",
+    "depth": "contracts/v1.2/depth.candidate.json",
+    "tooltip": "clear",
+    "popover": "frost",
+    "menu": "frost",
+    "dialog": "opaque-frost-consequential-decision",
+    "sheet": "dense-frost",
+    "toast": "frost",
+    "newNumericMaterialCalibrationIntroduced": false
+  },
+  "feedbackBoundary": {
+    "routineToastRole": "status",
+    "routineToastLive": "polite",
+    "criticalFailureRequiresPersistentNonToastPresentation": true,
+    "toastMaySupplementPersistentFailure": true,
+    "completeV12FeedbackStateSystemEstablished": false
+  },
+  "stateTokenBoundary": {
+    "completeV12StateTokenOwnerEstablished": false,
+    "componentLocalStateRefinementOnly": true,
+    "mayImportTokensStatesJsonAsV12Authority": false
+  },
+  "implementation": {
+    "inheritedApi": "css/glaze-v1.overlay.css",
+    "webLayer": "css/glaze-v1.2-overlay-components.candidate.css",
+    "reference": "reference/v1.2/overlay-components.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_overlay_components_rendered.py",
+    "workflow": ".github/workflows/glaze-v1.2-overlay-components.yml",
+    "catalog": "contracts/components/v1/catalog.json",
+    "candidateEntrypoint": "css/glaze-v1.2.0-candidate.css"
+  },
+  "acceptance": {
+    "appearance": ["light", "dark", "deep-dark"],
+    "accessibility": ["reduced-transparency", "reduced-motion", "increased-contrast", "forced-colors", "text-200", "rtl"],
+    "responsiveWidthsPx": [1280, 390],
+    "keyboardScenarios": ["tooltip-focus", "popover-escape-and-restore", "menu-roving-check-radio-and-restore", "dialog-escape-and-restore", "sheet-escape-and-restore", "toast-undo"],
+    "feedbackScenarios": ["routine-polite-toast", "critical-persistent-plus-supplemental-toast"]
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "bounded-web-overlay-component-reference",
+      "overlay-material-and-decision-surface-restraint",
+      "dismissal-and-focus-restoration-reference-behavior",
+      "menu-keyboard-and-selection-reference-behavior",
+      "responsive-sheet-reference-behavior",
+      "bounded-toast-and-persistent-failure-reference-behavior",
+      "exact-head-rendered-acceptance"
+    ],
+    "notEstablished": [
+      "complete-32-family-component-coverage",
+      "complete-v1.2-state-token-system",
+      "complete-v1.2-feedback-state-system",
+      "native-overlay-component-parity",
+      "assistive-technology-completeness",
+      "human-component-acceptance",
+      "production-overlay-performance-acceptance",
+      "rc",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "id": "glaze-v1.2-visual-regression-candidate",
+  "product": "GLAZE UI",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "stableBaseline": "1.1.0",
+  "consumerEligible": false,
+  "status": "bounded-provisional-zero-drift-regression",
+  "authority": {
+    "visualQualityCompanion": "Glaze UI V1.2 — Visual Quality and Acceptance.docx",
+    "referenceSceneIndex": "contracts/v1.2/reference-scenes.candidate.json",
+    "immutableStableBaseline": "contracts/regression/visual-baselines-v1.json",
+    "unrelatedFutureRegressionAuthority": "contracts/regression/reference-invariants.json"
+  },
+  "provisionalReference": {
+    "revision": "a20ff9dacab9a83bfc58473a0b124f61f47af7c5",
+    "verifiedExactHeadWorkflowCount": 30,
+    "humanApproved": false,
+    "canonicalScreenshotBaseline": false,
+    "acceptanceAuthority": false,
+    "purpose": "Bootstrap an exact-revision V1.2 drift reference from the verified Phase 5 Reference Scene Index checkpoint without representing it as the project-owner-approved optical baseline."
+  },
+  "comparison": {
+    "mode": "decoded-pixel-zero-drift",
+    "changedPixelTolerance": 0,
+    "maximumChannelDeltaTolerance": 0,
+    "ruleMeaning": "A deterministic same-runner equality guard for the provisional reference revision; this is not the final perceptual or acceptable-visual-difference threshold.",
+    "pixelDifferenceAloneIsHumanAcceptanceAuthority": false,
+    "humanOpticalReviewRemainsAuthoritative": true
+  },
+  "captureEnvironment": {
+    "browser": "headless-chrome",
+    "devicePixelRatio": 1,
+    "sameRunnerRequired": true,
+    "viewportPinnedPerScene": true,
+    "fontReadinessRequired": true,
+    "animationsDisabledForCapture": true,
+    "transitionsDisabledForCapture": true,
+    "caretHiddenForCapture": true,
+    "scrollPositionPinnedToTop": true,
+    "remoteRuntimeAssetsAllowed": false,
+    "dynamicContentPolicy": "governed local fixture-only reference content"
+  },
+  "requiredCoverage": [
+    "light",
+    "dark",
+    "deep-dark",
+    "mobile",
+    "typography",
+    "icons",
+    "component-state",
+    "reduced-transparency",
+    "increased-contrast",
+    "large-text",
+    "rtl"
+  ],
+  "scenes": [
+    {
+      "id": "system-shell-light-1440x1000-default-web",
+      "coverage": ["light"],
+      "page": "reference/v1.2/system-shell.html",
+      "viewport": [1440, 1000],
+      "htmlAttributes": {"data-glz-appearance": "light"},
+      "readyExpression": "true"
+    },
+    {
+      "id": "system-shell-dark-1440x1000-default-web",
+      "coverage": ["dark"],
+      "page": "reference/v1.2/system-shell.html",
+      "viewport": [1440, 1000],
+      "htmlAttributes": {"data-glz-appearance": "dark"},
+      "readyExpression": "true"
+    },
+    {
+      "id": "system-shell-deep-dark-1440x1000-default-web",
+      "coverage": ["deep-dark"],
+      "page": "reference/v1.2/system-shell.html",
+      "viewport": [1440, 1000],
+      "htmlAttributes": {"data-glz-appearance": "deep-dark"},
+      "readyExpression": "true"
+    },
+    {
+      "id": "system-shell-light-390x844-mobile-web",
+      "coverage": ["mobile"],
+      "page": "reference/v1.2/system-shell.html",
+      "viewport": [390, 844],
+      "mobile": true,
+      "htmlAttributes": {"data-glz-appearance": "light"},
+      "readyExpression": "true"
+    },
+    {
+      "id": "typography-light-1280x960-default-web",
+      "coverage": ["typography"],
+      "page": "reference/v1.2/typography.html",
+      "viewport": [1280, 960],
+      "htmlAttributes": {"data-glz-appearance": "light"},
+      "readyExpression": "true"
+    },
+    {
+      "id": "typography-light-390x844-text-200-web",
+      "coverage": ["typography", "large-text"],
+      "page": "reference/v1.2/typography.html",
+      "viewport": [390, 844],
+      "mobile": true,
+      "htmlAttributes": {"data-glz-appearance": "light"},
+      "rootStyle": {"font-size": "200%"},
+      "readyExpression": "true"
+    },
+    {
+      "id": "crystal-icons-light-1280x960-reduced-motion-web",
+      "coverage": ["icons"],
+      "page": "reference/v1.2/crystal-icons.html",
+      "viewport": [1280, 960],
+      "htmlAttributes": {"data-glz-appearance": "light"},
+      "mediaFeatures": [{"name": "prefers-reduced-motion", "value": "reduce"}],
+      "readyExpression": "true"
+    },
+    {
+      "id": "interaction-states-light-1280x1200-reduced-motion-web",
+      "coverage": ["component-state"],
+      "page": "reference/v1.2/interaction-states.html",
+      "viewport": [1280, 1200],
+      "htmlAttributes": {"data-glz-appearance": "light"},
+      "mediaFeatures": [{"name": "prefers-reduced-motion", "value": "reduce"}],
+      "readyExpression": "window.interactionStatesReady === true"
+    },
+    {
+      "id": "system-shell-light-1440x1000-reduced-transparency-web",
+      "coverage": ["reduced-transparency"],
+      "page": "reference/v1.2/system-shell.html",
+      "viewport": [1440, 1000],
+      "htmlAttributes": {"data-glz-appearance": "light", "data-glz-transparency": "reduced"},
+      "readyExpression": "true"
+    },
+    {
+      "id": "states-light-1280x960-increased-contrast-web",
+      "coverage": ["increased-contrast"],
+      "page": "reference/v1.2/states-feedback-recovery.html",
+      "viewport": [1280, 960],
+      "htmlAttributes": {"data-glz-appearance": "light", "data-glz-contrast": "increased"},
+      "mediaFeatures": [{"name": "prefers-reduced-motion", "value": "reduce"}],
+      "readyExpression": "!!window.GlazeV12StatesFeedbackRecovery"
+    },
+    {
+      "id": "responsive-rtl-1280x960-default-web",
+      "coverage": ["rtl"],
+      "page": "reference/v1.2/responsive-adaptation.html",
+      "viewport": [1280, 960],
+      "htmlAttributes": {"dir": "rtl", "data-glz-appearance": "light"},
+      "isolate": {
+        "allSelector": "[data-adaptation-scene]",
+        "targetSelector": "[data-adaptation-scene=\"rtl\"]",
+        "hideSelectors": [".intro"]
+      },
+      "readyExpression": "!!window.GlazeV12ResponsiveAdaptation"
+    }
+  ],
+  "baselineUpdatePolicy": {
+    "baselineChangeIsDesignChange": true,
+    "explicitReasonRequired": true,
+    "affectedRegionsRequired": true,
+    "reviewedScreenshotsRequired": true,
+    "ownerApprovalRequired": true,
+    "approverAndDateTraceabilityRequired": true,
+    "referenceRevisionMustBeExact": true,
+    "latestOrCurrentAliasProhibited": true,
+    "intentionalOpticalChangeMustFailOldReferenceUntilReviewedReferenceAdvance": true
+  },
+  "boundaries": {
+    "v11HumanApprovedBaselineMayBeMutated": false,
+    "v11HumanApprovedBaselineCountsAsV12Baseline": false,
+    "v21CandidateInvariantsCountAsV12Authority": false,
+    "provisionalReferenceCountsAsHumanOpticalAcceptance": false,
+    "provisionalReferenceCountsAsReleaseAcceptance": false,
+    "automatedRegressionReplacesHumanReview": false,
+    "applicationIconEcosystemWallCovered": false,
+    "referenceScenesComplete": false,
+    "consumerClaimBlocked": true
+  },
+  "notEstablished": [
+    "human-approved-v1.2-canonical-screenshot-baseline",
+    "final-perceptual-visual-difference-thresholds",
+    "application-icon-ecosystem-wall-regression",
+    "phase5-reference-scenes-complete",
+    "human-optical-acceptance",
+    "native-platform-visual-regression",
+    "physical-device-visual-regression",
+    "release-candidate",
+    "stable",
+    "consumer-conformance"
+  ]
+}

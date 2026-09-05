@@ -1,0 +1,32 @@
+name: Glaze V1.2 Geometry Candidate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  geometry-rendered:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact Candidate revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Preserve Stable and Candidate source authority
+        run: |
+          python scripts/validate_glaze_v1.py
+          python scripts/validate_glaze_v1_2_candidate.py
+      - name: Validate rendered V1.2 geometry Candidate
+        run: python scripts/validate_glaze_v1_2_geometry_rendered.py
+      - name: Upload V1.2 geometry evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glaze-v1.2-geometry-${{ github.event.pull_request.head.sha || github.sha }}
+          path: artifacts/glaze-v1.2-geometry-*.png
+          if-no-files-found: error
+          retention-days: 30

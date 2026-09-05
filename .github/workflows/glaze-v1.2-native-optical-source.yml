@@ -1,0 +1,39 @@
+name: Glaze V1.2 Native Frosted Optical Source Contract
+
+on:
+  pull_request:
+    paths:
+      - 'contracts/v1.2/native-optical-parity.candidate.json'
+      - 'reference/v1.2/native/android/app/src/main/AndroidManifest.xml'
+      - 'reference/v1.2/native/android/app/src/main/java/com/goreecloud/glazeui/reference/v12/Optical*.java'
+      - 'reference/v1.2/native/linux-gtk/optical_app.py'
+      - 'reference/v1.2/native/linux-gtk/glaze-v1.2-linux-optical.css'
+      - 'scripts/validate_glaze_v1_2_native_optical.py'
+      - 'scripts/validate_glaze_v1_2_*_optical_runtime.py'
+      - 'acceptance/v1.2-*-optical-candidate.md'
+      - '.github/workflows/glaze-v1.2-*-optical.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-contract:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Preserve Stable and Candidate authority
+        run: |
+          python3 scripts/validate_glaze_v1.py
+          python3 scripts/validate_glaze_v1_2_candidate.py
+          python3 scripts/validate_glaze_v1_2_migration.py
+      - name: Validate bounded native Frosted Optical source contract
+        run: |
+          python3 -m py_compile scripts/validate_glaze_v1_2_native_optical.py
+          python3 -m py_compile scripts/validate_glaze_v1_2_android_optical_runtime.py
+          python3 -m py_compile reference/v1.2/native/linux-gtk/optical_app.py
+          python3 -m py_compile scripts/validate_glaze_v1_2_linux_optical_runtime.py
+          python3 scripts/validate_glaze_v1_2_native_optical.py

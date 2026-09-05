@@ -1,0 +1,27 @@
+<!doctype html><html lang="en" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GLAZE UI V1.2 Interaction States Candidate</title>
+<link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css"><style>
+body{margin:0;padding:28px;background:var(--glz1-canvas);color:var(--glz1-text-primary);font:16px/1.5 system-ui,sans-serif}main{max-inline-size:1080px;margin:auto;display:grid;gap:24px}.stage{padding:20px;border:1px solid var(--glz1-line);border-radius:28px;background:var(--glz1-base)}.glz12-state-scene{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}.demo{min-block-size:48px;border:1px solid var(--glz1-line);border-radius:14px;background:var(--glz1-raised);color:inherit;font:inherit;padding:8px 12px}.stack{display:grid;gap:10px}@media(max-width:700px){body{padding:12px}.stage{padding:14px}}</style></head><body><main>
+<header><p>Candidate reference — GLAZE UI V1.1 / 1.1.0 remains Stable.</p><h1>Interaction states</h1></header>
+<section><h2>Core control states</h2><div class="stage glz12-state-scene">
+<button id="state-default" class="demo glz12-stateful" type="button"><span>Default</span></button>
+<button id="state-hover" class="demo glz12-stateful" type="button" data-demo-state="hover"><span>Hover</span></button>
+<button id="state-focus" class="demo glz12-stateful" type="button" data-demo-state="focus"><span>Focus</span></button>
+<button id="state-pressed" class="demo glz12-stateful" type="button" data-state="pressed"><span>Pressed</span></button>
+<button id="state-selected" class="demo glz12-stateful" type="button" data-state="selected" aria-selected="true"><span>Selected</span></button>
+<button id="state-disabled" class="demo glz12-stateful" type="button" disabled><span>Disabled</span></button>
+<button id="state-loading" class="demo glz12-stateful" type="button" aria-busy="true" aria-describedby="loading-desc"><span class="glz12-state-busy">Loading</span></button>
+</div><p id="loading-desc">Loading state includes visible text and aria-busy; motion is supplemental.</p></section>
+<section><h2>Semantic states</h2><div class="stage stack">
+<div id="semantic-success" class="glz12-semantic-state" data-semantic="success"><strong>Success:</strong> Backup verification completed.</div>
+<div id="semantic-information" class="glz12-semantic-state" data-semantic="information"><strong>Information:</strong> A new snapshot is available.</div>
+<div id="semantic-warning" class="glz12-semantic-state" data-semantic="warning"><strong>Warning:</strong> Storage is nearing its configured limit.</div>
+<div id="semantic-danger" class="glz12-semantic-state" data-semantic="danger"><strong>Error:</strong> Sync failed for two items; local data remains safe.</div>
+</div></section>
+<section><h2>Offline truth</h2><div class="stage"><div id="offline-state" class="glz12-offline-state" data-state="offline"><strong>Offline:</strong> Cached files remain available. Three changes are pending upload. Remote-only files are unavailable. Retry when a connection returns.</div></div></section>
+<section><h2>Recovery truth</h2><div class="stage stack">
+<div id="recovery-progress" class="glz12-recovery-state" data-state="in-progress"><strong>In progress:</strong> Restoring 42 of 120 files.</div>
+<div id="recovery-partial" class="glz12-recovery-state" data-state="partial"><strong>Partial:</strong> 118 files restored; two require attention.</div>
+<div id="recovery-awaiting" class="glz12-recovery-state" data-state="awaiting-action"><strong>Awaiting action:</strong> Choose whether to replace two conflicting files.</div>
+</div></section>
+</main><script>window.interactionStatesReady=true;</script></body></html>

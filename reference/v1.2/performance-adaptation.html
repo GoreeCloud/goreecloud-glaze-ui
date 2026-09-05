@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GLAZE UI V1.2 Performance Adaptation Candidate</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    body{margin:0;min-height:100vh;padding:24px;background:var(--glz1-canvas);color:var(--glz1-text-primary);font:16px/1.5 system-ui,sans-serif}
+    main{max-inline-size:960px;margin:auto;display:grid;gap:18px}
+    .perf-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+    .perf-stage{min-inline-size:0;padding:20px;border:1px solid var(--glz1-line);border-radius:24px;overflow:hidden}
+    .perf-stack{display:grid;gap:12px;min-inline-size:0}
+    .perf-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .perf-copy{overflow-wrap:anywhere}
+    .perf-probe{min-block-size:120px;padding:18px;border:1px solid var(--glz1-line);border-radius:20px}
+    @media(max-width:640px){body{padding:12px}.perf-grid{grid-template-columns:1fr}.perf-stage{padding:14px}}
+  </style>
+</head>
+<body>
+<main id="performance-reference">
+  <header class="perf-stack">
+    <p>Candidate reference — V1.1 / 1.1.0 remains Stable and official.</p>
+    <h1>Performance Adaptation</h1>
+    <p id="performance-boundary">Browser observations validate graceful presentation fallback only. They do not establish numeric runtime budgets, native parity, physical-device performance, or production performance acceptance.</p>
+  </header>
+
+  <section id="performance-stage" class="glz12-optical-stage perf-stage perf-stack" aria-labelledby="performance-title">
+    <h2 id="performance-title">Protected task surface</h2>
+    <div class="perf-grid">
+      <article id="performance-glaze" class="glz12-deep-glaze perf-probe perf-stack" data-glz-frost="dense-frost" data-glz-depth="overlay" data-glz-depth-material="true" data-glz-depth-change>
+        <div id="performance-aura" data-glz-optical-aura="ice" class="perf-stack">
+          <strong>Files workspace</strong>
+          <span class="perf-copy">Identity and hierarchy remain understandable when expensive optical effects are reduced or removed.</span>
+        </div>
+        <div class="perf-row">
+          <button id="performance-primary" class="glz1-button glz12-stateful" data-variant="primary" data-glz-motion="press" type="button">Open file</button>
+          <button id="performance-selected" class="glz1-button glz12-stateful" data-state="selected" type="button" aria-pressed="true">Selected</button>
+        </div>
+      </article>
+
+      <div class="perf-stack">
+        <article id="performance-semantic" class="glz12-semantic-state" data-semantic="warning" role="status">
+          <strong>Warning</strong>
+          <span class="perf-copy">Sync is delayed. Semantic meaning is independent of translucency, Aura, animation, and performance profile.</span>
+        </article>
+        <label class="perf-stack" for="performance-field">
+          <span>Reference field</span>
+          <span class="glz1-field-control"><input id="performance-field" type="text" value="Task context remains editable"></span>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <section class="perf-stage perf-stack" aria-labelledby="measurement-title">
+    <h2 id="measurement-title">Observation boundary</h2>
+    <p>Automated evidence records computed presentation and geometry only. It intentionally contains no FPS, frame-time, GPU, memory, thermal, power, or production threshold.</p>
+    <output id="performance-profile-label" aria-live="polite">Profile: full</output>
+  </section>
+</main>
+<script>
+  window.setPerformanceProfile = (profile) => {
+    const root = document.documentElement;
+    if (profile === 'full') root.removeAttribute('data-glz-material-performance');
+    else root.setAttribute('data-glz-material-performance', profile);
+    document.getElementById('performance-profile-label').textContent = `Profile: ${profile}`;
+  };
+  window.performanceReferenceReady = true;
+</script>
+</body>
+</html>

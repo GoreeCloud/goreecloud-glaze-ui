@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.data-visualization.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-data-visualization-reference",
+  "purpose": "Provide bounded, truthful visualization composition over semantic HTML/SVG and existing Glaze authorities without adopting proposed visualization components or manufacturing producer-authoritative metrics, thresholds, health, forecasts, or causation.",
+  "authority": {
+    "companionSpecification": "Glaze UI V1.2 — Data Visualization and Metrics.docx",
+    "interactionStates": "contracts/v1.2/interaction-states.candidate.json",
+    "formFactor": "contracts/v1.2/form-factor-tokens.candidate.json",
+    "productiveInterfaces": "contracts/v1.2/productive-interfaces.candidate.json",
+    "principle": "Data should be beautiful because it is clear, not because it is decorated."
+  },
+  "canonicalComponentBoundary": {
+    "catalog": "contracts/components/v1/catalog.json",
+    "catalogExtensionIntroduced": false,
+    "proposedExtensionsRemainNonCanonical": [
+      "GlzMetric",
+      "GlzMetricCard",
+      "GlzSparkline",
+      "GlzLineChart",
+      "GlzBarChart",
+      "GlzStorageRing",
+      "GlzProgressRing",
+      "GlzGauge",
+      "GlzTimeline",
+      "GlzStatusMatrix",
+      "GlzNetworkGraph",
+      "GlzChartTooltip",
+      "GlzChartLegend"
+    ]
+  },
+  "rules": {
+    "informationBeforeDecoration": true,
+    "denseVisualizationsUseStableNeutralSurfaces": true,
+    "visualizationLayerIntroducesBackdropBlur": false,
+    "semanticColorKeepsCanonicalMeaning": true,
+    "importantColorHasNonColorCompanion": true,
+    "multiSeriesCannotDependOnColorAlone": true,
+    "baseVisualizationUnderstandableWithoutHover": true,
+    "keyboardInspectionRequiredWhereInteractive": true,
+    "importantChartsRequireAccessibleEquivalent": true,
+    "freshnessVisibleWhenMaterial": true,
+    "missingUnknownUnavailableAndZeroRemainDistinct": true,
+    "estimatedAndForecastValuesRemainDistinctFromMeasured": true,
+    "forecastPresentationCannotImplyCertainty": true,
+    "thresholdsMustComeFromAuthoritativeConfiguration": true,
+    "overallHealthCannotUpgradeMissingDataToPositive": true,
+    "indeterminateProgressCannotFabricatePercentage": true,
+    "trendDirectionDoesNotImplyPositiveOrNegativeWithoutMetricSemantics": true,
+    "comparisonBaselineMustBeIdentified": true,
+    "correlationCannotBePresentedAsCausationWithoutEvidence": true,
+    "realTimePauseDoesNotImplyProducerCollectionStopped": true,
+    "noRuntimeNetworkRequest": true,
+    "noRuntimePersistence": true,
+    "noNewCanonicalComponent": true,
+    "noNewMaterialCalibration": true
+  },
+  "referenceScenes": [
+    "metrics-dashboard",
+    "time-series",
+    "capacity-storage",
+    "network-performance",
+    "health-status",
+    "timeline-events",
+    "comparison-bars",
+    "missing-and-forecast"
+  ],
+  "modeCoverage": ["compact", "deep-dark", "text-scale-200", "reduced-transparency", "forced-colors", "rtl"],
+  "interactiveAcceptance": {
+    "minimumInteractiveTargetPx": 48,
+    "assistedTargetPx": 56,
+    "metricHierarchy": ["label", "value", "unit", "freshness", "source"],
+    "seriesDifferentiation": ["stroke-pattern", "marker-shape", "direct-label"],
+    "inspection": ["keyboard-focusable-data-points", "visible-selected-point", "exact-value-text", "accessible-data-table"],
+    "truthfulStates": ["missing", "unknown", "unavailable", "zero", "measured", "estimated", "forecast", "stale"],
+    "adaptation": ["expanded", "compact", "200-percent-text", "rtl"]
+  },
+  "dataAuthorityBoundary": {
+    "referenceDataIsFixtureOnly": true,
+    "runtimeFetchesAuthoritativeData": false,
+    "runtimePersistsData": false,
+    "runtimeComputesAuthoritativeHealth": false,
+    "runtimeInventsThresholds": false,
+    "runtimeClaimsCausation": false,
+    "fixtureThresholdsAreExplicitlyLabeledAsFixture": true,
+    "fixtureForecastIsExplicitlyLabeledAsForecast": true
+  },
+  "implementation": {
+    "webLayer": "css/glaze-v1.2-data-visualization.candidate.css",
+    "runtime": "js/glaze-v1.2-data-visualization.candidate.mjs",
+    "reference": "reference/v1.2/data-visualization.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_data_visualization_rendered.py",
+    "workflow": ".github/workflows/glaze-v1.2-data-visualization.yml",
+    "candidateEntrypoint": "css/glaze-v1.2.0-candidate.css"
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "bounded-eight-scene-web-visualization-reference",
+      "stable-neutral-chart-surfaces",
+      "non-color-series-and-state-differentiation",
+      "keyboard-data-point-inspection",
+      "accessible-summary-and-tabular-equivalent",
+      "explicit-freshness-missing-unknown-estimated-forecast-state",
+      "fixture-threshold-and-source-labeling",
+      "compact-deep-dark-rtl-200-percent-text-reduced-transparency-forced-colors-rendered-gates"
+    ],
+    "notEstablished": [
+      "canonical-adoption-of-proposed-visualization-components",
+      "real-authoritative-metric-ingestion",
+      "real-time-streaming",
+      "real-producer-threshold-configuration",
+      "real-health-aggregation",
+      "forecast-model-quality-or-confidence",
+      "large-network-graph-performance",
+      "native-visualization-parity",
+      "assistive-technology-human-acceptance",
+      "production-performance-with-large-datasets",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

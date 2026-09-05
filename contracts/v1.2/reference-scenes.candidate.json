@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "id": "glaze-v1.2-reference-scenes-candidate",
+  "product": "GLAZE UI",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "stableBaseline": "1.1.0",
+  "consumerEligible": false,
+  "phase": "Phase 5 — Reference Scenes",
+  "purpose": "Fail-closed accounting of the canonical V1.2 Candidate reference scenes using existing governed reference evidence where it already exists, without mutating Stable V1.1 baselines or importing unrelated future regression authority.",
+  "requiredSceneCount": 16,
+  "boundedEstablishedCount": 15,
+  "phase5ReferenceScenesComplete": false,
+  "openSceneIds": [
+    "application-icon-ecosystem-wall"
+  ],
+  "excludedRegressionAuthorities": [
+    {
+      "path": "contracts/regression/visual-baselines-v1.json",
+      "reason": "Immutable human-approved V1 baseline; it is preserved as Stable evidence and is not a V1.2 Candidate visual baseline authority."
+    },
+    {
+      "path": "contracts/regression/reference-invariants.json",
+      "reason": "This contract is version 2.1-candidate and is not V1.2 Candidate authority."
+    }
+  ],
+  "scenes": [
+    {
+      "id": "canonical-light",
+      "taskLabel": "Canonical Light reference scene",
+      "status": "bounded-reference-established",
+      "sourcePath": "reference/v1.2/system-shell.html",
+      "sourceMarkers": ["data-glz-shell-region=\"workspace\""],
+      "validatorPath": "scripts/validate_glaze_v1_2_rendered.py",
+      "validatorMarkers": ["system-shell-light"]
+    },
+    {
+      "id": "canonical-dark",
+      "taskLabel": "Canonical Dark reference scene",
+      "status": "bounded-reference-established",
+      "sourcePath": "reference/v1.2/system-shell.html",
+      "sourceMarkers": ["data-glz-shell-region=\"workspace\""],
+      "validatorPath": "scripts/validate_glaze_v1_2_rendered.py",
+      "validatorMarkers": ["data-glz-appearance", "dark", "system-shell-dark"]
+    },
+    {
+      "id": "canonical-deep-dark",
+      "taskLabel": "Canonical Deep Dark reference scene",
+      "status": "bounded-reference-established",
+      "sourcePath": "reference/v1.2/system-shell.html",
+      "sourceMarkers": ["data-glz-shell-region=\"workspace\""],
+      "validatorPath": "scripts/validate_glaze_v1_2_rendered.py",
+      "validatorMarkers": ["deep-dark", "system-shell-deep-dark"]
+    },
+    {
+      "id": "desktop-dashboard",
+      "taskLabel": "Desktop dashboard reference",
+      "status": "bounded-reference-established",
+      "sourcePath": "reference/v1.2/composition-reference-library.html",
+      "sourceMarkers": ["id=\"scene-home\"", "data-composition=\"home-dashboard\""],
+      "validatorPath": "scripts/validate_glaze_v1_2_composition_reference_rendered.py",
+      "validatorMarkers": ["reference/v1.2/composition-reference-library.html", "home-dashboard"]
+    },
+    {
+      "id": "mobile",
+      "taskLabel": "Mobile reference",
+      "status": "bounded-reference-established",
+      "sourcePath": "reference/v1.2/responsive-adaptation.html",
+      "sourceMarkers": ["data-adaptation-scene=\"320-mobile\""],
+      "validatorPath": "scripts/validate_glaze_v1_2_responsive_adaptation_rendered.py",
+      "validatorMarkers": ["reference/v1.2/responsive-adaptation.html", "320-mobile"]
+    },
+    {
+      "id": "tablet",
+      "taskLabel": "Tablet reference",
+      "status": "bounded-reference-established",
+      "sourcePath": "reference/v1.2/responsive-adaptation.html",
+      "sourceMarkers": ["data-adaptation-scene=\"tablet-portrait\""],
+      "validatorPath": "scripts/validate_glaze_v1_2_responsive_adaptation_rendered.py",
+      "validatorMarkers": ["reference/v1.2/responsive-adaptation.html", "tablet-portrait"]
+    },
+    {
+      "id": "productive-table",
+      "taskLabel": "Productive table reference",
+      "status": "bounded-reference-established",
+      "sourcePath": "reference/v1.2/productive-interfaces.html",
+      "sourceMarkers": ["id=\"scene-file-browser\"", "glz12-productive-table"],
+      "validatorPath": "scripts/validate_glaze_v1_2_productive_interfaces_rendered.py",
+      "validatorMarkers": ["reference/v1.2/productive-interfaces.html"]
+    },
+    {
+      "id": "settings-form",
+      "taskLabel": "Settings/form reference",
+      "status": "bounded-reference-established",
+      "sourcePath": "reference/v1.2/composition-reference-library.html",
+      "sourceMarkers": ["id=\"scene-settings\"", "id=\"scene-form\"", "data-composition=\"settings\"", "data-composition=\"form\""],
+      "validatorPath": "scripts/validate_glaze_v1_2_composition_reference_rendered.py",
+      "validatorMarkers": ["reference/v1.2/composition-reference-library.html", "settings", "form"]
+    },
+    {
+      "id": "universal-search",
+      "taskLabel": "Universal Search reference",
+      "status": "bounded-reference-established",
+      "sourcePath": "reference/v1.2/signature-components.html",
+      "sourceMarkers": ["id=\"signature-search\"", "role=\"combobox\""],
+      "validatorPath": "scripts/validate_glaze_v1_2_signature_components_rendered.py",
+      "validatorMarkers": ["reference/v1.2/signature-components.html", "signature-search"]
+    },
+    {
+      "id": "modal-sheet",
+      "taskLabel": "Modal/sheet reference",
+      "status": "bounded-reference-established",
+      "sourcePath": "reference/v1.2/overlay-components.html",
+      "sourceMarkers": ["id=\"dialog-sample\"", "id=\"sheet-sample\""],
+      "validatorPath": "scripts/validate_glaze_v1_2_overlay_components_rendered.py",
+      "validatorMarkers": ["reference/v1.2/overlay-components.html"]
+    },
+    {
+      "id": "loading-error-recovery",
+      "taskLabel": "Loading/error/recovery reference",
+      "status": "bounded-reference-established",
+      "sourcePath": "reference/v1.2/states-feedback-recovery.html",
+      "sourceMarkers": ["data-state-scene=\"loading\"", "data-state-scene=\"critical-failure\"", "data-state-scene=\"recovery\""],
+      "validatorPath": "scripts/validate_glaze_v1_2_states_feedback_recovery_rendered.py",
+      "validatorMarkers": ["reference/v1.2/states-feedback-recovery.html", "critical-failure", "recovery"]
+    },
+    {
+      "id": "reduced-transparency",
+      "taskLabel": "Reduced Transparency reference",
+      "status": "bounded-reference-established",
+      "sourcePath": "reference/v1.2/responsive-adaptation.html",
+      "sourceMarkers": ["data-adaptation-scene=\"reduced-transparency\""],
+      "validatorPath": "scripts/validate_glaze_v1_2_responsive_adaptation_rendered.py",
+      "validatorMarkers": ["reference/v1.2/responsive-adaptation.html", "reduced-transparency"]
+    },
+    {
+      "id": "increased-contrast",
+      "taskLabel": "Increased Contrast reference",
+      "status": "bounded-reference-established",
+      "sourcePath": "reference/v1.2/states-feedback-recovery.html",
+      "sourceMarkers": ["data-state-scene=\"increased-contrast\""],
+      "validatorPath": "scripts/validate_glaze_v1_2_states_feedback_recovery_rendered.py",
+      "validatorMarkers": ["reference/v1.2/states-feedback-recovery.html", "increased-contrast"]
+    },
+    {
+      "id": "large-text",
+      "taskLabel": "Large text reference",
+      "status": "bounded-reference-established",
+      "sourcePath": "reference/v1.2/responsive-adaptation.html",
+      "sourceMarkers": ["data-adaptation-scene=\"text-scale-200\""],
+      "validatorPath": "scripts/validate_glaze_v1_2_responsive_adaptation_rendered.py",
+      "validatorMarkers": ["reference/v1.2/responsive-adaptation.html", "text-scale-200"]
+    },
+    {
+      "id": "rtl",
+      "taskLabel": "RTL reference",
+      "status": "bounded-reference-established",
+      "sourcePath": "reference/v1.2/responsive-adaptation.html",
+      "sourceMarkers": ["data-adaptation-scene=\"rtl\""],
+      "validatorPath": "scripts/validate_glaze_v1_2_responsive_adaptation_rendered.py",
+      "validatorMarkers": ["reference/v1.2/responsive-adaptation.html", "rtl"]
+    },
+    {
+      "id": "application-icon-ecosystem-wall",
+      "taskLabel": "Application icon Ecosystem Wall",
+      "status": "planned-open",
+      "ownerPath": "tokens/icon-identity.json",
+      "requiredOwnerState": {
+        "ecosystemWall.status": "planned",
+        "collisionDetection.status": "planned",
+        "collisionDetection.humanReviewFinalAuthority": true
+      }
+    }
+  ],
+  "evidenceBoundary": {
+    "established": [
+      "bounded-v1.2-reference-scene-accounting",
+      "source-marker-binding-to-existing-governed-v1.2-reference-evidence",
+      "explicit-accounting-of-the-open-application-icon-ecosystem-wall"
+    ],
+    "notEstablished": [
+      "phase5-reference-scenes-complete",
+      "application-icon-ecosystem-wall",
+      "v1.2-human-approved-visual-baseline",
+      "full-visual-regression",
+      "human-optical-acceptance",
+      "assistive-technology-acceptance",
+      "production-performance-acceptance",
+      "complete-native-parity",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

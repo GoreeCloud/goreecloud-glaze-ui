@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.core-token-authority.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-token-authority-consolidation",
+  "purpose": "Define one fail-closed ownership map for V1.2 Candidate token families without copying their raw values into a competing token source.",
+  "principles": {
+    "semanticRolesBeforeRawValues": true,
+    "singleOwnerPerFamily": true,
+    "compositionManifestDoesNotDuplicateRawValues": true,
+    "candidateDoesNotReplaceStable": true,
+    "unimplementedFamiliesRemainExplicitlyUnestablished": true,
+    "platformAdaptersMayMapButNotRedefineSemanticAuthority": true
+  },
+  "families": {
+    "color": {"status": "candidate-owned", "owner": "tokens/glaze-v1.2-optical-foundation.candidate.json", "pointer": "/opticalPalette", "scope": "optical-reference palette; not semantic-status pigment authority"},
+    "atmosphere": {"status": "candidate-owned", "owner": "tokens/glaze-v1.2-optical-foundation.candidate.json", "pointer": "/auraFamilies"},
+    "material": {"status": "candidate-owned", "owner": "tokens/glaze-v1.2-frosted-neutral.candidate.json", "pointer": "/materials"},
+    "frost": {"status": "candidate-owned", "owner": "tokens/glaze-v1.2-optical-foundation.candidate.json", "pointer": "/frostLevels"},
+    "blur": {"status": "candidate-owned", "owner": "tokens/glaze-v1.2-frosted-neutral.candidate.json", "pointer": "/effects/blur"},
+    "opacity": {"status": "candidate-owned", "owner": "tokens/glaze-v1.2-frosted-neutral.candidate.json", "pointer": "/materials", "scope": "material opacity encoded by appearance-specific material treatments"},
+    "spacing": {"status": "candidate-owned", "owner": "tokens/glaze-v1.2-spatial-foundation.candidate.json", "pointer": "/spacePx"},
+    "density": {"status": "candidate-owned", "owner": "tokens/glaze-v1.2-spatial-foundation.candidate.json", "pointer": "/density"},
+    "radius": {"status": "candidate-owned", "owner": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx"},
+    "shadow": {"status": "candidate-owned", "owner": "tokens/glaze-v1.2-depth.candidate.json", "pointer": "/depth", "scope": "role-calibrated shadow geometry and edge treatment"},
+    "elevation": {"status": "candidate-owned", "owner": "tokens/glaze-v1.2-depth.candidate.json", "pointer": "/depth"},
+    "typography": {"status": "candidate-owned", "owner": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles"},
+    "iconSize": {"status": "candidate-owned", "owner": "tokens/glaze-v1.2-crystal-icons.candidate.json", "pointer": "/sizes"},
+    "stroke": {"status": "candidate-owned", "owner": "tokens/glaze-v1.2-crystal-icons.candidate.json", "pointer": "/strokeViewBox"},
+    "motion": {"status": "candidate-owned", "owner": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/durationsMs"},
+    "semanticColor": {"status": "inherited-semantic-contract", "owner": "tokens/semantic-colors.json", "pointer": "/roles", "scope": "semantic meanings only; V1.2 appearance pigment remains separately governed"},
+    "state": {"status": "candidate-owned", "owner": "tokens/glaze-v1.2-states.candidate.json", "pointer": "/states", "scope": "interaction, focus, loading, semantic-state composition, offline, and recovery state authority", "consumerClaimBlocked": true},
+    "formFactor": {"status": "candidate-owned", "owner": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/compositionStates", "scope": "semantic composition-state, capability-input, safe-area, input-modality, and task-continuity authority; platform adapters still select the applicable capability class", "consumerClaimBlocked": true}
+  },
+  "implementation": {
+    "compositionManifest": "tokens/glaze-v1.2-core.candidate.json",
+    "validator": "scripts/validate_glaze_v1_2_core_tokens.py",
+    "workflow": ".github/workflows/glaze-v1.2-core-tokens.yml",
+    "documentation": "tokens/README.md"
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "single-owner-map-for-existing-v1.2-token-families",
+      "machine-readable-alias-pointers",
+      "lifecycle-and-source-drift-validation",
+      "v1.2-state-token-authority",
+      "v1.2-form-factor-token-authority"
+    ],
+    "notEstablished": [
+      "complete-v1.2-form-factor-runtime-acceptance",
+      "complete-hard-coded-value-elimination",
+      "native-token-parity",
+      "rc",
+      "stable",
+      "consumer-conformance",
+      "production-acceptance"
+    ]
+  }
+}

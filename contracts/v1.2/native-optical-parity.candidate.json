@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "glaze-v1.2-native-optical-parity-candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "stableBaseline": "1.1.0",
+  "status": "bounded-reference-implementation",
+  "authority": "tokens/glaze-v1.2-optical-foundation.candidate.json",
+  "governingPrinciples": [
+    "The material is the identity.",
+    "White behaves as light.",
+    "Blue behaves as atmosphere.",
+    "Translucency behaves as depth.",
+    "Native references must preserve hierarchy when compositor or OEM backdrop blur is unavailable."
+  ],
+  "opticalPalette": {
+    "frostWhite": "#F4F8FA",
+    "crystalWhite": "#FBFDFE",
+    "iceBlue": "#DCECF6",
+    "glacierBlue": "#8FC4E8",
+    "clearSkyBlue": "#68AEE0",
+    "cloudGray": "#DCE3E8",
+    "slateGray": "#7E8D99",
+    "coolGraphite": "#151C22",
+    "deepGraphite": "#0E1419",
+    "blueBlack": "#070C11"
+  },
+  "frostLevels": {
+    "clear": {
+      "intent": "minimal-diffusion",
+      "referenceBlurPx": 10,
+      "nativeRole": "compact-control-or-search-entry"
+    },
+    "mist": {
+      "intent": "light-visual-softening",
+      "referenceBlurPx": 18,
+      "nativeRole": "low-priority-floating-chrome"
+    },
+    "frost": {
+      "intent": "standard-glaze-treatment",
+      "referenceBlurPx": 28,
+      "nativeRole": "floating-navigation-or-overlay"
+    },
+    "dense-frost": {
+      "intent": "greater-environmental-abstraction",
+      "referenceBlurPx": 44,
+      "nativeRole": "control-center-or-priority-panel"
+    },
+    "opaque-frost": {
+      "intent": "accessibility-or-performance-fallback",
+      "referenceBlurPx": 0,
+      "nativeRole": "critical-or-fallback-surface"
+    }
+  },
+  "appearanceBindings": {
+    "light": {
+      "canvas": "cloudGray",
+      "primaryMaterial": "frostWhite",
+      "highlight": "crystalWhite",
+      "atmosphere": "iceBlue",
+      "strongAtmosphere": "glacierBlue",
+      "text": "coolGraphite"
+    },
+    "dark": {
+      "canvas": "coolGraphite",
+      "primaryMaterial": "coolGraphite",
+      "durable": "deepGraphite",
+      "highlight": "frostWhite",
+      "atmosphere": "glacierBlue",
+      "text": "frostWhite"
+    },
+    "deep-dark": {
+      "canvas": "blueBlack",
+      "primaryMaterial": "deepGraphite",
+      "durable": "coolGraphite",
+      "highlight": "frostWhite",
+      "atmosphere": "glacierBlue",
+      "text": "frostWhite"
+    }
+  },
+  "performanceProfiles": {
+    "full": {
+      "translucentMaterial": true,
+      "atmosphere": "restrained-dynamic-or-static-native-light",
+      "shadow": "full",
+      "nativeBackdropBlurClaim": false
+    },
+    "reduced": {
+      "translucentMaterial": true,
+      "atmosphere": "reduced-static",
+      "shadow": "simplified",
+      "nativeBackdropBlurClaim": false
+    },
+    "minimal": {
+      "translucentMaterial": false,
+      "atmosphere": "off",
+      "shadow": "basic",
+      "nativeBackdropBlurClaim": false
+    }
+  },
+  "accessibility": {
+    "reducedTransparency": "opaque-frost-white-or-graphite-with-no-background-blur",
+    "largeText": "200-percent-plus-without-critical-clipping",
+    "touchTargetDp": {
+      "minimum": 48,
+      "assisted": 56
+    },
+    "forcedColors": "platform-authoritative-where-supported",
+    "assistiveTechnology": "separate-acceptance-required"
+  },
+  "platformBindings": {
+    "android": {
+      "reference": "reference/v1.2/native/android",
+      "implementation": "reference/v1.2/native/android/app/src/main/java/com/goreecloud/glazeui/reference/v12/MainActivity.java",
+      "validator": "scripts/validate_glaze_v1_2_android_runtime.py",
+      "workflow": ".github/workflows/glaze-v1.2-android-native.yml",
+      "acceptance": "acceptance/v1.2-android-native-candidate.md"
+    },
+    "linuxGtk4": {
+      "reference": "reference/v1.2/native/linux-gtk",
+      "implementation": "reference/v1.2/native/linux-gtk/app.py",
+      "materialContract": "reference/v1.2/native/linux-gtk/material-contract.json",
+      "validator": "scripts/validate_glaze_v1_2_linux_runtime.py",
+      "workflow": ".github/workflows/glaze-v1.2-linux-native.yml",
+      "acceptance": "acceptance/v1.2-linux-native-candidate.md"
+    }
+  },
+  "requiredRuntimeCases": [
+    {
+      "id": "light-full",
+      "appearance": "light",
+      "performanceProfile": "full"
+    },
+    {
+      "id": "dark-reduced-transparency",
+      "appearance": "dark",
+      "performanceProfile": "reduced",
+      "reducedTransparency": true
+    },
+    {
+      "id": "deep-dark-minimal-large-text-touch",
+      "appearance": "deep-dark",
+      "performanceProfile": "minimal",
+      "largeText": true,
+      "touchAssistance": true
+    }
+  ],
+  "acceptanceBoundary": {
+    "establishes": [
+      "bounded Android handheld emulator optical-role alignment",
+      "bounded Linux GTK4 headless optical-role alignment",
+      "exact-revision native reference evidence",
+      "Full Reduced and Minimal native profile behavior",
+      "Light Dark and Deep Dark native role mapping",
+      "Reduced Transparency and large-text/touch fallback evidence"
+    ],
+    "doesNotEstablish": [
+      "Android physical-device qualification",
+      "Android OEM compositor backdrop-blur fidelity",
+      "TalkBack certification",
+      "Wayland compositor-wide backdrop-blur fidelity",
+      "Linux physical-display or GPU qualification",
+      "assistive-technology certification",
+      "signing or distribution acceptance",
+      "downstream application conformance",
+      "production acceptance",
+      "V1.2 RC or Stable promotion"
+    ]
+  }
+}
