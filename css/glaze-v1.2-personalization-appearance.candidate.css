@@ -27,6 +27,11 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-g
 html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-glz-density="productive"] { --glz12-personal-density-gap: 10px; --glz12-personal-density-pad: 12px; }
 html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-glz-density="immersive"] { --glz12-personal-density-gap: 24px; --glz12-personal-density-pad: 26px; }
 
+html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"] .glz12-personalization-library,
+html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"] .glz12-personalization-library > * {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
 html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"] .glz12-personalization-surface {
   min-inline-size: 0;
   max-inline-size: 100%;
@@ -69,6 +74,10 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-g
   grid-template-columns: minmax(0, 1fr);
 }
 html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-glz-text-scale="200"] :is(
+  .glz12-personalization-library,
+  .glz12-personalization-library > *,
+  .glz12-personalization-library h1,
+  .glz12-personalization-library h2,
   .glz12-personalization-surface,
   .glz12-personalization-grid,
   .glz12-personalization-grid > *,
