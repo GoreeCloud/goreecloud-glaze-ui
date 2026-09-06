@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Fail-closed exact-head source readiness for GLAZE UI V1.2 native Personalization adapters.
 
-This validator proves source presence, authority boundaries, and CI wiring for the
-Android and Linux Candidate adapter references. It does not claim that the native
-CI jobs passed, that physical devices were qualified, or that V1.2 is RC/Stable.
+This validator proves source presence, contract alignment, authority boundaries, and
+CI wiring for the Android and Linux Candidate adapter references. It does not claim
+that the native CI jobs passed, that physical devices were qualified, or that V1.2
+is Release Candidate or Stable.
 """
 from __future__ import annotations
 
@@ -19,6 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "artifacts/glaze-v1.2-native-personalization-source-readiness.json"
 VERSION = ROOT / "VERSION"
 LIFECYCLE = ROOT / "registry/lifecycle.json"
+CONTRACT = ROOT / "contracts/v1.2/personalization-appearance.candidate.json"
 
 ANDROID_SOURCE = ROOT / "reference/v1.2/native/android/app/src/main/java/com/goreecloud/glazeui/reference/v12/PersonalizationActivity.java"
 ANDROID_MANIFEST = ROOT / "reference/v1.2/native/android/app/src/main/AndroidManifest.xml"
@@ -56,10 +58,72 @@ def require_markers(text: str, markers: tuple[str, ...], label: str) -> None:
         require(marker in text, f"{label} missing source marker: {marker}")
 
 
+def validate_contract() -> dict[str, object]:
+    contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
+    require(contract.get("version") == "1.2.0-candidate", "Personalization contract version drifted")
+    require(contract.get("lifecycle") == "candidate" and contract.get("consumerEligible") is False, "Personalization contract lifecycle boundary drifted")
+    require(contract.get("stableBaseline") == "1.1.0", "Personalization Stable baseline drifted")
+
+    appearance = contract.get("appearance", {})
+    require(appearance.get("platformAdapterOwnsSystemResolution") is True, "platform system-resolution authority drifted")
+    require(appearance.get("nativeSystemAdapterReferencesImplemented") is True, "native system adapter reference status drifted")
+    require(appearance.get("nativeSystemAdapterReferencePlatforms") == ["android", "linux-gtk"], "native system adapter platform list drifted")
+    require(appearance.get("nativeSystemAdapterAcceptanceRequired") is True, "native system adapter acceptance gate disappeared")
+
+    wallpaper = contract.get("atmosphereProfiles", {}).get("wallpaperSampling", {})
+    require(wallpaper.get("inputAuthority") == "consumer-platform-adapter", "wallpaper input authority drifted")
+    require(wallpaper.get("acceptedInput") == "producer-supplied-local-rgb-summary", "wallpaper native input broadened")
+    require(wallpaper.get("directPixelAcquisitionOwnedByGlaze") is False, "Glaze took wallpaper acquisition ownership")
+    require(wallpaper.get("nativeRgbSummaryAdapterReferencesImplemented") is True, "native RGB-summary adapter reference status drifted")
+    require(wallpaper.get("nativeRgbSummaryAdapterReferencePlatforms") == ["android", "linux-gtk"], "native wallpaper adapter platform list drifted")
+    require(wallpaper.get("nativeWallpaperSourceAdapterAcceptanceRequired") is True, "native wallpaper-source acceptance gate disappeared")
+    require(wallpaper.get("maximumAlpha") == 0.12 and wallpaper.get("maximumChromaRetention") == 0.28, "wallpaper bounds drifted")
+
+    persistence = contract.get("persistenceAndSync", {})
+    require(persistence.get("persistenceAuthority") == "consumer-platform-adapter", "persistence authority drifted")
+    require(persistence.get("directPersistenceOwnedByGlaze") is False, "Glaze took persistence ownership")
+    require(persistence.get("syncAuthority") == "separate-governed-goreecloud-sync-integration", "sync authority drifted")
+    require(persistence.get("crossDeviceSyncImplementedByThisCandidate") is False, "native adapter work overclaimed cross-device sync")
+
+    runtime = contract.get("runtimeContract", {})
+    require(runtime.get("nativeReferenceFollowSystemAdaptersImplemented") is True, "native Follow System runtime declaration drifted")
+    require(runtime.get("nativeReferenceReducedTransparencySuppressesWallpaperAtmosphere") is True, "native Reduced Transparency precedence declaration drifted")
+
+    implementation = contract.get("implementation", {}).get("nativeAdapterReferences", {})
+    require(implementation.get("android", {}).get("source") == str(ANDROID_SOURCE.relative_to(ROOT)), "Android native source path declaration drifted")
+    require(implementation.get("android", {}).get("validator") == str(ANDROID_VALIDATOR.relative_to(ROOT)), "Android native validator path declaration drifted")
+    require(implementation.get("linuxGtk", {}).get("source") == str(LINUX_SOURCE.relative_to(ROOT)), "Linux native source path declaration drifted")
+    require(implementation.get("linuxGtk", {}).get("validator") == str(LINUX_VALIDATOR.relative_to(ROOT)), "Linux native validator path declaration drifted")
+    require(implementation.get("sourceReadinessValidator") == str(Path(__file__).resolve().relative_to(ROOT)), "native source-readiness validator declaration drifted")
+
+    implemented = set(contract.get("evidenceBoundary", {}).get("implemented", []))
+    require({
+        "android-follow-system-adapter-reference",
+        "linux-gtk-follow-system-adapter-reference",
+        "native-rgb-summary-atmosphere-adapter-references",
+        "native-reduced-transparency-atmosphere-precedence-source",
+    }.issubset(implemented), "native implementation evidence declarations are incomplete")
+    not_established = set(contract.get("evidenceBoundary", {}).get("notEstablished", []))
+    require({
+        "native-follow-system-platform-adapter-acceptance",
+        "consumer-platform-persistence-acceptance",
+        "cross-device-preference-sync",
+        "native-wallpaper-source-adapter-acceptance",
+        "assistive-technology-acceptance",
+        "native-platform-parity",
+        "physical-device-acceptance",
+        "release-candidate",
+        "stable",
+        "consumer-conformance",
+    }.issubset(not_established), "native adapter contract overclaimed an open evidence class")
+    return contract
+
+
 def validate() -> dict[str, object]:
     sources = [
         VERSION,
         LIFECYCLE,
+        CONTRACT,
         ANDROID_SOURCE,
         ANDROID_MANIFEST,
         ANDROID_VALIDATOR,
@@ -77,6 +141,7 @@ def validate() -> dict[str, object]:
     lifecycle = json.loads(LIFECYCLE.read_text(encoding="utf-8"))
     require(lifecycle.get("currentStable") == "1.1.0" and lifecycle.get("currentOfficial") == "1.1.0", "Stable lifecycle authority moved")
     require(lifecycle.get("activeCandidate") == "1.2.0-candidate", "V1.2 Candidate identity drifted")
+    validate_contract()
 
     android = ANDROID_SOURCE.read_text(encoding="utf-8")
     manifest = ANDROID_MANIFEST.read_text(encoding="utf-8")
@@ -187,6 +252,7 @@ def validate() -> dict[str, object]:
         "version": "1.2.0-candidate",
         "stableBaseline": "1.1.0",
         "consumerEligible": False,
+        "contractAligned": True,
         "androidAdapterSourceEstablished": True,
         "androidExactHeadCiWiringEstablished": True,
         "linuxAdapterSourceEstablished": True,
@@ -221,7 +287,7 @@ def validate() -> dict[str, object]:
             "stable",
             "consumer-conformance",
         ],
-        "boundary": "Exact-head native adapter source and CI wiring only. Native job success, physical-device/platform qualification, accessibility acceptance, persistence/sync, human approval, RC, Stable, production, and consumer conformance remain independent.",
+        "boundary": "Exact-head native adapter contract, source, and CI wiring only. Native job success, physical-device/platform qualification, accessibility acceptance, persistence/sync, human approval, RC, Stable, production, and consumer conformance remain independent.",
     }
 
 
@@ -230,7 +296,7 @@ def main() -> int:
         report = validate()
         OUT.parent.mkdir(parents=True, exist_ok=True)
         OUT.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        require(OUT.stat().st_size > 1500, "native Personalization source-readiness artifact unexpectedly small")
+        require(OUT.stat().st_size > 1700, "native Personalization source-readiness artifact unexpectedly small")
         print(f"PASS: bounded native Personalization source readiness emitted at {report['sourceRevision']}; native CI/physical/RC/Stable claims remain false.")
         return 0
     except (ValidationError, OSError, json.JSONDecodeError, subprocess.CalledProcessError) as error:
