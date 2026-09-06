@@ -6,16 +6,15 @@ on:
       - "VERSION"
       - "registry/lifecycle.json"
       - "contracts/v1.2/**"
+      - "tokens/glaze-v1.2-**"
+      - "css/glaze-v1.2-**"
+      - "js/glaze-v1.2-**"
+      - "reference/v1.2/**"
       - "contracts/performance/glaze-v1-performance-budget.json"
       - "contracts/glaze.conformance-evidence.schema.json"
-      - "acceptance/v1.2-promotion-gates.candidate.md"
-      - "acceptance/v1.2-human-optical-review-packet-candidate.md"
-      - "scripts/validate_glaze_v1_2_exact_head_readiness.py"
-      - "scripts/validate_glaze_v1_2_human_optical_review_packet.py"
-      - ".github/workflows/glaze-v1.2-exact-head-readiness.yml"
-      - ".github/workflows/glaze-v1.2-visual-regression.yml"
-      - ".github/workflows/glaze-v1.2-application-icon-ecosystem-wall.yml"
-      - ".github/workflows/glaze-v1.2-reference-scenes.yml"
+      - "acceptance/v1.2-**"
+      - "scripts/validate_glaze_v1_2_**"
+      - ".github/workflows/glaze-v1.2-**"
   workflow_dispatch:
 
 permissions:
@@ -46,8 +45,11 @@ jobs:
           python scripts/validate_glaze_v1.py
           python scripts/validate_glaze_v1_2_candidate.py
 
-      - name: Compile exact-head readiness and review-handoff validators
-        run: python -m py_compile scripts/validate_glaze_v1_2_exact_head_readiness.py scripts/validate_glaze_v1_2_human_optical_review_packet.py
+      - name: Compile exact-head and Living Frosted validators
+        run: python -m py_compile scripts/validate_glaze_v1_2_exact_head_readiness.py scripts/validate_glaze_v1_2_human_optical_review_packet.py scripts/validate_glaze_v1_2_living_glaze.py scripts/validate_glaze_v1_2_living_glaze_rendered.py
+
+      - name: Validate Living Frosted source authority
+        run: python scripts/validate_glaze_v1_2_living_glaze.py
 
       - name: Generate fail-closed exact-head readiness evidence
         run: python scripts/validate_glaze_v1_2_exact_head_readiness.py
