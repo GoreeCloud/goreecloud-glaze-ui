@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.living-material-2.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "extends": [
+    "contracts/v1.2/living-glaze.candidate.json",
+    "contracts/v1.2/performance-adaptation.candidate.json",
+    "contracts/v1.3/dynamic-color.candidate.json"
+  ],
+  "purpose": "Deepen V1.2 Living Glaze into a bounded responsive material engine with semantic thickness, tactile interaction response, geometry-aware specular behavior, neutral environmental transmission, and local performance degradation without changing release authority.",
+  "governingRules": {
+    "neutralMaterial": "material-color-remains-substantially-neutral",
+    "environmentalTransmission": "scene-color-visible-through-material-is-not-material-color",
+    "interaction": "response-is-feedback-not-spectacle",
+    "accessibility": "focus-and-accessibility-indicators-outrank-optical-highlights",
+    "performance": "effects-degrade-before-content-correctness-or-task-completion",
+    "privacy": "performance-and-environmental-decisions-remain-local-and-require-no-telemetry"
+  },
+  "responsiveInputs": {
+    "materialMayRespondTo": [
+      "underlying-luminance",
+      "underlying-complexity",
+      "hover",
+      "press",
+      "focus",
+      "drag",
+      "selection",
+      "expansion",
+      "scroll-position",
+      "hierarchy",
+      "interaction-velocity"
+    ],
+    "boundedAndDeterministic": true,
+    "sourceImageryRequired": false,
+    "sourceImageryTransmissionAllowed": false,
+    "producerOrRendererSummariesAllowed": true
+  },
+  "materialThickness": {
+    "soft-glaze": {
+      "meaning": "thin-light-subtly-diffused",
+      "intendedFor": ["compact-transient-controls", "low-emphasis-interactive-chrome"]
+    },
+    "glaze": {
+      "meaning": "standard-interactive-material",
+      "intendedFor": ["navigation", "toolbars", "ordinary-interactive-chrome"]
+    },
+    "deep-glaze": {
+      "meaning": "optically-thicker-stronger-diffusion-and-separation",
+      "intendedFor": ["expanded-search", "priority-floating-panels", "control-center-parent", "consequential-interactive-containers"]
+    },
+    "live-glaze": {
+      "meaning": "environmentally-and-interaction-responsive-signature-material",
+      "intendedFor": ["deliberate-signature-interaction", "connected-material-transformations"]
+    },
+    "stabilityRule": "larger-or-more-consequential-interactive-containers-generally-require-more-optical-stability"
+  },
+  "physicalInteractionResponse": {
+    "pressedMay": [
+      "compress-tiny-amount",
+      "reduce-elevation",
+      "broaden-or-shift-highlight",
+      "increase-optical-density",
+      "adjust-edge-brightness",
+      "bounded-spring-rebound"
+    ],
+    "mustRemainSubtle": true,
+    "continuousRestlessAnimationAllowed": false,
+    "semanticStateMustRemainIndependentOfEffect": true
+  },
+  "adaptiveSpecularLighting": {
+    "geometryAware": true,
+    "genericWhiteBorderAsUniversalHighlight": false,
+    "inputs": [
+      "material-depth",
+      "background-luminance",
+      "component-state",
+      "appearance-mode",
+      "edge-orientation"
+    ],
+    "focusOutranksSpecular": true,
+    "accessibilityOutranksSpecular": true
+  },
+  "environmentalTransmission": {
+    "materialColorDistinctFromTransmittedColor": true,
+    "materialRemainsPrimarilyNeutral": true,
+    "dynamicColorAuthority": "contracts/v1.3/dynamic-color.candidate.json",
+    "contextInfluenceMustRemainBounded": true,
+    "consequentialSemanticSurfacesMayBeRecoloredByTransmission": false,
+    "reducedTransparencyMayDisableTransmission": true
+  },
+  "degradation": {
+    "order": [3, 2, 1, 0],
+    "tiers": {
+      "3": {
+        "name": "living-glaze",
+        "capabilities": ["adaptive-optical-response", "interaction-effects", "connected-material-transformation"]
+      },
+      "2": {
+        "name": "responsive-glaze",
+        "capabilities": ["stable-blur", "interaction-responsive-depth", "interaction-responsive-highlights"]
+      },
+      "1": {
+        "name": "static-glaze",
+        "capabilities": ["neutral-transparency", "bounded-blur", "static-edges"]
+      },
+      "0": {
+        "name": "solid",
+        "capabilities": ["opaque-or-near-opaque-semantic-equivalent"]
+      }
+    },
+    "neverSacrifice": [
+      "text",
+      "interactive-target-size",
+      "focus",
+      "semantic-state",
+      "semantic-meaning",
+      "reading-order",
+      "required-actions",
+      "task-completion"
+    ]
+  },
+  "performanceGovernor": {
+    "name": "Glaze Performance Governor",
+    "decisionScope": "local-only",
+    "telemetryRequired": false,
+    "analyticsRequired": false,
+    "productionThresholdsEstablished": false,
+    "numericPerformanceBudgetsEstablished": false,
+    "inputClassificationAuthority": "consumer-platform-or-renderer-adapter",
+    "acceptedQualitativeSignals": {
+      "frameTiming": ["healthy", "strained", "critical", "unknown"],
+      "renderingCapability": ["high", "standard", "limited", "unknown"],
+      "glazeRegionLoad": ["low", "medium", "high", "unknown"],
+      "windowLoad": ["compact", "standard", "large", "unknown"],
+      "powerSaving": ["on", "off", "unknown"],
+      "animationPreference": ["standard", "reduced", "unknown"],
+      "compositorCapability": ["full", "partial", "none", "unknown"]
+    },
+    "rules": {
+      "forcedSolidMayBeSelectedByAccessibility": true,
+      "criticalFrameTimingCapsTier": 0,
+      "noCompositorCapsTier": 0,
+      "limitedRenderingCapsTier": 1,
+      "strainedFrameTimingCapsTier": 1,
+      "powerSavingCapsTier": 1,
+      "partialCompositorCapsTier": 2,
+      "highRegionLoadCapsTier": 2,
+      "reducedAnimationCapsConnectedMaterialMotion": true,
+      "unknownSignalsUseDeterministicConservativeFallback": true,
+      "governorMayUpgradeAboveRequestedTier": false
+    }
+  },
+  "accessibility": {
+    "precedence": [
+      "forced-colors",
+      "reduced-transparency",
+      "increased-contrast",
+      "reduced-motion",
+      "performance-governor",
+      "clarity-and-expression",
+      "material-effects"
+    ],
+    "forcedColors": "platform-authoritative-solid-semantic-treatment",
+    "reducedTransparency": "solid-or-near-solid-neutral-equivalent-without-background-transmission",
+    "increasedContrast": "strengthen-functional-separation-before-increasing-decorative-intensity",
+    "reducedMotion": "preserve-semantic-state-while-removing-nonessential-rebound-and-connected-travel"
+  },
+  "implementation": {
+    "tokenAuthority": "tokens/glaze-v1.3-material.candidate.json",
+    "runtime": "js/glaze-v1.3-living-material-2.candidate.mjs",
+    "tests": "tests/glaze-v1.3-living-material-2.test.mjs",
+    "validator": "scripts/validate_glaze_v1_3_living_material_2.py",
+    "workflow": ".github/workflows/glaze-v1.3-living-material-2.yml"
+  },
+  "evidenceBoundary": {
+    "implementedByWorkstream": [
+      "machine-readable-material-contract",
+      "semantic-thickness-profiles",
+      "bounded-material-response-runtime",
+      "qualitative-local-performance-governor",
+      "environmental-transmission-boundary",
+      "automated-runtime-and-contract-tests"
+    ],
+    "notEstablished": [
+      "production-frame-time-thresholds",
+      "production-gpu-or-compositor-budget",
+      "production-memory-budget",
+      "power-or-thermal-acceptance",
+      "physical-device-performance",
+      "human-optical-acceptance",
+      "assistive-technology-acceptance",
+      "native-platform-parity",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}
