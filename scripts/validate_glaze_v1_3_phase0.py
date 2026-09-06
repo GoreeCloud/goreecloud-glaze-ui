@@ -17,6 +17,7 @@ ALLOWED_PHASES = {
     "phase-4-human-reachability",
     "phase-5-expressive-shape",
     "phase-6-variable-responsive-typography",
+    "phase-7-adaptive-navigation",
 }
 ALLOWED_WORKSTREAM_STATUSES = {
     "planned",
