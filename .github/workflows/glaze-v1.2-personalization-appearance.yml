@@ -5,11 +5,13 @@ on:
     paths:
       - "contracts/v1.2/personalization-appearance.candidate.json"
       - "css/glaze-v1.2-personalization-appearance.candidate.css"
+      - "js/glaze-v1.2-personalization.candidate.mjs"
       - "css/glaze-v1.2.0-candidate.css"
       - "reference/v1.2/personalization-appearance.html"
       - "scripts/validate_glaze_v1_2_personalization_appearance_rendered.py"
       - ".github/workflows/glaze-v1.2-personalization-appearance.yml"
       - "contracts/v1.2/accessibility-adaptation.candidate.json"
+      - "contracts/v1.2/living-glaze.candidate.json"
       - "tokens/glaze-v1.2-form-factor.candidate.json"
   workflow_dispatch:
 
@@ -48,6 +50,7 @@ jobs:
         run: python scripts/validate_glaze_v1_2_personalization_appearance_rendered.py
 
       - name: Upload V1.2 Personalization and Appearance evidence
+        if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: glaze-v1.2-personalization-appearance-${{ github.event.pull_request.head.sha || github.sha }}
