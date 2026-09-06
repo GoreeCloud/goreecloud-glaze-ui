@@ -1,0 +1,77 @@
+name: Glaze V1.2 External Qualification Protocol Candidate
+
+on:
+  push:
+    paths:
+      - "contracts/performance/glaze-v1-performance-budget.json"
+      - "contracts/v1.2/device-performance-qualification.candidate.json"
+      - "contracts/v1.2/assistive-technology-qualification.candidate.json"
+      - "contracts/v1.2/performance-testing.candidate.json"
+      - "contracts/v1.2/accessibility-testing.candidate.json"
+      - "acceptance/v1.2-device-performance-qualification-candidate.md"
+      - "acceptance/v1.2-assistive-technology-qualification-candidate.md"
+      - "scripts/validate_glaze_v1_2_device_performance_qualification.py"
+      - "scripts/validate_glaze_v1_2_assistive_technology_qualification.py"
+      - ".github/workflows/glaze-v1.2-external-qualification-protocol.yml"
+  pull_request:
+    paths:
+      - "contracts/performance/glaze-v1-performance-budget.json"
+      - "contracts/v1.2/device-performance-qualification.candidate.json"
+      - "contracts/v1.2/assistive-technology-qualification.candidate.json"
+      - "contracts/v1.2/performance-testing.candidate.json"
+      - "contracts/v1.2/accessibility-testing.candidate.json"
+      - "acceptance/v1.2-device-performance-qualification-candidate.md"
+      - "acceptance/v1.2-assistive-technology-qualification-candidate.md"
+      - "scripts/validate_glaze_v1_2_device_performance_qualification.py"
+      - "scripts/validate_glaze_v1_2_assistive_technology_qualification.py"
+      - ".github/workflows/glaze-v1.2-external-qualification-protocol.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: glaze-v1-2-external-qualification-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  protocol-integrity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact Candidate revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Preserve Stable and Candidate lifecycle authority
+        run: |
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          python scripts/validate_glaze_v1.py
+          python scripts/validate_glaze_v1_2_candidate.py
+
+      - name: Compile external qualification validators
+        run: |
+          python -m py_compile \
+            scripts/validate_glaze_v1_2_device_performance_qualification.py \
+            scripts/validate_glaze_v1_2_assistive_technology_qualification.py
+
+      - name: Validate physical-device and performance qualification protocol
+        run: |
+          python scripts/validate_glaze_v1_2_device_performance_qualification.py
+          python scripts/validate_glaze_v1_2_device_performance_qualification.py --self-test
+
+      - name: Validate manual assistive-technology qualification protocol
+        run: |
+          python scripts/validate_glaze_v1_2_assistive_technology_qualification.py
+          python scripts/validate_glaze_v1_2_assistive_technology_qualification.py --self-test
+
+      - name: Preserve evidence boundary
+        run: |
+          echo "Protocol self-tests are synthetic and do not establish physical-device, production-performance, assistive-technology, RC, Stable, or consumer acceptance."
