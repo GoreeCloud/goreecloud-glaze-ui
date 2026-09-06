@@ -14,7 +14,7 @@
     "motion.direct": {"implementation": "direct", "meaning": "direct manipulation or immediate state response"},
     "motion.micro": {"implementation": "fast", "meaning": "small local response"},
     "motion.standard": {"implementation": "standard", "meaning": "ordinary state transition"},
-    "motion.connected": {"implementation": "spatial", "meaning": "context-preserving connected transformation"},
+    "motion.connected": {"implementation": "connected", "meaning": "context-preserving connected transformation"},
     "motion.expressive": {"implementation": "expressive", "meaning": "bounded high-value expressive transition"},
     "motion.reduced": {"implementation": "reduced", "meaning": "reduced-motion semantic equivalent"},
     "motion.minimal": {"implementation": "minimal", "meaning": "nonessential travel removed"}
@@ -23,7 +23,8 @@
     "direct": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/easing/direct", "mode": "inherited-baseline"},
     "fast": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/durationsMs/fast", "mode": "inherited-baseline"},
     "standard": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/durationsMs/standard", "mode": "inherited-baseline"},
-    "spatial": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/durationsMs/spatial", "mode": "inherited-baseline"},
+    "connected": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/durationsMs/deliberate", "mode": "v1.3-connected-semantic-binding"},
+    "spatial": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/durationsMs/spatial", "mode": "explicit-justification-only"},
     "reduced": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/profiles/reduced", "mode": "inherited-baseline"},
     "minimal": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/profiles/minimal", "mode": "inherited-baseline"},
     "expressive": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/durationsMs/deliberate", "mode": "v1.3-semantic-binding-to-governed-baseline"},
