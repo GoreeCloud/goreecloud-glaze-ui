@@ -11,7 +11,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT = ROOT / "contracts/v1.2/human-optical-review-packet.candidate.json"
-GUIDE = ROOT / "acceptance/v1.2-human-optical-review-packet.candidate.md"
+GUIDE = ROOT / "acceptance/v1.2-human-optical-review-packet-candidate.md"
 VISUAL = ROOT / "contracts/v1.2/visual-regression.candidate.json"
 ICON_WALL = ROOT / "contracts/v1.2/application-icon-ecosystem-wall.candidate.json"
 REFERENCE_SCENES = ROOT / "contracts/v1.2/reference-scenes.candidate.json"
@@ -81,9 +81,7 @@ def sha256(path: Path) -> str:
 
 
 def head_revision() -> str:
-    revision = subprocess.check_output(
-        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
-    ).strip()
+    revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     require(re.fullmatch(r"[0-9a-f]{40}", revision) is not None, "Git HEAD is not immutable")
     return revision
 
@@ -100,18 +98,25 @@ def validate_contract() -> tuple[dict[str, Any], list[Path]]:
     require(contract.get("status") == "machine-handoff-ready-human-review-pending", "review-packet status drifted")
 
     binding = contract.get("exactHeadBinding", {})
-    require(binding == {
-        "source": "git rev-parse HEAD",
-        "sameRevisionRequiredAcrossArtifacts": True,
-        "staticRevisionInContractProhibited": True,
-    }, "exact-head review binding drifted")
-    require(re.search(r"\b[0-9a-f]{40}\b", CONTRACT.read_text(encoding="utf-8")) is None,
-            "review-packet contract must not embed a static Candidate revision")
+    require(
+        binding == {
+            "source": "git rev-parse HEAD",
+            "sameRevisionRequiredAcrossArtifacts": True,
+            "staticRevisionInContractProhibited": True,
+        },
+        "exact-head review binding drifted",
+    )
+    require(
+        re.search(r"\b[0-9a-f]{40}\b", CONTRACT.read_text(encoding="utf-8")) is None,
+        "review-packet contract must not embed a static Candidate revision",
+    )
 
     evidence = contract.get("evidenceClasses")
     require(isinstance(evidence, list), "evidenceClasses must be an array")
-    require([item.get("id") for item in evidence if isinstance(item, dict)] == EXPECTED_EVIDENCE_IDS,
-            "review evidence class order/set drifted")
+    require(
+        [item.get("id") for item in evidence if isinstance(item, dict)] == EXPECTED_EVIDENCE_IDS,
+        "review evidence class order/set drifted",
+    )
     workflow_paths: list[Path] = []
     for item in evidence:
         evidence_id = item["id"]
@@ -122,15 +127,17 @@ def validate_contract() -> tuple[dict[str, Any], list[Path]]:
         require(item.get("required") is True, f"{evidence_id}: review evidence became optional")
         workflow_paths.append(ROOT / workflow_path)
 
-    human = contract.get("humanReview", {})
-    require(human == {
-        "required": True,
-        "status": "pending",
-        "finalAuthority": True,
-        "acceptedRevision": None,
-        "reviewedAt": None,
-        "reviewer": None,
-    }, "human-review state must remain pending and authoritative")
+    require(
+        contract.get("humanReview") == {
+            "required": True,
+            "status": "pending",
+            "finalAuthority": True,
+            "acceptedRevision": None,
+            "reviewedAt": None,
+            "reviewer": None,
+        },
+        "human-review state must remain pending and authoritative",
+    )
 
     rules = contract.get("rules", {})
     for key in (
@@ -143,17 +150,17 @@ def validate_contract() -> tuple[dict[str, Any], list[Path]]:
     ):
         require(rules.get(key) is True, f"review-packet safety rule weakened: {key}")
 
-    require(contract.get("requiredOutputClaims") == EXPECTED_CLAIMS,
-            "review-packet fail-closed output claims drifted")
+    require(contract.get("requiredOutputClaims") == EXPECTED_CLAIMS, "review-packet fail-closed output claims drifted")
     require(len(contract.get("reviewDimensions", [])) == 9, "human review dimension set drifted")
-
-    implementation = contract.get("implementation", {})
-    require(implementation == {
-        "guide": "acceptance/v1.2-human-optical-review-packet.candidate.md",
-        "validator": "scripts/validate_glaze_v1_2_human_optical_review_packet.py",
-        "manifestArtifact": "artifacts/glaze-v1.2-human-optical-review-manifest.json",
-        "orchestratingWorkflow": ".github/workflows/glaze-v1.2-exact-head-readiness.yml",
-    }, "review-packet implementation binding drifted")
+    require(
+        contract.get("implementation") == {
+            "guide": "acceptance/v1.2-human-optical-review-packet-candidate.md",
+            "validator": "scripts/validate_glaze_v1_2_human_optical_review_packet.py",
+            "manifestArtifact": "artifacts/glaze-v1.2-human-optical-review-manifest.json",
+            "orchestratingWorkflow": ".github/workflows/glaze-v1.2-exact-head-readiness.yml",
+        },
+        "review-packet implementation binding drifted",
+    )
 
     boundary = contract.get("evidenceBoundary", {})
     for marker in (
@@ -177,8 +184,10 @@ def validate_contract() -> tuple[dict[str, Any], list[Path]]:
 def validate_authority_boundaries() -> None:
     lifecycle = load_json(LIFECYCLE)
     require(VERSION.read_text(encoding="utf-8").strip() == "1.1.0", "VERSION moved away from Stable 1.1.0")
-    require(lifecycle.get("currentStable") == "1.1.0" and lifecycle.get("currentOfficial") == "1.1.0",
-            "Stable lifecycle authority moved")
+    require(
+        lifecycle.get("currentStable") == "1.1.0" and lifecycle.get("currentOfficial") == "1.1.0",
+        "Stable lifecycle authority moved",
+    )
     require(lifecycle.get("activeCandidate") == "1.2.0-candidate", "active Candidate identity drifted")
 
     visual = load_json(VISUAL)
@@ -186,22 +195,26 @@ def validate_authority_boundaries() -> None:
     require(provisional.get("humanApproved") is False, "provisional visual evidence became human approved")
     require(provisional.get("canonicalScreenshotBaseline") is False, "provisional visual evidence became canonical")
     require(provisional.get("acceptanceAuthority") is False, "provisional visual evidence gained acceptance authority")
-    require(visual.get("comparison", {}).get("humanOpticalReviewRemainsAuthoritative") is True,
-            "human optical authority drifted")
+    require(
+        visual.get("comparison", {}).get("humanOpticalReviewRemainsAuthoritative") is True,
+        "human optical authority drifted",
+    )
 
     wall = load_json(ICON_WALL)
-    require(wall.get("humanReview") == {
-        "required": True,
-        "status": "pending",
-        "finalAuthority": True,
-        "acceptedRevision": None,
-        "reviewedAt": None,
-    }, "application icon wall human review must remain pending")
+    require(
+        wall.get("humanReview") == {
+            "required": True,
+            "status": "pending",
+            "finalAuthority": True,
+            "acceptedRevision": None,
+            "reviewedAt": None,
+        },
+        "application icon wall human review must remain pending",
+    )
 
     scenes = load_json(REFERENCE_SCENES)
     require(scenes.get("phase5ReferenceScenesComplete") is False, "Reference Scenes unexpectedly completed")
-    require(scenes.get("openSceneIds") == ["application-icon-ecosystem-wall"],
-            "Reference Scene open set drifted")
+    require(scenes.get("openSceneIds") == ["application-icon-ecosystem-wall"], "Reference Scene open set drifted")
 
     readiness = load_json(READINESS)
     claims = readiness.get("requiredOutputClaims", {})
@@ -217,8 +230,10 @@ def validate_workflows(contract: dict[str, Any]) -> None:
         require(f"name: {item['workflow']}" in text, f"{evidence_id}: workflow identity drifted")
         require("actions/upload-artifact@" in text, f"{evidence_id}: workflow does not publish evidence")
         require(item["artifactNamePrefix"] in text, f"{evidence_id}: workflow artifact prefix missing")
-        require("github.event.pull_request.head.sha || github.sha" in text,
-                f"{evidence_id}: exact Candidate revision expression missing")
+        require(
+            "github.event.pull_request.head.sha || github.sha" in text,
+            f"{evidence_id}: exact Candidate revision expression missing",
+        )
 
     visual_text = (ROOT / EXPECTED_WORKFLOWS["provisional-visual-regression"][1]).read_text(encoding="utf-8")
     require("path: artifacts/visual-regression/" in visual_text, "visual-regression screenshots are not uploaded")
@@ -228,30 +243,29 @@ def validate_workflows(contract: dict[str, Any]) -> None:
         "contracts/v1.2/application-icon-ecosystem-wall.candidate.json",
         "reference/v1.2/application-icon-ecosystem-wall.html",
         ".branding-sources/goreecloud-branding-assets/catalog.json",
-        ".branding-sources/goreecloud-branding-assets/products/*/app-icon.svg",
+        ".branding-sources/goreecloud-branding-assets/products",
+        "-name app-icon.svg",
+        "test \"$(find \"$out/branding/products\" -name app-icon.svg -type f | wc -l)\" -eq 38",
     ):
-        require(marker in wall_text, f"application icon review artifact path missing: {marker}")
+        require(marker in wall_text, f"application icon review staging missing: {marker}")
 
     scenes_text = (ROOT / EXPECTED_WORKFLOWS["reference-scene-index"][1]).read_text(encoding="utf-8")
-    for marker in (
-        "contracts/v1.2/reference-scenes.candidate.json",
-        "reference/v1.2/",
-    ):
+    for marker in ("contracts/v1.2/reference-scenes.candidate.json", "reference/v1.2/"):
         require(marker in scenes_text, f"reference-scene review artifact path missing: {marker}")
 
     readiness_text = (ROOT / EXPECTED_WORKFLOWS["exact-head-readiness"][1]).read_text(encoding="utf-8")
     for marker in (
         "validate_glaze_v1_2_human_optical_review_packet.py",
         "artifacts/glaze-v1.2-human-optical-review-manifest.json",
+        "acceptance/v1.2-human-optical-review-packet-candidate.md",
     ):
         require(marker in readiness_text, f"exact-head review orchestration missing: {marker}")
 
 
 def build_manifest(contract: dict[str, Any], sources: list[Path]) -> dict[str, Any]:
     revision = head_revision()
-    evidence = []
-    for item in contract["evidenceClasses"]:
-        evidence.append({
+    evidence = [
+        {
             "id": item["id"],
             "workflow": item["workflow"],
             "workflowPath": item["workflowPath"],
@@ -260,8 +274,9 @@ def build_manifest(contract: dict[str, Any], sources: list[Path]) -> dict[str, A
             "required": True,
             "requiredRevision": revision,
             "revisionRule": "workflow run head_sha and reviewed artifact provenance must equal requiredRevision",
-        })
-
+        }
+        for item in contract["evidenceClasses"]
+    ]
     return {
         "schemaVersion": 1,
         "id": "glaze-v1.2-human-optical-review-manifest",
