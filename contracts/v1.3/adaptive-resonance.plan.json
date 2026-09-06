@@ -9,7 +9,7 @@
   "releaseContract": "GLAZE_UI_V1_3.md",
   "deferredQualification": "contracts/v1.3/deferred-qualification.plan.json",
   "deferredQualificationAcceptance": "acceptance/v1.3-deferred-qualification.md",
-  "phase": "phase-2-dynamic-color",
+  "phase": "phase-3-living-material-2",
   "phaseEffect": "implementation-workstream-active-no-lifecycle-promotion",
   "workstreams": [
     {
@@ -28,7 +28,7 @@
     },
     {
       "id": "adaptive-dynamic-color",
-      "status": "implementation-complete-validation-pending",
+      "status": "implemented-and-validated",
       "dependsOn": ["contract-and-token-architecture"],
       "expectedArtifacts": [
         "contracts/v1.3/dynamic-color.candidate.json",
@@ -59,14 +59,18 @@
     },
     {
       "id": "living-material-2",
-      "status": "planned",
+      "status": "implementation-in-progress",
       "dependsOn": [
         "contract-and-token-architecture",
         "adaptive-dynamic-color"
       ],
       "expectedArtifacts": [
         "contracts/v1.3/living-material-2.candidate.json",
-        "tokens/glaze-v1.3-material.candidate.json"
+        "tokens/glaze-v1.3-material.candidate.json",
+        "js/glaze-v1.3-living-material-2.candidate.mjs",
+        "tests/glaze-v1.3-living-material-2.test.mjs",
+        "scripts/validate_glaze_v1_3_living_material_2.py",
+        ".github/workflows/glaze-v1.3-living-material-2.yml"
       ]
     },
     {
