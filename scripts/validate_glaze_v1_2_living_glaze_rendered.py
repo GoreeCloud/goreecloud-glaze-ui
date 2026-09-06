@@ -71,7 +71,17 @@ def run():
         require('none' not in (baseline['pressed'],baseline['dragged']),'interactive transforms did not render')
         require('Readable content remains intact' in baseline['disabledText'],'disabled content readability marker missing')
         require(all(v>=48 for v in baseline['targetHeights']),'Navigation Capsule target fell below 48px')
-        clarity=execute(sid,"""const buttons=[...document.querySelectorAll('[data-clarity]')],out={};for(const b of buttons){b.click();out[b.dataset.clarity]=document.documentElement.dataset.glazeClarity}return out;""")
+
+        optics=execute(sid,"""document.querySelectorAll('[data-glaze-living]').forEach(e=>e.style.transition='none');const profiles=['clear','balanced','dense'],out={};for(const profile of profiles){document.documentElement.dataset.glazeClarity=profile;void document.body.offsetWidth;const s=getComputedStyle(document.querySelector('#simple')),c=getComputedStyle(document.querySelector('#complex')),u=getComputedStyle(document.querySelector('#unknown'));out[profile]={simple:{background:s.backgroundColor,backdrop:s.backdropFilter,border:s.borderColor},complex:{background:c.backgroundColor,backdrop:c.backdropFilter,border:c.borderColor},unknown:{background:u.backgroundColor,backdrop:u.backdropFilter,border:u.borderColor}}}document.documentElement.dataset.glazeClarity='balanced';return out;""")
+        for profile in ('clear','balanced','dense'):
+            require(optics[profile]['simple']['background'] != optics[profile]['complex']['background'],f'{profile} backdrop complexity does not alter material density')
+            require(optics[profile]['simple']['backdrop'] != optics[profile]['complex']['backdrop'],f'{profile} backdrop complexity does not alter diffusion')
+            require('blur(' in optics[profile]['unknown']['backdrop'],f'{profile} deterministic fallback lost Frosted Neutral blur')
+        require(len({optics[p]['unknown']['background'] for p in ('clear','balanced','dense')})==3,'Clear/Balanced/Dense do not produce distinct material density')
+        require(len({optics[p]['unknown']['backdrop'] for p in ('clear','balanced','dense')})==3,'Clear/Balanced/Dense do not produce distinct diffusion')
+        require(len({optics[p]['unknown']['border'] for p in ('clear','balanced','dense')})==3,'Clear/Balanced/Dense do not produce distinct edge treatment')
+
+        clarity=execute(sid,"""const buttons=[...document.querySelectorAll('[data-clarity]')],out={};for(const b of buttons){b.click();out[b.dataset.clarity]=document.documentElement.dataset.glazeClarity}document.documentElement.dataset.glazeClarity='balanced';return out;""")
         require(clarity=={'clear':'clear','balanced':'balanced','dense':'dense'},'clarity controls do not map deterministically')
         wide=screenshot(sid,'glaze-v1.2-living-glaze-wide.png')
         cdp(sid,'Emulation.setDeviceMetricsOverride',{'width':390,'height':900,'deviceScaleFactor':1,'mobile':False,'screenWidth':390,'screenHeight':900})
@@ -79,6 +89,12 @@ def run():
         require(compact['left']>=-1 and compact['right']<=compact['viewport']+1,'compact Navigation Capsule overflows viewport')
         require(all(v>=48 for v in compact['targets']),'compact target floor weakened')
         compact_shot=screenshot(sid,'glaze-v1.2-living-glaze-compact.png')
+
+        execute(sid,"document.documentElement.dataset.glzTransparency='reduced'")
+        reduced_transparency=execute(sid,"return {backdrop:getComputedStyle(document.querySelector('#complex')).backdropFilter,background:getComputedStyle(document.querySelector('#complex')).backgroundColor};")
+        require(reduced_transparency['backdrop']=='none','Reduced Transparency did not remove backdrop dependence')
+        execute(sid,"delete document.documentElement.dataset.glzTransparency")
+
         cdp(sid,'Emulation.setEmulatedMedia',{'media':'screen','features':[{'name':'prefers-reduced-motion','value':'reduce'}]})
         reduced=execute(sid,"return {transition:getComputedStyle(document.querySelector('#simple')).transitionDuration,pressed:getComputedStyle(document.querySelector('#pressed')).transform};")
         require(set(reduced['transition'].split(', '))=={'0s'},'Reduced Motion did not remove Living Glaze transition')
@@ -86,7 +102,7 @@ def run():
         forced=execute(sid,"return {active:matchMedia('(forced-colors: active)').matches,backdrop:getComputedStyle(document.querySelector('#complex')).backdropFilter};")
         require(forced['active'] is True,'Forced Colors emulation failed')
         require(forced['backdrop']=='none','Forced Colors did not remove backdrop dependence')
-        return {'sourceRevision':revision(),'status':'passed','baseline':baseline,'clarity':clarity,'compact':compact,'reducedMotion':reduced,'forcedColors':forced,'screenshots':[wide,compact_shot]}
+        return {'sourceRevision':revision(),'status':'passed','baseline':baseline,'optics':optics,'clarity':clarity,'compact':compact,'reducedTransparency':reduced_transparency,'reducedMotion':reduced,'forcedColors':forced,'screenshots':[wide,compact_shot]}
     finally:
         if sid:
             try:request('DELETE',f'/session/{sid}',timeout=5)
