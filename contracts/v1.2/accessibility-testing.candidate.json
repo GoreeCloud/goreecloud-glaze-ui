@@ -7,12 +7,16 @@
   "stableBaseline": "1.1.0",
   "consumerEligible": false,
   "phase": "Phase 5 — Accessibility Testing",
-  "purpose": "Bind the canonical V1.2 accessibility test scope to exact automated browser evidence without converting machine-observable checks into human or assistive-technology acceptance.",
+  "purpose": "Bind the canonical V1.2 accessibility test scope plus bounded Living Frosted and Personalization integration checks to exact automated browser evidence without converting machine-observable checks into human or assistive-technology acceptance.",
   "authoritativeInputs": [
     "contracts/accessibility/resolution-matrix.json",
     "contracts/v1.2/accessibility-adaptation.candidate.json",
+    "contracts/v1.2/living-glaze.candidate.json",
+    "contracts/v1.2/personalization-appearance.candidate.json",
     "reference/v1.2/accessibility-adaptation.html",
-    "reference/v1.2/responsive-adaptation.html"
+    "reference/v1.2/responsive-adaptation.html",
+    "reference/v1.2/living-glaze.html",
+    "reference/v1.2/personalization-appearance.html"
   ],
   "canonicalTaskScope": [
     "keyboard-navigation",
@@ -106,9 +110,27 @@
       "doesNotEstablish": "human optical readability acceptance"
     }
   },
+  "extendedAutomatedCoverage": {
+    "living-frosted-accessibility-integration": {
+      "reference": "reference/v1.2/living-glaze.html",
+      "validator": "scripts/validate_glaze_v1_2_living_glaze_rendered.py",
+      "method": "Verify canonical Reduced Motion/Transparency, Increased Contrast, Forced Colors, 48 px default targets, 56 px Touch Assistance, 200 percent compact reflow, deterministic material fallback, and readable disabled content on the Living Frosted signature path.",
+      "doesNotEstablish": "human optical, assistive-technology, native, or physical-device accessibility acceptance"
+    },
+    "personalization-accessibility-integration": {
+      "reference": "reference/v1.2/personalization-appearance.html",
+      "validator": "scripts/validate_glaze_v1_2_personalization_accessibility.py",
+      "method": "Verify accessibility-tree button names, 48/56 px target floors, Reduced Transparency precedence over accent/wallpaper atmosphere, Increased Contrast boundaries, 200 percent compact reflow, Forced Colors suppression of decorative atmosphere, and semantic-warning survival.",
+      "doesNotEstablish": "screen-reader, TalkBack, VoiceOver, native adapter, or physical-device accessibility acceptance"
+    }
+  },
   "delegatedRenderedValidators": [
     "scripts/validate_glaze_v1_2_accessibility_adaptation_rendered.py",
     "scripts/validate_glaze_v1_2_responsive_adaptation_rendered.py"
+  ],
+  "companionRenderedValidators": [
+    "scripts/validate_glaze_v1_2_living_glaze_rendered.py",
+    "scripts/validate_glaze_v1_2_personalization_accessibility.py"
   ],
   "implementation": {
     "validator": "scripts/validate_glaze_v1_2_accessibility_testing.py",
@@ -126,10 +148,13 @@
     "automatedBrowserTestingEqualsVoiceOverAcceptance": false,
     "automatedBrowserTestingEqualsPhysicalDeviceAcceptance": false,
     "automatedBrowserTestingEqualsNativePlatformAccessibilityAcceptance": false,
+    "livingFrostedBrowserAccessibilityEqualsHumanOrDeviceAcceptance": false,
+    "personalizationBrowserAccessibilityEqualsNativeAdapterAcceptance": false,
     "consumerClaimBlocked": true
   },
   "evidenceBoundary": {
     "boundedAutomatedAccessibilityTestingEstablished": true,
+    "boundedLivingAndPersonalizationAccessibilityIntegrationEstablished": true,
     "phase5AccessibilityTestingComplete": false,
     "established": [
       "machine-observable-web-keyboard-navigation",
@@ -140,7 +165,9 @@
       "machine-observable-rtl-and-responsive-containment",
       "machine-observable-reduced-motion-transparency-contrast-and-forced-colors",
       "machine-observable-grayscale-and-color-vision-structural-survival",
-      "machine-observable-mobile-and-far-view-reference-accessibility"
+      "machine-observable-mobile-and-far-view-reference-accessibility",
+      "machine-observable-living-frosted-accessibility-precedence",
+      "machine-observable-personalization-accessibility-precedence-and-semantic-isolation"
     ],
     "notEstablished": [
       "human-accessibility-acceptance",
@@ -153,6 +180,8 @@
       "complete-native-platform-accessibility-parity",
       "human-color-vision-optical-acceptance",
       "human-rtl-optical-acceptance",
+      "living-frosted-human-accessibility-acceptance",
+      "personalization-native-adapter-accessibility-acceptance",
       "release-candidate",
       "stable",
       "consumer-conformance"
