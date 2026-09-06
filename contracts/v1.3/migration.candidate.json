@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.migration-and-consumer-boundary.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "workstream": "migration-and-consumer-boundary",
+  "purpose": "Define a fail-closed V1.2-to-V1.3 migration control plane, exact-anchor consumer evidence boundary, rollback policy, and later rollout model without changing live lifecycle or consumer targets and without migrating consumers by declaration.",
+  "extends": [
+    "contracts/v1.2/migration.candidate.json",
+    "ADOPTION.md",
+    "CONFORMANCE.md",
+    "CONSUMERS.md",
+    "consumers/registry.json",
+    "contracts/v1.3/accessibility.candidate.json",
+    "contracts/v1.3/component-experience.candidate.json"
+  ],
+  "liveAuthority": {
+    "currentStable": "1.2.0",
+    "currentOfficial": "1.2.0",
+    "requiredConsumerVersion": "1.2.0",
+    "consumerRegistry": "consumers/registry.json",
+    "v1_3MayChangeLiveConsumerTargetInThisWorkstream": false,
+    "v1_3MayChangeVersionFileInThisWorkstream": false,
+    "v1_3MayChangeLifecycleRegistryInThisWorkstream": false,
+    "v1_3CandidateEntrypointMayBeCreatedInThisWorkstream": false
+  },
+  "evaluationBoundary": {
+    "proposedOrCandidateEvaluation": "explicit-non-production-opt-in-only",
+    "productionMigrationRequiresLifecycleEligibleRelease": true,
+    "productionMigrationRequiresConsumerEligibleRelease": true,
+    "productionMigrationRequiresExactDesignSystemAnchor": true,
+    "productionMigrationRequiresExactConsumerRevision": true,
+    "sharedDesignSystemEvidenceGrantsConsumerConformance": false,
+    "importedTokensOrStylesGrantConformance": false,
+    "versionLabelChangeGrantsConformance": false,
+    "candidateArtifactNameGrantsLifecycleEligibility": false
+  },
+  "consumerEvidence": {
+    "requiredRecordSchema": "contracts/v1.3/consumer-adoption-record.schema.json",
+    "requiredFields": [
+      "consumerName",
+      "repository",
+      "consumerRevision",
+      "designSystemVersion",
+      "designSystemRevision",
+      "supportedPlatforms",
+      "evidence",
+      "rollback",
+      "productionApproval"
+    ],
+    "evidenceCategories": [
+      "rendered-or-native",
+      "interaction",
+      "accessibility",
+      "responsive-form-factor",
+      "platform-integration",
+      "product-workflows",
+      "performance",
+      "production-approval"
+    ],
+    "repositoryLocalRequired": true,
+    "exactRevisionRequired": true,
+    "missingApplicableEvidenceFailsClosed": true,
+    "staleEvidenceFailsClosed": true,
+    "unsupportedOrUnvalidatedPlatformProductionBlocked": true,
+    "truthDomainAuthorityMustRemainWithOwningSystem": true
+  },
+  "readinessEvaluator": {
+    "runtime": "js/glaze-v1.3-migration.candidate.mjs",
+    "canMutateConsumerRepository": false,
+    "canMutateLifecycle": false,
+    "canGrantConformance": false,
+    "canGrantProductionApproval": false,
+    "failClosed": true,
+    "resultStates": ["evaluation-only", "blocked", "ready-for-consumer-acceptance", "eligible-after-independent-acceptance"],
+    "productionEligibilityRequires": [
+      "release-lifecycle-eligible",
+      "release-consumer-eligible",
+      "exact-design-system-anchor",
+      "exact-consumer-revision",
+      "all-applicable-consumer-evidence",
+      "explicit-consumer-production-approval",
+      "recorded-rollback-anchor"
+    ]
+  },
+  "rollback": {
+    "lastKnownGoodConsumerIntegrationRequired": true,
+    "rollbackRevisionMustBeRecordedBeforeProductionMigration": true,
+    "rollbackMustBeRepositoryLocal": true,
+    "rollbackMayRewriteImmutableDesignSystemHistory": false,
+    "presentationUpgradeAssumesNoDataMigration": true,
+    "consumerMustVerifyNoDataMigrationAssumption": true,
+    "independentlyReversible": true
+  },
+  "truthDomains": {
+    "glazeUiAuthority": "presentation-and-interaction-contract",
+    "consumerOrServiceAuthority": "underlying-product-system-security-privacy-and-state-truth",
+    "presentationMayManufactureUnderlyingTruth": false,
+    "presentationMayStrengthenUnverifiedSecurityOrPrivacyClaims": false
+  },
+  "laterRollout": {
+    "automatic": false,
+    "requiresStablePromotionFirst": true,
+    "waves": [
+      {"id": "wave-1", "intent": "small-low-risk-consumers-with-fast-rollback"},
+      {"id": "wave-2", "intent": "representative-web-mobile-desktop-after-wave-1-evidence"},
+      {"id": "wave-3", "intent": "remaining-supported-consumers-after-prior-wave-evidence"}
+    ],
+    "eachConsumerMustPassIndependently": true,
+    "waveEvidenceMaySubstituteForConsumerEvidence": false
+  },
+  "implementation": {
+    "migrationGuide": "MIGRATION_V1_2_TO_V1_3.md",
+    "adoptionRecordSchema": "contracts/v1.3/consumer-adoption-record.schema.json",
+    "runtime": "js/glaze-v1.3-migration.candidate.mjs",
+    "tests": "tests/glaze-v1.3-migration.test.mjs",
+    "validator": "scripts/validate_glaze_v1_3_migration.py",
+    "workflow": ".github/workflows/glaze-v1.3-migration.yml"
+  },
+  "evidenceBoundary": {
+    "implementedByWorkstream": [
+      "v1.2-to-v1.3-migration-control-plane",
+      "fail-closed-consumer-readiness-evaluator",
+      "consumer-adoption-record-schema",
+      "exact-anchor-and-repository-local-evidence-rules",
+      "rollback-and-independent-reversibility-rules",
+      "truth-domain-ownership-boundary",
+      "later-nonautomatic-rollout-model",
+      "automated-contract-runtime-schema-and-doc-validation"
+    ],
+    "notEstablished": [
+      "any-consumer-v1.3-migration",
+      "any-consumer-v1.3-conformance",
+      "any-consumer-v1.3-production-eligibility",
+      "v1.3-lifecycle-candidate",
+      "v1.3-release-candidate",
+      "v1.3-stable",
+      "native-platform-consumer-acceptance",
+      "assistive-technology-consumer-acceptance",
+      "physical-device-consumer-acceptance",
+      "production-performance-consumer-acceptance",
+      "cross-repository-rollout-execution"
+    ]
+  }
+}
