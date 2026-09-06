@@ -10,6 +10,8 @@
   "consumerEligible": false,
   "sourceStable": "1.2.0",
   "namespace": "color",
+  "dynamicColorContract": "contracts/v1.3/dynamic-color.candidate.json",
+  "runtimeBinding": "js/glaze-v1.3-dynamic-color.candidate.mjs",
   "semanticTokens": {
     "color.material.neutral": {"implementation": "materialNeutral", "meaning": "dominant substantially neutral material color authority"},
     "color.accent.user": {"implementation": "userAccent", "meaning": "personal interactive accent authority; not semantic status"},
@@ -24,9 +26,9 @@
     "semanticRoles": {"source": "tokens/semantic-colors.json", "pointer": "/roles", "mode": "inherited-semantic-contract"},
     "focusRole": {"source": "tokens/semantic-colors.json", "pointer": "/roles/focus", "mode": "inherited-semantic-contract"},
     "selectionRole": {"source": "tokens/semantic-colors.json", "pointer": "/roles/selected", "mode": "inherited-semantic-contract"},
-    "userAccent": {"status": "architecture-established-runtime-unestablished", "ownerWorkstream": "adaptive-dynamic-color"},
-    "productIdentity": {"status": "architecture-established-registry-mapping-required", "ownerWorkstream": "adaptive-dynamic-color"},
-    "contextPalette": {"status": "architecture-established-runtime-unestablished", "ownerWorkstream": "adaptive-dynamic-color"}
+    "userAccent": {"status": "implemented-candidate-runtime", "ownerWorkstream": "adaptive-dynamic-color", "binding": "js/glaze-v1.3-dynamic-color.candidate.mjs", "perceptualModel": "OKLCH"},
+    "productIdentity": {"status": "precedence-runtime-implemented-registry-adapter-deferred", "ownerWorkstream": "adaptive-dynamic-color", "binding": "js/glaze-v1.3-dynamic-color.candidate.mjs"},
+    "contextPalette": {"status": "implemented-candidate-local-summary-runtime", "ownerWorkstream": "adaptive-dynamic-color", "binding": "js/glaze-v1.3-dynamic-color.candidate.mjs", "maximumChroma": 0.1}
   },
   "authorities": [
     "neutral-material-palette",
@@ -34,6 +36,29 @@
     "product-identity-palette",
     "semantic-palette",
     "context-palette"
+  ],
+  "precedence": [
+    "accessibility",
+    "semantic",
+    "product-identity",
+    "user-accent",
+    "context-accent",
+    "default-glaze-accent"
+  ],
+  "userAccentRoles": [
+    "primary",
+    "secondary",
+    "tertiary",
+    "subtle-container",
+    "high-emphasis-container",
+    "on-accent",
+    "focus",
+    "selection"
+  ],
+  "appearanceModes": [
+    "light",
+    "dark",
+    "deep-dark"
   ],
   "rules": {
     "neutralMaterialDominatesSurfaceSystem": true,
@@ -43,13 +68,17 @@
     "colorOnlyStateCommunicationAllowed": false,
     "derivedAccentMustPassContrastValidation": true,
     "naiveRgbDerivationIsAuthority": false,
-    "semanticTokensMayContainRawPigments": false
+    "semanticTokensMayContainRawPigments": false,
+    "contextMayRecolorConsequentialDialogs": false,
+    "contextMayRecolorSemanticStatus": false,
+    "networkRequiredForDerivation": false,
+    "completeDefaultThemeWithoutPersonalization": true
   },
   "notEstablished": [
-    "perceptual-accent-derivation-algorithm",
-    "user-accent-tone-values",
-    "context-palette-runtime",
+    "native-platform-color-adapters",
+    "cross-device-personalization-sync",
     "product-identity-registry-binding",
-    "appearance-specific-v1.3-pigments"
+    "rendered-v1.3-visual-acceptance",
+    "consumer-adoption"
   ]
 }
