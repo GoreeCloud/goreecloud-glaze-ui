@@ -7,7 +7,7 @@
   "stableBaseline": "1.1.0",
   "consumerEligible": false,
   "phase": "Phase 5 — Accessibility Testing",
-  "purpose": "Bind the canonical V1.2 accessibility test scope plus bounded Living Frosted and Personalization integration checks to exact automated browser evidence without converting machine-observable checks into human or assistive-technology acceptance.",
+  "purpose": "Bind the canonical V1.2 accessibility test scope plus bounded browser integration checks and an independent Android machine-accessibility source/runtime evidence track to exact evidence without converting machine-observable checks into human, assistive-technology, physical-device, RC, Stable, production, or consumer acceptance.",
   "authoritativeInputs": [
     "contracts/accessibility/resolution-matrix.json",
     "contracts/v1.2/accessibility-adaptation.candidate.json",
@@ -16,7 +16,9 @@
     "reference/v1.2/accessibility-adaptation.html",
     "reference/v1.2/responsive-adaptation.html",
     "reference/v1.2/living-glaze.html",
-    "reference/v1.2/personalization-appearance.html"
+    "reference/v1.2/personalization-appearance.html",
+    "reference/v1.2/native/android/app/src/main/java/com/goreecloud/glazeui/reference/v12/MainActivity.java",
+    "reference/v1.2/native/android/app/src/main/AndroidManifest.xml"
   ],
   "canonicalTaskScope": [
     "keyboard-navigation",
@@ -38,77 +40,23 @@
     "material-readability-machine-observable-subset"
   ],
   "automatedCoverage": {
-    "keyboard-navigation": {
-      "reference": "reference/v1.2/accessibility-adaptation.html",
-      "method": "real WebDriver Tab key traversal through visible controls"
-    },
-    "screen-reader-semantics-machine-observable-subset": {
-      "reference": "reference/v1.2/accessibility-adaptation.html",
-      "method": "Chrome accessibility tree role/name inspection",
-      "doesNotEstablish": "screen-reader acceptance"
-    },
-    "accessible-names": {
-      "reference": "reference/v1.2/accessibility-adaptation.html",
-      "method": "accessibility-tree names plus DOM labeling semantics"
-    },
-    "focus-order": {
-      "reference": "reference/v1.2/accessibility-adaptation.html",
-      "method": "actual Tab traversal order"
-    },
-    "visible-focus": {
-      "reference": "reference/v1.2/accessibility-adaptation.html",
-      "method": "rendered focus outline geometry under Increased Contrast"
-    },
-    "touch-targets": {
-      "reference": "reference/v1.2/accessibility-adaptation.html",
-      "method": "48 px default and 56 px Touch Assistance target geometry"
-    },
-    "text-scale-200-plus": {
-      "reference": "reference/v1.2/accessibility-adaptation.html",
-      "method": "320 px-class rendered 200 percent text reflow and clipping checks"
-    },
-    "rtl": {
-      "reference": "reference/v1.2/responsive-adaptation.html",
-      "method": "RTL direction, current-location semantics, containment, and logical layout checks"
-    },
-    "reduced-motion": {
-      "reference": "reference/v1.2/accessibility-adaptation.html",
-      "method": "existing canonical Accessibility Adaptation rendered acceptance"
-    },
-    "reduced-transparency": {
-      "reference": "reference/v1.2/accessibility-adaptation.html",
-      "method": "existing canonical Accessibility Adaptation rendered acceptance"
-    },
-    "increased-contrast": {
-      "reference": "reference/v1.2/accessibility-adaptation.html",
-      "method": "existing canonical Accessibility Adaptation rendered acceptance"
-    },
-    "forced-colors": {
-      "reference": "reference/v1.2/accessibility-adaptation.html",
-      "method": "existing canonical Accessibility Adaptation rendered acceptance"
-    },
-    "grayscale": {
-      "reference": "reference/v1.2/accessibility-adaptation.html",
-      "method": "Chrome achromatopsia simulation with semantic text and structural-state checks"
-    },
-    "color-vision-accessibility-machine-observable-subset": {
-      "reference": "reference/v1.2/accessibility-adaptation.html",
-      "method": "Chrome deuteranopia/protanopia/tritanopia simulation with non-color semantic/structural checks",
-      "doesNotEstablish": "human color-vision optical acceptance"
-    },
-    "mobile-accessibility": {
-      "reference": "reference/v1.2/responsive-adaptation.html",
-      "method": "320 px-class containment plus 48 px target geometry"
-    },
-    "far-view-accessibility": {
-      "reference": "reference/v1.2/responsive-adaptation.html",
-      "method": "far-view semantic scene plus 56 px target geometry"
-    },
-    "material-readability-machine-observable-subset": {
-      "reference": "reference/v1.2/accessibility-adaptation.html",
-      "method": "text remains visible, unblurred, unfiltered and structurally explicit in accessibility fallbacks",
-      "doesNotEstablish": "human optical readability acceptance"
-    }
+    "keyboard-navigation": {"reference": "reference/v1.2/accessibility-adaptation.html", "method": "real WebDriver Tab key traversal through visible controls"},
+    "screen-reader-semantics-machine-observable-subset": {"reference": "reference/v1.2/accessibility-adaptation.html", "method": "Chrome accessibility tree role/name inspection", "doesNotEstablish": "screen-reader acceptance"},
+    "accessible-names": {"reference": "reference/v1.2/accessibility-adaptation.html", "method": "accessibility-tree names plus DOM labeling semantics"},
+    "focus-order": {"reference": "reference/v1.2/accessibility-adaptation.html", "method": "actual Tab traversal order"},
+    "visible-focus": {"reference": "reference/v1.2/accessibility-adaptation.html", "method": "rendered focus outline geometry under Increased Contrast"},
+    "touch-targets": {"reference": "reference/v1.2/accessibility-adaptation.html", "method": "48 px default and 56 px Touch Assistance target geometry"},
+    "text-scale-200-plus": {"reference": "reference/v1.2/accessibility-adaptation.html", "method": "320 px-class rendered 200 percent text reflow and clipping checks"},
+    "rtl": {"reference": "reference/v1.2/responsive-adaptation.html", "method": "RTL direction, current-location semantics, containment, and logical layout checks"},
+    "reduced-motion": {"reference": "reference/v1.2/accessibility-adaptation.html", "method": "existing canonical Accessibility Adaptation rendered acceptance"},
+    "reduced-transparency": {"reference": "reference/v1.2/accessibility-adaptation.html", "method": "existing canonical Accessibility Adaptation rendered acceptance"},
+    "increased-contrast": {"reference": "reference/v1.2/accessibility-adaptation.html", "method": "existing canonical Accessibility Adaptation rendered acceptance"},
+    "forced-colors": {"reference": "reference/v1.2/accessibility-adaptation.html", "method": "existing canonical Accessibility Adaptation rendered acceptance"},
+    "grayscale": {"reference": "reference/v1.2/accessibility-adaptation.html", "method": "Chrome achromatopsia simulation with semantic text and structural-state checks"},
+    "color-vision-accessibility-machine-observable-subset": {"reference": "reference/v1.2/accessibility-adaptation.html", "method": "Chrome deuteranopia/protanopia/tritanopia simulation with non-color semantic/structural checks", "doesNotEstablish": "human color-vision optical acceptance"},
+    "mobile-accessibility": {"reference": "reference/v1.2/responsive-adaptation.html", "method": "320 px-class containment plus 48 px target geometry"},
+    "far-view-accessibility": {"reference": "reference/v1.2/responsive-adaptation.html", "method": "far-view semantic scene plus 56 px target geometry"},
+    "material-readability-machine-observable-subset": {"reference": "reference/v1.2/accessibility-adaptation.html", "method": "text remains visible, unblurred, unfiltered and structurally explicit in accessibility fallbacks", "doesNotEstablish": "human optical readability acceptance"}
   },
   "extendedAutomatedCoverage": {
     "living-frosted-accessibility-integration": {
@@ -122,6 +70,15 @@
       "validator": "scripts/validate_glaze_v1_2_personalization_accessibility.py",
       "method": "Verify accessibility-tree button names, 48/56 px target floors, Reduced Transparency precedence over accent/wallpaper atmosphere, Increased Contrast boundaries, 200 percent compact reflow, Forced Colors suppression of decorative atmosphere, and semantic-warning survival.",
       "doesNotEstablish": "screen-reader, TalkBack, VoiceOver, native adapter, or physical-device accessibility acceptance"
+    },
+    "android-machine-accessibility": {
+      "reference": "reference/v1.2/native/android/app/src/main/java/com/goreecloud/glazeui/reference/v12/MainActivity.java",
+      "sourceValidator": "scripts/validate_glaze_v1_2_android_accessibility_source.py",
+      "runtimeValidator": "scripts/validate_glaze_v1_2_android_accessibility_runtime.py",
+      "workflow": ".github/workflows/glaze-v1.2-android-native.yml",
+      "evidenceArtifact": ".artifacts/glaze-v1.2-android-native/android-accessibility-evidence.json",
+      "method": "Verify machine-observable Android accessible names, native Button roles, state-bearing Quick Settings content descriptions, 48 dp default targets, 56 dp Touch Assistance targets, 200 percent text-scale reachability, and Reduced Transparency semantic-state reachability on the bounded Android handheld emulator reference.",
+      "doesNotEstablish": "TalkBack, Switch Access, Voice Access, human accessibility review, physical-device accessibility qualification, OEM accessibility-service interoperability, complete native-platform accessibility parity, downstream consumer conformance, Release Candidate designation, or Stable promotion"
     }
   },
   "delegatedRenderedValidators": [
@@ -132,9 +89,13 @@
     "scripts/validate_glaze_v1_2_living_glaze_rendered.py",
     "scripts/validate_glaze_v1_2_personalization_accessibility.py"
   ],
+  "companionSourceValidators": [
+    "scripts/validate_glaze_v1_2_android_accessibility_source.py"
+  ],
   "implementation": {
     "validator": "scripts/validate_glaze_v1_2_accessibility_testing.py",
-    "workflow": ".github/workflows/glaze-v1.2-accessibility-testing.yml"
+    "workflow": ".github/workflows/glaze-v1.2-accessibility-testing.yml",
+    "androidNativeRuntimeWorkflow": ".github/workflows/glaze-v1.2-android-native.yml"
   },
   "rules": {
     "reuseExistingAccessibilityAuthority": true,
@@ -150,11 +111,19 @@
     "automatedBrowserTestingEqualsNativePlatformAccessibilityAcceptance": false,
     "livingFrostedBrowserAccessibilityEqualsHumanOrDeviceAcceptance": false,
     "personalizationBrowserAccessibilityEqualsNativeAdapterAcceptance": false,
+    "androidMachineAccessibilityMaySupplementPhase5": true,
+    "androidMachineAccessibilityEqualsTalkBackAcceptance": false,
+    "androidMachineAccessibilityEqualsAssistiveTechnologyAcceptance": false,
+    "androidMachineAccessibilityEqualsHumanAcceptance": false,
+    "androidMachineAccessibilityEqualsPhysicalDeviceAcceptance": false,
+    "androidMachineAccessibilityEqualsCompleteNativePlatformAccessibilityParity": false,
+    "androidMachineAccessibilityEqualsPhase5Completion": false,
     "consumerClaimBlocked": true
   },
   "evidenceBoundary": {
     "boundedAutomatedAccessibilityTestingEstablished": true,
     "boundedLivingAndPersonalizationAccessibilityIntegrationEstablished": true,
+    "boundedAndroidMachineAccessibilityEvidenceTrackEstablished": true,
     "phase5AccessibilityTestingComplete": false,
     "established": [
       "machine-observable-web-keyboard-navigation",
@@ -167,7 +136,8 @@
       "machine-observable-grayscale-and-color-vision-structural-survival",
       "machine-observable-mobile-and-far-view-reference-accessibility",
       "machine-observable-living-frosted-accessibility-precedence",
-      "machine-observable-personalization-accessibility-precedence-and-semantic-isolation"
+      "machine-observable-personalization-accessibility-precedence-and-semantic-isolation",
+      "machine-observable-android-native-names-roles-state-descriptions-target-floors-text-scale-and-reduced-transparency"
     ],
     "notEstablished": [
       "human-accessibility-acceptance",
@@ -176,7 +146,9 @@
       "talkback-acceptance",
       "voiceover-acceptance",
       "switch-control-acceptance",
+      "voice-access-acceptance",
       "physical-device-accessibility-acceptance",
+      "oem-accessibility-service-interoperability",
       "complete-native-platform-accessibility-parity",
       "human-color-vision-optical-acceptance",
       "human-rtl-optical-acceptance",
@@ -184,6 +156,7 @@
       "personalization-native-adapter-accessibility-acceptance",
       "release-candidate",
       "stable",
+      "production",
       "consumer-conformance"
     ]
   }
