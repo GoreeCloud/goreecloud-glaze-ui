@@ -4,6 +4,11 @@ const ATMOSPHERE = new Set(['calm', 'balanced', 'expressive']);
 const DENSITY = new Set(['comfortable', 'standard', 'productive', 'immersive']);
 const CLARITY = new Set(['clear', 'balanced', 'dense']);
 
+const WALLPAPER_DEFAULT_ALPHA = 0.08;
+const WALLPAPER_MAX_ALPHA = 0.12;
+const WALLPAPER_DEFAULT_CHROMA_RETENTION = 0.24;
+const WALLPAPER_MAX_CHROMA_RETENTION = 0.28;
+
 export const DEFAULT_PERSONALIZATION = Object.freeze({
   appearance: 'follow-system',
   accent: 'ice',
@@ -19,6 +24,25 @@ function rootOf(target) {
 
 function bounded(value, allowed, fallback) {
   return allowed.has(value) ? value : fallback;
+}
+
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function numericChannel(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return null;
+  return clamp(Math.round(number), 0, 255);
+}
+
+function normalizeWallpaperSample(sample) {
+  if (!sample || typeof sample !== 'object') return null;
+  const values = Array.isArray(sample) ? sample : [sample.r, sample.g, sample.b];
+  if (values.length < 3) return null;
+  const [r, g, b] = values.map(numericChannel);
+  if ([r, g, b].some(value => value === null)) return null;
+  return {r, g, b};
 }
 
 export function normalizePersonalization(value = {}) {
@@ -80,6 +104,59 @@ export function createWebStoragePreferenceAdapter(storage, key = 'goreecloud.gla
       if (typeof storage.removeItem === 'function') storage.removeItem(key);
     }
   });
+}
+
+export function deriveWallpaperAtmosphere(sample, options = {}) {
+  const normalized = normalizeWallpaperSample(sample);
+  if (!normalized) return null;
+
+  const requestedAlpha = Number(options.alpha);
+  const alpha = Number.isFinite(requestedAlpha)
+    ? clamp(requestedAlpha, 0, WALLPAPER_MAX_ALPHA)
+    : WALLPAPER_DEFAULT_ALPHA;
+
+  const requestedRetention = Number(options.chromaRetention);
+  const chromaRetention = Number.isFinite(requestedRetention)
+    ? clamp(requestedRetention, 0, WALLPAPER_MAX_CHROMA_RETENTION)
+    : WALLPAPER_DEFAULT_CHROMA_RETENTION;
+
+  const luminance = Math.round(
+    normalized.r * 0.2126 + normalized.g * 0.7152 + normalized.b * 0.0722
+  );
+  const desaturate = channel => clamp(
+    Math.round(luminance + (channel - luminance) * chromaRetention),
+    0,
+    255
+  );
+
+  const derived = {
+    r: desaturate(normalized.r),
+    g: desaturate(normalized.g),
+    b: desaturate(normalized.b),
+    alpha,
+    chromaRetention,
+    source: 'producer-supplied-local-rgb-summary'
+  };
+  return Object.freeze({
+    ...derived,
+    css: `rgb(${derived.r} ${derived.g} ${derived.b} / ${derived.alpha})`
+  });
+}
+
+export function applyWallpaperAtmosphere(target = document, sample = null, options = {}) {
+  const root = rootOf(target);
+  const derived = deriveWallpaperAtmosphere(sample, options);
+  if (!root.style || typeof root.style.setProperty !== 'function') {
+    throw new TypeError('Wallpaper atmosphere target must expose a style declaration');
+  }
+  if (!derived) {
+    root.style.setProperty('--glz12-wallpaper-atmosphere', 'transparent');
+    delete root.dataset.glzWallpaperAtmosphere;
+    return null;
+  }
+  root.style.setProperty('--glz12-wallpaper-atmosphere', derived.css);
+  root.dataset.glzWallpaperAtmosphere = 'local-bounded';
+  return derived;
 }
 
 export function resolveAppearance(preference = 'follow-system', systemAdapter = createBrowserSystemAppearanceAdapter()) {
@@ -159,7 +236,11 @@ export const personalizationCandidate = Object.freeze({
   persistenceAuthority: 'consumer-platform-adapter',
   crossDeviceSyncAuthority: 'separate-governed-goreecloud-sync-integration',
   directCrossDeviceSyncImplemented: false,
-  directWallpaperSamplingImplemented: false,
+  wallpaperSourceAuthority: 'consumer-platform-adapter',
+  directWallpaperPixelAcquisitionImplemented: false,
+  boundedWallpaperAtmosphereDerivationImplemented: true,
+  wallpaperAtmosphereMaximumAlpha: WALLPAPER_MAX_ALPHA,
+  wallpaperAtmosphereMaximumChromaRetention: WALLPAPER_MAX_CHROMA_RETENTION,
   profiles: Object.freeze({
     appearance: Object.freeze([...APPEARANCE]),
     accent: Object.freeze([...ACCENT]),
