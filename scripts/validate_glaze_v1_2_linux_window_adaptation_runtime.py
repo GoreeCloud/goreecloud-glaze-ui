@@ -239,7 +239,7 @@ def run_case(
             raise SystemExit(f"{case_id} primary task value drift")
 
         added_context = evidence.get("addedContext")
-        if added_context is not (expected_layout == "expanded"):
+        if added_context != (expected_layout == "expanded"):
             raise SystemExit(
                 f"{case_id} added-context semantics mismatch: {added_context}"
             )
