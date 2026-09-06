@@ -1,0 +1,8 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","schemaVersion":1,"id":"goreecloud.glaze-ui.v1.2.component-experience.candidate","product":"GLAZE UI V1.2","version":"1.2.0-candidate","lifecycle":"candidate","consumerEligible":false,"stableBaseline":"1.1.0","extends":["contracts/v1.2/living-glaze.candidate.json","contracts/v1.2/component-materials.candidate.json"],
+  "catalogAuthority":"contracts/components/v1/catalog.json",
+  "requiredDimensions":["material-role","resting-geometry","interactive-geometry","hover","focus","press","selected","expansion","motion-role","reduced-motion","reduced-transparency","increased-contrast","forced-colors","compact-layout","expanded-layout","touch-target","pointer","keyboard","semantic-accent"],
+  "stateSet":["rest","hover","focus","pressed","dragged","selected","expanded","loading","disabled"],
+  "rules":{"focusPrecedesDecorativeMaterial":true,"hoverNotSoleAffordance":true,"disabledPreservesReadableContent":true,"stateNotColorOnly":true,"motionReinforcesStateNeverDefinesIt":true},
+  "evidenceBoundary":{"notEstablished":["all-32-component-experience-matrix-complete","assistive-technology-complete","human-component-acceptance","release-candidate","stable"]}
+}

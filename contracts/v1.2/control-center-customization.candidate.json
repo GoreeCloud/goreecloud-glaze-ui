@@ -1,0 +1,10 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","schemaVersion":1,"id":"goreecloud.glaze-ui.v1.2.control-center-customization.candidate","product":"GLAZE UI V1.2","version":"1.2.0-candidate","lifecycle":"candidate","consumerEligible":false,"stableBaseline":"1.1.0","extends":["contracts/v1.2/living-glaze.candidate.json","contracts/v1.2/system-shell-materials.candidate.json"],
+  "parent":{"material":"deep-glaze","dominantPanelCount":1,"nestedBackdropBlur":false},
+  "moduleTypes":["compact-control","wide-control","tall-control","slider","media-module","device-module","connectivity-module","system-status-module"],
+  "governedSizes":["icon","compact","wide","tall","expanded"],
+  "activeState":{"accentMayMixIntoNeutralLocalSurface":true,"parentRemainsNeutral":true},
+  "editing":{"dragHandlesWhereAppropriate":true,"accessibleReorderAlternative":true,"visibleInsertionLocations":true,"reset":true,"semanticAnnouncements":true,"cancelWithoutStateCorruption":true},
+  "semanticIdentitySurvivesResize":true,
+  "evidenceBoundary":{"notEstablished":["persistent-user-layout-storage","cross-device-sync","physical-device-editing-acceptance","release-candidate","stable"]}
+}

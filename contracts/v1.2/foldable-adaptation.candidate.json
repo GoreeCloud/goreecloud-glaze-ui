@@ -1,0 +1,8 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","schemaVersion":1,"id":"goreecloud.glaze-ui.v1.2.foldable-adaptation.candidate","product":"GLAZE UI V1.2","version":"1.2.0-candidate","lifecycle":"candidate","consumerEligible":false,"stableBaseline":"1.1.0","extends":["contracts/v1.2/living-glaze.candidate.json","contracts/v1.2/responsive-adaptation-reference.candidate.json"],
+  "folded":{"completeEnvironment":true,"primaryTasksRemainUsableWhenProductScopePermits":true},
+  "unfolded":{"addsInformationRatherThanOnlyScale":true,"transformations":["list-to-list-detail","navigation-capsule-to-rail","editor-to-editor-inspector","single-to-multi-pane","media-to-media-plus-queue"]},
+  "hinge":{"criticalTargetsAvoidUnsafeRegion":true,"mayActAsStructuralDivider":true},
+  "continuity":["current-task","input","selection","scroll-position-where-practical","media-state","focus-semantics","unsaved-work"],
+  "evidenceBoundary":{"notEstablished":["oem-hinge-matrix","physical-foldable-acceptance","production-posture-telemetry","release-candidate","stable"]}
+}
