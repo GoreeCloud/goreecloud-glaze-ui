@@ -9,7 +9,11 @@ ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "website"
 DIST = SITE / "dist"
 IDENTITY = ROOT / "assets" / "identity" / "official" / "facet"
-CANONICAL_SHA256 = "3c9566bf21c5bed4121547c3d5c79c34e4f3e60105179b7f2342c4b60ae91a61"
+# Approved canonical Glaze UI mark from GoreeCloud/goreecloud-branding-assets,
+# commit 8aa413f7e5b50a0e9da65f3f8d173aa988d576bb, Git blob
+# af8b70387bdaedb8d8388a1660b2d2ca29548fe2. The visual geometry is unchanged;
+# this checksum reflects the corrected approved accessible title metadata.
+CANONICAL_SHA256 = "82d3bdc331a96593873ca4d327e3b46d561d1ca96e653cef71e0c5e42fa1a31c"
 
 for name in ("index.html", "404.html", "site.css", "identity.css", "site.js", "_headers", "build.py"):
     if not (SITE / name).is_file():
