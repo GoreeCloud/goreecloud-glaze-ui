@@ -114,7 +114,7 @@ def source_contract() -> dict[str, object]:
         "TOUCH_ASSISTANCE_DP = 56",
         'primary.setContentDescription("Primary action")',
         'secondaryAction.setContentDescription("Secondary action")',
-        "button.setContentDescription(name + \": \" + state",
+        'button.setContentDescription(name + ": " + state',
         "Reduced Transparency: enabled",
         "not OEM-wide blur fidelity",
         "physical-device",
@@ -124,14 +124,8 @@ def source_contract() -> dict[str, object]:
         if marker not in source:
             raise SystemExit(f"Android accessibility source contract missing: {marker}")
 
-    forbidden = (
-        "AccessibilityService",
-        "BIND_ACCESSIBILITY_SERVICE",
-        "enabled_accessibility_services",
-    )
-    joined = source + "\n" + manifest
-    for marker in forbidden:
-        if marker in joined:
+    for marker in ("AccessibilityService", "BIND_ACCESSIBILITY_SERVICE", "enabled_accessibility_services"):
+        if marker in source + "\n" + manifest:
             raise SystemExit(
                 f"bounded accessibility evidence must not own or enable an accessibility service: {marker}"
             )
@@ -148,8 +142,7 @@ def dump_ui(serial: str) -> ET.Element:
     remote = "/sdcard/glaze-v12-accessibility.xml"
     adb(serial, "shell", "uiautomator", "dump", remote)
     raw = adb(serial, "exec-out", "cat", remote).stdout
-    diagnostic = OUT / "android-accessibility-last-hierarchy.xml"
-    diagnostic.write_text(raw, encoding="utf-8")
+    (OUT / "android-accessibility-last-hierarchy.xml").write_text(raw, encoding="utf-8")
     return ET.fromstring(raw)
 
 
@@ -179,8 +172,7 @@ def app_nodes(root: ET.Element):
 
 def node_is_visible(node: ET.Element, display: tuple[int, int]) -> bool:
     """Treat missing UIAutomator visibility metadata as unknown, not invisible."""
-    visibility = node.attrib.get("visible-to-user")
-    if visibility == "false":
+    if node.attrib.get("visible-to-user") == "false":
         return False
     try:
         x1, y1, x2, y2 = bounds(node)
@@ -211,6 +203,15 @@ def advance_scroll(serial: str) -> None:
     time.sleep(0.12)
 
 
+def retreat_scroll(serial: str) -> None:
+    width, height = display_size(serial)
+    x = width // 2
+    start_y = max(1, round(height * 0.48))
+    end_y = max(start_y + 1, round(height * 0.76))
+    adb(serial, "shell", "input", "swipe", str(x), str(start_y), str(x), str(end_y), "190")
+    time.sleep(0.12)
+
+
 def launch(serial: str, *, appearance: str = "light", reduced: bool = False, touch: bool = False) -> None:
     adb(serial, "shell", "wm", "size", "reset", check=False)
     adb(serial, "shell", "am", "force-stop", PACKAGE)
@@ -228,15 +229,16 @@ def launch(serial: str, *, appearance: str = "light", reduced: bool = False, tou
 
 def scan_hierarchy(serial: str, dpi: int, *, swipes: int = 14) -> dict[str, object]:
     controls: dict[str, dict[str, object]] = {}
-    unnamed_clickables: list[dict[str, str]] = []
+    unnamed_clickables: dict[tuple[str, str], dict[str, str]] = {}
     display = display_size(serial)
     app_instances = 0
     clickable_instances = 0
     visible_clickable_instances = 0
     missing_visibility_metadata = 0
+    reverse_recovery_swipes = 0
 
-    for index in range(swipes + 1):
-        root = dump_ui(serial)
+    def collect(root: ET.Element) -> None:
+        nonlocal app_instances, clickable_instances, visible_clickable_instances, missing_visibility_metadata
         for node in app_nodes(root):
             app_instances += 1
             if node.attrib.get("clickable") != "true":
@@ -249,37 +251,60 @@ def scan_hierarchy(serial: str, dpi: int, *, swipes: int = 14) -> dict[str, obje
             visible_clickable_instances += 1
             name, content_description = node_name(node)
             if not name:
-                unnamed_clickables.append(
-                    {
-                        "class": node.attrib.get("class", ""),
-                        "bounds": node.attrib.get("bounds", ""),
-                        "visibilityMetadata": node.attrib.get("visible-to-user", "absent"),
-                    }
-                )
+                key = (node.attrib.get("class", ""), node.attrib.get("bounds", ""))
+                unnamed_clickables[key] = {
+                    "class": key[0],
+                    "bounds": key[1],
+                    "visibilityMetadata": node.attrib.get("visible-to-user", "absent"),
+                }
                 continue
-            role = node.attrib.get("class", "")
             measured = height_dp(node, dpi)
             prior = controls.get(name)
             if prior is None or measured > float(prior["maxHeightDp"]):
                 controls[name] = {
-                    "role": role,
+                    "role": node.attrib.get("class", ""),
                     "maxHeightDp": round(measured, 2),
                     "enabled": node.attrib.get("enabled") == "true",
                     "focusable": node.attrib.get("focusable") == "true",
                     "contentDescriptionPresent": bool(content_description),
                     "visibilityMetadata": node.attrib.get("visible-to-user", "absent"),
                 }
+
+    def expected_complete() -> bool:
+        names = tuple(controls)
+        return all(any(name.startswith(prefix) for name in names) for prefix in EXPECTED_CONTROLS.values())
+
+    for index in range(swipes + 1):
+        collect(dump_ui(serial))
+        if expected_complete():
+            break
         if index < swipes:
             advance_scroll(serial)
 
+    # Android 36 may expose a viewport whose first Quick Settings row is just
+    # above the initial dump after scroll normalization. If the forward sweep
+    # is incomplete, recover by traversing back toward the start while still
+    # applying the same name, role, state-description, visibility, and geometry
+    # requirements. This is reachability recovery, not a relaxed assertion.
+    if not expected_complete():
+        for _ in range(swipes):
+            retreat_scroll(serial)
+            reverse_recovery_swipes += 1
+            collect(dump_ui(serial))
+            if expected_complete():
+                break
+
     if unnamed_clickables:
-        raise SystemExit(f"visible app clickables without accessible names: {unnamed_clickables}")
+        raise SystemExit(
+            f"visible app clickables without accessible names: {list(unnamed_clickables.values())}"
+        )
 
     return {
         "appNodeInstances": app_instances,
         "clickableAppNodeInstances": clickable_instances,
         "visibleClickableInstances": visible_clickable_instances,
         "clickablesMissingVisibilityMetadata": missing_visibility_metadata,
+        "reverseRecoverySwipes": reverse_recovery_swipes,
         "namedControls": controls,
     }
 
@@ -321,6 +346,14 @@ def contains(serial: str, fragment: str, *, swipes: int = 14) -> bool:
                 return True
         if index < swipes:
             advance_scroll(serial)
+    for _ in range(swipes):
+        retreat_scroll(serial)
+        root = dump_ui(serial)
+        for node in app_nodes(root):
+            text = normalize_name(node.attrib.get("text", ""))
+            content_description = normalize_name(node.attrib.get("content-desc", ""))
+            if expected in text or expected in content_description:
+                return True
     return False
 
 
