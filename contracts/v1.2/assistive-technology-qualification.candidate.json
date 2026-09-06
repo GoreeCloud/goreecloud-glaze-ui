@@ -113,7 +113,8 @@
   "implementation": {
     "validator": "scripts/validate_glaze_v1_2_assistive_technology_qualification.py",
     "workflow": ".github/workflows/glaze-v1.2-external-qualification-protocol.yml",
-    "humanProcedure": "acceptance/v1.2-assistive-technology-qualification-candidate.md"
+    "humanProcedure": "acceptance/v1.2-assistive-technology-qualification-candidate.md",
+    "recordTemplate": "acceptance/v1.2-assistive-technology-qualification.template.json"
   },
   "notEstablished": [
     "human-accessibility-acceptance",
