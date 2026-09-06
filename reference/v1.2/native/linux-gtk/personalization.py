@@ -108,6 +108,19 @@ def composite_atmosphere(neutral: int, atmosphere: dict[str, object] | None) -> 
     return tuple(round(neutral * (1.0 - alpha) + int(channel) * alpha) for channel in rgb)
 
 
+def load_css_compat(provider: Gtk.CssProvider, css: str) -> str:
+    """Load CSS across GTK4 PyGObject bindings without guessing one signature."""
+    if hasattr(provider, "load_from_string"):
+        provider.load_from_string(css)
+        return "load_from_string"
+    try:
+        provider.load_from_data(css, -1)
+        return "load_from_data-length"
+    except TypeError:
+        provider.load_from_data(css)
+        return "load_from_data"
+
+
 class PersonalizationCandidate(Gtk.Application):
     def __init__(self, args: argparse.Namespace) -> None:
         super().__init__(application_id="com.goreecloud.glazeui.reference.v12.personalization", flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
@@ -121,6 +134,7 @@ class PersonalizationCandidate(Gtk.Application):
         self.action: Gtk.Button | None = None
         self.status: Gtk.Label | None = None
         self.sample: Gtk.Box | None = None
+        self.css_loader = "unresolved"
         self.evidence_written = False
 
     def do_activate(self) -> None:
@@ -158,7 +172,7 @@ window.personalization-shell {{ background: rgb({canvas[0]}, {canvas[1]}, {canva
 button.personalization-action {{ min-height: {target}px; border-radius: 999px; padding: 8px 18px; background: rgb(82, 151, 181); color: white; font-weight: 700; }}
 button.personalization-action:focus {{ outline: 2px solid rgb(82, 151, 181); outline-offset: 2px; }}
 """
-        provider.load_from_data(css.encode("utf-8"))
+        self.css_loader = load_css_compat(provider, css)
         display = self.get_active_window().get_display() if self.get_active_window() is not None else None
         if display is None:
             from gi.repository import Gdk  # noqa: PLC0415
@@ -274,6 +288,7 @@ button.personalization-action:focus {{ outline: 2px solid rgb(82, 151, 181); out
             "lifecycle": "Candidate native evidence",
             "platform": "Linux GTK4",
             "gtkVersion": f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}",
+            "cssLoader": self.css_loader,
             "appearancePreference": self.preference,
             "resolvedAppearance": self.resolved_appearance,
             "systemAppearanceSource": self.system_source,
