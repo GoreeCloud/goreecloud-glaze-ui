@@ -7,11 +7,12 @@
   "lifecycle": "candidate",
   "consumerEligible": false,
   "stableBaseline": "1.1.0",
-  "status": "bounded-personalization-and-appearance-evidence",
-  "purpose": "Provide bounded V1.2 Candidate appearance, accent, atmosphere, and density expression without allowing personalization to override semantic truth, accessibility, product identity, security/privacy meaning, or platform authority.",
+  "status": "bounded-personalization-appearance-and-adapter-evidence",
+  "purpose": "Provide bounded V1.2 Candidate appearance, accent, atmosphere, density, clarity, system-resolution, and consumer-adapter behavior without allowing personalization to override semantic truth, accessibility, product identity, security/privacy meaning, or platform authority.",
   "authority": {
     "companionSpecification": "Glaze UI V1.2 — Personalization and Appearance.docx",
     "accessibilityResolution": "contracts/v1.2/accessibility-adaptation.candidate.json",
+    "livingGlaze": "contracts/v1.2/living-glaze.candidate.json",
     "formFactorTokens": "tokens/glaze-v1.2-form-factor.candidate.json",
     "spatialTokens": "tokens/glaze-v1.2-spatial-foundation.candidate.json",
     "principle": "Personalize expression, not truth or control semantics."
@@ -27,7 +28,8 @@
     "modes": ["follow-system", "light", "dark", "deep-dark"],
     "manualModeMayOverrideSystemFollowing": true,
     "platformAdapterOwnsSystemResolution": true,
-    "candidateDoesNotPersistPreference": true
+    "browserSystemAdapterImplemented": true,
+    "nativeSystemAdapterAcceptanceRequired": true
   },
   "accentProfiles": {
     "default": "ice",
@@ -53,8 +55,15 @@
     "mayChangeSemantics": false,
     "mayHideEssentialNavigation": false
   },
+  "clarityProfiles": {
+    "default": "balanced",
+    "allowed": ["clear", "balanced", "dense"],
+    "authority": "contracts/v1.2/living-glaze.candidate.json",
+    "accessibilityMayOverride": true
+  },
   "accessibilityOverrides": {
     "reducedTransparencyOverridesAtmosphere": true,
+    "reducedTransparencyOverridesClarity": true,
     "reducedMotionOverridesDecorativeMotion": true,
     "increasedContrastOverridesDecorativeBoundaryStrength": true,
     "forcedColorsOverridesAccentRendering": true,
@@ -74,15 +83,32 @@
   },
   "persistenceAndSync": {
     "persistenceAuthority": "consumer-platform-adapter",
+    "adapterInterfaceImplemented": true,
+    "webStorageAdapterHelperAvailable": true,
+    "directPersistenceOwnedByGlaze": false,
+    "persistenceRequiresConsumerOptIn": true,
     "syncAuthority": "separate-governed-goreecloud-sync-integration",
-    "implementedByThisCandidate": false,
+    "crossDeviceSyncImplementedByThisCandidate": false,
     "privacyReviewRequiredBeforeCrossDeviceSync": true
+  },
+  "runtimeContract": {
+    "normalizationFailsClosedToGovernedDefaults": true,
+    "browserFollowSystemUsesPrefersColorScheme": true,
+    "systemChangesMayReResolveFollowSystem": true,
+    "manualAppearanceDoesNotTrackSystemChanges": true,
+    "persistenceAdapterIsOptional": true,
+    "malformedStoredPreferenceFallsBackSafely": true,
+    "storageEnvelopeSchemaVersion": 1
   },
   "acceptance": {
     "accentDoesNotChangeSemanticStateRequired": true,
     "atmosphereProfileDifferentiationRequired": true,
+    "clarityProfileDifferentiationRequired": true,
     "reducedTransparencyDisablesDecorativeAtmosphereRequired": true,
     "densityProfileDifferentiationRequired": true,
+    "followSystemBrowserResolutionRequired": true,
+    "injectedPersistenceAdapterRoundTripRequired": true,
+    "invalidPersistenceFallbackRequired": true,
     "minimumInteractiveTargetPx": 48,
     "lightDarkDeepDarkRequired": true,
     "compactViewportPx": 320,
@@ -92,6 +118,7 @@
   },
   "implementation": {
     "candidateLayer": "css/glaze-v1.2-personalization-appearance.candidate.css",
+    "runtime": "js/glaze-v1.2-personalization.candidate.mjs",
     "reference": "reference/v1.2/personalization-appearance.html",
     "renderedValidator": "scripts/validate_glaze_v1_2_personalization_appearance_rendered.py",
     "workflow": ".github/workflows/glaze-v1.2-personalization-appearance.yml",
@@ -103,15 +130,19 @@
       "bounded-governed-accent-profiles",
       "bounded-atmosphere-profiles",
       "bounded-density-profiles",
+      "bounded-living-glaze-clarity-profiles",
       "manual-light-dark-deep-dark-reference",
+      "browser-follow-system-resolution-adapter",
+      "optional-consumer-persistence-adapter-interface",
+      "web-storage-adapter-helper",
       "semantic-state-isolation",
       "reduced-transparency-precedence",
       "compact-200-percent-text-reference",
       "exact-head-rendered-browser-acceptance"
     ],
     "notEstablished": [
-      "follow-system-platform-adapter-acceptance",
-      "preference-persistence",
+      "native-follow-system-platform-adapter-acceptance",
+      "consumer-platform-persistence-acceptance",
       "cross-device-preference-sync",
       "wallpaper-sampling",
       "human-visual-review",
