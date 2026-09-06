@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -36,8 +35,12 @@ HISTORICAL_DOCS = (
     "acceptance/v1.1-specification-candidate.md",
 )
 
+# These files intentionally embed superseded lifecycle literals to preserve
+# historical release evidence or to reproduce the promoted Candidate source
+# layer. Their presence must not be mistaken for a current product claim.
 HISTORICAL_SOURCE_PATHS = {
     "acceptance/v1.1-rendered-web-evidence.json",
+    "scripts/glaze_v1_2_promoted_source_runner.py",
     "scripts/promote_glaze_v1_1_stable.py",
     "scripts/validate_evidence_presentation.py",
     "scripts/validate_glaze_motion.py",
@@ -55,7 +58,7 @@ HISTORICAL_SOURCE_PATHS = {
 HISTORICAL_QUALIFIERS = (
     "historical", "at the time", "at publication", "then-current", "superseded",
     "not current", "does not define the current", "does not override the current",
-    "was current", "was the current", "previous stable", "rollback",
+    "was current", "was the current", "previous stable", "prior stable", "rollback",
 )
 STRONG_CURRENT_CLAIMS = (
     "sole current", "current official target", "current stable", "current product identity",
@@ -106,8 +109,29 @@ def release_for(lifecycle: dict[str, Any], version: str) -> dict[str, Any]:
 
 
 def historical_record(relative: str, text: str) -> bool:
+    """Return whether a tracked source is explicitly historical/provenance-only.
+
+    Candidate/RC source files are retained as frozen provenance after promotion,
+    so their Candidate-era lifecycle literals are expected. Current V1.2
+    reference and front-door documentation is deliberately *not* blanket-exempt:
+    stale authority claims there must still fail the audit.
+    """
     if relative in HISTORICAL_DOCS or relative in HISTORICAL_SOURCE_PATHS:
         return True
+
+    path = Path(relative)
+    lowered = relative.lower()
+    name = path.name.lower()
+
+    if relative.startswith("acceptance/v1.1") or relative.startswith("contracts/v1.1/"):
+        return True
+    if relative.startswith("releases/1.1") or relative.startswith("reference/v1.1/"):
+        return True
+    if "candidate" in name or ".candidate." in lowered or "release-candidate" in lowered:
+        return True
+    if name.endswith("_legacy.py") or name.endswith("-legacy.py"):
+        return True
+
     preamble = text[:1600].lower()
     return "historical record" in preamble or "historical status" in preamble or "superseded" in preamble
 
@@ -183,7 +207,7 @@ def main() -> int:
         fail(f"obsolete lifecycle/version authority language found: {preview}")
 
     report = {
-        "schemaVersion": 3,
+        "schemaVersion": 4,
         "status": "pass",
         "currentOfficial": current_official,
         "currentStable": current_stable,
@@ -195,7 +219,7 @@ def main() -> int:
         "currentAuthorityDocuments": sorted(CURRENT_AUTHORITY_DOCS),
         "historicalDocumentsExplicitlyQualified": list(HISTORICAL_DOCS),
         "obsoleteLifecycleAuthorityFindings": 0,
-        "scopeRule": "Historical records are preserved, but superseded lifecycle state may not be presented as current authority without explicit historical qualification.",
+        "scopeRule": "Historical Candidate/RC/release records are preserved as provenance, while current V1.2 authority surfaces remain fail-closed against superseded lifecycle claims.",
         "deferredQualificationRule": "V1.3 deferral does not convert unperformed V1.2 human/manual/physical qualification into passed evidence.",
     }
     rendered = json.dumps(report, indent=2, sort_keys=True) + "\n"
