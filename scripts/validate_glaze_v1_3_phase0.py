@@ -14,6 +14,7 @@ ALLOWED_PHASES = {
     "phase-1-token-architecture",
     "phase-2-dynamic-color",
     "phase-3-living-material-2",
+    "phase-4-human-reachability",
 }
 ALLOWED_WORKSTREAM_STATUSES = {
     "planned",
