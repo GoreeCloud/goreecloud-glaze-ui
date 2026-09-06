@@ -9,14 +9,23 @@ on:
       - "contracts/v1.2/motion.candidate.json"
       - "contracts/v1.2/data-visualization.candidate.json"
       - "contracts/v1.2/productive-interfaces.candidate.json"
+      - "contracts/v1.2/living-glaze.candidate.json"
+      - "contracts/v1.2/personalization-appearance.candidate.json"
       - "reference/v1.2/performance-adaptation.html"
       - "reference/v1.2/motion.html"
       - "reference/v1.2/data-visualization.html"
       - "reference/v1.2/productive-interfaces.html"
+      - "reference/v1.2/living-glaze.html"
+      - "reference/v1.2/personalization-appearance.html"
       - "js/glaze-v1.2-data-visualization.candidate.mjs"
       - "js/glaze-v1.2-productive-interfaces.candidate.mjs"
+      - "js/glaze-v1.2-living-glaze.candidate.mjs"
+      - "js/glaze-v1.2-personalization.candidate.mjs"
+      - "css/glaze-v1.2-living-glaze.candidate.css"
+      - "css/glaze-v1.2-personalization-appearance.candidate.css"
       - "scripts/validate_glaze_v1_2_performance_adaptation_rendered.py"
       - "scripts/validate_glaze_v1_2_performance_testing.py"
+      - "scripts/validate_glaze_v1_2_extended_performance.py"
       - ".github/workflows/glaze-v1.2-performance-testing.yml"
   workflow_dispatch:
 
@@ -30,7 +39,7 @@ concurrency:
 jobs:
   bounded-performance-measurements:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 35
     steps:
       - name: Check out exact Candidate revision
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -49,11 +58,17 @@ jobs:
           python scripts/validate_glaze_v1.py
           python scripts/validate_glaze_v1_2_candidate.py
 
-      - name: Compile bounded Performance Testing validator
-        run: python -m py_compile scripts/validate_glaze_v1_2_performance_testing.py
+      - name: Compile bounded Performance Testing validators
+        run: |
+          python -m py_compile \
+            scripts/validate_glaze_v1_2_performance_testing.py \
+            scripts/validate_glaze_v1_2_extended_performance.py
 
       - name: Record exact-head bounded Performance Testing evidence
         run: python scripts/validate_glaze_v1_2_performance_testing.py
+
+      - name: Record Living Frosted and Personalization performance observations
+        run: python scripts/validate_glaze_v1_2_extended_performance.py
 
       - name: Upload bounded V1.2 Performance Testing evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -63,5 +78,7 @@ jobs:
             artifacts/glaze-v1.2-performance-testing-*.png
             artifacts/glaze-v1.2-performance-testing-evidence.json
             artifacts/glaze-v1.2-performance-adaptation-*.png
+            artifacts/glaze-v1.2-extended-performance-*.png
+            artifacts/glaze-v1.2-extended-performance-evidence.json
           if-no-files-found: error
           retention-days: 14
