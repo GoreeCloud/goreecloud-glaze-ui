@@ -57,7 +57,8 @@ def main() -> int:
     req(lifecycle.get("activeCandidate") is None, "Personalization work must not activate lifecycle Candidate")
 
     plan = load(PLAN)
-    req(plan.get("phase") == "phase-13-personalization", "plan must be in Phase 13 Personalization")
+    # Phase 0 owns global development-phase sequencing. Personalization must
+    # remain reusable as a dependency revalidation gate in later V1.3 phases.
     workstreams = {item.get("id"): item for item in plan.get("workstreams", [])}
     for dep in DEPENDENCIES:
         req(workstreams.get(dep, {}).get("status") == "implemented-and-validated", f"Personalization requires validated dependency {dep}")
