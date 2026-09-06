@@ -9,7 +9,7 @@
   "releaseContract": "GLAZE_UI_V1_3.md",
   "deferredQualification": "contracts/v1.3/deferred-qualification.plan.json",
   "deferredQualificationAcceptance": "acceptance/v1.3-deferred-qualification.md",
-  "phase": "phase-6-variable-responsive-typography",
+  "phase": "phase-7-adaptive-navigation",
   "phaseEffect": "implementation-workstream-active-no-lifecycle-promotion",
   "workstreams": [
     {
@@ -95,10 +95,14 @@
     },
     {
       "id": "adaptive-navigation",
-      "status": "planned",
+      "status": "implementation-complete-validation-pending",
       "dependsOn": ["human-reachability"],
       "expectedArtifacts": [
-        "contracts/v1.3/adaptive-navigation.candidate.json"
+        "contracts/v1.3/adaptive-navigation.candidate.json",
+        "js/glaze-v1.3-adaptive-navigation.candidate.mjs",
+        "tests/glaze-v1.3-adaptive-navigation.test.mjs",
+        "scripts/validate_glaze_v1_3_adaptive_navigation.py",
+        ".github/workflows/glaze-v1.3-adaptive-navigation.yml"
       ]
     },
     {
