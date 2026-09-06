@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the enduring GLAZE UI V1.3 Adaptive Resonance Phase 0 lifecycle boundary."""
+"""Validate the enduring GLAZE UI V1.3 Adaptive Resonance pre-promotion lifecycle boundary."""
 from __future__ import annotations
 
 import json
@@ -13,6 +13,7 @@ ALLOWED_PHASES = {
     "phase-0-foundation",
     "phase-1-token-architecture",
     "phase-2-dynamic-color",
+    "phase-3-living-material-2",
 }
 ALLOWED_WORKSTREAM_STATUSES = {
     "planned",
@@ -45,10 +46,10 @@ def main() -> int:
         "js/glaze-v1.2.0.mjs",
     )
     for path in required:
-        req((ROOT / path).is_file(), f"missing required Phase 0 authority file: {path}")
+        req((ROOT / path).is_file(), f"missing required pre-promotion authority file: {path}")
 
     if errors:
-        print("GLAZE UI V1.3 Phase 0 boundary validation FAILED:")
+        print("GLAZE UI V1.3 pre-promotion boundary validation FAILED:")
         for error in errors:
             print(f"- {error}")
         return 1
@@ -128,9 +129,16 @@ def main() -> int:
     )
 
     known = set(ids)
+    statuses = {item.get("id"): item.get("status") for item in workstreams}
     for item in workstreams:
         for dep in item.get("dependsOn", []):
             req(dep in known, f"unknown dependency {dep!r} in workstream {item.get('id')!r}")
+        if item.get("status") != "planned":
+            for dep in item.get("dependsOn", []):
+                req(
+                    statuses.get(dep) == "implemented-and-validated",
+                    f"active workstream {item.get('id')!r} requires validated dependency {dep!r}",
+                )
 
     deferred = load("contracts/v1.3/deferred-qualification.plan.json")
     req(deferred.get("lifecycle") == "planned", "deferred V1.3 qualification must remain planned")
@@ -149,13 +157,13 @@ def main() -> int:
     req(not (ROOT / "js/glaze-v1.3.0-candidate.mjs").exists(), "pre-promotion development must not create a Candidate runtime entrypoint")
 
     if errors:
-        print("GLAZE UI V1.3 Phase 0 boundary validation FAILED:")
+        print("GLAZE UI V1.3 pre-promotion boundary validation FAILED:")
         for error in errors:
             print(f"- {error}")
         return 1
 
-    print("GLAZE UI V1.3 Adaptive Resonance Phase 0 boundary: PASS")
-    print("Boundary: V1.2 remains Stable, V1.3 remains Proposed, and later workstreams may progress without implying promotion.")
+    print("GLAZE UI V1.3 Adaptive Resonance pre-promotion boundary: PASS")
+    print("Boundary: V1.2 remains Stable, V1.3 remains Proposed, and active workstreams require validated dependencies.")
     return 0
 
 
