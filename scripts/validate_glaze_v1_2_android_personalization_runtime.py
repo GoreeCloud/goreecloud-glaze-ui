@@ -74,6 +74,9 @@ def validate_source_contract() -> dict:
         "WALLPAPER_MAX_CHROMA_RETENTION = 0.28f",
         "MIN_TOUCH_DP = 48",
         "TOUCH_ASSISTANCE_DP = 56",
+        "reducedTransparency",
+        "wallpaperAtmosphere = reducedTransparency ? null : readWallpaperAtmosphere()",
+        "atmosphericMaterial",
         "no persistence, synchronization, wallpaper acquisition, telemetry, network",
     )
     for marker in required:
@@ -100,6 +103,8 @@ def validate_source_contract() -> dict:
         "systemAppearanceResolution": True,
         "clarityNormalization": True,
         "localRgbSummaryDerivation": True,
+        "neutralMaterialRetainedUnderAtmosphere": True,
+        "reducedTransparencySuppressesAtmosphere": True,
         "directWallpaperAcquisition": False,
         "persistenceOwnedByReference": False,
         "crossDeviceSyncOwnedByReference": False,
@@ -158,7 +163,15 @@ def height_dp(node: ET.Element, dpi: int) -> float:
     return (y2 - y1) * 160.0 / dpi
 
 
-def launch(serial: str, *, appearance: str, clarity: str, touch: bool = False, wallpaper: tuple[int, int, int] | None = None) -> None:
+def launch(
+    serial: str,
+    *,
+    appearance: str,
+    clarity: str,
+    touch: bool = False,
+    reduced: bool = False,
+    wallpaper: tuple[int, int, int] | None = None,
+) -> None:
     adb(serial, "shell", "am", "force-stop", PACKAGE)
     args = [
         "shell", "am", "start", "-W", "-n", ACTIVITY,
@@ -167,6 +180,8 @@ def launch(serial: str, *, appearance: str, clarity: str, touch: bool = False, w
     ]
     if touch:
         args += ["--ez", "touchAssistance", "true"]
+    if reduced:
+        args += ["--ez", "reducedTransparency", "true"]
     if wallpaper is not None:
         r, g, b = wallpaper
         args += ["--ei", "wallpaperR", str(r), "--ei", "wallpaperG", str(g), "--ei", "wallpaperB", str(b)]
@@ -210,6 +225,7 @@ def case_follow_system_light(serial: str, dpi: int) -> dict:
         "Appearance preference: Follow System",
         "Resolved appearance: Light",
         "Clarity: Clear",
+        "Reduced Transparency: Disabled",
         "Target floor: 48 dp",
         "Wallpaper atmosphere: Local bounded RGB summary",
         "Wallpaper alpha: 0.08",
@@ -229,6 +245,7 @@ def case_follow_system_dark_touch(serial: str, dpi: int) -> dict:
         "Appearance preference: Follow System",
         "Resolved appearance: Dark",
         "Clarity: Dense",
+        "Reduced Transparency: Disabled",
         "Target floor: 56 dp",
         "Wallpaper atmosphere: Local bounded RGB summary",
     ):
@@ -246,11 +263,29 @@ def case_manual_deep_dark(serial: str, dpi: int) -> dict:
         "Appearance preference: Deep Dark",
         "Resolved appearance: Deep Dark",
         "Clarity: Balanced",
+        "Reduced Transparency: Disabled",
         "Wallpaper atmosphere: None",
     ):
         require_contains(ui, fragment)
     target = action_target(serial, dpi, 48.0)
     return {"id": "manual-deep-dark-independent-of-system", "targetDp": round(target, 2)}
+
+
+def case_reduced_transparency(serial: str, dpi: int) -> dict:
+    set_night_mode(serial, True)
+    launch(serial, appearance="follow-system", clarity="clear", reduced=True, wallpaper=(255, 40, 80))
+    ui = dump_ui(serial)
+    for fragment in (
+        "Appearance preference: Follow System",
+        "Resolved appearance: Dark",
+        "Clarity: Clear",
+        "Reduced Transparency: Enabled",
+        "Wallpaper atmosphere: None",
+    ):
+        require_contains(ui, fragment)
+    target = action_target(serial, dpi, 48.0)
+    name, digest = screenshot(serial, "android-v1.2-personalization-reduced-transparency.png")
+    return {"id": "reduced-transparency-suppresses-atmosphere", "targetDp": round(target, 2), "screenshot": name, "sha256": digest}
 
 
 def case_invalid_fallback(serial: str, dpi: int) -> dict:
@@ -261,6 +296,7 @@ def case_invalid_fallback(serial: str, dpi: int) -> dict:
         "Appearance preference: Follow System",
         "Resolved appearance: Light",
         "Clarity: Balanced",
+        "Reduced Transparency: Disabled",
         "Wallpaper atmosphere: None",
     ):
         require_contains(ui, fragment)
@@ -279,6 +315,7 @@ def main() -> int:
             case_follow_system_light(serial, dpi),
             case_follow_system_dark_touch(serial, dpi),
             case_manual_deep_dark(serial, dpi),
+            case_reduced_transparency(serial, dpi),
             case_invalid_fallback(serial, dpi),
         ]
     finally:
