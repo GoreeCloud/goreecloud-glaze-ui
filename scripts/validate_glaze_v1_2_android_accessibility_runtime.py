@@ -14,6 +14,7 @@ from pathlib import Path
 import re
 import subprocess
 import time
+import unicodedata
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,9 +25,10 @@ PACKAGE = "com.goreecloud.glazeui.reference.v12"
 ACTIVITY = f"{PACKAGE}/.MainActivity"
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
 BOUNDS = re.compile(r"\[(\d+),(\d+)\]\[(\d+),(\d+)\]")
+SIZE = re.compile(r"(?:Override|Physical) size:\s*(\d+)x(\d+)")
 
 EXPECTED_CONTROLS = {
-    "Wi-Fi": "Wi‑Fi:",
+    "Wi-Fi": "Wi-Fi:",
     "Bluetooth": "Bluetooth:",
     "Night Light": "Night Light:",
     "Performance": "Performance:",
@@ -80,6 +82,22 @@ def density(serial: str) -> int:
     raise SystemExit(f"could not resolve Android density from {output!r}")
 
 
+def display_size(serial: str) -> tuple[int, int]:
+    output = adb(serial, "shell", "wm", "size").stdout
+    matches = SIZE.findall(output)
+    if not matches:
+        raise SystemExit(f"could not resolve Android display size from {output!r}")
+    width, height = matches[-1]
+    return int(width), int(height)
+
+
+def normalize_name(value: str) -> str:
+    normalized = unicodedata.normalize("NFKC", value)
+    for char in ("\u2010", "\u2011", "\u2012", "\u2013", "\u2212"):
+        normalized = normalized.replace(char, "-")
+    return " ".join(normalized.split())
+
+
 def source_contract() -> dict[str, object]:
     source = SOURCE.read_text(encoding="utf-8")
     manifest = MANIFEST.read_text(encoding="utf-8")
@@ -125,8 +143,11 @@ def dump_ui(serial: str) -> ET.Element:
     return ET.fromstring(raw)
 
 
-def node_name(node: ET.Element) -> str:
-    return (node.attrib.get("content-desc", "") or node.attrib.get("text", "")).strip()
+def node_name(node: ET.Element) -> tuple[str, str]:
+    content_description = node.attrib.get("content-desc", "").strip()
+    text = node.attrib.get("text", "").strip()
+    raw = content_description or text
+    return normalize_name(raw), content_description
 
 
 def bounds(node: ET.Element) -> tuple[int, int, int, int]:
@@ -148,17 +169,26 @@ def app_nodes(root: ET.Element):
 
 
 def reset_scroll(serial: str) -> None:
+    width, height = display_size(serial)
+    x = width // 2
+    start_y = max(1, round(height * 0.30))
+    end_y = max(start_y + 1, round(height * 0.78))
     for _ in range(8):
-        adb(serial, "shell", "input", "swipe", "520", "650", "520", "1850", "160")
+        adb(serial, "shell", "input", "swipe", str(x), str(start_y), str(x), str(end_y), "160")
         time.sleep(0.08)
 
 
 def advance_scroll(serial: str) -> None:
-    adb(serial, "shell", "input", "swipe", "520", "1800", "520", "560", "190")
+    width, height = display_size(serial)
+    x = width // 2
+    start_y = max(1, round(height * 0.76))
+    end_y = max(1, round(height * 0.48))
+    adb(serial, "shell", "input", "swipe", str(x), str(start_y), str(x), str(end_y), "190")
     time.sleep(0.12)
 
 
 def launch(serial: str, *, appearance: str = "light", reduced: bool = False, touch: bool = False) -> None:
+    adb(serial, "shell", "wm", "size", "reset", check=False)
     adb(serial, "shell", "am", "force-stop", PACKAGE)
     args = ["shell", "am", "start", "-W", "-n", ACTIVITY, "--es", "appearance", appearance]
     if reduced:
@@ -172,7 +202,7 @@ def launch(serial: str, *, appearance: str = "light", reduced: bool = False, tou
     reset_scroll(serial)
 
 
-def scan_hierarchy(serial: str, dpi: int, *, swipes: int = 12) -> dict[str, object]:
+def scan_hierarchy(serial: str, dpi: int, *, swipes: int = 14) -> dict[str, object]:
     controls: dict[str, dict[str, object]] = {}
     unnamed_clickables: list[dict[str, str]] = []
     observed_clickables = 0
@@ -183,7 +213,7 @@ def scan_hierarchy(serial: str, dpi: int, *, swipes: int = 12) -> dict[str, obje
             if node.attrib.get("clickable") != "true" or node.attrib.get("visible-to-user") != "true":
                 continue
             observed_clickables += 1
-            name = node_name(node)
+            name, content_description = node_name(node)
             if not name:
                 unnamed_clickables.append(
                     {
@@ -201,6 +231,7 @@ def scan_hierarchy(serial: str, dpi: int, *, swipes: int = 12) -> dict[str, obje
                     "maxHeightDp": round(measured, 2),
                     "enabled": node.attrib.get("enabled") == "true",
                     "focusable": node.attrib.get("focusable") == "true",
+                    "contentDescriptionPresent": bool(content_description),
                 }
         if index < swipes:
             advance_scroll(serial)
@@ -221,10 +252,16 @@ def resolve_expected(
     for control_id, prefix in EXPECTED_CONTROLS.items():
         matches = [(name, info) for name, info in controls.items() if name.startswith(prefix)]
         if not matches:
-            raise SystemExit(f"expected named Android control not observed: {control_id} ({prefix})")
+            observed = sorted(controls)
+            raise SystemExit(
+                f"expected named Android control not observed: {control_id} ({prefix}); "
+                f"observed={observed}"
+            )
         name, info = max(matches, key=lambda item: float(item[1]["maxHeightDp"]))
         if info["role"] != "android.widget.Button":
             raise SystemExit(f"{control_id} exposed unexpected native role {info['role']!r}")
+        if control_id in {"Wi-Fi", "Bluetooth", "Night Light", "Performance", "Airplane Mode", "Focus"} and not info["contentDescriptionPresent"]:
+            raise SystemExit(f"{control_id} did not expose its state-bearing content description")
         measured = float(info["maxHeightDp"])
         if measured < floor_dp - 1.0:
             raise SystemExit(f"{control_id} below {floor_dp:.0f} dp target floor: {measured:.2f} dp")
@@ -234,12 +271,15 @@ def resolve_expected(
     return resolved
 
 
-def contains(serial: str, fragment: str, *, swipes: int = 12) -> bool:
+def contains(serial: str, fragment: str, *, swipes: int = 14) -> bool:
+    expected = normalize_name(fragment)
     reset_scroll(serial)
     for index in range(swipes + 1):
         root = dump_ui(serial)
         for node in app_nodes(root):
-            if fragment in node.attrib.get("text", "") or fragment in node.attrib.get("content-desc", ""):
+            text = normalize_name(node.attrib.get("text", ""))
+            content_description = normalize_name(node.attrib.get("content-desc", ""))
+            if expected in text or expected in content_description:
                 return True
         if index < swipes:
             advance_scroll(serial)
@@ -330,6 +370,7 @@ def main() -> int:
         large_text = large_text_audit(serial, dpi)
         reduced = reduced_transparency_audit(serial)
     finally:
+        adb(serial, "shell", "wm", "size", "reset", check=False)
         adb(serial, "shell", "settings", "put", "system", "font_scale", original_scale, check=False)
         adb(serial, "shell", "am", "force-stop", PACKAGE, check=False)
 
