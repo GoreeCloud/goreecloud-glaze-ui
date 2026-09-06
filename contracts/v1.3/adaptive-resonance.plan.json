@@ -9,16 +9,21 @@
   "releaseContract": "GLAZE_UI_V1_3.md",
   "deferredQualification": "contracts/v1.3/deferred-qualification.plan.json",
   "deferredQualificationAcceptance": "acceptance/v1.3-deferred-qualification.md",
-  "phase": "phase-0-foundation",
-  "phaseEffect": "planning-readiness-only",
+  "phase": "phase-1-token-architecture",
+  "phaseEffect": "implementation-workstream-active-no-lifecycle-promotion",
   "workstreams": [
     {
       "id": "contract-and-token-architecture",
-      "status": "planned",
+      "status": "implementation-complete-validation-pending",
       "dependsOn": [],
       "expectedArtifacts": [
-        "contracts/v1.3/core-tokens.candidate.json",
-        "tokens/glaze-v1.3-core.candidate.json"
+        "contracts/v1.3/adaptive-resonance.candidate.json",
+        "tokens/glaze-v1.3-color.candidate.json",
+        "tokens/glaze-v1.3-material.candidate.json",
+        "tokens/glaze-v1.3-shape.candidate.json",
+        "tokens/glaze-v1.3-type.candidate.json",
+        "tokens/glaze-v1.3-motion.candidate.json",
+        "tokens/glaze-v1.3-layout.candidate.json"
       ]
     },
     {
@@ -26,8 +31,8 @@
       "status": "planned",
       "dependsOn": ["contract-and-token-architecture"],
       "expectedArtifacts": [
-        "contracts/v1.3/adaptive-color.candidate.json",
-        "tokens/glaze-v1.3-adaptive-color.candidate.json"
+        "contracts/v1.3/dynamic-color.candidate.json",
+        "tokens/glaze-v1.3-color.candidate.json"
       ]
     },
     {
@@ -35,7 +40,8 @@
       "status": "planned",
       "dependsOn": ["contract-and-token-architecture"],
       "expectedArtifacts": [
-        "contracts/v1.3/expressive-shape.candidate.json"
+        "contracts/v1.3/expressive-shape.candidate.json",
+        "tokens/glaze-v1.3-shape.candidate.json"
       ]
     },
     {
@@ -44,7 +50,7 @@
       "dependsOn": ["contract-and-token-architecture"],
       "expectedArtifacts": [
         "contracts/v1.3/typography.candidate.json",
-        "tokens/glaze-v1.3-typography.candidate.json"
+        "tokens/glaze-v1.3-type.candidate.json"
       ]
     },
     {
@@ -55,8 +61,8 @@
         "adaptive-dynamic-color"
       ],
       "expectedArtifacts": [
-        "contracts/v1.3/living-material.candidate.json",
-        "tokens/glaze-v1.3-living-material.candidate.json"
+        "contracts/v1.3/living-material-2.candidate.json",
+        "tokens/glaze-v1.3-material.candidate.json"
       ]
     },
     {
@@ -64,7 +70,7 @@
       "status": "planned",
       "dependsOn": ["contract-and-token-architecture"],
       "expectedArtifacts": [
-        "contracts/v1.3/ergonomics.candidate.json"
+        "contracts/v1.3/reachability.candidate.json"
       ]
     },
     {
@@ -72,7 +78,7 @@
       "status": "planned",
       "dependsOn": ["human-reachability"],
       "expectedArtifacts": [
-        "contracts/v1.3/navigation.candidate.json"
+        "contracts/v1.3/adaptive-navigation.candidate.json"
       ]
     },
     {
@@ -83,7 +89,8 @@
         "adaptive-navigation"
       ],
       "expectedArtifacts": [
-        "contracts/v1.3/form-factor.candidate.json"
+        "contracts/v1.3/multi-pane.candidate.json",
+        "tokens/glaze-v1.3-layout.candidate.json"
       ]
     },
     {
@@ -117,7 +124,8 @@
         "adaptive-navigation"
       ],
       "expectedArtifacts": [
-        "contracts/v1.3/motion.candidate.json"
+        "contracts/v1.3/motion-semantics.candidate.json",
+        "tokens/glaze-v1.3-motion.candidate.json"
       ]
     },
     {
@@ -156,7 +164,7 @@
         "multi-pane-foldable-desktop"
       ],
       "expectedArtifacts": [
-        "contracts/v1.3/signature-components.candidate.json",
+        "contracts/v1.3/component-experience.candidate.json",
         "reference/v1.3/"
       ]
     },
@@ -179,6 +187,7 @@
         "migration-and-consumer-boundary"
       ],
       "expectedArtifacts": [
+        "GLAZE_UI_V1_3_CANDIDATE.md",
         "acceptance/v1.3-candidate.md"
       ],
       "includesDeferredQualificationPlan": true
