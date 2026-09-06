@@ -1,9 +1,10 @@
-name: Glaze V1.2 Exact-Head Readiness Candidate
+name: Glaze V1.2 Exact-Head Stable Readiness
 
 on:
   push:
     branches:
-      - feat/glaze-v1.2-migration-control-plane
+      - main
+      - fix/v1.2-stable-validation-boundary
   pull_request:
     paths:
       - "VERSION"
@@ -27,7 +28,7 @@ jobs:
   exact-head-readiness:
     runs-on: ubuntu-24.04
     steps:
-      - name: Check out exact Candidate revision
+      - name: Check out exact Stable revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -39,12 +40,12 @@ jobs:
           python-version: "3.12"
           check-latest: false
 
-      - name: Preserve Stable and Candidate authorities
+      - name: Validate Stable and promoted-source authorities
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
-          test "$(cat VERSION)" = "1.1.0"
+          test "$(cat VERSION)" = "1.2.0"
           python scripts/validate_glaze_v1.py
           python scripts/validate_glaze_v1_2_candidate.py
 

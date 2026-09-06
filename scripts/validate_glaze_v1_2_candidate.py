@@ -2,16 +2,15 @@
 """Validate the frozen V1.2 Candidate source layer under V1.2 Stable authority.
 
 V1.2 Stable intentionally freezes the implementation that was developed under
-Candidate-suffixed source paths.  The legacy validator contains the deep source
+Candidate-suffixed source paths. The legacy validator contains the deep source
 assertions for that implementation, but it also encoded the old global release
-state (V1.1 current Stable / V1.2 active Candidate).  After promotion those
+state (V1.1 current Stable / V1.2 active Candidate). After promotion those
 release-state assertions are historical, not current authority.
 
 This harness therefore validates the real Stable lifecycle first, then runs the
 legacy source validator against an in-memory historical lifecycle projection.
 The projection exists only so the legacy validator can exercise its unchanged
-source assertions; it is never written to the repository and is not release
-evidence.
+source assertions; it is never written as repository evidence.
 """
 from __future__ import annotations
 
@@ -116,7 +115,16 @@ def run_legacy_source_validation(projected_lifecycle: dict) -> None:
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
 
-    with tempfile.NamedTemporaryFile("w", encoding="utf-8", suffix=".json") as handle:
+    # The legacy helper deliberately rejects paths outside ROOT. Place the
+    # ephemeral lifecycle fixture inside the checkout, then let
+    # NamedTemporaryFile remove it immediately after validation.
+    with tempfile.NamedTemporaryFile(
+        "w",
+        encoding="utf-8",
+        suffix=".json",
+        prefix=".glaze-v1.2-historical-lifecycle-",
+        dir=ROOT,
+    ) as handle:
         json.dump(projected_lifecycle, handle, indent=2)
         handle.flush()
         module.LIFECYCLE_PATH = Path(handle.name)
