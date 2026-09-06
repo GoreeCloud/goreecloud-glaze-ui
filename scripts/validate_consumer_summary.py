@@ -32,7 +32,10 @@ def main() -> int:
         require("Fresh repository-local" in summary, "CONSUMERS.md must preserve repository-local adoption gating")
         require("No consumer is production-eligible merely because" in summary, "CONSUMERS.md must preserve non-automatic production eligibility")
 
-    stale_markers = ("GLAZE UI V1.0 (`1.0.0`)", "current Stable production baseline is 2.")
+    stale_markers = (
+        "GLAZE UI V1.0 (`1.0.0`)",
+        "current Stable production baseline is 2.",
+    )
     for marker in stale_markers:
         require(marker not in summary, f"CONSUMERS.md contains stale baseline marker: {marker}")
 
