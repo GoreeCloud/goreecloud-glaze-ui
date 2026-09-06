@@ -39,6 +39,14 @@
       "required": true
     },
     {
+      "id": "living-frosted",
+      "workflow": "Glaze V1.2 Living Glaze Candidate",
+      "workflowPath": ".github/workflows/glaze-v1.2-living-glaze.yml",
+      "artifactNamePrefix": "glaze-v1.2-living-glaze-",
+      "kind": "living-material-computed-optics-and-responsive-screenshots",
+      "required": true
+    },
+    {
       "id": "exact-head-readiness",
       "workflow": "Glaze V1.2 Exact-Head Readiness Candidate",
       "workflowPath": ".github/workflows/glaze-v1.2-exact-head-readiness.yml",
@@ -54,6 +62,9 @@
     "interaction-state-and-feedback-quality",
     "reduced-transparency-and-increased-contrast-quality",
     "rtl-layout-quality",
+    "living-frosted-clear-balanced-dense-differentiation-and-legibility",
+    "living-glaze-interaction-restraint-focus-and-material-continuity",
+    "navigation-capsule-reachability-hierarchy-and-context-continuity",
     "application-icon-family-consistency",
     "application-icon-identity-collision-review",
     "application-icon-compact-size-legibility"
@@ -70,6 +81,7 @@
     "allReviewArtifactsMustResolveToOneExactCandidateRevision": true,
     "artifactAssemblyMayNotSetHumanReviewComplete": true,
     "machineEvidenceMayNotSubstituteHumanOpticalAcceptance": true,
+    "livingFrostedRenderedEvidenceMayNotSubstituteHumanAcceptance": true,
     "humanReviewMayNotPromoteLifecycleByItself": true,
     "stableV11AuthorityMayNotMove": true,
     "consumerClaimBlocked": true
@@ -94,12 +106,14 @@
     "established": [
       "same-revision-human-review-handoff-contract",
       "machine-verifiable-artifact-source-bindings",
+      "living-frosted-rendered-evidence-handoff",
       "bounded-review-dimensions",
       "pending-human-review-state"
     ],
     "notEstablished": [
       "human-collision-review",
       "human-optical-acceptance",
+      "living-frosted-human-optical-acceptance",
       "human-approved-v1.2-canonical-screenshot-baseline",
       "phase5-reference-scenes-complete",
       "release-candidate",
