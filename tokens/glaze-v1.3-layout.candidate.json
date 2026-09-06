@@ -17,9 +17,9 @@
     "layout.environment.medium": {"implementation": "mediumEnvironment", "meaning": "medium adaptive environment"},
     "layout.environment.expanded": {"implementation": "expandedEnvironment", "meaning": "expanded multi-region environment"},
     "layout.environment.workspace": {"implementation": "workspaceEnvironment", "meaning": "persistent multi-pane productivity environment"},
-    "layout.pane.primary": {"implementation": "paneRoles.primary", "meaning": "current task or main content region"},
-    "layout.pane.secondary": {"implementation": "paneRoles.secondary", "meaning": "supporting list, detail, queue, or adjacent context"},
-    "layout.pane.inspector": {"implementation": "paneRoles.inspector", "meaning": "properties, metadata, tools, or contextual inspection"},
+    "layout.pane.primary": {"implementation": "primaryPane", "meaning": "current task or main content region"},
+    "layout.pane.secondary": {"implementation": "secondaryPane", "meaning": "supporting list, detail, queue, or adjacent context"},
+    "layout.pane.inspector": {"implementation": "inspectorPane", "meaning": "properties, metadata, tools, or contextual inspection"},
     "layout.posture": {"implementation": "posturePolicy", "meaning": "platform-declared fold/posture composition authority"},
     "layout.unsafeRegion": {"implementation": "unsafeRegionPolicy", "meaning": "platform-declared hinge, cutout, and obstruction avoidance"},
     "layout.safeArea": {"implementation": "safeArea", "meaning": "platform safe-area and obstruction-aware composition"},
@@ -39,6 +39,21 @@
       "fallbackComposition": "dualPane",
       "persistentProductivityRegionsAllowed": true,
       "requiresTaskValueForAdditionalPanes": true
+    },
+    "primaryPane": {
+      "status": "implemented-candidate-runtime",
+      "ownerWorkstream": "multi-pane-foldable-desktop",
+      "role": "current-task-or-main-content"
+    },
+    "secondaryPane": {
+      "status": "implemented-candidate-runtime",
+      "ownerWorkstream": "multi-pane-foldable-desktop",
+      "role": "supporting-list-detail-queue-or-context"
+    },
+    "inspectorPane": {
+      "status": "implemented-candidate-runtime",
+      "ownerWorkstream": "multi-pane-foldable-desktop",
+      "role": "properties-metadata-tools-or-inspection"
     },
     "paneRoles": {
       "status": "implemented-candidate-runtime",
