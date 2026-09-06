@@ -4,7 +4,8 @@
   "product": "GLAZE UI V1.2",
   "version": "1.2.0-candidate",
   "lifecycle": "candidate",
-  "stableBaseline": "1.1.0",
+  "stableBaseline": "1.1.1",
+  "visualBaseline": "1.1.0",
   "currentStableToken": false,
   "governingRule": "Neutral glass is the material. Color is an accent.",
   "materials": {
