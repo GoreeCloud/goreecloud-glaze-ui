@@ -19,12 +19,15 @@
     "VERSION",
     "registry/lifecycle.json",
     "contracts/v1.2/migration.candidate.json",
+    "contracts/v1.2/living-glaze.candidate.json",
+    "tokens/glaze-v1.2-living-material.candidate.json",
     "contracts/v1.2/reference-scenes.candidate.json",
     "contracts/v1.2/accessibility-testing.candidate.json",
     "contracts/v1.2/performance-testing.candidate.json",
     "contracts/v1.2/visual-regression.candidate.json",
     "contracts/performance/glaze-v1-performance-budget.json",
     "contracts/glaze.conformance-evidence.schema.json",
+    "acceptance/v1.2-living-frosted-candidate.md",
     "acceptance/v1.2-promotion-gates.candidate.md"
   ],
   "gateOrder": ["G0", "G1", "G2", "G3", "G4", "G5", "G6", "G7"],
@@ -35,11 +38,11 @@
     },
     "G1": {
       "status": "bounded-evidence-present",
-      "meaning": "Candidate optical-foundation contracts and their existing validators are present; downstream acceptance categories remain independent."
+      "meaning": "Frosted Neutral plus Living Frosted Candidate optical/material contracts, deterministic token authority, and fail-closed source validation are present; downstream acceptance categories remain independent."
     },
     "G2": {
       "status": "bounded-evidence-present",
-      "meaning": "Candidate component/System Shell contract evidence is present; this does not establish complete native parity or release acceptance."
+      "meaning": "Candidate component/System Shell and Living Frosted interaction/navigation/ergonomic/continuity contract evidence are present; this does not establish complete native parity or release acceptance."
     },
     "G3": {
       "status": "blocked",
@@ -48,6 +51,7 @@
         "application-icon-ecosystem-wall-open",
         "human-approved-v1.2-visual-baseline-absent",
         "final-perceptual-thresholds-absent",
+        "living-frosted-human-optical-acceptance-absent",
         "human-optical-acceptance-absent"
       ]
     },
@@ -57,6 +61,7 @@
         "phase5-accessibility-testing-incomplete",
         "real-assistive-technology-acceptance-absent",
         "phase5-performance-testing-incomplete",
+        "living-frosted-physical-device-performance-acceptance-absent",
         "accepted-runtime-and-platform-performance-budgets-absent",
         "physical-device-and-production-performance-acceptance-absent",
         "complete-native-platform-accessibility-and-performance-parity-absent"
@@ -84,6 +89,7 @@
   "rules": {
     "exactRevisionRequired": true,
     "evidenceCategoriesRemainIndependent": true,
+    "livingFrostedSourceEvidenceMayNotSubstituteHumanAcceptance": true,
     "automatedChecksMayNotSubstituteHumanOpticalReview": true,
     "browserAccessibilityEvidenceMayNotSubstituteRealAssistiveTechnologyAcceptance": true,
     "browserPerformanceObservationsMayNotSubstituteAcceptedProductionBudgets": true,
@@ -111,11 +117,13 @@
   },
   "evidenceBoundary": {
     "boundedExactHeadReadinessReportingEstablished": true,
+    "livingFrostedBoundedSourceEvidenceIntegrated": true,
     "phase5ExactRevisionConformanceEvidenceComplete": false,
     "established": [
       "runtime-git-head-binding",
       "stable-v1.1-authority-preservation-check",
       "candidate-lifecycle-and-consumer-isolation-check",
+      "living-frosted-source-and-token-binding",
       "ordered-G0-through-G7-readiness-accounting",
       "fail-closed-G3-G4-G5-blocker-reporting",
       "v1.1-conformance-schema-isolation-check"
@@ -125,9 +133,11 @@
       "stable-readiness",
       "production-readiness",
       "consumer-conformance",
+      "living-frosted-human-optical-acceptance",
       "human-optical-acceptance",
       "assistive-technology-acceptance",
       "accepted-production-performance-budgets",
+      "living-frosted-physical-device-performance-acceptance",
       "physical-device-performance-acceptance",
       "complete-native-platform-parity",
       "complete-supported-platform-evidence",
