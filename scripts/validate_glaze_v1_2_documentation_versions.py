@@ -43,6 +43,7 @@ HISTORICAL_SOURCE_PATHS = {
     "scripts/validate_glaze_motion.py",
     "scripts/validate_glaze_v1_0_reset.py",
     "scripts/validate_glaze_v1_2_candidate_legacy.py",
+    "scripts/validate_glaze_v1_2_contract_namespace_legacy.py",
     "scripts/validate_glaze_v1_2_core_tokens_legacy.py",
     "scripts/validate_glaze_v1_2_form_factor_tokens_legacy.py",
     "scripts/validate_glaze_v1_2_living_glaze_legacy.py",
