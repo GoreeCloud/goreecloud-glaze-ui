@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.personalization.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "status": "bounded-personalization-implementation-candidate",
+  "purpose": "Extend the V1.2 bounded Personalization and Appearance model into V1.3 Dynamic Color, Expressive Shape, Responsive Typography, and Accessibility/Resilience while preserving semantic truth, product identity, privacy, platform authority, and release boundaries.",
+  "extends": [
+    "contracts/v1.2/personalization-appearance.candidate.json",
+    "contracts/v1.3/dynamic-color.candidate.json",
+    "contracts/v1.3/expressive-shape.candidate.json",
+    "contracts/v1.3/typography.candidate.json",
+    "contracts/v1.3/accessibility.candidate.json"
+  ],
+  "principle": "Personalize expression, not truth or control semantics.",
+  "preferencePrecedence": [
+    "accessibility",
+    "platform-system",
+    "goreecloud-user",
+    "application-specific-when-allowed",
+    "glaze-default"
+  ],
+  "appearance": {
+    "allowed": ["follow-system", "light", "dark", "deep-dark"],
+    "default": "follow-system",
+    "platformAdapterOwnsSystemResolution": true,
+    "manualModeMayOverrideSystemFollowing": true,
+    "nativeSystemAdapterAcceptanceRequired": true
+  },
+  "accent": {
+    "input": "bounded-local-user-seed",
+    "defaultSeed": "#68AEE0",
+    "derivationAuthority": "contracts/v1.3/dynamic-color.candidate.json",
+    "semanticRoleOverrideAllowed": false,
+    "productIdentityReplacementAllowed": false,
+    "forcedColorsOverrideAllowed": false,
+    "unsafeRawSemanticPaletteEditingAllowed": false,
+    "networkRequired": false
+  },
+  "expressionProfiles": {
+    "default": "balanced",
+    "allowed": ["calm", "balanced", "expressive"],
+    "typographyProfileAuthority": "contracts/v1.3/typography.candidate.json",
+    "shapeProfileAuthority": "contracts/v1.3/expressive-shape.candidate.json",
+    "shapeCeilings": {
+      "calm": "soft",
+      "balanced": "rounded",
+      "expressive": "expressive"
+    },
+    "shapeCeilingMayReplaceComponentSemanticRole": false,
+    "arbitraryGeometryAllowed": false,
+    "arbitraryTypographyAxisValuesAllowed": false,
+    "continuousDecorativeExpressionAllowed": false
+  },
+  "density": {
+    "default": "standard",
+    "allowed": ["comfortable", "standard", "productive", "immersive"],
+    "minimumInteractiveTargetPx": 48,
+    "touchAssistanceMinimumInteractiveTargetPx": 56,
+    "largeTextMayRelaxDensity": true,
+    "touchAssistanceMayRelaxDensity": true,
+    "mayChangeSemantics": false,
+    "mayHideEssentialNavigation": false
+  },
+  "materialClarity": {
+    "default": "balanced",
+    "allowed": ["clear", "balanced", "solid"],
+    "accessibilityAuthority": "contracts/v1.3/accessibility.candidate.json",
+    "reducedTransparencyMayForceSolid": true,
+    "forcedColorsMayForceSolid": true
+  },
+  "wallpaperAtmosphere": {
+    "defaultEnabled": true,
+    "sourceAuthority": "consumer-platform-adapter",
+    "acceptedInput": "producer-supplied-local-rgb-summary",
+    "directPixelAcquisitionOwnedByGlaze": false,
+    "remoteContentRequired": false,
+    "telemetryAllowed": false,
+    "rawWallpaperPixelsRetained": false,
+    "wallpaperImageTransmissionAllowed": false,
+    "maximumAlpha": 0.12,
+    "maximumChromaRetention": 0.28,
+    "expressionAlpha": {
+      "calm": 0.04,
+      "balanced": 0.08,
+      "expressive": 0.12
+    },
+    "reducedTransparencyDisables": true,
+    "forcedColorsDisables": true,
+    "invalidInputFailsClosedToTransparent": true
+  },
+  "accessibilityOverrides": {
+    "accessibilityOutranksPersonalization": true,
+    "forcedColorsOverridesAccentRendering": true,
+    "forcedColorsForcesSolidMaterial": true,
+    "reducedTransparencyDisablesWallpaperAtmosphere": true,
+    "reducedTransparencyForcesSolidMaterial": true,
+    "reducedMotionOverridesDecorativeMotion": true,
+    "largeTextMayRelaxDensity": true,
+    "touchAssistanceRaisesHitAreaFloor": true,
+    "personalizationMayCounteractLargeText": false,
+    "personalizationMayHideVisibleFocus": false
+  },
+  "prohibited": {
+    "semanticColorRemapping": true,
+    "securityOrPrivacyMeaningOverride": true,
+    "productIdentityReplacement": true,
+    "arbitraryIconPacks": true,
+    "arbitraryComponentGeometry": true,
+    "rawBlurSlider": true,
+    "rawSaturationSlider": true,
+    "rawShadowSlider": true,
+    "rawTypographyAxisSlider": true,
+    "telemetryForPersonalization": true,
+    "remoteWallpaperSamplingRequirement": true,
+    "glazeOwnedWallpaperPixelAcquisition": true,
+    "wallpaperImageTransmission": true,
+    "automaticCrossDeviceSync": true
+  },
+  "persistenceAndSync": {
+    "persistenceAuthority": "consumer-platform-adapter",
+    "adapterInterfaceImplemented": true,
+    "directPersistenceOwnedByGlaze": false,
+    "persistenceRequiresExplicitConsumerAction": true,
+    "storageEnvelopeSchemaVersion": 1,
+    "malformedStoredPreferenceFallsBackSafely": true,
+    "syncAuthority": "separate-governed-goreecloud-sync-integration",
+    "crossDeviceSyncImplementedByThisWorkstream": false,
+    "privacyReviewRequiredBeforeCrossDeviceSync": true
+  },
+  "continuity": {
+    "preserve": [
+      "current-task",
+      "current-destination",
+      "selection",
+      "draft-state",
+      "typed-input",
+      "unsaved-work",
+      "focus",
+      "logical-focus-order",
+      "media-state",
+      "product-identity"
+    ],
+    "preferenceChangeMayReloadPage": false,
+    "preferenceChangeMayResetSelection": false,
+    "preferenceChangeMayDiscardDraft": false,
+    "preferenceChangeMayResetFocus": false
+  },
+  "implementation": {
+    "runtime": "js/glaze-v1.3-personalization.candidate.mjs",
+    "tests": "tests/glaze-v1.3-personalization.test.mjs",
+    "validator": "scripts/validate_glaze_v1_3_personalization.py",
+    "workflow": ".github/workflows/glaze-v1.3-personalization.yml"
+  },
+  "evidenceBoundary": {
+    "implementedByWorkstream": [
+      "bounded-personalization-normalization",
+      "dynamic-color-user-seed-routing",
+      "bounded-expression-profile-routing",
+      "bounded-density-and-material-clarity-resolution",
+      "bounded-local-wallpaper-atmosphere-derivation",
+      "accessibility-precedence",
+      "optional-consumer-persistence-adapter-interface",
+      "safe-preference-envelope",
+      "personalization-continuity-guardrails",
+      "automated-runtime-and-contract-tests"
+    ],
+    "notEstablished": [
+      "native-system-appearance-adapter-acceptance",
+      "native-wallpaper-source-adapter-acceptance",
+      "consumer-platform-persistence-acceptance",
+      "cross-device-preference-sync",
+      "human-optical-personalization-acceptance",
+      "assistive-technology-acceptance",
+      "physical-device-acceptance",
+      "complete-native-platform-parity",
+      "production-performance-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}
