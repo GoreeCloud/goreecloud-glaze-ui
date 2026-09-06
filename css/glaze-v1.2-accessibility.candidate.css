@@ -12,9 +12,15 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"] .glz12
 /* Canonical Reduced Motion binding. Legacy data-mode remains supported by the motion owner. */
 html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-glz-motion="reduced"]:root :is(
   [data-glz-motion="press"],
-  .glz1-morph-card[data-glz-connected="card-detail"]
+  .glz1-morph-card[data-glz-connected="card-detail"],
+  [data-glaze-living]
 ) {
   transition: none !important;
+}
+html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-glz-motion="reduced"]:root :is(
+  [data-glaze-living][data-material-state="pressed"],
+  [data-glaze-living][data-material-state="dragged"]
+) {
   transform: none !important;
 }
 html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-glz-motion="reduced"]:root .glz12-motion-selection-indicator {
@@ -55,7 +61,9 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-g
   .glz1-capsule,
   .glz1-smart-rail,
   .glz12-shell-navigation[data-variant="floating"],
-  [data-glz-shell-region="navigation"][data-variant="floating"]
+  [data-glz-shell-region="navigation"][data-variant="floating"],
+  [data-glaze-living],
+  [data-glaze-navigation-capsule]
 ) {
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
@@ -79,7 +87,9 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-g
   .glz12-shell-navigation[data-variant="floating"],
   .glz12-semantic-state,
   .glz12-offline-state,
-  .glz12-recovery-state
+  .glz12-recovery-state,
+  [data-glaze-living],
+  [data-glaze-navigation-capsule]
 ) {
   border-style: solid;
   border-width: var(--glz12-state-focus-width);
@@ -90,6 +100,9 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-g
   .glz1-icon-button,
   .glz1-field-control,
   .glz1-select,
+  [data-glaze-living],
+  [data-glaze-navigation-capsule] button,
+  [data-glaze-navigation-capsule] a,
   a,
   button,
   input,
@@ -111,7 +124,11 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-g
   .glz1-button,
   .glz1-field,
   .glz1-field-control,
-  .glz1-select
+  .glz1-select,
+  [data-glaze-living],
+  [data-glaze-navigation-capsule],
+  [data-glaze-navigation-capsule] button,
+  [data-glaze-navigation-capsule] a
 ) {
   min-inline-size: 0;
   max-inline-size: 100%;
@@ -120,7 +137,11 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-g
 html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-glz-text-scale="200"]:root .glz12-a11y-grid {
   grid-template-columns: minmax(0, 1fr) !important;
 }
-html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-glz-text-scale="200"]:root :is(.glz1-button,.glz1-field-control,.glz1-select) {
+html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-glz-text-scale="200"]:root [data-glaze-navigation-capsule] {
+  flex-wrap: wrap;
+  border-radius: var(--glz12-radius-surface, 20px);
+}
+html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-glz-text-scale="200"]:root :is(.glz1-button,.glz1-field-control,.glz1-select,[data-glaze-navigation-capsule] button,[data-glaze-navigation-capsule] a) {
   white-space: normal;
 }
 
@@ -130,7 +151,9 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-g
   .glz1-icon-button,
   .glz1-field-control,
   .glz1-select,
-  .glz12-a11y-action
+  .glz12-a11y-action,
+  [data-glaze-navigation-capsule] button,
+  [data-glaze-navigation-capsule] a
 ) {
   min-inline-size: var(--glz12-shell-target-assisted);
   min-block-size: var(--glz12-shell-target-assisted);
@@ -168,7 +191,9 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-g
     .glz1-sheet,
     .glz1-toast,
     .glz1-sidebar[data-variant="floating"],
-    .glz1-navigation-rail[data-variant="floating"]
+    .glz1-navigation-rail[data-variant="floating"],
+    [data-glaze-living],
+    [data-glaze-navigation-capsule]
   ) {
     forced-color-adjust: auto;
     -webkit-backdrop-filter: none !important;
@@ -192,7 +217,9 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-g
     .glz1-sheet,
     .glz1-toast,
     .glz1-capsule,
-    .glz1-smart-rail
+    .glz1-smart-rail,
+    [data-glaze-living],
+    [data-glaze-navigation-capsule]
   ) {
     transition: none !important;
     animation: none !important;
@@ -208,7 +235,9 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-g
     .glz1-select,
     .glz1-capsule,
     .glz1-popover,
-    .glz12-a11y-region
+    .glz12-a11y-region,
+    [data-glaze-living],
+    [data-glaze-navigation-capsule]
   ) {
     border-color: CanvasText;
   }
