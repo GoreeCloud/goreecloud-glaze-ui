@@ -53,6 +53,7 @@ jobs:
           python -m py_compile \
             scripts/validate_glaze_v1_2_exact_head_readiness.py \
             scripts/validate_glaze_v1_2_human_optical_review_packet.py \
+            scripts/validate_glaze_v1_2_human_optical_review_record.py \
             scripts/validate_glaze_v1_2_living_glaze.py \
             scripts/validate_glaze_v1_2_living_glaze_rendered.py \
             scripts/validate_glaze_v1_2_personalization_readiness.py \
@@ -82,6 +83,11 @@ jobs:
 
       - name: Generate fail-closed exact-head readiness evidence
         run: python scripts/validate_glaze_v1_2_exact_head_readiness.py
+
+      - name: Validate human optical review record protocol
+        run: |
+          python scripts/validate_glaze_v1_2_human_optical_review_record.py
+          python scripts/validate_glaze_v1_2_human_optical_review_record.py --self-test
 
       - name: Generate fail-closed human optical review manifest
         run: python scripts/validate_glaze_v1_2_human_optical_review_packet.py
