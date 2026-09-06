@@ -59,7 +59,7 @@
     },
     {
       "id": "living-material-2",
-      "status": "implementation-in-progress",
+      "status": "implementation-complete-validation-pending",
       "dependsOn": [
         "contract-and-token-architecture",
         "adaptive-dynamic-color"
