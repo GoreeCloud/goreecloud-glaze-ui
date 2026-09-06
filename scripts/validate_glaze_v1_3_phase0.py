@@ -65,13 +65,21 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == STABLE_VERSION, "V1.3 development must leave VERSION at 1.2.0 until governed Candidate activation")
+    req(
+        (ROOT / "VERSION").read_text(encoding="utf-8").strip() == STABLE_VERSION,
+        "V1.3 development must leave VERSION at 1.2.0 until governed Candidate activation",
+    )
+
     lifecycle = load("registry/lifecycle.json")
     req(lifecycle.get("currentOfficial") == STABLE_VERSION, "currentOfficial must remain 1.2.0")
     req(lifecycle.get("currentStable") == STABLE_VERSION, "currentStable must remain 1.2.0")
     req(lifecycle.get("activeCandidate") is None, "V1.3 development must not activate Candidate before the governed gate")
     req(lifecycle.get("plannedNext") == PLANNED_TARGET, "plannedNext must remain 1.3.0-candidate")
-    stable = next((item for item in lifecycle.get("releases", []) if item.get("version") == STABLE_VERSION), None)
+
+    stable = next(
+        (item for item in lifecycle.get("releases", []) if item.get("version") == STABLE_VERSION),
+        None,
+    )
     req(bool(stable) and stable.get("status") == "stable", "V1.2 must remain Stable")
     req(bool(stable) and stable.get("consumerEligible") is True, "V1.2 must remain consumer-eligible")
 
@@ -81,7 +89,13 @@ def main() -> int:
     req(plan.get("sourceStable") == STABLE_VERSION, "V1.3 must derive from 1.2.0 Stable")
     req(plan.get("targetVersion") == PLANNED_TARGET, "V1.3 planned target mismatch")
     req(plan.get("phase") in ALLOWED_PHASES, "unexpected V1.3 development phase")
-    req(plan.get("phaseEffect") in {"planning-readiness-only", "implementation-workstream-active-no-lifecycle-promotion"}, "development phase effect must not imply lifecycle promotion")
+    req(
+        plan.get("phaseEffect") in {
+            "planning-readiness-only",
+            "implementation-workstream-active-no-lifecycle-promotion",
+        },
+        "development phase effect must not imply lifecycle promotion",
+    )
 
     gates = plan.get("gates", {})
     req(gates.get("candidateActivationRequiresImplementationEvidence") is True, "Candidate must require implementation evidence")
@@ -100,12 +114,31 @@ def main() -> int:
     req(protected.get("phase0MayCreateCandidateEntrypoints") is False, "development must not inherit permission to create Candidate entrypoints")
 
     expected_workstreams = {
-        "contract-and-token-architecture", "adaptive-dynamic-color", "expressive-shape", "variable-responsive-typography", "living-material-2", "human-reachability", "adaptive-navigation", "multi-pane-foldable-desktop", "system-shell-and-control-center", "contextual-intelligence", "motion-and-continuity", "accessibility-and-resilience", "personalization", "signature-components-and-reference-suite", "migration-and-consumer-boundary", "fresh-v1.3-qualification"
+        "contract-and-token-architecture",
+        "adaptive-dynamic-color",
+        "expressive-shape",
+        "variable-responsive-typography",
+        "living-material-2",
+        "human-reachability",
+        "adaptive-navigation",
+        "multi-pane-foldable-desktop",
+        "system-shell-and-control-center",
+        "contextual-intelligence",
+        "motion-and-continuity",
+        "accessibility-and-resilience",
+        "personalization",
+        "signature-components-and-reference-suite",
+        "migration-and-consumer-boundary",
+        "fresh-v1.3-qualification",
     }
     workstreams = plan.get("workstreams", [])
     ids = {item.get("id") for item in workstreams}
     req(ids == expected_workstreams, "V1.3 workstream set is incomplete or unexpected")
-    req(all(item.get("status") in ALLOWED_WORKSTREAM_STATUSES for item in workstreams), "V1.3 workstream status escaped the pre-promotion development vocabulary")
+    req(
+        all(item.get("status") in ALLOWED_WORKSTREAM_STATUSES for item in workstreams),
+        "V1.3 workstream status escaped the pre-promotion development vocabulary",
+    )
+
     known = set(ids)
     statuses = {item.get("id"): item.get("status") for item in workstreams}
     for item in workstreams:
@@ -113,17 +146,24 @@ def main() -> int:
             req(dep in known, f"unknown dependency {dep!r} in workstream {item.get('id')!r}")
         if item.get("status") != "planned":
             for dep in item.get("dependsOn", []):
-                req(statuses.get(dep) == "implemented-and-validated", f"active workstream {item.get('id')!r} requires validated dependency {dep!r}")
+                req(
+                    statuses.get(dep) == "implemented-and-validated",
+                    f"active workstream {item.get('id')!r} requires validated dependency {dep!r}",
+                )
 
     deferred = load("contracts/v1.3/deferred-qualification.plan.json")
     req(deferred.get("lifecycle") == "planned", "deferred V1.3 qualification must remain planned")
     req(deferred.get("sourceStable") == STABLE_VERSION, "deferred qualification must remain anchored to V1.2 Stable")
-    req(deferred.get("rules", {}).get("v1.3LifecyclePromotionAutomatic") is False, "deferred qualification must not auto-promote V1.3")
+    req(
+        deferred.get("rules", {}).get("v1.3LifecyclePromotionAutomatic") is False,
+        "deferred qualification must not auto-promote V1.3",
+    )
 
     contract = (ROOT / "GLAZE_UI_V1_3.md").read_text(encoding="utf-8")
     req("**Lifecycle:** Proposed" in contract, "V1.3 human-readable contract must say Proposed")
     req("Lifecycle effect:** None" in contract, "V1.3 contract must preserve no-lifecycle-effect boundary")
     req("consumer-eligible" in contract, "V1.3 contract must describe the consumer boundary")
+
     req(not (ROOT / "css/glaze-v1.3.0-candidate.css").exists(), "pre-promotion development must not create a Candidate CSS entrypoint")
     req(not (ROOT / "js/glaze-v1.3.0-candidate.mjs").exists(), "pre-promotion development must not create a Candidate runtime entrypoint")
 
