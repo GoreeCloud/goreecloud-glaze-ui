@@ -8,7 +8,7 @@
   "consumerEligible": false,
   "stableBaseline": "1.1.0",
   "status": "bounded-personalization-appearance-and-adapter-evidence",
-  "purpose": "Provide bounded V1.2 Candidate appearance, accent, atmosphere, density, clarity, system-resolution, and consumer-adapter behavior without allowing personalization to override semantic truth, accessibility, product identity, security/privacy meaning, or platform authority.",
+  "purpose": "Provide bounded V1.2 Candidate appearance, accent, atmosphere, density, clarity, system-resolution, local wallpaper-derived atmosphere, and consumer-adapter behavior without allowing personalization to override semantic truth, accessibility, product identity, security/privacy meaning, or platform authority.",
   "authority": {
     "companionSpecification": "Glaze UI V1.2 — Personalization and Appearance.docx",
     "accessibilityResolution": "contracts/v1.2/accessibility-adaptation.candidate.json",
@@ -43,9 +43,17 @@
     "allowed": ["calm", "balanced", "expressive"],
     "semanticRoleOverrideAllowed": false,
     "wallpaperSampling": {
-      "implementationStatus": "not-implemented",
+      "implementationStatus": "bounded-local-derivation-implemented",
+      "inputAuthority": "consumer-platform-adapter",
+      "acceptedInput": "producer-supplied-local-rgb-summary",
+      "directPixelAcquisitionOwnedByGlaze": false,
+      "boundedLocalDerivationImplemented": true,
       "requiredProperties": ["local", "bounded", "low-intensity", "filtered", "desaturated"],
-      "remoteContentRequired": false
+      "maximumAlpha": 0.12,
+      "maximumChromaRetention": 0.28,
+      "remoteContentRequired": false,
+      "telemetryAllowed": false,
+      "rawWallpaperPixelsRetained": false
     }
   },
   "densityProfiles": {
@@ -79,7 +87,9 @@
     "rawSaturationSlider": true,
     "rawShadowSlider": true,
     "telemetryForPersonalization": true,
-    "remoteWallpaperSamplingRequirement": true
+    "remoteWallpaperSamplingRequirement": true,
+    "glazeOwnedWallpaperPixelAcquisition": true,
+    "wallpaperImageTransmission": true
   },
   "persistenceAndSync": {
     "persistenceAuthority": "consumer-platform-adapter",
@@ -98,12 +108,20 @@
     "manualAppearanceDoesNotTrackSystemChanges": true,
     "persistenceAdapterIsOptional": true,
     "malformedStoredPreferenceFallsBackSafely": true,
-    "storageEnvelopeSchemaVersion": 1
+    "storageEnvelopeSchemaVersion": 1,
+    "wallpaperInputIsProducerSuppliedRgbOnly": true,
+    "wallpaperInvalidInputFailsClosedToTransparent": true,
+    "wallpaperAtmosphereIsLocallyDerived": true,
+    "wallpaperAtmosphereMaximumAlpha": 0.12,
+    "wallpaperAtmosphereMaximumChromaRetention": 0.28
   },
   "acceptance": {
     "accentDoesNotChangeSemanticStateRequired": true,
     "atmosphereProfileDifferentiationRequired": true,
     "clarityProfileDifferentiationRequired": true,
+    "wallpaperAtmosphereLocalDerivationRequired": true,
+    "wallpaperAtmosphereInvalidInputFailsClosedRequired": true,
+    "wallpaperAtmosphereAccessibilityPrecedenceRequired": true,
     "reducedTransparencyDisablesDecorativeAtmosphereRequired": true,
     "densityProfileDifferentiationRequired": true,
     "followSystemBrowserResolutionRequired": true,
@@ -129,6 +147,7 @@
     "implemented": [
       "bounded-governed-accent-profiles",
       "bounded-atmosphere-profiles",
+      "bounded-local-wallpaper-atmosphere-derivation",
       "bounded-density-profiles",
       "bounded-living-glaze-clarity-profiles",
       "manual-light-dark-deep-dark-reference",
@@ -144,7 +163,7 @@
       "native-follow-system-platform-adapter-acceptance",
       "consumer-platform-persistence-acceptance",
       "cross-device-preference-sync",
-      "wallpaper-sampling",
+      "native-wallpaper-source-adapter-acceptance",
       "human-visual-review",
       "assistive-technology-acceptance",
       "native-platform-parity",
