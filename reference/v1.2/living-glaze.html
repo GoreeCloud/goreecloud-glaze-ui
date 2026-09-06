@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-glaze-upgrade="v1.2-frosted-neutral" data-glaze-clarity="balanced" data-glaze-tier="3">
+<html lang="en" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light" data-glaze-clarity="balanced" data-glaze-tier="3">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -17,14 +17,14 @@
     <button data-clarity="clear">Clear</button><button data-clarity="balanced">Balanced</button><button data-clarity="dense">Dense</button>
   </div>
   <section class="grid" aria-label="Living Glaze states">
-    <article class="lab" data-glaze-living data-backdrop-complexity="simple" data-material-state="rest"><h2>Simple backdrop</h2><p>May become clearer while retaining contrast.</p></article>
-    <article class="lab" data-glaze-living data-backdrop-complexity="complex" data-material-state="hover"><h2>Complex backdrop</h2><p>Uses bounded denser presentation without image sampling.</p></article>
-    <article class="lab" data-glaze-living data-backdrop-complexity="unknown" data-material-state="focus" tabindex="0"><h2>Fail closed</h2><p>Unknown complexity resolves to deterministic Balanced behavior.</p></article>
-    <article class="lab" data-glaze-living data-material-state="pressed"><h2>Pressed</h2><p>Subtle depth response; action correctness never depends on completion.</p></article>
-    <article class="lab" data-glaze-living data-material-state="dragged"><h2>Dragged</h2><p>Direct manipulation separates from its source plane.</p></article>
-    <article class="lab" data-glaze-living data-material-state="disabled" aria-disabled="true"><h2>Disabled</h2><p>Readable content remains intact while affordance decreases.</p></article>
+    <article id="simple" class="lab" data-glaze-living data-backdrop-complexity="simple" data-material-state="rest"><h2>Simple backdrop</h2><p>May become clearer while retaining contrast.</p></article>
+    <article id="complex" class="lab" data-glaze-living data-backdrop-complexity="complex" data-material-state="hover"><h2>Complex backdrop</h2><p>Uses bounded denser presentation without image sampling.</p></article>
+    <article id="unknown" class="lab" data-glaze-living data-backdrop-complexity="unknown" data-material-state="focus" tabindex="0"><h2>Fail closed</h2><p>Unknown complexity resolves to deterministic Balanced behavior.</p></article>
+    <article id="pressed" class="lab" data-glaze-living data-material-state="pressed"><h2>Pressed</h2><p>Subtle depth response; action correctness never depends on completion.</p></article>
+    <article id="dragged" class="lab" data-glaze-living data-material-state="dragged"><h2>Dragged</h2><p>Direct manipulation separates from its source plane.</p></article>
+    <article id="disabled" class="lab" data-glaze-living data-material-state="disabled" aria-disabled="true"><h2>Disabled</h2><p>Readable content remains intact while affordance decreases.</p></article>
   </section>
-  <nav class="lab" data-glaze-living data-glaze-navigation-capsule data-glaze-zone="primary-interaction" aria-label="Adaptive Navigation Capsule">
+  <nav id="capsule" class="lab" data-glaze-living data-glaze-navigation-capsule data-glaze-zone="primary-interaction" aria-label="Adaptive Navigation Capsule">
     <button aria-current="page">Home</button><button>Search</button><button>Control</button><button>Profile</button>
   </nav>
 </main>
@@ -36,6 +36,7 @@
     card.addEventListener('pointerup',()=>setLivingGlazeState(card,'rest'));
     card.addEventListener('focus',()=>setLivingGlazeState(card,'focus'));
   });
+  window.livingGlazeReady=true;
 </script>
 </body>
 </html>
