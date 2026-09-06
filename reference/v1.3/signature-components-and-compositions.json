@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "referenceOnly": true,
+  "catalogAuthority": "contracts/components/v1/catalog.json",
+  "contractAuthority": "contracts/v1.3/component-experience.candidate.json",
+  "signatureComponents": [
+    {"id": "GlzCapsule", "referenceRole": "reachable-expandable-chrome", "durableReading": false},
+    {"id": "GlzMorphCard", "referenceRole": "durable-expandable-content", "durableReading": true},
+    {"id": "GlzSmartRail", "referenceRole": "adaptive-primary-navigation", "durableReading": false},
+    {"id": "GlzAuroraSurface", "referenceRole": "nonsemantic-atmosphere", "durableReading": false},
+    {"id": "GlzUniversalSearch", "referenceRole": "scope-visible-search", "durableReading": true}
+  ],
+  "referenceScenes": [
+    {"id": "home-dashboard", "primaryTask": "primary-state-and-critical-exceptions", "secondaryTaskValue": true, "inspectorTaskValue": false},
+    {"id": "data-heavy-administration", "primaryTask": "durable-data-administration", "secondaryTaskValue": true, "inspectorTaskValue": true},
+    {"id": "settings", "primaryTask": "scanable-settings-and-risk-separated-controls", "secondaryTaskValue": true, "inspectorTaskValue": false},
+    {"id": "file-browser", "primaryTask": "file-list-and-selection", "secondaryTaskValue": false, "inspectorTaskValue": true},
+    {"id": "search", "primaryTask": "search-query-and-results", "secondaryTaskValue": false, "inspectorTaskValue": false},
+    {"id": "form", "primaryTask": "form-completion-and-save-state", "secondaryTaskValue": false, "inspectorTaskValue": false},
+    {"id": "detail-inspector", "primaryTask": "primary-content-with-subordinate-inspector", "secondaryTaskValue": false, "inspectorTaskValue": true},
+    {"id": "media", "primaryTask": "media-content-and-reachable-controls", "secondaryTaskValue": false, "inspectorTaskValue": false}
+  ],
+  "environments": ["compact", "medium", "expanded", "workspace", "farView", "wearable"],
+  "rules": {
+    "referenceSuiteCreatesNewTokenAuthority": false,
+    "referenceSuiteCreatesNewMaterialAuthority": false,
+    "referenceSuiteCreatesNewSemanticAuthority": false,
+    "personalizationMayChangeSemanticMeaning": false,
+    "accessibilityMayRecomposePresentation": true,
+    "durableReadingBackdropDependent": false,
+    "additionalPaneRequiresTaskValue": true,
+    "rawViewportWidthAuthority": false,
+    "deviceBrandBreakpointsCanonical": false,
+    "complete32ComponentCoverageClaimed": false
+  },
+  "evidenceBoundary": {
+    "nativeParityEstablished": false,
+    "humanOpticalAcceptanceEstablished": false,
+    "assistiveTechnologyAcceptanceEstablished": false,
+    "physicalDeviceAcceptanceEstablished": false,
+    "releaseCandidateEstablished": false,
+    "stableEstablished": false,
+    "consumerConformanceEstablished": false
+  }
+}
