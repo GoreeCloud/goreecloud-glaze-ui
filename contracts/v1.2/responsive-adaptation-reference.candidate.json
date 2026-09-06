@@ -102,7 +102,10 @@
     "runtime": "js/glaze-v1.2-responsive-adaptation-reference.candidate.mjs",
     "reference": "reference/v1.2/responsive-adaptation.html",
     "renderedValidator": "scripts/validate_glaze_v1_2_responsive_adaptation_rendered.py",
+    "linuxNativeWindowReference": "reference/v1.2/native/linux-gtk/window_adaptation.py",
+    "linuxNativeWindowValidator": "scripts/validate_glaze_v1_2_linux_window_adaptation_runtime.py",
     "workflow": ".github/workflows/glaze-v1.2-responsive-adaptation.yml",
+    "linuxNativeWorkflow": ".github/workflows/glaze-v1.2-linux-native.yml",
     "candidateEntrypoint": "css/glaze-v1.2.0-candidate.css"
   },
   "evidenceBoundary": {
@@ -115,7 +118,8 @@
       "far-view-56px-reference-target-gate",
       "wearable-glanceable-reference",
       "reduced-transparency-200-percent-text-rtl-reference-gates",
-      "exact-head-rendered-acceptance"
+      "exact-head-rendered-acceptance",
+      "linux-gtk-bounded-window-recomposition-evidence"
     ],
     "notEstablished": [
       "automatic-production-capability-selection",
