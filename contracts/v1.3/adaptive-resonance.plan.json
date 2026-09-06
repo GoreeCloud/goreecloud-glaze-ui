@@ -9,7 +9,7 @@
   "releaseContract": "GLAZE_UI_V1_3.md",
   "deferredQualification": "contracts/v1.3/deferred-qualification.plan.json",
   "deferredQualificationAcceptance": "acceptance/v1.3-deferred-qualification.md",
-  "phase": "phase-7-adaptive-navigation",
+  "phase": "phase-8-multi-pane-foldable-desktop",
   "phaseEffect": "implementation-workstream-active-no-lifecycle-promotion",
   "workstreams": [
     {
@@ -54,7 +54,7 @@
     },
     {
       "id": "variable-responsive-typography",
-      "status": "implementation-complete-validation-pending",
+      "status": "implemented-and-validated",
       "dependsOn": ["contract-and-token-architecture"],
       "expectedArtifacts": [
         "contracts/v1.3/typography.candidate.json",
@@ -95,7 +95,7 @@
     },
     {
       "id": "adaptive-navigation",
-      "status": "implementation-complete-validation-pending",
+      "status": "implemented-and-validated",
       "dependsOn": ["human-reachability"],
       "expectedArtifacts": [
         "contracts/v1.3/adaptive-navigation.candidate.json",
@@ -107,14 +107,18 @@
     },
     {
       "id": "multi-pane-foldable-desktop",
-      "status": "planned",
+      "status": "implementation-complete-validation-pending",
       "dependsOn": [
         "human-reachability",
         "adaptive-navigation"
       ],
       "expectedArtifacts": [
         "contracts/v1.3/multi-pane.candidate.json",
-        "tokens/glaze-v1.3-layout.candidate.json"
+        "tokens/glaze-v1.3-layout.candidate.json",
+        "js/glaze-v1.3-multi-pane.candidate.mjs",
+        "tests/glaze-v1.3-multi-pane.test.mjs",
+        "scripts/validate_glaze_v1_3_multi_pane.py",
+        ".github/workflows/glaze-v1.3-multi-pane.yml"
       ]
     },
     {
