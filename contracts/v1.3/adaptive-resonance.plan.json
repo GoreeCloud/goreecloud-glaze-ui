@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "lifecycle": "proposed",
+  "created": "2026-09-06",
+  "sourceStable": "1.2.0",
+  "releaseContract": "GLAZE_UI_V1_3.md",
+  "deferredQualification": "contracts/v1.3/deferred-qualification.plan.json",
+  "deferredQualificationAcceptance": "acceptance/v1.3-deferred-qualification.md",
+  "phase": "phase-0-foundation",
+  "phaseEffect": "planning-readiness-only",
+  "workstreams": [
+    {
+      "id": "contract-and-token-architecture",
+      "status": "planned",
+      "dependsOn": [],
+      "expectedArtifacts": [
+        "contracts/v1.3/core-tokens.candidate.json",
+        "tokens/glaze-v1.3-core.candidate.json"
+      ]
+    },
+    {
+      "id": "adaptive-dynamic-color",
+      "status": "planned",
+      "dependsOn": ["contract-and-token-architecture"],
+      "expectedArtifacts": [
+        "contracts/v1.3/adaptive-color.candidate.json",
+        "tokens/glaze-v1.3-adaptive-color.candidate.json"
+      ]
+    },
+    {
+      "id": "expressive-shape",
+      "status": "planned",
+      "dependsOn": ["contract-and-token-architecture"],
+      "expectedArtifacts": [
+        "contracts/v1.3/expressive-shape.candidate.json"
+      ]
+    },
+    {
+      "id": "variable-responsive-typography",
+      "status": "planned",
+      "dependsOn": ["contract-and-token-architecture"],
+      "expectedArtifacts": [
+        "contracts/v1.3/typography.candidate.json",
+        "tokens/glaze-v1.3-typography.candidate.json"
+      ]
+    },
+    {
+      "id": "living-material-2",
+      "status": "planned",
+      "dependsOn": [
+        "contract-and-token-architecture",
+        "adaptive-dynamic-color"
+      ],
+      "expectedArtifacts": [
+        "contracts/v1.3/living-material.candidate.json",
+        "tokens/glaze-v1.3-living-material.candidate.json"
+      ]
+    },
+    {
+      "id": "human-reachability",
+      "status": "planned",
+      "dependsOn": ["contract-and-token-architecture"],
+      "expectedArtifacts": [
+        "contracts/v1.3/ergonomics.candidate.json"
+      ]
+    },
+    {
+      "id": "adaptive-navigation",
+      "status": "planned",
+      "dependsOn": ["human-reachability"],
+      "expectedArtifacts": [
+        "contracts/v1.3/navigation.candidate.json"
+      ]
+    },
+    {
+      "id": "multi-pane-foldable-desktop",
+      "status": "planned",
+      "dependsOn": [
+        "human-reachability",
+        "adaptive-navigation"
+      ],
+      "expectedArtifacts": [
+        "contracts/v1.3/form-factor.candidate.json"
+      ]
+    },
+    {
+      "id": "system-shell-and-control-center",
+      "status": "planned",
+      "dependsOn": [
+        "adaptive-navigation",
+        "living-material-2"
+      ],
+      "expectedArtifacts": [
+        "contracts/v1.3/system-shell.candidate.json",
+        "contracts/v1.3/control-center.candidate.json"
+      ]
+    },
+    {
+      "id": "contextual-intelligence",
+      "status": "planned",
+      "dependsOn": [
+        "adaptive-dynamic-color",
+        "adaptive-navigation"
+      ],
+      "expectedArtifacts": [
+        "contracts/v1.3/contextual-intelligence.candidate.json"
+      ]
+    },
+    {
+      "id": "motion-and-continuity",
+      "status": "planned",
+      "dependsOn": [
+        "living-material-2",
+        "adaptive-navigation"
+      ],
+      "expectedArtifacts": [
+        "contracts/v1.3/motion.candidate.json"
+      ]
+    },
+    {
+      "id": "accessibility-and-resilience",
+      "status": "planned",
+      "dependsOn": [
+        "adaptive-dynamic-color",
+        "variable-responsive-typography",
+        "living-material-2",
+        "human-reachability",
+        "motion-and-continuity"
+      ],
+      "expectedArtifacts": [
+        "contracts/v1.3/accessibility.candidate.json"
+      ]
+    },
+    {
+      "id": "personalization",
+      "status": "planned",
+      "dependsOn": [
+        "adaptive-dynamic-color",
+        "expressive-shape",
+        "variable-responsive-typography",
+        "accessibility-and-resilience"
+      ],
+      "expectedArtifacts": [
+        "contracts/v1.3/personalization.candidate.json"
+      ]
+    },
+    {
+      "id": "signature-components-and-reference-suite",
+      "status": "planned",
+      "dependsOn": [
+        "system-shell-and-control-center",
+        "personalization",
+        "multi-pane-foldable-desktop"
+      ],
+      "expectedArtifacts": [
+        "contracts/v1.3/signature-components.candidate.json",
+        "reference/v1.3/"
+      ]
+    },
+    {
+      "id": "migration-and-consumer-boundary",
+      "status": "planned",
+      "dependsOn": [
+        "accessibility-and-resilience",
+        "signature-components-and-reference-suite"
+      ],
+      "expectedArtifacts": [
+        "contracts/v1.3/migration.candidate.json",
+        "MIGRATION_V1_2_TO_V1_3.md"
+      ]
+    },
+    {
+      "id": "fresh-v1.3-qualification",
+      "status": "planned",
+      "dependsOn": [
+        "migration-and-consumer-boundary"
+      ],
+      "expectedArtifacts": [
+        "acceptance/v1.3-candidate.md"
+      ],
+      "includesDeferredQualificationPlan": true
+    }
+  ],
+  "gates": {
+    "candidateActivationRequiresImplementationEvidence": true,
+    "candidateActivationRequiresValidation": true,
+    "releaseCandidateRequiresExactRevisionAcceptance": true,
+    "stableRequiresFormalPromotion": true,
+    "consumerConformanceAutomatic": false,
+    "deferredV1_2EvidenceCountsAsV1_3Pass": false,
+    "accessibilityOutranksExpression": true,
+    "degradeEffectsBeforeCorrectness": true
+  },
+  "protectedStableState": {
+    "versionFileMustRemain": "1.2.0",
+    "officialStableMustRemain": "1.2.0",
+    "v1_2WebEntrypointMustRemain": "css/glaze-v1.2.0.css",
+    "v1_2RuntimeEntrypointMustRemain": "js/glaze-v1.2.0.mjs",
+    "phase0MayChangeLifecycleRegistry": false,
+    "phase0MayCreateCandidateEntrypoints": false
+  },
+  "naming": {
+    "fullReleaseTheme": "GLAZE UI V1.3 — Adaptive Resonance",
+    "standaloneResonanceAllowedAsGlazeReleaseName": false,
+    "reason": "Standalone Resonance is reserved by an existing GoreeCloud Music capability identity."
+  }
+}
