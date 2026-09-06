@@ -15,6 +15,7 @@ ALLOWED_PHASES = {
     "phase-2-dynamic-color",
     "phase-3-living-material-2",
     "phase-4-human-reachability",
+    "phase-5-expressive-shape",
 }
 ALLOWED_WORKSTREAM_STATUSES = {
     "planned",
