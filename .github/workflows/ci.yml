@@ -8,10 +8,14 @@ jobs:
   validate-v1:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.12'
+      - name: Validate GitHub Actions runtime and immutable pin integrity
+        run: |
+          python -m py_compile scripts/validate_github_actions_runtime_integrity.py
+          python scripts/validate_github_actions_runtime_integrity.py
       - name: Validate current GLAZE UI V1.1 Stable contract
         run: python scripts/validate_glaze_v1.py
       - name: Validate V1.2 Frosted Neutral Candidate track

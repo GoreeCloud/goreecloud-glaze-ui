@@ -34,7 +34,10 @@ APPROVED_EXTERNAL_ACTIONS = {
     },
 }
 
-USES = re.compile(r"^\s*uses:\s*([^\s#]+)", re.MULTILINE)
+# Workflow steps may spell an action either as an indented `uses:` key after a
+# step name or in YAML's compact list-item form (`- uses:`). Both are security
+# relevant and must be covered by the same immutable-pin policy.
+USES = re.compile(r"^\s*(?:-\s*)?uses:\s*([^\s#]+)", re.MULTILINE)
 SHA = re.compile(r"^[0-9a-f]{40}$")
 NODE20_OVERRIDE = "ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION"
 LEGACY_NODE20_OVERRIDE = "FORCE_JAVASCRIPT_ACTIONS_TO_NODE20"
