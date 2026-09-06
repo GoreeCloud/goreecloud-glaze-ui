@@ -9,7 +9,7 @@
   "releaseContract": "GLAZE_UI_V1_3.md",
   "deferredQualification": "contracts/v1.3/deferred-qualification.plan.json",
   "deferredQualificationAcceptance": "acceptance/v1.3-deferred-qualification.md",
-  "phase": "phase-13-personalization",
+  "phase": "phase-14-signature-components-and-reference-suite",
   "phaseEffect": "implementation-workstream-active-no-lifecycle-promotion",
   "workstreams": [
     {"id":"contract-and-token-architecture","status":"implemented-and-validated","dependsOn":[],"expectedArtifacts":["contracts/v1.3/adaptive-resonance.candidate.json","tokens/glaze-v1.3-color.candidate.json","tokens/glaze-v1.3-material.candidate.json","tokens/glaze-v1.3-shape.candidate.json","tokens/glaze-v1.3-type.candidate.json","tokens/glaze-v1.3-motion.candidate.json","tokens/glaze-v1.3-layout.candidate.json"]},
@@ -25,7 +25,7 @@
     {"id":"motion-and-continuity","status":"implemented-and-validated","dependsOn":["living-material-2","adaptive-navigation"],"expectedArtifacts":["contracts/v1.3/motion-semantics.candidate.json","tokens/glaze-v1.3-motion.candidate.json","js/glaze-v1.3-motion.candidate.mjs","tests/glaze-v1.3-motion.test.mjs","scripts/validate_glaze_v1_3_motion.py",".github/workflows/glaze-v1.3-motion.yml"]},
     {"id":"accessibility-and-resilience","status":"implemented-and-validated","dependsOn":["adaptive-dynamic-color","variable-responsive-typography","living-material-2","human-reachability","motion-and-continuity"],"expectedArtifacts":["contracts/v1.3/accessibility.candidate.json","js/glaze-v1.3-accessibility.candidate.mjs","tests/glaze-v1.3-accessibility.test.mjs","scripts/validate_glaze_v1_3_accessibility.py",".github/workflows/glaze-v1.3-accessibility.yml"]},
     {"id":"personalization","status":"implemented-and-validated","dependsOn":["adaptive-dynamic-color","expressive-shape","variable-responsive-typography","accessibility-and-resilience"],"expectedArtifacts":["contracts/v1.3/personalization.candidate.json","js/glaze-v1.3-personalization.candidate.mjs","tests/glaze-v1.3-personalization.test.mjs","scripts/validate_glaze_v1_3_personalization.py",".github/workflows/glaze-v1.3-personalization.yml"]},
-    {"id":"signature-components-and-reference-suite","status":"planned","dependsOn":["system-shell-and-control-center","personalization","multi-pane-foldable-desktop"],"expectedArtifacts":["contracts/v1.3/component-experience.candidate.json","reference/v1.3/"]},
+    {"id":"signature-components-and-reference-suite","status":"implementation-complete-validation-pending","dependsOn":["system-shell-and-control-center","personalization","multi-pane-foldable-desktop"],"expectedArtifacts":["contracts/v1.3/component-experience.candidate.json","js/glaze-v1.3-component-experience.candidate.mjs","tests/glaze-v1.3-component-experience.test.mjs","scripts/validate_glaze_v1_3_component_experience.py",".github/workflows/glaze-v1.3-component-experience.yml","reference/v1.3/signature-components-and-compositions.json","reference/v1.3/signature-components-and-compositions.html"]},
     {"id":"migration-and-consumer-boundary","status":"planned","dependsOn":["accessibility-and-resilience","signature-components-and-reference-suite"],"expectedArtifacts":["contracts/v1.3/migration.candidate.json","MIGRATION_V1_2_TO_V1_3.md"]},
     {"id":"fresh-v1.3-qualification","status":"planned","dependsOn":["migration-and-consumer-boundary"],"expectedArtifacts":["GLAZE_UI_V1_3_CANDIDATE.md","acceptance/v1.3-candidate.md"],"includesDeferredQualificationPlan":true}
   ],
