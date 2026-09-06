@@ -1,6 +1,9 @@
 name: Glaze V1.2 Android Native Candidate
 
 on:
+  push:
+    branches:
+      - feat/glaze-v1.2-migration-control-plane
   pull_request:
     paths:
       - 'reference/v1.2/native/android/**'
