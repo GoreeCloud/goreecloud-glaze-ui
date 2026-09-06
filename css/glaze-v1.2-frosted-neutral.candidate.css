@@ -41,8 +41,8 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"] {
   --glz11-tint-deep-amber: transparent;
   --glz11-tint-live-teal: transparent;
   --glz11-tint-live-amber: transparent;
-  --glz11-aura-teal-max: rgba(15, 107, 111, 0.025);
-  --glz11-aura-amber-max: rgba(217, 163, 95, 0.012);
+  --glz11-aura-teal-max: transparent;
+  --glz11-aura-amber-max: transparent;
 }
 
 html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-glz-appearance="dark"] {
@@ -56,8 +56,8 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-g
   --glz12-shadow-float: 0 30px 86px rgba(0, 0, 0, 0.44), 0 9px 26px rgba(0, 0, 0, 0.24);
   --glz12-inner-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.13);
   --glz12-inner-edge: inset 1px 1px 0 rgba(255, 255, 255, 0.09);
-  --glz11-aura-teal-max: rgba(15, 107, 111, 0.04);
-  --glz11-aura-amber-max: rgba(217, 163, 95, 0.02);
+  --glz11-aura-teal-max: transparent;
+  --glz11-aura-amber-max: transparent;
 }
 
 html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-glz-appearance="deep-dark"] {
@@ -71,8 +71,8 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-g
   --glz12-shadow-float: 0 34px 96px rgba(0, 0, 0, 0.52), 0 10px 30px rgba(0, 0, 0, 0.30);
   --glz12-inner-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.11);
   --glz12-inner-edge: inset 1px 1px 0 rgba(255, 255, 255, 0.08);
-  --glz11-aura-teal-max: rgba(15, 107, 111, 0.05);
-  --glz11-aura-amber-max: rgba(217, 163, 95, 0.025);
+  --glz11-aura-teal-max: transparent;
+  --glz11-aura-amber-max: transparent;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -87,8 +87,8 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-g
     --glz12-shadow-float: 0 30px 86px rgba(0, 0, 0, 0.44), 0 9px 26px rgba(0, 0, 0, 0.24);
     --glz12-inner-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.13);
     --glz12-inner-edge: inset 1px 1px 0 rgba(255, 255, 255, 0.09);
-    --glz11-aura-teal-max: rgba(15, 107, 111, 0.04);
-    --glz11-aura-amber-max: rgba(217, 163, 95, 0.02);
+    --glz11-aura-teal-max: transparent;
+    --glz11-aura-amber-max: transparent;
   }
 }
 
