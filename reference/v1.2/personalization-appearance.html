@@ -30,6 +30,11 @@
       <button type="button" data-clarity="balanced">Balanced</button>
       <button type="button" data-clarity="dense">Dense</button>
     </div>
+    <div class="control-row" aria-label="Wallpaper atmosphere">
+      <button id="apply-wallpaper-atmosphere" type="button">Apply local wallpaper color summary</button>
+      <button id="clear-wallpaper-atmosphere" type="button">Clear wallpaper atmosphere</button>
+    </div>
+    <p>Wallpaper adaptation is deliberately data-minimized: Glaze never fetches, decodes, or inspects wallpaper pixels. A platform or consumer adapter may provide a local RGB summary; Glaze only derives a bounded, desaturated, low-intensity atmosphere from that summary.</p>
     <div class="control-row">
       <button id="persist-preferences" type="button">Persist current preferences</button>
       <button id="clear-preferences" type="button">Clear persisted preferences</button>
@@ -44,19 +49,22 @@
       <article class="glz12-personalization-chip"><strong>Density</strong><p>Comfortable, Standard, Productive, and Immersive alter spacing without changing semantics.</p></article>
       <article class="glz12-personalization-chip"><strong>Appearance</strong><p>Light, Dark, and Deep Dark remain readable; Follow System resolves through the platform-adapter contract.</p></article>
       <article class="glz12-personalization-chip"><strong>Clarity</strong><p>Clear, Balanced, and Dense personalize Living Frosted material within accessibility limits.</p></article>
+      <article class="glz12-personalization-chip"><strong>Wallpaper atmosphere</strong><p>A local RGB summary may gently influence environmental color while semantic colors and accessibility remain authoritative.</p></article>
     </div>
     <p><button id="action" class="glz1-button glz12-personalization-action" type="button">Personalization action</button></p>
   </section>
   <section class="glz12-personalization-surface">
     <h2>Boundaries</h2>
-    <p id="boundary-copy">No raw blur, saturation, or shadow sliders. No arbitrary icon packs. No semantic-color remapping. Glaze does not own cross-device preference sync, native platform acceptance, or wallpaper sampling.</p>
+    <p id="boundary-copy">No raw blur, saturation, or shadow sliders. No arbitrary icon packs. No semantic-color remapping. Glaze does not own cross-device preference sync, native platform acceptance, or wallpaper pixel acquisition.</p>
   </section>
 </main>
 <script type="module">
   import {
+    applyWallpaperAtmosphere,
     createBrowserSystemAppearanceAdapter,
     createPersonalizationController,
-    createWebStoragePreferenceAdapter
+    createWebStoragePreferenceAdapter,
+    deriveWallpaperAtmosphere
   } from '../../js/glaze-v1.2-personalization.candidate.mjs';
 
   const storageKey='goreecloud.glaze.v1.2.personalization.reference';
@@ -69,6 +77,7 @@
       preference:document.documentElement.dataset.glzAppearancePreference,
       resolved:document.documentElement.dataset.glzAppearance,
       clarity:document.documentElement.dataset.glazeClarity,
+      wallpaperAtmosphere:document.documentElement.dataset.glzWallpaperAtmosphere || 'none',
       persistenceEnabled:controller.persistenceEnabled
     });
   };
@@ -76,9 +85,11 @@
   renderStatus();
   document.querySelectorAll('[data-appearance]').forEach(button=>button.addEventListener('click',()=>{controller.set({appearance:button.dataset.appearance});renderStatus();}));
   document.querySelectorAll('[data-clarity]').forEach(button=>button.addEventListener('click',()=>{controller.set({clarity:button.dataset.clarity});renderStatus();}));
+  document.getElementById('apply-wallpaper-atmosphere').addEventListener('click',()=>{applyWallpaperAtmosphere(document,{r:232,g:72,b:154});renderStatus();});
+  document.getElementById('clear-wallpaper-atmosphere').addEventListener('click',()=>{applyWallpaperAtmosphere(document,null);renderStatus();});
   document.getElementById('persist-preferences').addEventListener('click',()=>{controller.set({}, {persist:true});renderStatus();});
   document.getElementById('clear-preferences').addEventListener('click',()=>{controller.clearPersisted();renderStatus();});
-  window.glazePersonalizationReference={controller,systemAdapter,persistenceAdapter,storageKey,renderStatus};
+  window.glazePersonalizationReference={controller,systemAdapter,persistenceAdapter,storageKey,renderStatus,applyWallpaperAtmosphere,deriveWallpaperAtmosphere};
   window.personalizationReady=true;
 </script>
 </body>
