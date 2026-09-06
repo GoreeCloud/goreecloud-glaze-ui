@@ -12,6 +12,7 @@ PRODUCT = "GLAZE UI V1.3 — Adaptive Resonance"
 ALLOWED_PHASES = {
     "phase-0-foundation",
     "phase-1-token-architecture",
+    "phase-2-dynamic-color",
 }
 ALLOWED_WORKSTREAM_STATUSES = {
     "planned",
