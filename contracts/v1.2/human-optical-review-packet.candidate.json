@@ -85,7 +85,7 @@
     "reviewStatus": "pending"
   },
   "implementation": {
-    "guide": "acceptance/v1.2-human-optical-review-packet.candidate.md",
+    "guide": "acceptance/v1.2-human-optical-review-packet-candidate.md",
     "validator": "scripts/validate_glaze_v1_2_human_optical_review_packet.py",
     "manifestArtifact": "artifacts/glaze-v1.2-human-optical-review-manifest.json",
     "orchestratingWorkflow": ".github/workflows/glaze-v1.2-exact-head-readiness.yml"
