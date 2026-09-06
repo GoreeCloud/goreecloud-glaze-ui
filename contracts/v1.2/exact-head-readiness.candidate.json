@@ -53,8 +53,8 @@
     "G3": {
       "status": "blocked",
       "blockers": [
-        "phase5-reference-scenes-incomplete",
-        "application-icon-ecosystem-wall-open",
+        "phase5-reference-scenes-human-review-incomplete",
+        "application-icon-ecosystem-wall-human-collision-review-pending",
         "human-approved-v1.2-visual-baseline-absent",
         "final-perceptual-thresholds-absent",
         "living-frosted-human-optical-acceptance-absent",
@@ -124,12 +124,14 @@
   "evidenceBoundary": {
     "boundedExactHeadReadinessReportingEstablished": true,
     "livingFrostedBoundedSourceEvidenceIntegrated": true,
+    "boundedReferenceSceneSourcesComplete": true,
     "phase5ExactRevisionConformanceEvidenceComplete": false,
     "established": [
       "runtime-git-head-binding",
       "stable-v1.1-authority-preservation-check",
       "candidate-lifecycle-and-consumer-isolation-check",
       "living-frosted-source-and-token-binding",
+      "all-17-bounded-reference-scene-source-binding",
       "ordered-G0-through-G7-readiness-accounting",
       "fail-closed-G3-G4-G5-blocker-reporting",
       "v1.1-conformance-schema-isolation-check"
@@ -139,6 +141,8 @@
       "stable-readiness",
       "production-readiness",
       "consumer-conformance",
+      "phase5-reference-scenes-human-accepted",
+      "application-icon-ecosystem-wall-human-collision-review",
       "living-frosted-human-optical-acceptance",
       "human-optical-acceptance",
       "assistive-technology-acceptance",
@@ -147,7 +151,6 @@
       "physical-device-performance-acceptance",
       "complete-native-platform-parity",
       "complete-supported-platform-evidence",
-      "phase5-reference-scenes-complete",
       "governed-lifecycle-promotion"
     ]
   }
