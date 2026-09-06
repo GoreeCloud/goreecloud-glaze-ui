@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "glaze-v1.2-release-promotion-candidate",
+  "product": "GLAZE UI",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "stableBaseline": "1.1.0",
+  "consumerEligible": false,
+  "purpose": "Define fail-closed, exact-revision decision records for G5 Release Candidate acceptance and G6 Stable promotion without allowing CI, templates, or lifecycle metadata to manufacture approval.",
+  "authority": {
+    "stableQualification": "GoreeCloud Drive: Standard — Stable Release Qualification",
+    "promotionGates": "acceptance/v1.2-promotion-gates.candidate.md",
+    "lifecycleRegistry": "registry/lifecycle.json",
+    "candidateContract": "GLAZE_UI_V1_2_CANDIDATE.md"
+  },
+  "currentBoundary": {
+    "rcDecisionProtocolEstablished": true,
+    "rcAcceptanceEstablished": false,
+    "releaseCandidateEstablished": false,
+    "stablePromotionProtocolEstablished": true,
+    "stableApprovalEstablished": false,
+    "stableEstablished": false,
+    "consumerEligibilityEstablished": false
+  },
+  "rcAcceptance": {
+    "recordType": "glaze-v1.2-rc-acceptance",
+    "candidateVersion": "1.2.0-candidate",
+    "requiredGateIds": ["G0", "G1", "G2", "G3", "G4"],
+    "requiredEvidenceClasses": [
+      "exact-head-automated",
+      "human-optical",
+      "manual-assistive-technology",
+      "native-platform",
+      "physical-device-performance",
+      "migration-rollback",
+      "release-blocker-review"
+    ],
+    "gateStatusValues": ["pass", "fail"],
+    "evidenceStatusValues": ["current", "missing", "rejected"],
+    "decisionValues": ["rejected", "approved-for-rc"]
+  },
+  "stablePromotion": {
+    "recordType": "glaze-v1.2-stable-promotion",
+    "targetVersion": "1.2.0",
+    "immutableTag": "v1.2.0",
+    "githubReleaseIdentity": "v1.2.0",
+    "previousStableVersion": "1.1.0",
+    "previousStableTag": "v1.1.0",
+    "requiredDocumentationSync": [
+      "projectSpecification",
+      "changeLog",
+      "lifecycleRegistry",
+      "releaseRecord"
+    ],
+    "decisionValues": ["rejected", "approved-stable"]
+  },
+  "rules": {
+    "exactRevisionRequired": true,
+    "movingRevisionAliasesProhibited": true,
+    "g5RequiresG0ThroughG4Pass": true,
+    "g5RequiresCurrentEvidenceForEveryRequiredClass": true,
+    "g5RequiresNoOpenReleaseBlockers": true,
+    "g5DecisionAloneDoesNotChangeLifecycle": true,
+    "g6RequiresAcceptedRcDecision": true,
+    "g6RequiresGovernedMergeAndPostMergeValidation": true,
+    "g6RequiresExplicitLifecycleApproval": true,
+    "g6RequiresImmutableReleaseIdentity": true,
+    "g6RequiresTraceableReleaseArtifacts": true,
+    "g6RequiresPreviousStableRollbackPreserved": true,
+    "g6RequiresDocumentationSynchronization": true,
+    "g6RequiresNoOpenReleaseBlockers": true,
+    "templateOrSelfTestImpliesAcceptance": false,
+    "greenCiImpliesReleaseCandidate": false,
+    "greenCiImpliesStable": false,
+    "mergeImpliesStable": false,
+    "tagImpliesStable": false,
+    "githubReleaseImpliesStable": false,
+    "releaseCandidateImpliesStable": false,
+    "stableDesignSystemImpliesConsumerConformance": false
+  },
+  "implementation": {
+    "rcTemplate": "acceptance/v1.2-rc-acceptance.template.json",
+    "stableTemplate": "acceptance/v1.2-stable-promotion.template.json",
+    "validator": "scripts/validate_glaze_v1_2_release_promotion.py",
+    "workflow": ".github/workflows/glaze-v1.2-release-promotion-protocol.yml"
+  },
+  "notEstablished": [
+    "G3-human-optical-acceptance",
+    "G4-manual-assistive-technology-acceptance",
+    "G4-physical-device-native-platform-acceptance",
+    "G4-accepted-runtime-platform-performance-budgets",
+    "G4-physical-device-production-performance-acceptance",
+    "G5-release-candidate-acceptance",
+    "G5-release-candidate-lifecycle",
+    "G6-stable-approval",
+    "G6-stable-lifecycle",
+    "G6-consumer-eligibility",
+    "G7-consumer-conformance"
+  ]
+}

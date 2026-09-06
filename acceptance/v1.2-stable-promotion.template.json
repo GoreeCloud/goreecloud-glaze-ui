@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "recordType": "glaze-v1.2-stable-promotion",
+  "repository": "GoreeCloud/goreecloud-glaze-ui",
+  "targetVersion": "1.2.0",
+  "reviewedAt": "REPLACE_WITH_ISO_8601_TIMESTAMP_WITH_TIMEZONE",
+  "approver": "REPLACE_WITH_AUTHORIZED_LIFECYCLE_APPROVER",
+  "approverRole": "REPLACE_WITH_APPROVER_ROLE",
+  "selectedRcRevision": "REPLACE_WITH_EXACT_40_CHAR_RC_SHA",
+  "rcAcceptanceRecord": "REPLACE_WITH_G5_ACCEPTANCE_RECORD_REFERENCE",
+  "promotionPullRequest": 0,
+  "mergeRevision": "REPLACE_WITH_EXACT_40_CHAR_MERGE_SHA",
+  "releaseRevision": "REPLACE_WITH_EXACT_40_CHAR_RELEASE_SHA",
+  "immutableTag": "v1.2.0",
+  "githubReleaseIdentity": "v1.2.0",
+  "postMergeValidation": [],
+  "releaseArtifacts": [],
+  "lifecycleApproval": {
+    "approved": false,
+    "approvedAt": "REPLACE_WITH_ISO_8601_TIMESTAMP_WITH_TIMEZONE",
+    "approvedBy": "REPLACE_WITH_AUTHORIZED_LIFECYCLE_APPROVER"
+  },
+  "documentationSync": {
+    "projectSpecification": false,
+    "changeLog": false,
+    "lifecycleRegistry": false,
+    "releaseRecord": false
+  },
+  "rollback": {
+    "version": "1.1.0",
+    "tag": "v1.1.0",
+    "preserved": false
+  },
+  "releaseBlockers": {
+    "reviewed": false,
+    "open": ["Template placeholder: perform the final Stable release-blocker review."]
+  },
+  "consumerEligible": false,
+  "decision": "rejected",
+  "summary": "Fail-closed template only. G6 remains blocked until the accepted RC is governed through merge, exact release revision validation, explicit lifecycle approval, immutable v1.2.0 tag/release identity, traceable artifacts, rollback preservation, documentation synchronization, and a final no-blocker decision."
+}
