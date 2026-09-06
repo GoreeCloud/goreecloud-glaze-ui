@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goreecloud.example/schemas/glaze-ui-v1.3-consumer-adoption-record.json",
+  "title": "GLAZE UI V1.3 Consumer Adoption Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "consumerName",
+    "repository",
+    "consumerRevision",
+    "designSystemVersion",
+    "designSystemRevision",
+    "supportedPlatforms",
+    "evidence",
+    "rollback",
+    "productionApproval"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "consumerName": {"type": "string", "minLength": 1},
+    "repository": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+    "consumerRevision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "designSystemVersion": {"type": "string", "minLength": 1},
+    "designSystemRevision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "supportedPlatforms": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"enum": ["web", "desktop", "mobile", "tablet", "tv", "smartwatch", "other-user-facing"]}
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "renderedOrNative",
+        "interaction",
+        "accessibility",
+        "responsiveFormFactor",
+        "platformIntegration",
+        "productWorkflows",
+        "performance"
+      ],
+      "properties": {
+        "renderedOrNative": {"$ref": "#/$defs/evidenceItem"},
+        "interaction": {"$ref": "#/$defs/evidenceItem"},
+        "accessibility": {"$ref": "#/$defs/evidenceItem"},
+        "responsiveFormFactor": {"$ref": "#/$defs/evidenceItem"},
+        "platformIntegration": {"$ref": "#/$defs/evidenceItem"},
+        "productWorkflows": {"$ref": "#/$defs/evidenceItem"},
+        "performance": {"$ref": "#/$defs/evidenceItem"}
+      }
+    },
+    "rollback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lastKnownGoodRevision", "verified", "independentlyReversible"],
+      "properties": {
+        "lastKnownGoodRevision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "verified": {"const": true},
+        "independentlyReversible": {"const": true},
+        "notes": {"type": "string"}
+      }
+    },
+    "productionApproval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approved", "authority", "consumerRevision"],
+      "properties": {
+        "approved": {"type": "boolean"},
+        "authority": {"type": "string", "minLength": 1},
+        "consumerRevision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "notes": {"type": "string"}
+      }
+    },
+    "truthDomainNotes": {"type": "string"}
+  },
+  "$defs": {
+    "evidenceItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "consumerRevision", "repositoryLocal"],
+      "properties": {
+        "status": {"enum": ["passed", "not-applicable", "missing", "stale", "failed"]},
+        "consumerRevision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "repositoryLocal": {"type": "boolean"},
+        "platforms": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["web", "desktop", "mobile", "tablet", "tv", "smartwatch", "other-user-facing"]}
+        },
+        "reference": {"type": "string"},
+        "notes": {"type": "string"}
+      }
+    }
+  }
+}
