@@ -11,6 +11,7 @@ native-platform, release, consumer, or production acceptance.
 from __future__ import annotations
 
 import base64
+import hashlib
 import json
 from pathlib import Path
 import shutil
@@ -113,6 +114,10 @@ def execute(session_id: str, script: str) -> Any:
     return request("POST", f"/session/{session_id}/execute/sync", {"script": script, "args": []})
 
 
+def execute_async(session_id: str, script: str) -> Any:
+    return request("POST", f"/session/{session_id}/execute/async", {"script": script, "args": []})
+
+
 def cdp(session_id: str, command: str, params: dict[str, Any] | None = None) -> Any:
     return request("POST", f"/session/{session_id}/goog/cdp/execute", {"cmd": command, "params": params or {}})
 
@@ -140,13 +145,51 @@ def navigate(session_id: str, relative: str) -> None:
     raise RenderedAcceptanceError(f"Page did not finish loading: {relative}")
 
 
-def screenshot(session_id: str, name: str) -> Path:
+def settle_render(session_id: str) -> None:
+    state = execute_async(session_id, r"""
+        const done = arguments[arguments.length - 1];
+        const complete = () => {
+          window.scrollTo(0, 0);
+          void document.documentElement.getBoundingClientRect();
+          requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(() => {
+            done({
+              ready: document.readyState,
+              fonts: document.fonts ? document.fonts.status : 'unsupported'
+            });
+          })));
+        };
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(complete, complete);
+        } else {
+          complete();
+        }
+    """)
+    require(isinstance(state, dict) and state.get("ready") == "complete", f"render did not settle on a complete document: {state}")
+    require(state.get("fonts") in {"loaded", "unsupported"}, f"render fonts did not settle: {state}")
+
+
+def capture_png(session_id: str, name: str) -> bytes:
     encoded = request("GET", f"/session/{session_id}/screenshot")
     require(isinstance(encoded, str) and bool(encoded), f"Chrome did not return screenshot bytes for {name}")
+    image = base64.b64decode(encoded)
+    require(len(image) > 10_000, f"Screenshot appears empty or invalid for {name}")
+    return image
+
+
+def screenshot(session_id: str, name: str) -> Path:
+    settle_render(session_id)
+    first = capture_png(session_id, name)
+    settle_render(session_id)
+    second = capture_png(session_id, name)
+    first_hash = hashlib.sha256(first).hexdigest()
+    second_hash = hashlib.sha256(second).hexdigest()
+    require(
+        first == second,
+        f"Screenshot capture is nondeterministic for {name}: first={first_hash}, second={second_hash}",
+    )
     ARTIFACTS.mkdir(exist_ok=True)
     path = ARTIFACTS / f"glaze-v1.1-{name}.png"
-    path.write_bytes(base64.b64decode(encoded))
-    require(path.stat().st_size > 10_000, f"Screenshot appears empty or invalid: {path}")
+    path.write_bytes(second)
     return path
 
 
@@ -282,10 +325,11 @@ def main() -> int:
             set_viewport(session_id, width, height, mobile)
             emulate_media(session_id, [])
             navigate(session_id, relative)
+            cdp(session_id, "Emulation.setScrollbarsHidden", {"hidden": mobile})
             validate_normal(read_state(session_id), scene, width, appearance, expected_canvas)
             validate_keyboard_focus(session_id, scene)
-            validate_touch_assistance(session_id, scene)
             screenshot(session_id, scene)
+            validate_touch_assistance(session_id, scene)
             validate_reduced_transparency(session_id, scene)
             if scene == "desktop-workspace":
                 execute(session_id, "document.documentElement.setAttribute('data-glz-transparency','reduced');return true;")
