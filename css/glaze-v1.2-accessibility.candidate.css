@@ -17,6 +17,13 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-g
 ) {
   transition: none !important;
 }
+/* Nonessential press/morph travel is removed, not merely made instantaneous. */
+html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-glz-motion="reduced"]:root :is(
+  [data-glz-motion="press"],
+  .glz1-morph-card[data-glz-connected="card-detail"]
+) {
+  transform: none !important;
+}
 html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"][data-glz-motion="reduced"]:root :is(
   [data-glaze-living][data-material-state="pressed"],
   [data-glaze-living][data-material-state="dragged"]
