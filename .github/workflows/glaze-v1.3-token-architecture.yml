@@ -6,6 +6,7 @@ on:
       - feat/glaze-ui-v1.3-adaptive-resonance
     paths:
       - 'contracts/v1.3/adaptive-resonance.candidate.json'
+      - 'contracts/v1.3/adaptive-resonance.plan.json'
       - 'tokens/glaze-v1.3-*.candidate.json'
       - 'scripts/validate_glaze_v1_3_token_architecture.py'
       - 'scripts/validate_glaze_v1_3_phase0.py'
@@ -15,6 +16,7 @@ on:
   pull_request:
     paths:
       - 'contracts/v1.3/adaptive-resonance.candidate.json'
+      - 'contracts/v1.3/adaptive-resonance.plan.json'
       - 'tokens/glaze-v1.3-*.candidate.json'
       - 'scripts/validate_glaze_v1_3_token_architecture.py'
       - 'scripts/validate_glaze_v1_3_phase0.py'
@@ -44,6 +46,7 @@ jobs:
         run: python scripts/validate_glaze_v1_3_token_architecture.py
       - name: Parse V1.3 architecture JSON
         run: |
+          python -m json.tool contracts/v1.3/adaptive-resonance.plan.json >/dev/null
           python -m json.tool contracts/v1.3/adaptive-resonance.candidate.json >/dev/null
           python -m json.tool tokens/glaze-v1.3-color.candidate.json >/dev/null
           python -m json.tool tokens/glaze-v1.3-material.candidate.json >/dev/null
