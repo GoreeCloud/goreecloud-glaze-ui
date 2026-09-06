@@ -1,0 +1,84 @@
+name: Glaze V1.2 One-Shot Node 24 Workflow Migration
+
+on:
+  push:
+    branches:
+      - feat/glaze-v1.2-migration-control-plane
+    paths:
+      - ".github/workflows/glaze-v1.2-node24-migration.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  normalize-node24-action-pins:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact migration source revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Normalize approved external actions to immutable Node 24 pins
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('.github/workflows')
+          approved = {
+              'actions/checkout': ('3d3c42e5aac5ba805825da76410c181273ba90b1', 'v7.0.1'),
+              'actions/setup-python': ('5fda3b95a4ea91299a34e894583c3862153e4b97', 'v7.0.0'),
+              'actions/upload-artifact': ('043fb46d1a93c77aae656e7c1c64a875d1fc6a0a', 'v7.0.1'),
+          }
+
+          changed = []
+          for path in sorted([*root.glob('*.yml'), *root.glob('*.yaml')]):
+              text = path.read_text(encoding='utf-8')
+              original = text
+              for action, (sha, release) in approved.items():
+                  pattern = re.compile(
+                      rf'(?m)^(\s*uses:\s*{re.escape(action)}@)[^\s#]+(?:\s*#.*)?$'
+                  )
+                  text = pattern.sub(rf'\g<1>{sha} # {release}', text)
+              if text != original:
+                  path.write_text(text, encoding='utf-8')
+                  changed.append(str(path))
+
+          print(f'Normalized {len(changed)} workflow files')
+          for item in changed:
+              print(item)
+          PY
+
+      - name: Validate normalized Node 24 action policy
+        run: |
+          python3 -m py_compile scripts/validate_github_actions_runtime_integrity.py
+          python3 scripts/validate_github_actions_runtime_integrity.py
+          git diff --check
+
+      - name: Remove one-shot migration workflow and transient evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/glaze-v1.2-node24-migration.yml
+          rm -f artifacts/github-actions-runtime-integrity.json
+
+      - name: Commit normalized workflow authority once
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "GoreeCloud CI Maintenance"
+          git config user.email "295260680+GoreeCloud@users.noreply.github.com"
+          git add .github/workflows
+          git diff --cached --check
+          git diff --cached --quiet && { echo "No workflow migration changes generated"; exit 1; }
+          git commit -m "chore(ci): migrate GitHub Actions to immutable Node 24 pins"
+          CURRENT_REMOTE="$(git ls-remote origin refs/heads/feat/glaze-v1.2-migration-control-plane | cut -f1)"
+          test "$CURRENT_REMOTE" = "$GITHUB_SHA"
+          git push origin HEAD:feat/glaze-v1.2-migration-control-plane
