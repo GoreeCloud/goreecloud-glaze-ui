@@ -6,6 +6,9 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
         <activity
+            android:name=".FoldableAdaptationActivity"
+            android:exported="true" />
+        <activity
             android:name=".PlatformAdapterActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
