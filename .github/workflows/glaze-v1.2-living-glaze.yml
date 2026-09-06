@@ -21,7 +21,11 @@ jobs:
           python scripts/validate_glaze_v1_2_candidate.py
           python scripts/validate_glaze_v1_2_contract_namespace.py
       - name: Validate Living Frosted Candidate contracts
-        run: python scripts/validate_glaze_v1_2_living_glaze.py
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          set -o pipefail
+          python scripts/validate_glaze_v1_2_living_glaze.py 2>&1 | tee artifacts/glaze-v1.2-living-glaze-source.log
       - name: Validate rendered Living Frosted behavior
         run: python scripts/validate_glaze_v1_2_living_glaze_rendered.py
       - name: Upload Living Frosted evidence
