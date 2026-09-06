@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.typography.tokens.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "namespace": "typography",
+  "semanticTokens": {
+    "type.display": {"implementation": "display", "meaning": "largest expressive display hierarchy"},
+    "type.title": {"implementation": "title", "meaning": "major page or destination title"},
+    "type.heading": {"implementation": "heading", "meaning": "section hierarchy"},
+    "type.body": {"implementation": "body", "meaning": "primary readable content"},
+    "type.label": {"implementation": "label", "meaning": "compact control and metadata label"},
+    "type.caption": {"implementation": "caption", "meaning": "supporting metadata and secondary annotation"},
+    "type.numeral": {"implementation": "numeral", "meaning": "numeric metric and aligned numeric display"}
+  },
+  "implementationValues": {
+    "display": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/display", "mode": "inherited-baseline"},
+    "title": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/title", "mode": "inherited-baseline"},
+    "heading": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/heading", "mode": "inherited-baseline"},
+    "body": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/body", "mode": "inherited-baseline"},
+    "label": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/label", "mode": "inherited-baseline"},
+    "caption": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/caption", "mode": "inherited-baseline"},
+    "numeral": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/numeric", "mode": "inherited-baseline"},
+    "variableAxes": {"status": "architecture-established-runtime-unestablished", "ownerWorkstream": "variable-responsive-typography", "allowedAxes": ["weight", "width", "optical-size", "grade"]},
+    "layoutEnvironmentAdaptation": {"status": "architecture-established-runtime-unestablished", "ownerWorkstream": "variable-responsive-typography"}
+  },
+  "rules": {
+    "semanticHierarchyBeforeRawFontValues": true,
+    "variableAxisChangesMustBeRestrained": true,
+    "continuousWobblePulseOrMorphAllowed": false,
+    "remoteRuntimeFontDependencyAllowed": false,
+    "largeTextAndReflowOverrideExpression": true,
+    "rtlLogicalAlignmentRequired": true,
+    "phoneTypographyIsScaledDesktopTypographyOnly": false,
+    "farViewTypographyIsScaledPhoneTypographyOnly": false,
+    "semanticTokensMayContainRawFontValues": false
+  },
+  "notEstablished": [
+    "variable-font-selection",
+    "axis-calibration",
+    "responsive-role-environment-values",
+    "state-driven-type-adjustments"
+  ]
+}
