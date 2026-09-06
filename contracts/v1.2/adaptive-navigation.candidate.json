@@ -3,7 +3,7 @@
   "extends":["contracts/v1.2/living-glaze.candidate.json","contracts/v1.2/system-shell-navigation.candidate.json"],
   "semanticModel":{"destinationsRemainStable":true,"presentationTransformsByEnvironment":true,"viewportWidthAloneIsInsufficient":true},
   "presentations":{"compact":"navigation-capsule","largeHandheld":"bottom-navigation-plus-contextual-lower-toolbar","tablet":"rail-or-adaptive-sidebar","foldableUnfolded":"rail-or-sidebar-plus-multi-pane-workspace","desktop":"persistent-sidebar-or-rail-plus-toolbar","farView":"directional-focus-navigation"},
-  "navigationCapsule":{"material":"frosted-neutral-glaze","detachedWhenAppropriate":true,"minimumTargetPx":48,"touchAssistanceTargetPx":56,"safeAreaAware":true,"labelsMayCollapseWithoutReducingTarget":true,"accentPolicy":"current-destination-only"},
+  "navigationCapsule":{"material":"frosted-neutral-glaze","detachedWhenAppropriate":true,"minimumTargetPx":48,"touchAssistanceTargetPx":56,"safeAreaAware":true,"labelsMayCollapseWithoutReducingTarget":true,"accentPolicy":"current-destination-only","accessibilityReflow":{"largeTextOrTouchAssistanceForcesInFlow":true,"stickyOrFloatingMayNotOccludeVisibleContent":true,"targetSizeMayNotBeReducedToPreserveFloatingLayout":true,"zeroVisibleControlIntersectionsRequired":true}},
   "context":{"restoreFocus":true,"preserveScrollWhereAppropriate":true,"preserveSelection":true,"preserveFilters":true,"preserveDraft":true,"logicalBack":true},
   "evidenceBoundary":{"notEstablished":["human-navigation-acceptance","physical-device-navigation-acceptance","release-candidate","stable","consumer-conformance"]}
 }
