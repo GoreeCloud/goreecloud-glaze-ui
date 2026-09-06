@@ -15,6 +15,7 @@ GUIDE = ROOT / "acceptance/v1.2-human-optical-review-packet-candidate.md"
 VISUAL = ROOT / "contracts/v1.2/visual-regression.candidate.json"
 ICON_WALL = ROOT / "contracts/v1.2/application-icon-ecosystem-wall.candidate.json"
 LIVING = ROOT / "contracts/v1.2/living-glaze.candidate.json"
+PERSONALIZATION = ROOT / "contracts/v1.2/personalization-appearance.candidate.json"
 REFERENCE_SCENES = ROOT / "contracts/v1.2/reference-scenes.candidate.json"
 READINESS = ROOT / "contracts/v1.2/exact-head-readiness.candidate.json"
 LIFECYCLE = ROOT / "registry/lifecycle.json"
@@ -26,6 +27,7 @@ EXPECTED_EVIDENCE_IDS = [
     "application-icon-ecosystem-wall",
     "reference-scene-index",
     "living-frosted",
+    "personalization-appearance",
     "exact-head-readiness",
 ]
 EXPECTED_WORKFLOWS = {
@@ -48,6 +50,11 @@ EXPECTED_WORKFLOWS = {
         "Glaze V1.2 Living Glaze Candidate",
         ".github/workflows/glaze-v1.2-living-glaze.yml",
         "glaze-v1.2-living-glaze-",
+    ),
+    "personalization-appearance": (
+        "Glaze V1.2 Personalization and Appearance Candidate",
+        ".github/workflows/glaze-v1.2-personalization-appearance.yml",
+        "glaze-v1.2-personalization-appearance-",
     ),
     "exact-head-readiness": (
         "Glaze V1.2 Exact-Head Readiness Candidate",
@@ -135,6 +142,7 @@ def validate_contract() -> tuple[dict[str, Any], list[Path]]:
         "artifactAssemblyMayNotSetHumanReviewComplete",
         "machineEvidenceMayNotSubstituteHumanOpticalAcceptance",
         "livingFrostedRenderedEvidenceMayNotSubstituteHumanAcceptance",
+        "personalizationRenderedEvidenceMayNotSubstituteHumanAcceptance",
         "humanReviewMayNotPromoteLifecycleByItself",
         "stableV11AuthorityMayNotMove",
         "consumerClaimBlocked",
@@ -142,9 +150,14 @@ def validate_contract() -> tuple[dict[str, Any], list[Path]]:
         require(rules.get(key) is True, f"review-packet safety rule weakened: {key}")
 
     require(contract.get("requiredOutputClaims") == EXPECTED_CLAIMS, "review-packet fail-closed output claims drifted")
-    require(len(contract.get("reviewDimensions", [])) == 12, "human review dimension set drifted")
-    require("living-frosted-clear-balanced-dense-differentiation-and-legibility" in contract.get("reviewDimensions", []), "Living Frosted review dimension missing")
-    require("navigation-capsule-reachability-hierarchy-and-context-continuity" in contract.get("reviewDimensions", []), "Navigation Capsule review dimension missing")
+    require(len(contract.get("reviewDimensions", [])) == 14, "human review dimension set drifted")
+    for dimension in (
+        "living-frosted-clear-balanced-dense-differentiation-and-legibility",
+        "navigation-capsule-reachability-hierarchy-and-context-continuity",
+        "personalization-appearance-accent-atmosphere-density-and-clarity-quality",
+        "bounded-wallpaper-atmosphere-subtlety-accessibility-and-semantic-isolation",
+    ):
+        require(dimension in contract.get("reviewDimensions", []), f"human review dimension missing: {dimension}")
     require(contract.get("implementation") == {
         "guide": "acceptance/v1.2-human-optical-review-packet-candidate.md",
         "validator": "scripts/validate_glaze_v1_2_human_optical_review_packet.py",
@@ -156,13 +169,14 @@ def validate_contract() -> tuple[dict[str, Any], list[Path]]:
     for marker in (
         "human-collision-review", "human-optical-acceptance",
         "living-frosted-human-optical-acceptance",
+        "personalization-human-visual-acceptance",
         "human-approved-v1.2-canonical-screenshot-baseline",
         "phase5-reference-scenes-complete", "release-candidate", "stable",
         "production-acceptance", "consumer-conformance",
     ):
         require(marker in boundary.get("notEstablished", []), f"fail-closed review boundary missing: {marker}")
 
-    sources = [CONTRACT, GUIDE, VISUAL, ICON_WALL, LIVING, REFERENCE_SCENES, READINESS, LIFECYCLE, VERSION, *workflow_paths]
+    sources = [CONTRACT, GUIDE, VISUAL, ICON_WALL, LIVING, PERSONALIZATION, REFERENCE_SCENES, READINESS, LIFECYCLE, VERSION, *workflow_paths]
     for path in sources:
         require(path.is_file(), f"missing {path.relative_to(ROOT)}")
     return contract, sources
@@ -191,6 +205,18 @@ def validate_authority_boundaries() -> None:
     require(living.get("theme") == "Living Frosted" and living.get("consumerEligible") is False, "Living Frosted review source drifted")
     require("human-optical-acceptance" in living.get("evidenceBoundary", {}).get("notEstablished", []), "Living Frosted human acceptance boundary missing")
 
+    personalization = load_json(PERSONALIZATION)
+    require(personalization.get("consumerEligible") is False and personalization.get("stableBaseline") == "1.1.0", "Personalization lifecycle boundary drifted")
+    require("bounded-local-wallpaper-atmosphere-derivation" in personalization.get("evidenceBoundary", {}).get("implemented", []), "Personalization wallpaper atmosphere evidence missing")
+    for marker in (
+        "native-follow-system-platform-adapter-acceptance",
+        "consumer-platform-persistence-acceptance",
+        "native-wallpaper-source-adapter-acceptance",
+        "human-visual-review",
+        "physical-device-acceptance",
+    ):
+        require(marker in personalization.get("evidenceBoundary", {}).get("notEstablished", []), f"Personalization acceptance boundary missing: {marker}")
+
     scenes = load_json(REFERENCE_SCENES)
     require(scenes.get("requiredSceneCount") == 17 and scenes.get("boundedEstablishedCount") == 17, "bounded reference scene accounting drifted")
     require(scenes.get("phase5BoundedReferenceScenesComplete") is True, "bounded Reference Scene sources are incomplete")
@@ -202,6 +228,7 @@ def validate_authority_boundaries() -> None:
     for key in ("promotionReady", "rcReady", "stableReady", "productionReady", "consumerEligible", "consumerConformanceClaim"):
         require(claims.get(key) is False, f"readiness claim overpromoted: {key}")
     require(readiness.get("evidenceBoundary", {}).get("boundedReferenceSceneSourcesComplete") is True, "readiness did not absorb bounded reference-scene completion")
+    require(readiness.get("evidenceBoundary", {}).get("personalizationBoundedExactHeadEvidenceIntegrated") is True, "readiness did not absorb Personalization bounded evidence")
 
 
 def validate_workflows(contract: dict[str, Any]) -> None:
@@ -236,10 +263,20 @@ def validate_workflows(contract: dict[str, Any]) -> None:
     for marker in ("validate_glaze_v1_2_living_glaze_rendered.py", "artifacts/glaze-v1.2-living-glaze-", "actions/upload-artifact@"):
         require(marker in living_text, f"Living Frosted review artifact binding missing: {marker}")
 
+    personalization_text = (ROOT / EXPECTED_WORKFLOWS["personalization-appearance"][1]).read_text(encoding="utf-8")
+    for marker in (
+        "validate_glaze_v1_2_personalization_appearance_rendered.py",
+        "glaze-v1.2-personalization-appearance-",
+        "actions/upload-artifact@",
+    ):
+        require(marker in personalization_text, f"Personalization review artifact binding missing: {marker}")
+
     readiness_text = (ROOT / EXPECTED_WORKFLOWS["exact-head-readiness"][1]).read_text(encoding="utf-8")
     for marker in (
         "validate_glaze_v1_2_human_optical_review_packet.py",
+        "validate_glaze_v1_2_personalization_readiness.py",
         "artifacts/glaze-v1.2-human-optical-review-manifest.json",
+        "artifacts/glaze-v1.2-personalization-readiness.json",
     ):
         require(marker in readiness_text, f"exact-head review orchestration missing: {marker}")
 
@@ -267,7 +304,7 @@ def build_manifest(contract: dict[str, Any], sources: list[Path]) -> dict[str, A
         "evidenceClasses": evidence, "reviewDimensions": contract["reviewDimensions"],
         "sourceDigests": {str(path.relative_to(ROOT)): f"sha256:{sha256(path)}" for path in sources},
         "claims": dict(EXPECTED_CLAIMS),
-        "boundary": "Machine-assembled exact-revision review handoff only; Living Frosted and icon-wall human optical/collision acceptance, RC, Stable, production acceptance, and consumer conformance remain unestablished.",
+        "boundary": "Machine-assembled exact-revision review handoff only; Living Frosted, Personalization, and icon-wall human optical/collision acceptance, RC, Stable, production acceptance, and consumer conformance remain unestablished.",
     }
 
 
@@ -282,7 +319,7 @@ def main() -> int:
     except (ReviewPacketError, OSError, json.JSONDecodeError, subprocess.CalledProcessError) as error:
         print(f"FAIL: {error}")
         return 1
-    print("PASS: V1.2 human optical review handoff includes Living Frosted and is exact-revision-bound; human review remains pending and authoritative.")
+    print("PASS: V1.2 human optical review handoff includes Living Frosted and Personalization and is exact-revision-bound; human review remains pending and authoritative.")
     return 0
 
 
