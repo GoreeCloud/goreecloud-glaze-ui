@@ -7,14 +7,20 @@
   "stableBaseline": "1.1.0",
   "consumerEligible": false,
   "phase": "Phase 5 — Performance Testing",
-  "purpose": "Record exact-revision browser-CI performance observations for representative V1.2 Candidate interactions without inventing numeric production budgets or converting bounded measurements into production acceptance.",
+  "purpose": "Record exact-revision browser-CI performance observations for representative V1.2 Candidate interactions, including Living Frosted and Personalization runtime paths, without inventing numeric production budgets or converting bounded measurements into production acceptance.",
   "authoritativeInputs": [
     "contracts/performance/glaze-v1-performance-budget.json",
     "contracts/v1.2/performance-adaptation.candidate.json",
+    "contracts/v1.2/living-glaze.candidate.json",
+    "contracts/v1.2/personalization-appearance.candidate.json",
     "reference/v1.2/performance-adaptation.html",
     "reference/v1.2/motion.html",
     "reference/v1.2/data-visualization.html",
-    "reference/v1.2/productive-interfaces.html"
+    "reference/v1.2/productive-interfaces.html",
+    "reference/v1.2/living-glaze.html",
+    "reference/v1.2/personalization-appearance.html",
+    "js/glaze-v1.2-living-glaze.candidate.mjs",
+    "js/glaze-v1.2-personalization.candidate.mjs"
   ],
   "canonicalBudgetBoundary": {
     "requiredStatus": "revalidation-required",
@@ -54,6 +60,16 @@
       "id": "expanded-table-workload-observation",
       "authority": "reference/v1.2/productive-interfaces.html",
       "description": "Measure sort/filter operations after deterministically cloning fixture rows in the test session. Synthetic expansion is test-only and does not establish production large-dataset or virtualization performance."
+    },
+    {
+      "id": "living-frosted-optical-and-tier-switch-observation",
+      "authority": "reference/v1.2/living-glaze.html",
+      "description": "Record bounded browser switch-to-frame and Performance-domain observations while cycling Clear/Balanced/Dense clarity and Living Glaze complexity tiers, verifying target geometry and deterministic fallback semantics without establishing compositor, GPU, physical-device, or production budgets."
+    },
+    {
+      "id": "personalization-and-wallpaper-atmosphere-switch-observation",
+      "authority": "reference/v1.2/personalization-appearance.html",
+      "description": "Record bounded browser switch-to-frame and Performance-domain observations for appearance/accent/atmosphere/density/clarity changes and local RGB-summary wallpaper-atmosphere derivation, without treating browser behavior as native system, persistence, wallpaper-source adapter, power, thermal, or production acceptance."
     }
   ],
   "rules": {
@@ -70,6 +86,9 @@
     "browserCiEqualsMobileGpuPerformance": false,
     "androidEmulatorEqualsPhysicalDevicePerformance": false,
     "headlessBrowserMetricsEqualGpuOrCompositorBudget": false,
+    "livingFrostedBrowserObservationEqualsPhysicalDevicePerformance": false,
+    "personalizationBrowserObservationEqualsNativeAdapterPerformance": false,
+    "localWallpaperDerivationObservationEqualsWallpaperSourceAdapterAcceptance": false,
     "testOnlyExpandedRowsEqualProductionLargeDatasetAcceptance": false,
     "fixtureVisualizationUpdateEqualsProductionChartUpdateAcceptance": false,
     "telemetryOrAnalyticsRequired": false,
@@ -86,12 +105,17 @@
   "delegatedValidators": [
     "scripts/validate_glaze_v1_2_performance_adaptation_rendered.py"
   ],
+  "companionValidators": [
+    "scripts/validate_glaze_v1_2_extended_performance.py"
+  ],
   "implementation": {
     "validator": "scripts/validate_glaze_v1_2_performance_testing.py",
+    "extendedValidator": "scripts/validate_glaze_v1_2_extended_performance.py",
     "workflow": ".github/workflows/glaze-v1.2-performance-testing.yml"
   },
   "evidenceBoundary": {
     "boundedBrowserCiMeasurementsEstablished": true,
+    "extendedLivingAndPersonalizationBrowserMeasurementsEstablished": true,
     "phase5PerformanceTestingComplete": false,
     "established": [
       "exact-head-browser-ci-measurement-capture",
@@ -101,6 +125,9 @@
       "visualization-fixture-update-observation",
       "deterministic-scrolling-observation",
       "test-only-expanded-table-sort-filter-observation",
+      "living-frosted-browser-optical-and-tier-switch-observation",
+      "personalization-browser-preference-switch-observation",
+      "bounded-wallpaper-atmosphere-derivation-observation",
       "semantic-and-accessibility-invariants-during-measurement"
     ],
     "notEstablished": [
@@ -115,6 +142,9 @@
       "power-budget",
       "thermal-budget",
       "mobile-gpu-performance-acceptance",
+      "living-frosted-physical-device-performance-acceptance",
+      "personalization-native-adapter-performance-acceptance",
+      "wallpaper-source-adapter-performance-acceptance",
       "physical-device-performance-acceptance",
       "production-large-dataset-performance",
       "production-chart-update-performance",
