@@ -69,15 +69,16 @@ def main() -> None:
     lifecycle = json.loads(text(LIFECYCLE_PATH))
 
     req(tokens.get("lifecycle") == "candidate", "token lifecycle must remain Candidate")
-    req(tokens.get("stableBaseline") == "1.1.0", "Candidate must remain based on V1.1 Stable")
+    req(tokens.get("stableBaseline") == "1.1.1", "Candidate package must remain based on current V1.1 Stable")
+    req(tokens.get("visualBaseline") == "1.1.0", "Candidate must preserve the approved V1.1.0 visual baseline provenance")
     req(tokens.get("currentStableToken") is False, "Candidate token must not claim Stable authority")
     req(
         tokens.get("governingRule") == "Neutral glass is the material. Color is an accent.",
         "governing visual rule drifted",
     )
 
-    req(lifecycle.get("currentStable") == "1.1.0", "V1.2 Candidate must not replace V1.1 Stable authority")
-    req(lifecycle.get("currentOfficial") == "1.1.0", "V1.2 Candidate must not replace current official version")
+    req(lifecycle.get("currentStable") == "1.1.1", "V1.2 Candidate must not replace V1.1.1 Stable authority")
+    req(lifecycle.get("currentOfficial") == "1.1.1", "V1.2 Candidate must not replace current official version")
     req(lifecycle.get("activeCandidate") == "1.2.0-candidate", "V1.2 must be registered as the active Candidate")
     candidate_release = next(
         (
@@ -91,7 +92,8 @@ def main() -> None:
     assert candidate_release is not None
     req(candidate_release.get("status") == "candidate", "V1.2 lifecycle status must remain Candidate")
     req(candidate_release.get("consumerEligible") is False, "Candidate must not be consumer eligible")
-    req(candidate_release.get("stableBaseline") == "1.1.0", "Candidate lifecycle Stable baseline drifted")
+    req(candidate_release.get("stableBaseline") == "1.1.1", "Candidate lifecycle Stable package baseline drifted")
+    req(candidate_release.get("visualBaseline") == "1.1.0", "Candidate lifecycle visual baseline provenance drifted")
     req(candidate_release.get("contract") == "GLAZE_UI_V1_2_CANDIDATE.md", "Candidate lifecycle contract binding drifted")
 
     capabilities = lifecycle.get("capabilities", {})
@@ -149,7 +151,7 @@ def main() -> None:
     req('data-glz-transparency="reduced"' in css, "Reduced Transparency fallback missing")
     req("backdrop-filter: none" in css, "no-backdrop fallback missing")
 
-    req('@import url("./glaze-v1.1.0.css")' in entrypoint, "Candidate entrypoint must inherit V1.1 Stable")
+    req('@import url("./glaze-v1.1.1.css")' in entrypoint, "Candidate entrypoint must inherit current V1.1 Stable package")
     req(
         '@import url("./glaze-v1.2-frosted-neutral.candidate.css")' in entrypoint,
         "Candidate entrypoint must import Frosted Neutral layer",
@@ -179,7 +181,8 @@ def main() -> None:
     req(component_contract.get("product") == "GLAZE UI V1.2", "component material contract product mismatch")
     req(component_contract.get("version") == "1.2.0-candidate", "component material contract version mismatch")
     req(component_contract.get("lifecycle") == "candidate", "component material contract lifecycle mismatch")
-    req(component_contract.get("stableBaseline") == "1.1.0", "component material contract baseline mismatch")
+    req(component_contract.get("stableBaseline") == "1.1.1", "component material contract package baseline mismatch")
+    req(component_contract.get("visualBaseline") == "1.1.0", "component material contract visual provenance drifted")
     req(
         component_contract.get("governingRule") == "Neutral glass is the material. Color is an accent.",
         "component material governing rule drifted",
@@ -245,7 +248,8 @@ def main() -> None:
     req(system_shell_contract.get("product") == "GLAZE UI V1.2", "System Shell Candidate product mismatch")
     req(system_shell_contract.get("version") == "1.2.0-candidate", "System Shell Candidate version mismatch")
     req(system_shell_contract.get("lifecycle") == "candidate", "System Shell Candidate lifecycle mismatch")
-    req(system_shell_contract.get("stableBaseline") == "1.1.0", "System Shell Candidate baseline mismatch")
+    req(system_shell_contract.get("stableBaseline") == "1.1.1", "System Shell Candidate package baseline mismatch")
+    req(system_shell_contract.get("visualBaseline") == "1.1.0", "System Shell Candidate visual provenance drifted")
     req(
         system_shell_contract.get("inherits") == "contracts/system-shell/glaze-system-shell-v1.json",
         "System Shell Candidate inheritance binding drifted",
@@ -330,13 +334,13 @@ def main() -> None:
 
     req("Neutral glass is the material. Color is an accent." in contract, "Candidate contract governing rule missing")
     req("default material tint from teal, aqua, green, or amber is `0`" in contract, "Candidate contract substrate rule missing")
-    req("V1.1 / 1.1.0" in contract, "Candidate contract Stable baseline missing")
+    req("V1.1 / 1.1.0" in contract, "Candidate contract must preserve approved V1.1.0 visual-baseline provenance")
     req("component-material contract" in contract, "Candidate contract must document component-material expansion")
     req("32-component" in contract, "Candidate contract must document exact catalog coverage")
     req("System Shell material expansion" in contract, "Candidate contract must document System Shell material expansion")
     req("five-region System Shell contract" in contract, "Candidate contract must preserve five-region System Shell authority")
 
-    print("GLAZE UI V1.2 Frosted Neutral Candidate validated; 32-component and five-region System Shell material expansions are complete; V1.1 remains current Stable")
+    print("GLAZE UI V1.2 Frosted Neutral Candidate validated; package baseline is V1.1.1, approved visual provenance remains V1.1.0, and the 32-component/five-region System Shell expansions remain Candidate-only")
 
 
 if __name__ == "__main__":
