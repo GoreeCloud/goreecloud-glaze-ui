@@ -9,7 +9,7 @@ on:
       - "contracts/performance/glaze-v1-performance-budget.json"
       - "contracts/glaze.conformance-evidence.schema.json"
       - "acceptance/v1.2-promotion-gates.candidate.md"
-      - "acceptance/v1.2-human-optical-review-packet.candidate.md"
+      - "acceptance/v1.2-human-optical-review-packet-candidate.md"
       - "scripts/validate_glaze_v1_2_exact_head_readiness.py"
       - "scripts/validate_glaze_v1_2_human_optical_review_packet.py"
       - ".github/workflows/glaze-v1.2-exact-head-readiness.yml"
