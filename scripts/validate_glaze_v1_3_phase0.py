@@ -16,6 +16,7 @@ ALLOWED_PHASES = {
     "phase-3-living-material-2",
     "phase-4-human-reachability",
     "phase-5-expressive-shape",
+    "phase-6-variable-responsive-typography",
 }
 ALLOWED_WORKSTREAM_STATUSES = {
     "planned",
