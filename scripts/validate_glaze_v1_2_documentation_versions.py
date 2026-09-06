@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-LIFECYCLE = ROOT / "registry/lifecycle.json"
+LIFECYCLE = ROOT / "registry" / "lifecycle.json"
 VERSION = ROOT / "VERSION"
 
 CURRENT_AUTHORITY_DOCS = {
@@ -23,7 +23,6 @@ CURRENT_AUTHORITY_DOCS = {
     "website/README.md": ("current Stable",),
     "ICON_CONSTRUCTION.md": ("Current Stable product authority",),
     "ICON_IDENTITY.md": ("Current Stable product authority",),
-    "MIGRATION_V1_1_TO_V1_2.md": ("Production migration target",),
 }
 
 HISTORICAL_DOCS = (
@@ -31,6 +30,7 @@ HISTORICAL_DOCS = (
     "GLAZE_UI_V1_1.md",
     "GLAZE_UI_V1_1_CANDIDATE.md",
     "GLAZE_UI_V1_2_CANDIDATE.md",
+    "MIGRATION_V1_1_TO_V1_2.md",
     "releases/1.0.0.md",
     "acceptance/v1.1-release-candidate.md",
     "acceptance/v1.1-specification-candidate.md",
