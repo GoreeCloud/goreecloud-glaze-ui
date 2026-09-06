@@ -7,13 +7,24 @@ on:
       - "contracts/v1.2/accessibility-adaptation.candidate.json"
       - "contracts/v1.2/accessibility-testing.candidate.json"
       - "contracts/v1.2/responsive-adaptation-reference.candidate.json"
+      - "contracts/v1.2/living-glaze.candidate.json"
+      - "contracts/v1.2/personalization-appearance.candidate.json"
       - "css/glaze-v1.2-accessibility.candidate.css"
       - "css/glaze-v1.2-responsive-adaptation-reference.candidate.css"
+      - "css/glaze-v1.2-living-glaze.candidate.css"
+      - "css/glaze-v1.2-personalization-appearance.candidate.css"
       - "css/glaze-v1.2.0-candidate.css"
       - "reference/v1.2/accessibility-adaptation.html"
       - "reference/v1.2/responsive-adaptation.html"
+      - "reference/v1.2/living-glaze.html"
+      - "reference/v1.2/personalization-appearance.html"
+      - "js/glaze-v1.2-living-glaze.candidate.mjs"
+      - "js/glaze-v1.2-personalization.candidate.mjs"
       - "scripts/validate_glaze_v1_2_accessibility_adaptation_rendered.py"
       - "scripts/validate_glaze_v1_2_responsive_adaptation_rendered.py"
+      - "scripts/validate_glaze_v1_2_living_glaze.py"
+      - "scripts/validate_glaze_v1_2_living_glaze_rendered.py"
+      - "scripts/validate_glaze_v1_2_personalization_accessibility.py"
       - "scripts/validate_glaze_v1_2_accessibility_testing.py"
       - ".github/workflows/glaze-v1.2-accessibility-testing.yml"
       - "tokens/glaze-v1.2-form-factor.candidate.json"
@@ -31,7 +42,7 @@ concurrency:
 jobs:
   bounded-automated-accessibility-testing:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - name: Check out exact Candidate revision
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -52,11 +63,22 @@ jobs:
           python scripts/validate_glaze_v1_2_core_tokens.py
           python scripts/validate_glaze_v1_2_form_factor_tokens.py
 
-      - name: Compile bounded Accessibility Testing validator
-        run: python -m py_compile scripts/validate_glaze_v1_2_accessibility_testing.py
+      - name: Compile bounded Accessibility Testing validators
+        run: |
+          python -m py_compile \
+            scripts/validate_glaze_v1_2_accessibility_testing.py \
+            scripts/validate_glaze_v1_2_living_glaze.py \
+            scripts/validate_glaze_v1_2_living_glaze_rendered.py \
+            scripts/validate_glaze_v1_2_personalization_accessibility.py
 
       - name: Run bounded V1.2 automated Accessibility Testing
         run: python scripts/validate_glaze_v1_2_accessibility_testing.py
+
+      - name: Run Living Frosted accessibility integration
+        run: python scripts/validate_glaze_v1_2_living_glaze_rendered.py
+
+      - name: Run Personalization accessibility integration
+        run: python scripts/validate_glaze_v1_2_personalization_accessibility.py
 
       - name: Upload bounded V1.2 Accessibility Testing evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -67,5 +89,9 @@ jobs:
             artifacts/glaze-v1.2-accessibility-testing-evidence.json
             artifacts/glaze-v1.2-accessibility-adaptation-*.png
             artifacts/glaze-v1.2-responsive-*.png
+            artifacts/glaze-v1.2-living-glaze-*.png
+            artifacts/glaze-v1.2-living-glaze-evidence.json
+            artifacts/glaze-v1.2-personalization-accessibility-*.png
+            artifacts/glaze-v1.2-personalization-accessibility-evidence.json
           if-no-files-found: error
           retention-days: 14
