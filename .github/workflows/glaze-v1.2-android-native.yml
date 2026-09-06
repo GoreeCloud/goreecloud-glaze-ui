@@ -11,6 +11,7 @@ on:
       - 'scripts/validate_glaze_v1_2_android_personalization_runtime.py'
       - 'scripts/validate_glaze_v1_2_android_platform_adapter_runtime.py'
       - 'scripts/validate_glaze_v1_2_android_foldable_runtime.py'
+      - 'scripts/validate_glaze_v1_2_android_accessibility_runtime.py'
       - 'acceptance/v1.2-android-native-candidate.md'
       - '.github/workflows/glaze-v1.2-android-native.yml'
   workflow_dispatch:
@@ -21,7 +22,7 @@ permissions:
 jobs:
   android-handheld-emulator:
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    timeout-minutes: 45
     steps:
       - name: Check out exact Candidate revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -35,6 +36,7 @@ jobs:
           python3 -m py_compile scripts/validate_glaze_v1_2_android_personalization_runtime.py
           python3 -m py_compile scripts/validate_glaze_v1_2_android_platform_adapter_runtime.py
           python3 -m py_compile scripts/validate_glaze_v1_2_android_foldable_runtime.py
+          python3 -m py_compile scripts/validate_glaze_v1_2_android_accessibility_runtime.py
 
       - name: Preserve current Stable and Candidate source contracts
         run: |
@@ -185,6 +187,11 @@ jobs:
           GLAZE_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
         run: python3 scripts/validate_glaze_v1_2_android_foldable_runtime.py
 
+      - name: Run V1.2 Android machine accessibility emulator evidence
+        env:
+          GLAZE_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python3 scripts/validate_glaze_v1_2_android_accessibility_runtime.py
+
       - name: Upload V1.2 Android native Candidate evidence
         if: success()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -197,6 +204,7 @@ jobs:
             .artifacts/glaze-v1.2-android-native/android-personalization-evidence.json
             .artifacts/glaze-v1.2-android-native/android-platform-adapter-evidence.json
             .artifacts/glaze-v1.2-android-native/android-foldable-adaptation-evidence.json
+            .artifacts/glaze-v1.2-android-native/android-accessibility-evidence.json
           if-no-files-found: error
           retention-days: 30
 
@@ -212,5 +220,6 @@ jobs:
         shell: bash
         run: |
           adb shell wm size reset >/dev/null 2>&1 || true
+          adb shell settings put system font_scale 1.0 >/dev/null 2>&1 || true
           adb emu kill >/dev/null 2>&1 || true
           if test -f "$RUNNER_TEMP/glaze-v12-android-emulator.pid"; then kill "$(cat "$RUNNER_TEMP/glaze-v12-android-emulator.pid")" >/dev/null 2>&1 || true; fi
