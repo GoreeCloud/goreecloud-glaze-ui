@@ -76,3 +76,30 @@ jobs:
 
       - name: Compile Ecosystem Wall validator
         run: python -m py_compile scripts/validate_glaze_v1_2_application_icon_ecosystem_wall.py
+
+      - name: Stage exact-revision Ecosystem Wall review sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="artifacts/application-icon-ecosystem-wall"
+          mkdir -p "$out/contracts" "$out/reference" "$out/branding/products"
+          git rev-parse HEAD > "$out/REVISION"
+          git -C .branding-sources/goreecloud-branding-assets rev-parse HEAD > "$out/BRANDING_REVISION"
+          cp contracts/v1.2/application-icon-ecosystem-wall.candidate.json "$out/contracts/"
+          cp reference/v1.2/application-icon-ecosystem-wall.html "$out/reference/"
+          cp .branding-sources/goreecloud-branding-assets/catalog.json "$out/branding/"
+          while IFS= read -r asset; do
+            product="$(basename "$(dirname "$asset")")"
+            mkdir -p "$out/branding/products/$product"
+            cp "$asset" "$out/branding/products/$product/app-icon.svg"
+          done < <(find .branding-sources/goreecloud-branding-assets/products -mindepth 2 -maxdepth 2 -name app-icon.svg -type f | sort)
+          test "$(find "$out/branding/products" -name app-icon.svg -type f | wc -l)" -eq 38
+
+      - name: Upload exact-revision Ecosystem Wall review sources
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: glaze-v1.2-application-icon-ecosystem-wall-${{ github.event.pull_request.head.sha || github.sha }}
+          path: artifacts/application-icon-ecosystem-wall/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
