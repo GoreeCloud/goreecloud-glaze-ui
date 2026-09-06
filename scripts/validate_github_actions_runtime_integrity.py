@@ -27,6 +27,11 @@ APPROVED_EXTERNAL_ACTIONS = {
         "release": "v7.0.0",
         "runtime": "node24-generation",
     },
+    "actions/setup-node": {
+        "sha": "820762786026740c76f36085b0efc47a31fe5020",
+        "release": "v7.0.0",
+        "runtime": "node24-generation",
+    },
     "actions/upload-artifact": {
         "sha": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
         "release": "v7.0.1",
