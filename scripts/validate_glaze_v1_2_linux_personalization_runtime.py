@@ -103,7 +103,8 @@ def get_color_scheme(env: dict[str, str]) -> str:
 
 
 def set_color_scheme(value: str, env: dict[str, str]) -> None:
-    run("gsettings", "set", "org.gnome.desktop.interface", "color-scheme", value, env=env)
+    serialized = json.dumps(value)
+    run("gsettings", "set", "org.gnome.desktop.interface", "color-scheme", serialized, env=env)
     observed = get_color_scheme(env)
     if value not in observed:
         raise SystemExit(f"could not set GNOME color-scheme to {value}: {observed}")
@@ -134,6 +135,11 @@ def screenshot(path: Path, env: dict[str, str]) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
+def require_target(name: str, value: int, floor: int) -> None:
+    if value < floor:
+        raise SystemExit(f"{name} target below {floor}px floor: {value}px")
+
+
 def run_case(case_id: str, args: list[str], *, floor: int, expected: dict[str, object], env: dict[str, str], screenshot_required: bool = False) -> dict:
     case_dir = OUT / f"personalization-{case_id}"
     case_dir.mkdir(parents=True, exist_ok=True)
@@ -148,8 +154,7 @@ def run_case(case_id: str, args: list[str], *, floor: int, expected: dict[str, o
             raise SystemExit(f"{case_id} lifecycle/readiness drifted: {evidence}")
         if evidence.get("interactionState") != "Action: Complete":
             raise SystemExit(f"{case_id} interaction did not complete")
-        if int(evidence.get("targetHeightPx", 0)) < floor:
-            raise SystemExit(f"{case_id} target below {floor}px: {evidence.get('targetHeightPx')}")
+        require_target(f"{case_id} action", int(evidence.get("targetHeightPx", 0)), floor)
         neutral = evidence.get("neutralSurfaceRgb")
         if not isinstance(neutral, list) or len(neutral) != 3 or len(set(neutral)) != 1:
             raise SystemExit(f"{case_id} neutral material authority drifted: {neutral}")
