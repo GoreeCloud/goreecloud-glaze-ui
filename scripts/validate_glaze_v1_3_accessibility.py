@@ -67,7 +67,8 @@ def main() -> int:
     req(lifecycle.get("activeCandidate") is None, "Accessibility work must not activate lifecycle Candidate")
 
     plan = load(PLAN)
-    req(plan.get("phase") == "phase-12-accessibility-and-resilience", "plan must be in Phase 12 Accessibility and Resilience")
+    # Phase 0 owns overall phase sequencing. This workstream validator must remain
+    # reusable as a dependency revalidation gate in later governed V1.3 phases.
     workstreams = {item.get("id"): item for item in plan.get("workstreams", [])}
     for dep in DEPENDENCIES:
         req(workstreams.get(dep, {}).get("status") == "implemented-and-validated", f"Accessibility requires validated dependency {dep}")
