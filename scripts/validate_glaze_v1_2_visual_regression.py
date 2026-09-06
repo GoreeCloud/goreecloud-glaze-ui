@@ -60,7 +60,14 @@ def validate_contract()->dict[str,Any]:
     return c
 
 def validate_authorities()->None:
-    index=load(REFERENCE_INDEX); require(index.get("version")=="1.2.0-candidate" and index.get("boundedEstablishedCount")==15 and index.get("requiredSceneCount")==16 and index.get("phase5ReferenceScenesComplete") is False and index.get("openSceneIds")==["application-icon-ecosystem-wall"],"reference-scene boundary drifted")
+    index=load(REFERENCE_INDEX)
+    require(index.get("version")=="1.2.0-candidate","reference-scene version drifted")
+    require(index.get("boundedEstablishedCount")==17 and index.get("requiredSceneCount")==17,"bounded reference-scene accounting drifted")
+    require(index.get("phase5BoundedReferenceScenesComplete") is True,"bounded reference-scene source phase is not complete")
+    require(index.get("phase5ReferenceScenesComplete") is False,"human reference-scene acceptance was overclaimed")
+    require(index.get("openSceneIds")==[],"bounded reference-scene inventory unexpectedly open")
+    require(index.get("humanReviewPending") is True,"human reference-scene review must remain pending")
+    require(index.get("humanReviewPendingSceneIds")==["living-glaze-material-lab","application-icon-ecosystem-wall"],"human-review pending-scene boundary drifted")
     stable=load(STABLE_BASELINE); require(stable.get("product")=="GLAZE UI V1.1" and stable.get("version")=="1.1.0" and stable.get("status")=="stable-human-approved-source-pinned" and stable.get("newOpticalPixelsRequireNewHumanApproval") is True,"immutable V1.1 baseline drifted")
     future=load(FUTURE_INVARIANTS); require(future.get("id")=="glaze-ui-2.1-reference-regression" and future.get("lifecycle")=="candidate" and future.get("since")=="2.1.0-candidate.1","2.1 regression boundary drifted")
 
