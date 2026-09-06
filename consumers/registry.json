@@ -1,9 +1,9 @@
 {
   "schemaVersion": 5,
-  "officialBaseline": "1.1.0",
+  "officialBaseline": "1.1.1",
   "officialProductLabel": "GLAZE UI V1.1",
-  "requiredConsumerVersion": "1.1.0",
-  "auditedAt": "2026-09-03",
+  "requiredConsumerVersion": "1.1.1",
+  "auditedAt": "2026-09-06",
   "statusVocabulary": [
     "adoption-required",
     "unverified",
@@ -29,110 +29,110 @@
       "repository": "GoreeCloud/goreecloud-manager",
       "status": "adoption-required",
       "targetVersion": null,
-      "requiredTargetVersion": "1.1.0",
+      "requiredTargetVersion": "1.1.1",
       "referenceRevision": null,
       "evidence": null,
       "productionEligible": false,
-      "notes": "Fresh repository-local GLAZE UI V1.1 adoption and acceptance evidence is required."
+      "notes": "Fresh repository-local GLAZE UI V1.1.1 adoption and acceptance evidence is required."
     },
     {
       "name": "GoreeCloud Website",
       "repository": "GoreeCloud/goreecloud-website",
       "status": "adoption-required",
       "targetVersion": null,
-      "requiredTargetVersion": "1.1.0",
+      "requiredTargetVersion": "1.1.1",
       "referenceRevision": null,
       "evidence": null,
       "productionEligible": false,
-      "notes": "Fresh repository-local GLAZE UI V1.1 adoption and acceptance evidence is required."
+      "notes": "Fresh repository-local GLAZE UI V1.1.1 adoption and acceptance evidence is required. Static-site source authority migration is governed separately."
     },
     {
       "name": "GoreeCloud Tasks",
       "repository": "GoreeCloud/goreecloud-tasks",
       "status": "adoption-required",
       "targetVersion": null,
-      "requiredTargetVersion": "1.1.0",
+      "requiredTargetVersion": "1.1.1",
       "referenceRevision": null,
       "evidence": null,
       "productionEligible": false,
-      "notes": "Fresh repository-local GLAZE UI V1.1 adoption and acceptance evidence is required."
+      "notes": "Fresh repository-local GLAZE UI V1.1.1 adoption and acceptance evidence is required."
     },
     {
       "name": "GoreeCloud Launcher",
       "repository": "GoreeCloud/goreecloud-launcher",
       "status": "adoption-required",
       "targetVersion": null,
-      "requiredTargetVersion": "1.1.0",
+      "requiredTargetVersion": "1.1.1",
       "referenceRevision": null,
       "evidence": null,
       "productionEligible": false,
-      "notes": "Fresh repository-local GLAZE UI V1.1 adoption and acceptance evidence is required."
+      "notes": "Fresh repository-local GLAZE UI V1.1.1 adoption and acceptance evidence is required."
     },
     {
       "name": "GoreeCloud Keyboard",
       "repository": "GoreeCloud/goreecloud-keyboard",
       "status": "adoption-required",
       "targetVersion": null,
-      "requiredTargetVersion": "1.1.0",
+      "requiredTargetVersion": "1.1.1",
       "referenceRevision": null,
       "evidence": null,
       "productionEligible": false,
-      "notes": "Fresh repository-local GLAZE UI V1.1 adoption and acceptance evidence is required."
+      "notes": "Fresh repository-local GLAZE UI V1.1.1 adoption and acceptance evidence is required."
     },
     {
       "name": "GoreeCloud Notes",
       "repository": "GoreeCloud/goreecloud-notes",
       "status": "unverified",
       "targetVersion": null,
-      "requiredTargetVersion": "1.1.0",
+      "requiredTargetVersion": "1.1.1",
       "referenceRevision": null,
       "evidence": null,
       "productionEligible": false,
-      "notes": "Fresh repository-local GLAZE UI V1.1 adoption and acceptance evidence is required."
+      "notes": "Fresh repository-local GLAZE UI V1.1.1 adoption and acceptance evidence is required."
     },
     {
       "name": "GoreeCloud Monitor",
       "repository": "GoreeCloud/goreecloud-monitor",
       "status": "adoption-required",
       "targetVersion": null,
-      "requiredTargetVersion": "1.1.0",
+      "requiredTargetVersion": "1.1.1",
       "referenceRevision": null,
       "evidence": null,
       "productionEligible": false,
-      "notes": "Fresh repository-local GLAZE UI V1.1 adoption and acceptance evidence is required."
+      "notes": "Fresh repository-local GLAZE UI V1.1.1 adoption and acceptance evidence is required."
     },
     {
       "name": "GoreeCloud Browser",
       "repository": "GoreeCloud/goreecloud-browser",
       "status": "adoption-required",
       "targetVersion": null,
-      "requiredTargetVersion": "1.1.0",
+      "requiredTargetVersion": "1.1.1",
       "referenceRevision": null,
       "evidence": null,
       "productionEligible": false,
-      "notes": "Fresh repository-local GLAZE UI V1.1 adoption and acceptance evidence is required."
+      "notes": "Fresh repository-local GLAZE UI V1.1.1 adoption and acceptance evidence is required."
     },
     {
       "name": "GoreeCloud Security Center",
       "repository": "GoreeCloud/goreecloud-wardveil-security",
       "status": "adoption-required",
       "targetVersion": null,
-      "requiredTargetVersion": "1.1.0",
+      "requiredTargetVersion": "1.1.1",
       "referenceRevision": null,
       "evidence": null,
       "productionEligible": false,
-      "notes": "Fresh repository-local GLAZE UI V1.1 adoption and acceptance evidence is required; Wardveil remains security-truth authority."
+      "notes": "Fresh repository-local GLAZE UI V1.1.1 adoption and acceptance evidence is required; Wardveil remains security-truth authority."
     },
     {
       "name": "GoreeCloud Privacy Center",
       "repository": "GoreeCloud/goreecloud-privacy-shield",
       "status": "adoption-required",
       "targetVersion": null,
-      "requiredTargetVersion": "1.1.0",
+      "requiredTargetVersion": "1.1.1",
       "referenceRevision": null,
       "evidence": null,
       "productionEligible": false,
-      "notes": "Fresh repository-local GLAZE UI V1.1 adoption and acceptance evidence is required; Privacy Shield remains privacy-truth authority."
+      "notes": "Fresh repository-local GLAZE UI V1.1.1 adoption and acceptance evidence is required; Privacy Shield remains privacy-truth authority."
     }
   ]
 }

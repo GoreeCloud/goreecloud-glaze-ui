@@ -38,8 +38,8 @@ jobs:
           name: design-center-mobile-ui
           path: artifacts/design-center-mobile-*.png
           if-no-files-found: warn
-      - name: Check V1 runtime syntax
-        run: node --check js/glaze-v1.1.0.mjs
+      - name: Check current V1.1 Stable runtime syntax
+        run: node --check js/glaze-v1.1.1.mjs
 
   validate-v1-2-linux-gtk-candidate:
     if: >-

@@ -53,7 +53,7 @@
           "maxLength": 160
         },
         "glaze_version": {
-          "const": "1.1.0"
+          "const": "1.1.1"
         },
         "source_revision": {
           "type": "string",

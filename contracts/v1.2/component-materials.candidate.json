@@ -3,7 +3,8 @@
   "product": "GLAZE UI V1.2",
   "version": "1.2.0-candidate",
   "lifecycle": "candidate",
-  "stableBaseline": "1.1.0",
+  "stableBaseline": "1.1.1",
+  "visualBaseline": "1.1.0",
   "governingRule": "Neutral glass is the material. Color is an accent.",
   "materialRoles": [
     "surface",
@@ -27,206 +28,37 @@
     "depthBeforeHue": true
   },
   "components": {
-    "GlzButton": {
-      "tier": "foundation",
-      "defaultMaterial": "raised",
-      "frostedTargets": [
-        {"selector": ".glz1-button[data-variant=\"glaze\"]", "role": "glaze"}
-      ]
-    },
-    "GlzIconButton": {
-      "tier": "foundation",
-      "defaultMaterial": "raised",
-      "frostedTargets": [
-        {"selector": ".glz1-icon-button[data-variant=\"glaze\"]", "role": "glaze"}
-      ]
-    },
-    "GlzTextField": {
-      "tier": "foundation",
-      "defaultMaterial": "surface",
-      "frostedTargets": [
-        {"selector": ".glz1-field-control[data-variant=\"glaze\"]", "role": "soft-glaze"}
-      ]
-    },
-    "GlzSelect": {
-      "tier": "foundation",
-      "defaultMaterial": "surface",
-      "frostedTargets": [
-        {"selector": ".glz1-select[data-variant=\"glaze\"]", "role": "soft-glaze"}
-      ]
-    },
-    "GlzCheckbox": {
-      "tier": "foundation",
-      "defaultMaterial": "control-local",
-      "frostedTargets": []
-    },
-    "GlzRadio": {
-      "tier": "foundation",
-      "defaultMaterial": "control-local",
-      "frostedTargets": []
-    },
-    "GlzSwitch": {
-      "tier": "foundation",
-      "defaultMaterial": "control-local",
-      "frostedTargets": []
-    },
-    "GlzSlider": {
-      "tier": "foundation",
-      "defaultMaterial": "control-local",
-      "frostedTargets": []
-    },
-    "GlzCard": {
-      "tier": "structure",
-      "defaultMaterial": "surface",
-      "frostedTargets": [
-        {"selector": ".glz1-card[data-material=\"frosted\"]", "role": "soft-glaze"}
-      ]
-    },
-    "GlzList": {
-      "tier": "structure",
-      "defaultMaterial": "surface",
-      "frostedTargets": []
-    },
-    "GlzTable": {
-      "tier": "structure",
-      "defaultMaterial": "surface",
-      "frostedTargets": []
-    },
-    "GlzTabs": {
-      "tier": "structure",
-      "defaultMaterial": "inherited",
-      "frostedTargets": []
-    },
-    "GlzSidebar": {
-      "tier": "structure",
-      "defaultMaterial": "surface",
-      "frostedTargets": [
-        {"selector": ".glz1-sidebar[data-variant=\"floating\"]", "role": "glaze"}
-      ]
-    },
-    "GlzNavigationRail": {
-      "tier": "structure",
-      "defaultMaterial": "surface",
-      "frostedTargets": [
-        {"selector": ".glz1-navigation-rail[data-variant=\"floating\"]", "role": "glaze"}
-      ]
-    },
-    "GlzDock": {
-      "tier": "structure",
-      "defaultMaterial": "glaze",
-      "frostedTargets": [
-        {"selector": ".glz1-dock", "role": "glaze"}
-      ]
-    },
-    "GlzToolbar": {
-      "tier": "structure",
-      "defaultMaterial": "surface",
-      "frostedTargets": [
-        {"selector": ".glz1-toolbar[data-variant=\"floating\"]", "role": "glaze"}
-      ]
-    },
-    "GlzTooltip": {
-      "tier": "overlay",
-      "defaultMaterial": "glaze",
-      "frostedTargets": [
-        {"selector": ".glz1-tooltip", "role": "glaze"}
-      ]
-    },
-    "GlzPopover": {
-      "tier": "overlay",
-      "defaultMaterial": "glaze",
-      "frostedTargets": [
-        {"selector": ".glz1-popover", "role": "glaze"}
-      ]
-    },
-    "GlzMenu": {
-      "tier": "overlay",
-      "defaultMaterial": "glaze",
-      "frostedTargets": [
-        {"selector": ".glz1-menu", "role": "glaze"}
-      ]
-    },
-    "GlzDialog": {
-      "tier": "overlay",
-      "defaultMaterial": "raised",
-      "frostedTargets": []
-    },
-    "GlzSheet": {
-      "tier": "overlay",
-      "defaultMaterial": "deep-glaze",
-      "frostedTargets": [
-        {"selector": ".glz1-sheet", "role": "deep-glaze"}
-      ]
-    },
-    "GlzToast": {
-      "tier": "overlay",
-      "defaultMaterial": "glaze",
-      "frostedTargets": [
-        {"selector": ".glz1-toast", "role": "glaze"}
-      ]
-    },
-    "GlzCapsule": {
-      "tier": "signature",
-      "defaultMaterial": "glaze",
-      "frostedTargets": [
-        {"selector": ".glz1-capsule", "role": "glaze"}
-      ]
-    },
-    "GlzMorphCard": {
-      "tier": "signature",
-      "defaultMaterial": "surface",
-      "frostedTargets": [
-        {"selector": ".glz1-morph-card[data-material=\"frosted\"]", "role": "soft-glaze"}
-      ]
-    },
-    "GlzSmartRail": {
-      "tier": "signature",
-      "defaultMaterial": "glaze",
-      "frostedTargets": [
-        {"selector": ".glz1-smart-rail", "role": "glaze"}
-      ]
-    },
-    "GlzAuroraSurface": {
-      "tier": "signature",
-      "defaultMaterial": "surface",
-      "frostedTargets": [
-        {"selector": ".glz1-aurora[data-material=\"live-glaze\"]", "role": "live-glaze"}
-      ]
-    },
-    "GlzUniversalSearch": {
-      "tier": "signature",
-      "defaultMaterial": "composite",
-      "frostedTargets": [
-        {"selector": ".glz1-search-entry", "role": "glaze"},
-        {"selector": ".glz1-search-panel", "role": "deep-glaze"}
-      ]
-    },
-    "GlzAIAction": {
-      "tier": "intelligence",
-      "defaultMaterial": "control-local",
-      "frostedTargets": []
-    },
-    "GlzAISuggestion": {
-      "tier": "intelligence",
-      "defaultMaterial": "surface",
-      "frostedTargets": []
-    },
-    "GlzAIAnswer": {
-      "tier": "intelligence",
-      "defaultMaterial": "surface",
-      "frostedTargets": []
-    },
-    "GlzSmartSummary": {
-      "tier": "intelligence",
-      "defaultMaterial": "surface",
-      "frostedTargets": []
-    },
-    "GlzSourceChip": {
-      "tier": "intelligence",
-      "defaultMaterial": "raised",
-      "frostedTargets": [
-        {"selector": ".glz1-source-chip[data-material=\"frosted\"]", "role": "soft-glaze"}
-      ]
-    }
+    "GlzButton": {"tier": "foundation", "defaultMaterial": "raised", "frostedTargets": [{"selector": ".glz1-button[data-variant=\"glaze\"]", "role": "glaze"}]},
+    "GlzIconButton": {"tier": "foundation", "defaultMaterial": "raised", "frostedTargets": [{"selector": ".glz1-icon-button[data-variant=\"glaze\"]", "role": "glaze"}]},
+    "GlzTextField": {"tier": "foundation", "defaultMaterial": "surface", "frostedTargets": [{"selector": ".glz1-field-control[data-variant=\"glaze\"]", "role": "soft-glaze"}]},
+    "GlzSelect": {"tier": "foundation", "defaultMaterial": "surface", "frostedTargets": [{"selector": ".glz1-select[data-variant=\"glaze\"]", "role": "soft-glaze"}]},
+    "GlzCheckbox": {"tier": "foundation", "defaultMaterial": "control-local", "frostedTargets": []},
+    "GlzRadio": {"tier": "foundation", "defaultMaterial": "control-local", "frostedTargets": []},
+    "GlzSwitch": {"tier": "foundation", "defaultMaterial": "control-local", "frostedTargets": []},
+    "GlzSlider": {"tier": "foundation", "defaultMaterial": "control-local", "frostedTargets": []},
+    "GlzCard": {"tier": "structure", "defaultMaterial": "surface", "frostedTargets": [{"selector": ".glz1-card[data-material=\"frosted\"]", "role": "soft-glaze"}]},
+    "GlzList": {"tier": "structure", "defaultMaterial": "surface", "frostedTargets": []},
+    "GlzTable": {"tier": "structure", "defaultMaterial": "surface", "frostedTargets": []},
+    "GlzTabs": {"tier": "structure", "defaultMaterial": "inherited", "frostedTargets": []},
+    "GlzSidebar": {"tier": "structure", "defaultMaterial": "surface", "frostedTargets": [{"selector": ".glz1-sidebar[data-variant=\"floating\"]", "role": "glaze"}]},
+    "GlzNavigationRail": {"tier": "structure", "defaultMaterial": "surface", "frostedTargets": [{"selector": ".glz1-navigation-rail[data-variant=\"floating\"]", "role": "glaze"}]},
+    "GlzDock": {"tier": "structure", "defaultMaterial": "glaze", "frostedTargets": [{"selector": ".glz1-dock", "role": "glaze"}]},
+    "GlzToolbar": {"tier": "structure", "defaultMaterial": "surface", "frostedTargets": [{"selector": ".glz1-toolbar[data-variant=\"floating\"]", "role": "glaze"}]},
+    "GlzTooltip": {"tier": "overlay", "defaultMaterial": "glaze", "frostedTargets": [{"selector": ".glz1-tooltip", "role": "glaze"}]},
+    "GlzPopover": {"tier": "overlay", "defaultMaterial": "glaze", "frostedTargets": [{"selector": ".glz1-popover", "role": "glaze"}]},
+    "GlzMenu": {"tier": "overlay", "defaultMaterial": "glaze", "frostedTargets": [{"selector": ".glz1-menu", "role": "glaze"}]},
+    "GlzDialog": {"tier": "overlay", "defaultMaterial": "raised", "frostedTargets": []},
+    "GlzSheet": {"tier": "overlay", "defaultMaterial": "deep-glaze", "frostedTargets": [{"selector": ".glz1-sheet", "role": "deep-glaze"}]},
+    "GlzToast": {"tier": "overlay", "defaultMaterial": "glaze", "frostedTargets": [{"selector": ".glz1-toast", "role": "glaze"}]},
+    "GlzCapsule": {"tier": "signature", "defaultMaterial": "glaze", "frostedTargets": [{"selector": ".glz1-capsule", "role": "glaze"}]},
+    "GlzMorphCard": {"tier": "signature", "defaultMaterial": "surface", "frostedTargets": [{"selector": ".glz1-morph-card[data-material=\"frosted\"]", "role": "soft-glaze"}]},
+    "GlzSmartRail": {"tier": "signature", "defaultMaterial": "glaze", "frostedTargets": [{"selector": ".glz1-smart-rail", "role": "glaze"}]},
+    "GlzAuroraSurface": {"tier": "signature", "defaultMaterial": "surface", "frostedTargets": [{"selector": ".glz1-aurora[data-material=\"live-glaze\"]", "role": "live-glaze"}]},
+    "GlzUniversalSearch": {"tier": "signature", "defaultMaterial": "composite", "frostedTargets": [{"selector": ".glz1-search-entry", "role": "glaze"}, {"selector": ".glz1-search-panel", "role": "deep-glaze"}]},
+    "GlzAIAction": {"tier": "intelligence", "defaultMaterial": "control-local", "frostedTargets": []},
+    "GlzAISuggestion": {"tier": "intelligence", "defaultMaterial": "surface", "frostedTargets": []},
+    "GlzAIAnswer": {"tier": "intelligence", "defaultMaterial": "surface", "frostedTargets": []},
+    "GlzSmartSummary": {"tier": "intelligence", "defaultMaterial": "surface", "frostedTargets": []},
+    "GlzSourceChip": {"tier": "intelligence", "defaultMaterial": "raised", "frostedTargets": [{"selector": ".glz1-source-chip[data-material=\"frosted\"]", "role": "soft-glaze"}]}
   }
 }

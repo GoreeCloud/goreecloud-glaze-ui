@@ -35,8 +35,8 @@ def main() -> int:
     candidate = load_json("contracts/v1.1/optical-refinement.candidate.json")
     atmosphere = load_json("tokens/glaze-v1.1-atmosphere.candidate.json")
 
-    # Current-product boundary must remain untouched by a candidate-only change.
-    require(current_version in {"1.0.0", "1.1.0"}, "candidate history may be validated only during V1.0 pre-promotion or V1.1 Stable authority")
+    # Historical candidate evidence remains valid to audit under V1.1 Stable maintenance authority.
+    require(current_version in {"1.0.0", "1.1.0", "1.1.1"}, "candidate history may be validated only during V1.0 pre-promotion or V1.1 Stable authority")
     require(candidate["releaseBoundary"]["currentTarget"] is False, "V1.1 candidate must not declare itself current")
     require(candidate["releaseBoundary"]["productionStable"] is False, "V1.1 candidate must not declare production stability")
     require(candidate["releaseBoundary"]["mergeDoesNotPromote"] is True, "merge must not imply lifecycle promotion")
@@ -145,8 +145,8 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    print("GLAZE UI V1.1 specification-stable candidate contract: PASS")
-    print("Boundary: candidate validation only; V1.0 remains current until separate governed promotion.")
+    print("GLAZE UI V1.1 historical specification-candidate contract: PASS")
+    print("Boundary: historical candidate audit only; current Stable package authority is validated separately and this record cannot promote itself.")
     return 0
 
 
