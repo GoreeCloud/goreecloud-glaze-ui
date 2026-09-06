@@ -21,6 +21,7 @@ ALLOWED_PHASES = {
     "phase-8-multi-pane-foldable-desktop",
     "phase-9-system-shell-and-control-center",
     "phase-10-contextual-intelligence",
+    "phase-11-motion-and-continuity",
 }
 ALLOWED_WORKSTREAM_STATUSES = {
     "planned",
