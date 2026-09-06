@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.component-experience.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "workstream": "signature-components-and-reference-suite",
+  "purpose": "Compose the canonical five Signature component families and eight reference compositions through validated V1.3 System Shell, Multi-Pane, Personalization, and accessibility-aware authorities without creating a new token, material, semantic, or release authority.",
+  "extends": [
+    "contracts/v1.2/component-experience.candidate.json",
+    "contracts/v1.2/signature-components.candidate.json",
+    "contracts/v1.2/composition-reference-library.candidate.json",
+    "contracts/v1.3/system-shell.candidate.json",
+    "contracts/v1.3/multi-pane.candidate.json",
+    "contracts/v1.3/personalization.candidate.json",
+    "contracts/v1.3/accessibility.candidate.json"
+  ],
+  "catalogAuthority": "contracts/components/v1/catalog.json",
+  "referenceAuthority": {
+    "manifest": "reference/v1.3/signature-components-and-compositions.json",
+    "browserReference": "reference/v1.3/signature-components-and-compositions.html",
+    "createsNewTokenAuthority": false,
+    "createsNewMaterialAuthority": false,
+    "createsNewSemanticAuthority": false,
+    "createsNewLifecycleAuthority": false,
+    "principle": "Reference scenes demonstrate governed composition; they do not define new design-system truth."
+  },
+  "signatureComponents": {
+    "GlzCapsule": {
+      "semanticPurpose": "compact-expandable-status-or-action-chrome",
+      "v1IdentityPreserved": true,
+      "criticalContentExclusiveProhibited": true,
+      "systemTruthMayDependOnMaterialEffect": false
+    },
+    "GlzMorphCard": {
+      "semanticPurpose": "durable-content-card-with-state-preserving-expansion",
+      "v1IdentityPreserved": true,
+      "durableReadingBackdropDependent": false,
+      "solidByDefaultForDurableReading": true
+    },
+    "GlzSmartRail": {
+      "semanticPurpose": "primary-navigation-container",
+      "v1IdentityPreserved": true,
+      "presentationAuthority": "contracts/v1.3/system-shell.candidate.json",
+      "primaryNavigationOrderMayBePersonalized": false,
+      "currentStateDistinctFromFocus": true
+    },
+    "GlzAuroraSurface": {
+      "semanticPurpose": "nonsemantic-atmospheric-substrate",
+      "v1IdentityPreserved": true,
+      "semanticMeaningMayDependOnAtmosphere": false,
+      "reducedTransparencyOrForcedColorsUsesSolidNeutral": true
+    },
+    "GlzUniversalSearch": {
+      "semanticPurpose": "scope-visible-universal-search-entry-and-results",
+      "v1IdentityPreserved": true,
+      "presentationAuthority": "contracts/v1.3/system-shell.candidate.json",
+      "scopeMustBeVisible": true,
+      "generatedResultsDistinctFromSystemTruth": true,
+      "destructiveActionRequiresConfirmation": true,
+      "nestedBackdropBlurAllowed": false
+    }
+  },
+  "referenceScenes": {
+    "home-dashboard": {"primaryTask": "primary-state-and-critical-exceptions", "secondaryTaskValue": true, "inspectorTaskValue": false},
+    "data-heavy-administration": {"primaryTask": "durable-data-administration", "secondaryTaskValue": true, "inspectorTaskValue": true},
+    "settings": {"primaryTask": "scanable-settings-and-risk-separated-controls", "secondaryTaskValue": true, "inspectorTaskValue": false},
+    "file-browser": {"primaryTask": "file-list-and-selection", "secondaryTaskValue": false, "inspectorTaskValue": true},
+    "search": {"primaryTask": "search-query-and-results", "secondaryTaskValue": false, "inspectorTaskValue": false},
+    "form": {"primaryTask": "form-completion-and-save-state", "secondaryTaskValue": false, "inspectorTaskValue": false},
+    "detail-inspector": {"primaryTask": "primary-content-with-subordinate-inspector", "secondaryTaskValue": false, "inspectorTaskValue": true},
+    "media": {"primaryTask": "media-content-and-reachable-controls", "secondaryTaskValue": false, "inspectorTaskValue": false}
+  },
+  "environmentPolicy": {
+    "supported": ["compact", "medium", "expanded", "workspace", "farView", "wearable"],
+    "selectionAuthority": "platform-or-layout-adapter",
+    "rawViewportWidthAuthority": false,
+    "deviceBrandBreakpointsCanonical": false,
+    "largerLayoutsMustAddTaskValue": true,
+    "compactOrWearableMayCollapseToSingleFocus": true,
+    "farViewRaisesInteractiveTargetFloor": true
+  },
+  "compositionRules": {
+    "primaryTaskVisuallyDominant": true,
+    "semanticOrderPreservedAcrossTransformation": true,
+    "additionalPaneRequiresTaskValue": true,
+    "durableReadingBackdropDependent": false,
+    "cardOverloadProhibited": true,
+    "responsiveTransformationRequired": true,
+    "desktopSqueezedIntoCompactProhibited": true,
+    "personalizationMayChangeSemanticMeaning": false,
+    "personalizationMayReplaceProductIdentity": false,
+    "accessibilityMayRecomposePresentation": true,
+    "accessibilityMayCollapsePaneCount": true,
+    "stateMayDependOnColorOnly": false,
+    "motionMayDefineState": false,
+    "focusDistinctFromCurrentOrSelectedState": true
+  },
+  "accessibility": {
+    "minimumInteractiveTargetPx": 48,
+    "touchAssistanceMinimumInteractiveTargetPx": 56,
+    "farViewMinimumInteractiveTargetPx": 56,
+    "textScalePercent": 200,
+    "largeTextMayReducePaneCount": true,
+    "reducedTransparencyMayRemoveAtmosphere": true,
+    "forcedColorsUsesPlatformAuthority": true,
+    "reducedMotionMayUseImmediateTransformation": true,
+    "horizontalPageOverflowToPreserveCompositionProhibited": true,
+    "continuityPreservedAcrossRecomposition": true
+  },
+  "implementation": {
+    "runtime": "js/glaze-v1.3-component-experience.candidate.mjs",
+    "tests": "tests/glaze-v1.3-component-experience.test.mjs",
+    "validator": "scripts/validate_glaze_v1_3_component_experience.py",
+    "workflow": ".github/workflows/glaze-v1.3-component-experience.yml",
+    "referenceManifest": "reference/v1.3/signature-components-and-compositions.json",
+    "referenceHtml": "reference/v1.3/signature-components-and-compositions.html"
+  },
+  "evidenceBoundary": {
+    "implementedByWorkstream": [
+      "canonical-five-signature-component-v1.3-composition",
+      "canonical-eight-reference-scene-v1.3-composition",
+      "system-shell-navigation-and-search-delegation",
+      "task-value-driven-multi-pane-reference-composition",
+      "bounded-personalization-expression-composition",
+      "accessibility-aware-reference-recomposition",
+      "machine-readable-reference-manifest",
+      "browser-reference-structure",
+      "automated-runtime-contract-and-reference-tests"
+    ],
+    "notEstablished": [
+      "complete-32-component-v1.3-coverage",
+      "native-signature-component-parity",
+      "native-reference-scene-parity",
+      "assistive-technology-human-acceptance",
+      "human-optical-component-acceptance",
+      "physical-device-component-acceptance",
+      "production-component-performance-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}
