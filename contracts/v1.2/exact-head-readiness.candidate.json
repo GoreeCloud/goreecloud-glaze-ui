@@ -132,9 +132,7 @@
   "implementation": {
     "validator": "scripts/validate_glaze_v1_2_exact_head_readiness.py",
     "workflow": ".github/workflows/glaze-v1.2-exact-head-readiness.yml",
-    "artifact": "artifacts/glaze-v1.2-exact-head-readiness.json",
-    "personalizationCompanionValidator": "scripts/validate_glaze_v1_2_personalization_readiness.py",
-    "personalizationCompanionArtifact": "artifacts/glaze-v1.2-personalization-readiness.json"
+    "artifact": "artifacts/glaze-v1.2-exact-head-readiness.json"
   },
   "evidenceBoundary": {
     "boundedExactHeadReadinessReportingEstablished": true,
