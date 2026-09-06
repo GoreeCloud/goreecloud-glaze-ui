@@ -79,7 +79,6 @@ def main() -> int:
 
     plan = load("contracts/v1.3/adaptive-resonance.plan.json")
     req(plan.get("lifecycle") == "proposed", "V1.3 plan must remain Proposed")
-    req(plan.get("phase") == "phase-2-dynamic-color", "dynamic-color implementation requires phase-2-dynamic-color")
     workstreams = {item.get("id"): item for item in plan.get("workstreams", [])}
     req(workstreams.get("contract-and-token-architecture", {}).get("status") == "implemented-and-validated", "token architecture must be validated before dynamic color")
     req(
@@ -88,7 +87,7 @@ def main() -> int:
             "implementation-complete-validation-pending",
             "implemented-and-validated",
         },
-        "dynamic-color workstream must be active but not outside governed status vocabulary",
+        "dynamic-color workstream must remain implemented within governed status vocabulary",
     )
 
     contract = load(CONTRACT_PATH)
@@ -168,7 +167,7 @@ def main() -> int:
         return 1
 
     print("GLAZE UI V1.3 Adaptive Resonance dynamic color contract: PASS")
-    print("Boundary: local-first perceptual accent derivation is implemented as a Proposed candidate artifact; semantic truth and V1.2 Stable authority remain protected.")
+    print("Boundary: local-first perceptual accent derivation remains valid in later V1.3 phases; semantic truth and V1.2 Stable authority remain protected.")
     return 0
 
 
