@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -32,6 +33,7 @@ public final class PersonalizationActivity extends Activity {
     private String appearancePreference;
     private String resolvedAppearance;
     private String clarity;
+    private boolean reducedTransparency;
     private boolean touchAssistance;
     private int targetFloorDp;
     private WallpaperAtmosphere wallpaperAtmosphere;
@@ -49,9 +51,10 @@ public final class PersonalizationActivity extends Activity {
         appearancePreference = normalizeAppearancePreference(getIntent().getStringExtra("appearance"));
         resolvedAppearance = resolveAppearance(appearancePreference, getResources().getConfiguration());
         clarity = normalizeClarity(getIntent().getStringExtra("clarity"));
+        reducedTransparency = getIntent().getBooleanExtra("reducedTransparency", false);
         touchAssistance = getIntent().getBooleanExtra("touchAssistance", false);
         targetFloorDp = touchAssistance ? TOUCH_ASSISTANCE_DP : MIN_TOUCH_DP;
-        wallpaperAtmosphere = readWallpaperAtmosphere();
+        wallpaperAtmosphere = reducedTransparency ? null : readWallpaperAtmosphere();
 
         resolvePalette();
         configureWindow();
@@ -165,6 +168,7 @@ public final class PersonalizationActivity extends Activity {
         add(evidence, fact("Appearance preference", appearancePreferenceLabel()), 6);
         add(evidence, fact("Resolved appearance", appearanceLabel(resolvedAppearance)), 6);
         add(evidence, fact("Clarity", clarityLabel()), 6);
+        add(evidence, fact("Reduced Transparency", reducedTransparency ? "Enabled" : "Disabled"), 6);
         add(evidence, fact("Target floor", targetFloorDp + " dp"), 6);
         if (wallpaperAtmosphere == null) {
             add(evidence, fact("Wallpaper atmosphere", "None"), 0);
@@ -178,15 +182,12 @@ public final class PersonalizationActivity extends Activity {
         LinearLayout material = panel();
         material.setContentDescription("Living Frosted native material sample; clarity " + clarityLabel());
         if (wallpaperAtmosphere != null) {
-            material.setBackground(rounded(Color.argb(
-                Math.round(wallpaperAtmosphere.alpha * 255f),
-                wallpaperAtmosphere.r,
-                wallpaperAtmosphere.g,
-                wallpaperAtmosphere.b
-            ), 26, line));
+            material.setBackground(atmosphericMaterial(wallpaperAtmosphere));
         }
         add(material, heading("Living Frosted", 21), 6);
-        add(material, body("Clarity changes optical expression only. Accessibility and semantic meaning remain authoritative."), 0);
+        add(material, body(reducedTransparency
+            ? "Reduced Transparency suppresses decorative wallpaper atmosphere while preserving structure, text, and semantic meaning."
+            : "Clarity changes optical expression only. Accessibility and semantic meaning remain authoritative."), 0);
         page.addView(material, block(16));
 
         Button action = new Button(this);
@@ -220,6 +221,17 @@ public final class PersonalizationActivity extends Activity {
         layout.setPadding(dp(18), dp(18), dp(18), dp(18));
         layout.setBackground(rounded(raised, 26, line));
         return layout;
+    }
+
+    private LayerDrawable atmosphericMaterial(WallpaperAtmosphere atmosphere) {
+        GradientDrawable neutralBase = rounded(raised, 26, line);
+        GradientDrawable atmosphereOverlay = rounded(Color.argb(
+            Math.round(Math.min(atmosphere.alpha, WALLPAPER_MAX_ALPHA) * 255f),
+            atmosphere.r,
+            atmosphere.g,
+            atmosphere.b
+        ), 26, Color.TRANSPARENT);
+        return new LayerDrawable(new android.graphics.drawable.Drawable[]{neutralBase, atmosphereOverlay});
     }
 
     private TextView fact(String name, String value) {
