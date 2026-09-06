@@ -5,14 +5,14 @@
   "consumerEligible": false,
   "stableBaseline": "1.1.0",
   "clarity": {
-    "clear": {"opacityMultiplier": 0.88, "blurMultiplier": 0.92, "edgeMultiplier": 0.9},
-    "balanced": {"opacityMultiplier": 1.0, "blurMultiplier": 1.0, "edgeMultiplier": 1.0},
-    "dense": {"opacityMultiplier": 1.12, "blurMultiplier": 1.12, "edgeMultiplier": 1.18}
+    "clear": {"materialMixPercent": 82, "blurDeltaPx": -4, "edgeSpecularPercent": 28},
+    "balanced": {"materialMixPercent": 92, "blurDeltaPx": 0, "edgeSpecularPercent": 45},
+    "dense": {"materialMixPercent": 98, "blurDeltaPx": 6, "edgeSpecularPercent": 68}
   },
   "backdrop": {
-    "simple": {"opacityDelta": -0.04, "blurDeltaPx": -4, "saturation": 1.1},
-    "complex": {"opacityDelta": 0.08, "blurDeltaPx": 8, "saturation": 0.92},
-    "unknown": {"profile": "balanced"}
+    "simple": {"materialMixDeltaPercent": -4, "blurDeltaPx": -4, "saturation": 1.08},
+    "complex": {"materialMixDeltaPercent": 2, "blurDeltaPx": 8, "saturation": 0.92},
+    "unknown": {"materialMixDeltaPercent": 0, "blurDeltaPx": 0, "profile": "selected-clarity"}
   },
   "thickness": {
     "thin": {"depthPx": 2, "shadowPx": 10, "specular": 0.72},
@@ -30,5 +30,6 @@
     "loading": {"scale": 1.0, "elevationDeltaPx": 0},
     "disabled": {"scale": 1.0, "elevationDeltaPx": 0}
   },
-  "performanceTiers": {"0": "solid", "1": "static-glaze", "2": "responsive-glaze", "3": "living-glaze"}
+  "performanceTiers": {"0": "solid", "1": "static-glaze", "2": "responsive-glaze", "3": "living-glaze"},
+  "accessibilityPrecedence": ["forced-colors", "reduced-transparency", "increased-contrast", "clarity-personalization"]
 }
