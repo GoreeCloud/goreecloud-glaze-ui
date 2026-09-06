@@ -33,7 +33,18 @@
     "thirdPartyLogosMustPreserveBrandIntegrity": true,
     "generatedMediaMustBeExplicitlyLabeledWhenConceptual": true,
     "conceptualMediaMayClaimImplementedReality": false,
-    "screenshotsMustBeActualOrClearlyConceptualAndVersionAligned": true
+    "screenshotsMustBeActualOrClearlyConceptualAndVersionAligned": true,
+    "glazeUiIdentity": {
+      "authoritativeRepository": "GoreeCloud/goreecloud-branding-assets",
+      "canonicalPath": "systems/glaze-ui/glaze-ui-mark.svg",
+      "canonicalGitBlob": "7756ca8f04a588286e05e37e9a141dbea7f1965d",
+      "canonicalStatus": "approved",
+      "consumerRepository": "GoreeCloud/goreecloud-glaze-ui",
+      "packagedDerivativePath": "assets/identity/official/facet/glaze-ui-mark.svg",
+      "packagedDerivativeMustMatchCanonicalBlob": true,
+      "scope": "glaze-ui-product-identity-only",
+      "establishesSharedArtworkLibrary": false
+    }
   },
   "truthBoundaries": {
     "decorativeColorMayEncodeSemanticState": false,
@@ -105,6 +116,7 @@
       "bounded-media-treatment-rules",
       "conceptual-media-labeling",
       "source-and-provenance-boundaries",
+      "approved-glaze-ui-identity-provenance",
       "semantic-truth-isolation",
       "decorative-accessibility-isolation",
       "reduced-transparency-media-fallback",
