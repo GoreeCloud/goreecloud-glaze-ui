@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.multi-pane.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "extends": [
+    "contracts/v1.2/foldable-adaptation.candidate.json",
+    "contracts/v1.2/responsive-adaptation-reference.candidate.json",
+    "contracts/v1.3/reachability.candidate.json",
+    "contracts/v1.3/adaptive-navigation.candidate.json"
+  ],
+  "purpose": "Define capability-driven multi-pane, large-screen, desktop, and foldable composition that adds useful information when space and posture permit while preserving task continuity, reachability, accessibility, and hinge/obstruction safety.",
+  "paneRoles": {
+    "primary": {"meaning": "current task or main content", "required": true},
+    "secondary": {"meaning": "supporting list, detail, queue, or adjacent task context", "required": false},
+    "inspector": {"meaning": "properties, metadata, tools, or contextual inspection", "required": false},
+    "navigation": {"meaning": "environment-governed primary navigation region", "required": false},
+    "utility": {"meaning": "supplementary task controls or status region", "required": false}
+  },
+  "compositionStates": {
+    "singlePane": {
+      "maximumContentPanes": 1,
+      "primaryRequired": true,
+      "secondaryPersistent": false,
+      "inspectorPersistent": false
+    },
+    "dualPane": {
+      "maximumContentPanes": 2,
+      "primaryRequired": true,
+      "secondaryPersistent": true,
+      "inspectorPersistent": false
+    },
+    "triplePane": {
+      "maximumContentPanes": 3,
+      "primaryRequired": true,
+      "secondaryPersistent": true,
+      "inspectorPersistent": true
+    },
+    "dualRegionHinge": {
+      "maximumContentPanes": 2,
+      "primaryRequired": true,
+      "hingeActsAsStructuralDivider": true,
+      "criticalTargetsMayIntersectHinge": false
+    }
+  },
+  "environmentPolicy": {
+    "compact": {
+      "defaultComposition": "singlePane",
+      "multiPaneAllowed": false,
+      "informationGainMayAppearAs": ["sheet", "drill-in", "stacked-section"]
+    },
+    "medium": {
+      "defaultComposition": "dualPane",
+      "fallbackComposition": "singlePane",
+      "requiresSecondaryTaskValue": true,
+      "inspectorPersistent": false
+    },
+    "expanded": {
+      "defaultComposition": "dualPane",
+      "alternateComposition": "triplePane",
+      "thirdPaneRequiresInspectorValue": true
+    },
+    "workspace": {
+      "defaultComposition": "triplePane",
+      "fallbackComposition": "dualPane",
+      "persistentProductivityRegionsAllowed": true,
+      "toolbarMaySupplement": true
+    },
+    "farView": {
+      "defaultComposition": "singlePane",
+      "secondaryRegionsMayAppearWhenTaskUseful": true,
+      "directionalFocusOrderRequired": true
+    },
+    "wearable": {
+      "defaultComposition": "singlePane",
+      "multiPaneAllowed": false,
+      "glanceablePrimaryValueFirst": true
+    }
+  },
+  "posturePolicy": {
+    "folded": {
+      "defaultComposition": "singlePane",
+      "primaryTaskMustRemainUsableWhenProductScopePermits": true
+    },
+    "unfolded": {
+      "mayAddInformation": true,
+      "mayPromoteToDualPane": true,
+      "mayPromoteToTriplePaneWhenWorkspaceCapable": true,
+      "mustNotOnlyScaleSinglePane": true
+    },
+    "halfOpen": {
+      "platformRegionsRequiredForDualRegionUse": true,
+      "mayUseDualRegionHinge": true,
+      "mustNotInferHingeGeometry": true
+    },
+    "flat": {
+      "usesDeclaredEnvironmentAndCapabilities": true
+    },
+    "unknown": {
+      "fallback": "environment-policy-without-posture-specialization"
+    }
+  },
+  "hingeAndObstruction": {
+    "platformProvidedUnsafeRegionsRequired": true,
+    "hardCodedDeviceHingeGeometryProhibited": true,
+    "criticalTargetsAvoidUnsafeRegions": true,
+    "textMustNotBeSplitAcrossUnsafeRegion": true,
+    "selectionHandlesMustNotRequireUnsafeRegion": true,
+    "hingeMayActAsStructuralDivider": true,
+    "unsafeRegionMayBeIgnoredWhenPlatformReportsNone": true
+  },
+  "informationGain": {
+    "largerLayoutsMustAddTaskValueRatherThanOnlyScale": true,
+    "allowedTransformations": [
+      "list-to-list-detail",
+      "navigation-capsule-to-rail-or-sidebar",
+      "editor-to-editor-inspector",
+      "single-to-multi-pane",
+      "media-to-media-plus-queue",
+      "canvas-to-canvas-plus-tools"
+    ],
+    "secondaryPaneMayBeEmptyDecoration": false,
+    "inspectorPaneMayBeEmptyDecoration": false
+  },
+  "selectionInputs": {
+    "environment": "required-semantic-layout-environment-from-platform-or-layout-adapter",
+    "posture": "optional-platform-posture",
+    "availableRegions": "optional-platform-declared-safe-layout-regions",
+    "secondaryTaskValue": "product-declared",
+    "inspectorTaskValue": "product-declared",
+    "supportsPersistentSecondary": "capability-declared",
+    "supportsInspector": "capability-declared",
+    "largeTextOrReflow": "accessibility-authority",
+    "touchAssistance": "accessibility-authority",
+    "inputModality": "platform-or-input-adapter"
+  },
+  "selectionRules": {
+    "rawViewportWidthRequired": false,
+    "numericBreakpointsCanonical": false,
+    "deviceBrandBreakpointsCanonical": false,
+    "deviceIdentityInferenceAllowed": false,
+    "environmentAdapterOwnsCapabilitySelection": true,
+    "productDeclaresWhetherExtraPaneAddsTaskValue": true,
+    "accessibilityMayCollapseMultiPane": true,
+    "touchTargetSizeMayShrinkToPreservePaneCount": false,
+    "paneCountMayIncreaseWithoutTaskValue": false
+  },
+  "continuity": {
+    "preserve": [
+      "current-task",
+      "current-destination",
+      "selection",
+      "typed-input",
+      "unsaved-work",
+      "focus-where-practical",
+      "scroll-context-where-practical",
+      "media-state",
+      "filters",
+      "logical-back-history"
+    ],
+    "recompositionMayReloadPage": false,
+    "recompositionMayDiscardUnsavedWork": false,
+    "panePromotionMayChangeSemanticMeaning": false,
+    "paneCollapseMayLoseCurrentSelection": false
+  },
+  "accessibility": {
+    "precedence": [
+      "platform-accessibility",
+      "large-text-and-reflow",
+      "unsafe-region-and-occlusion",
+      "task-continuity",
+      "declared-layout-environment",
+      "task-value",
+      "presentation-density"
+    ],
+    "minimumInteractiveTargetPx": 48,
+    "touchAssistanceTargetPx": 56,
+    "largeTextMayCollapseInspector": true,
+    "largeTextMayCollapseSecondary": true,
+    "forcedColorsMustPreservePaneBoundaries": true,
+    "reducedTransparencyMayUseSolidPaneSurfaces": true,
+    "reducedMotionMayUseImmediateRecomposition": true,
+    "rtlLogicalPaneOrderRequired": true,
+    "horizontalPageOverflowToPreservePaneCountProhibited": true
+  },
+  "implementation": {
+    "tokens": "tokens/glaze-v1.3-layout.candidate.json",
+    "runtime": "js/glaze-v1.3-multi-pane.candidate.mjs",
+    "tests": "tests/glaze-v1.3-multi-pane.test.mjs",
+    "validator": "scripts/validate_glaze_v1_3_multi_pane.py",
+    "workflow": ".github/workflows/glaze-v1.3-multi-pane.yml"
+  },
+  "evidenceBoundary": {
+    "implementedByWorkstream": [
+      "semantic-pane-role-contract",
+      "environment-and-task-value-composition-resolution",
+      "folded-unfolded-and-half-open-posture-policy",
+      "platform-declared-hinge-and-obstruction-safety",
+      "accessibility-driven-pane-collapse-policy",
+      "continuity-preserving-recomposition-model",
+      "automated-contract-and-runtime-tests"
+    ],
+    "notEstablished": [
+      "oem-hinge-matrix",
+      "physical-foldable-acceptance",
+      "production-window-manager-integration",
+      "platform-environment-threshold-calibration",
+      "human-large-screen-acceptance",
+      "assistive-technology-human-acceptance",
+      "native-form-factor-parity",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}
