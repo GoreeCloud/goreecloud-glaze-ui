@@ -2,11 +2,12 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": 1,
   "updated": "2026-09-06",
-  "officialProductLabel": "GLAZE UI V1.1",
-  "currentOfficial": "1.1.0",
-  "currentStable": "1.1.0",
-  "activeCandidate": "1.2.0-candidate",
-  "activePatchReleaseCandidate": "1.1.1-rc.1",
+  "officialProductLabel": "GLAZE UI V1.2",
+  "currentOfficial": "1.2.0",
+  "currentStable": "1.2.0",
+  "activeCandidate": null,
+  "plannedNext": "1.3.0-candidate",
+  "activePatchReleaseCandidate": null,
   "resetState": "stable",
   "releases": [
     {
@@ -16,7 +17,7 @@
       "consumerEligible": false,
       "contract": "GLAZE_UI_V1_0.md",
       "acceptance": "acceptance/v1.0-stable.md",
-      "note": "The V1.0 namespace is official. Production consumer eligibility requires fresh post-reset acceptance evidence."
+      "note": "Historical namespace-reset baseline."
     },
     {
       "version": "1.1.0",
@@ -25,101 +26,48 @@
       "consumerEligible": true,
       "contract": "GLAZE_UI_V1_1.md",
       "acceptance": "acceptance/v1.1-stable.md",
-      "note": "Current immutable Stable shared design-system release. Its known CSS import-closure defect is handled by the separate 1.1.1 patch Release Candidate; downstream consumers remain independently migration- and acceptance-gated."
+      "note": "Prior known-good Stable release retained for rollback and audit. It is superseded as the current consumer target by V1.2."
     },
     {
       "version": "1.1.1-rc.1",
       "label": "GLAZE UI V1.1.1 — Import Closure Patch",
-      "status": "release-candidate",
+      "status": "superseded-release-candidate",
       "consumerEligible": false,
       "stableBaseline": "1.1.0",
       "contract": "contracts/v1.1/patch-1.1.1-candidate.json",
       "acceptance": "acceptance/v1.1.1-patch-candidate.md",
-      "note": "Corrective Stable-line Release Candidate. It does not replace current Stable/current official authority until separate post-merge qualification and immutable 1.1.1 promotion complete."
+      "note": "Historical corrective RC evidence. V1.2 Stable supersedes this pending V1.1-line patch as the current design-system target."
     },
     {
-      "version": "1.2.0-candidate",
-      "label": "GLAZE UI V1.2 — Frosted Neutral",
-      "status": "candidate",
-      "consumerEligible": false,
+      "version": "1.2.0",
+      "label": "GLAZE UI V1.2 — Living Frosted",
+      "status": "stable",
+      "consumerEligible": true,
       "stableBaseline": "1.1.0",
-      "contract": "GLAZE_UI_V1_2_CANDIDATE.md",
-      "tokens": "tokens/glaze-v1.2-frosted-neutral.candidate.json",
+      "contract": "GLAZE_UI_V1_2.md",
+      "tokens": "tokens/glaze-v1.json",
       "opticalFoundation": "tokens/glaze-v1.2-optical-foundation.candidate.json",
       "migration": "contracts/v1.2/migration.candidate.json",
-      "promotionGates": "acceptance/v1.2-promotion-gates.candidate.md",
-      "webEntrypoint": "css/glaze-v1.2.0-candidate.css",
+      "acceptance": "acceptance/v1.2-stable.md",
+      "webEntrypoint": "css/glaze-v1.2.0.css",
+      "runtimeEntrypoint": "js/glaze-v1.2.0.mjs",
       "reference": "reference/v1.2/frosted-neutral.html",
-      "note": "Next-upgrade material candidate. Neutral frosted glass is the substrate; the V1.2 Frosted Optical foundation defines Frost White as the primary material and Ice Blue as restrained atmosphere. Stable authority remains V1.1 until governed promotion."
+      "sourceQualificationAnchor": "b0eadf9a60f73d45caffb62ffc7e9e0334cddc97",
+      "note": "Current Stable shared design-system release. The project owner explicitly moved the remaining external/manual/physical qualification work to the V1.3 track on 2026-09-06. Those deferred qualifications are not represented as passed V1.2 evidence and do not create downstream consumer acceptance."
     }
   ],
   "capabilities": {
-    "system-shell": {
-      "status": "stable-inherited",
-      "since": "1.0.0",
-      "implementation": "contracts/system-shell/glaze-system-shell-v1.json"
-    },
-    "component-catalog": {
-      "status": "stable-inherited",
-      "since": "1.0.0",
-      "implementation": "contracts/components/v1/catalog.json"
-    },
-    "web-entrypoint": {
-      "status": "stable",
-      "since": "1.1.0",
-      "implementation": "css/glaze-v1.1.0.css"
-    },
-    "runtime-entrypoint": {
-      "status": "stable",
-      "since": "1.1.0",
-      "implementation": "js/glaze-v1.1.0.mjs"
-    },
-    "performance-budget": {
-      "status": "stable-inherited",
-      "since": "1.0.0",
-      "implementation": "contracts/performance/glaze-v1-performance-budget.json"
-    },
-    "visual-regression": {
-      "status": "stable",
-      "since": "1.1.0",
-      "implementation": "contracts/regression/visual-baselines-v1.json"
-    },
-    "native-reference": {
-      "status": "bounded-release-evidence",
-      "since": "1.1.0",
-      "implementation": "reference/v1.1/native/android"
-    },
-    "frosted-neutral-material": {
-      "status": "candidate",
-      "since": "1.2.0-candidate",
-      "implementation": "tokens/glaze-v1.2-frosted-neutral.candidate.json",
-      "webPreview": "css/glaze-v1.2.0-candidate.css"
-    },
-    "frosted-optical-foundation": {
-      "status": "candidate-contract",
-      "since": "1.2.0-candidate",
-      "implementation": "tokens/glaze-v1.2-optical-foundation.candidate.json",
-      "note": "Contracts Frost White/Ice Blue identity, frost levels, Aura families, visual distribution, performance profiles, accessibility fallbacks, and anti-patterns. Rendered alignment remains separately acceptance-gated."
-    },
-    "frosted-neutral-component-materials": {
-      "status": "candidate",
-      "since": "1.2.0-candidate",
-      "implementation": "contracts/v1.2/component-materials.candidate.json",
-      "webPreview": "reference/v1.2/component-gallery.html"
-    },
-    "frosted-neutral-system-shell": {
-      "status": "candidate",
-      "since": "1.2.0-candidate",
-      "implementation": "contracts/v1.2/system-shell-materials.candidate.json",
-      "webPreview": "reference/v1.2/system-shell.html"
-    },
-    "v1.2-migration-control-plane": {
-      "status": "candidate-contract",
-      "since": "1.2.0-candidate",
-      "implementation": "contracts/v1.2/migration.candidate.json",
-      "plan": "MIGRATION_V1_1_TO_V1_2.md",
-      "acceptance": "acceptance/v1.2-promotion-gates.candidate.md",
-      "validator": "scripts/validate_glaze_v1_2_migration.py"
-    }
+    "system-shell": {"status":"stable-inherited","since":"1.0.0","implementation":"contracts/system-shell/glaze-system-shell-v1.json"},
+    "component-catalog": {"status":"stable-inherited","since":"1.0.0","implementation":"contracts/components/v1/catalog.json"},
+    "web-entrypoint": {"status":"stable","since":"1.2.0","implementation":"css/glaze-v1.2.0.css"},
+    "runtime-entrypoint": {"status":"stable","since":"1.2.0","implementation":"js/glaze-v1.2.0.mjs"},
+    "performance-budget": {"status":"stable-inherited-bounded","since":"1.0.0","implementation":"contracts/performance/glaze-v1-performance-budget.json","note":"Physical-device and production-platform requalification is deferred to V1.3 and is not claimed by V1.2 Stable."},
+    "visual-regression": {"status":"stable-bounded","since":"1.2.0","implementation":"reference/v1.2/","note":"Automated/reference evidence is retained; broader human optical qualification is a V1.3 follow-up."},
+    "native-reference": {"status":"bounded-release-evidence","since":"1.2.0","implementation":"reference/v1.2/native"},
+    "frosted-neutral-material": {"status":"stable","since":"1.2.0","implementation":"tokens/glaze-v1.2-frosted-neutral.candidate.json","webEntrypoint":"css/glaze-v1.2.0.css"},
+    "frosted-optical-foundation": {"status":"stable-promoted-source","since":"1.2.0","implementation":"tokens/glaze-v1.2-optical-foundation.candidate.json"},
+    "frosted-neutral-component-materials": {"status":"stable-promoted-source","since":"1.2.0","implementation":"contracts/v1.2/component-materials.candidate.json","webPreview":"reference/v1.2/component-gallery.html"},
+    "frosted-neutral-system-shell": {"status":"stable-promoted-source","since":"1.2.0","implementation":"contracts/v1.2/system-shell-materials.candidate.json","webPreview":"reference/v1.2/system-shell.html"},
+    "v1.2-migration-control-plane": {"status":"stable","since":"1.2.0","implementation":"contracts/v1.2/migration.candidate.json","plan":"MIGRATION_V1_1_TO_V1_2.md","acceptance":"acceptance/v1.2-stable.md","validator":"scripts/validate_glaze_v1_2_stable.py"}
   }
 }
