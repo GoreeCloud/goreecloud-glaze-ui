@@ -18,8 +18,7 @@ import java.util.Locale;
 
 /**
  * Bounded Android framework-native adapter reference for GLAZE UI V1.2
- * Personalization + Living Frosted. This activity intentionally owns no
- * persistence, synchronization, wallpaper acquisition, telemetry, network
+ * Personalization + Living Frosted. Authority boundary: no persistence, synchronization, wallpaper acquisition, telemetry, network
  * transport, or lifecycle promotion authority.
  */
 public final class PersonalizationActivity extends Activity {
