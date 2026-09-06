@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Validate the non-current GLAZE UI V1.1 specification-stable candidate.
+"""Validate the historical GLAZE UI V1.1 specification-stable candidate.
 
-This validator intentionally fails closed if the candidate relaxes current V1
-semantic, accessibility, material, or release boundaries. Passing this script
-does not promote V1.1 or establish production acceptance.
+This validator intentionally fails closed if the retained candidate source relaxes
+inherited V1 semantic, accessibility, material, or release boundaries. Passing
+this script does not promote V1.1 or establish current production acceptance.
 """
 
 from __future__ import annotations
@@ -35,8 +35,11 @@ def main() -> int:
     candidate = load_json("contracts/v1.1/optical-refinement.candidate.json")
     atmosphere = load_json("tokens/glaze-v1.1-atmosphere.candidate.json")
 
-    # Current-product boundary must remain untouched by a candidate-only change.
-    require(current_version in {"1.0.0", "1.1.0"}, "candidate history may be validated only during V1.0 pre-promotion or V1.1 Stable authority")
+    # Historical Candidate source remains valid to audit after later governed Stable promotions.
+    require(
+        current_version in {"1.0.0", "1.1.0", "1.2.0"},
+        "V1.1 candidate history may be validated only within the governed V1 product line",
+    )
     require(candidate["releaseBoundary"]["currentTarget"] is False, "V1.1 candidate must not declare itself current")
     require(candidate["releaseBoundary"]["productionStable"] is False, "V1.1 candidate must not declare production stability")
     require(candidate["releaseBoundary"]["mergeDoesNotPromote"] is True, "merge must not imply lifecycle promotion")
@@ -145,8 +148,8 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    print("GLAZE UI V1.1 specification-stable candidate contract: PASS")
-    print("Boundary: candidate validation only; V1.0 remains current until separate governed promotion.")
+    print("GLAZE UI V1.1 historical specification-stable Candidate source: PASS")
+    print(f"Boundary: historical source validation only under current repository VERSION {current_version}; no lifecycle promotion or consumer acceptance implied.")
     return 0
 
 
