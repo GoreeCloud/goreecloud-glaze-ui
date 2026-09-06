@@ -7,6 +7,7 @@
 html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"] {
   --glz12-personal-accent: rgb(82 151 181);
   --glz12-personal-atmosphere-strength: 0.08;
+  --glz12-wallpaper-atmosphere: transparent;
   --glz12-personal-density-gap: 16px;
   --glz12-personal-density-pad: 18px;
 }
@@ -56,9 +57,11 @@ html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"] .glz12
   background-color: color-mix(in srgb, var(--glz12-personal-accent) 13%, var(--glz1-raised));
 }
 html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"] .glz12-personalization-atmosphere {
-  background-image: linear-gradient(145deg,
-    color-mix(in srgb, var(--glz12-personal-accent) calc(var(--glz12-personal-atmosphere-strength) * 100%), transparent),
-    transparent 58%);
+  background-image:
+    radial-gradient(110% 95% at 88% 2%, var(--glz12-wallpaper-atmosphere), transparent 62%),
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--glz12-personal-accent) calc(var(--glz12-personal-atmosphere-strength) * 100%), transparent),
+      transparent 58%);
 }
 html[data-glaze-version="1.1"][data-glaze-upgrade="v1.2-frosted-neutral"] .glz12-personalization-action {
   min-block-size: 48px;
