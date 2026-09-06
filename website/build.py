@@ -19,9 +19,10 @@ for name in ("index.html", "404.html", "_headers"):
 for name in ("site.css", "identity.css", "site.js"):
     shutil.copy2(SOURCE / name, DIST / "assets" / name)
 
-# Publish only the generic foundations used by the public reference surface and the
-# official V1.1 entrypoint/layers and inherited V1 structural layers. Former product-release and candidate assets are not
-# part of the current public artifact.
+# This retained repository website subtree is a transitional publication/history
+# surface. It publishes the generic foundations and preserved V1.1 presentation
+# chain required by that snapshot; live lifecycle authority is GLAZE UI V1.2 / 1.2.0.
+# Canonical public static-site source lives in GoreeCloud/goreecloud-static-websites.
 for name in (
     "glaze.css",
     "glaze.controls.css",
@@ -53,6 +54,7 @@ shutil.copy2(IDENTITY / "glaze-ui-mark.svg", DIST / "assets" / "glaze-ui-mark.sv
 shutil.copy2(REFERENCE / "v1-system-shell.html", DIST / "reference" / "v1-system-shell.html")
 
 print(
-    f"Built {DIST.relative_to(ROOT)} from the official GLAZE UI V1.1 Stable source "
-    "with an isolated current V1.1 public publication boundary"
+    f"Built {DIST.relative_to(ROOT)} as a transitional Design Center snapshot under "
+    "GLAZE UI V1.2 / 1.2.0 current Stable authority, using the explicitly retained "
+    "V1.1 presentation asset chain"
 )
