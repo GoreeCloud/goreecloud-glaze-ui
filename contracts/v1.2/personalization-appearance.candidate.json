@@ -29,6 +29,8 @@
     "manualModeMayOverrideSystemFollowing": true,
     "platformAdapterOwnsSystemResolution": true,
     "browserSystemAdapterImplemented": true,
+    "nativeSystemAdapterReferencesImplemented": true,
+    "nativeSystemAdapterReferencePlatforms": ["android", "linux-gtk"],
     "nativeSystemAdapterAcceptanceRequired": true
   },
   "accentProfiles": {
@@ -48,6 +50,9 @@
       "acceptedInput": "producer-supplied-local-rgb-summary",
       "directPixelAcquisitionOwnedByGlaze": false,
       "boundedLocalDerivationImplemented": true,
+      "nativeRgbSummaryAdapterReferencesImplemented": true,
+      "nativeRgbSummaryAdapterReferencePlatforms": ["android", "linux-gtk"],
+      "nativeWallpaperSourceAdapterAcceptanceRequired": true,
       "requiredProperties": ["local", "bounded", "low-intensity", "filtered", "desaturated"],
       "maximumAlpha": 0.12,
       "maximumChromaRetention": 0.28,
@@ -106,6 +111,8 @@
     "browserFollowSystemUsesPrefersColorScheme": true,
     "systemChangesMayReResolveFollowSystem": true,
     "manualAppearanceDoesNotTrackSystemChanges": true,
+    "nativeReferenceFollowSystemAdaptersImplemented": true,
+    "nativeReferenceReducedTransparencySuppressesWallpaperAtmosphere": true,
     "persistenceAdapterIsOptional": true,
     "malformedStoredPreferenceFallsBackSafely": true,
     "storageEnvelopeSchemaVersion": 1,
@@ -125,6 +132,8 @@
     "reducedTransparencyDisablesDecorativeAtmosphereRequired": true,
     "densityProfileDifferentiationRequired": true,
     "followSystemBrowserResolutionRequired": true,
+    "nativeAdapterSourceReadinessRequired": true,
+    "nativeAdapterExecutionAcceptanceIndependent": true,
     "injectedPersistenceAdapterRoundTripRequired": true,
     "invalidPersistenceFallbackRequired": true,
     "minimumInteractiveTargetPx": 48,
@@ -141,7 +150,20 @@
     "renderedValidator": "scripts/validate_glaze_v1_2_personalization_appearance_rendered.py",
     "workflow": ".github/workflows/glaze-v1.2-personalization-appearance.yml",
     "candidateEntrypoint": "css/glaze-v1.2.0-candidate.css",
-    "mustLoadBeforeFinalAccessibilityLayer": true
+    "mustLoadBeforeFinalAccessibilityLayer": true,
+    "nativeAdapterReferences": {
+      "android": {
+        "source": "reference/v1.2/native/android/app/src/main/java/com/goreecloud/glazeui/reference/v12/PersonalizationActivity.java",
+        "validator": "scripts/validate_glaze_v1_2_android_personalization_runtime.py",
+        "workflow": ".github/workflows/glaze-v1.2-android-native.yml"
+      },
+      "linuxGtk": {
+        "source": "reference/v1.2/native/linux-gtk/personalization.py",
+        "validator": "scripts/validate_glaze_v1_2_linux_personalization_runtime.py",
+        "workflow": ".github/workflows/glaze-v1.2-linux-native.yml"
+      },
+      "sourceReadinessValidator": "scripts/validate_glaze_v1_2_native_personalization_source.py"
+    }
   },
   "evidenceBoundary": {
     "implemented": [
@@ -152,6 +174,10 @@
       "bounded-living-glaze-clarity-profiles",
       "manual-light-dark-deep-dark-reference",
       "browser-follow-system-resolution-adapter",
+      "android-follow-system-adapter-reference",
+      "linux-gtk-follow-system-adapter-reference",
+      "native-rgb-summary-atmosphere-adapter-references",
+      "native-reduced-transparency-atmosphere-precedence-source",
       "optional-consumer-persistence-adapter-interface",
       "web-storage-adapter-helper",
       "semantic-state-isolation",
