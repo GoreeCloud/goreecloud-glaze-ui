@@ -14,7 +14,7 @@
   "workstreams": [
     {
       "id": "contract-and-token-architecture",
-      "status": "implementation-complete-validation-pending",
+      "status": "implemented-and-validated",
       "dependsOn": [],
       "expectedArtifacts": [
         "contracts/v1.3/adaptive-resonance.candidate.json",
