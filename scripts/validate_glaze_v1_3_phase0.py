@@ -18,6 +18,7 @@ ALLOWED_PHASES = {
     "phase-5-expressive-shape",
     "phase-6-variable-responsive-typography",
     "phase-7-adaptive-navigation",
+    "phase-8-multi-pane-foldable-desktop",
 }
 ALLOWED_WORKSTREAM_STATUSES = {
     "planned",
