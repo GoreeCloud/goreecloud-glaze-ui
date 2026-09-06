@@ -162,20 +162,25 @@ def run_legacy_promoted_source(legacy_filename: str) -> int:
         if hasattr(module, "validate_lifecycle"):
             module.validate_lifecycle = lambda: validate_projection(projected)
 
-        # Living Glaze resolves VERSION/lifecycle through string-relative helper
-        # functions instead of path globals. Intercept only those two historical
-        # authority reads and delegate every source read to the unchanged helper.
+        # Living Glaze resolves VERSION through text() and lifecycle through
+        # load(), rather than through path globals. Intercept only those two
+        # historical authority reads and delegate all source reads unchanged.
         if legacy_filename == "validate_glaze_v1_2_living_glaze_legacy.py":
             original_text = module.text
+            original_load = module.load
 
             def compatibility_text(path: str) -> str:
                 if path == "VERSION":
                     return "1.1.0\n"
-                if path == "registry/lifecycle.json":
-                    return json.dumps(projected)
                 return original_text(path)
 
+            def compatibility_load(path: str):
+                if path == "registry/lifecycle.json":
+                    return copy.deepcopy(projected)
+                return original_load(path)
+
             module.text = compatibility_text
+            module.load = compatibility_load
 
         result = module.main()
 
