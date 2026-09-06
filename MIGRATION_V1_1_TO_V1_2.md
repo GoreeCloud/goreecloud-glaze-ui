@@ -105,7 +105,7 @@ Candidate authority is split intentionally:
 - `contracts/v1.2/system-shell-materials.candidate.json` — exact five-region System Shell mapping.
 - `contracts/v1.2/migration.candidate.json` — migration lifecycle, stages, gates, rollback, and consumer rollout rules.
 
-The optical foundation initially **extends** the existing Frosted Neutral layer. Before RC, legacy V1.1 teal/amber Aura compatibility fields must be retired or explicitly mapped to Frost/Ice behavior.
+The optical foundation continues to **extend** the Frosted Neutral substrate, but V1.2 no longer exposes teal/amber Aura alpha tokens. Frost/Ice/Crystal/Content is the V1.2 Aura authority. Inherited V1.1 `--glz11-aura-teal-max` and `--glz11-aura-amber-max` CSS variables remain only as `transparent` compatibility neutralizers in the V1.2 compatibility layers until a future Stable source set can remove the inherited declarations; they are not V1.2 atmospheric values.
 
 ### 4.2 Web implementation
 
@@ -176,7 +176,7 @@ Pass when all 32 components and all five System Shell regions retain exact inher
 
 ### M3 → G3 — Rendered Optical Acceptance
 
-Pass when actual Candidate implementation consumes the optical foundation and source-pinned Light, Dark, and Deep Dark evidence demonstrates the intended Frosted Optical identity. Legacy teal/amber Aura compatibility must be retired or mapped before this gate can lead to RC.
+Pass when actual Candidate implementation consumes the optical foundation and source-pinned Light, Dark, and Deep Dark evidence demonstrates the intended Frosted Optical identity. The V1.2 token-level legacy teal/amber Aura compatibility requirement is satisfied; bounded inherited V1.1 Aura variables remain transparent-only compatibility neutralizers and may not carry chromatic values.
 
 ### M4 → G4 — Accessibility, Performance, and Resilience
 
@@ -233,7 +233,7 @@ No data migration is expected from a presentation-system upgrade, but product-sp
 
 ## 9. Validation
 
-`python scripts/validate_glaze_v1_2_migration.py` is a fail-closed control-plane validator. It verifies at minimum:
+`python scripts/validate_glaze_v1_2_migration.py` is a fail-closed control-plane validator. `python scripts/validate_glaze_v1_2_legacy_aura_retirement.py` is the focused fail-closed token-retirement companion. Together they verify at minimum:
 
 - V1.1 Stable authority has not moved.
 - V1.2 remains Candidate and non-consumer-eligible.
@@ -243,10 +243,12 @@ No data migration is expected from a presentation-system upgrade, but product-sp
 - Frost/Ice/Crystal/Content Aura families are present.
 - Full/Reduced/Minimal performance profiles are present.
 - teal/purple are prohibited as default V1.2 atmosphere.
+- V1.2 Frosted Neutral atmosphere no longer contains legacy teal/amber Aura alpha maps.
+- any inherited V1.1 teal/amber Aura variable assignment in a V1.2 Candidate CSS layer is `transparent` only.
 - migration stages and gates remain complete and ordered.
-- CI continues to execute the migration validator.
+- CI continues to execute both migration and legacy Aura retirement validators.
 
-This validator supplements, rather than replaces, rendered, accessibility, runtime, native, performance, and human optical review.
+These validators supplement, rather than replace, rendered, accessibility, runtime, native, performance, and human optical review.
 
 ## 10. Promotion checklist
 
@@ -254,7 +256,7 @@ V1.2 must not be promoted Stable until all applicable items are verified on the 
 
 - [ ] Candidate contract and token set complete.
 - [ ] Frost White/Ice Blue optical implementation complete.
-- [ ] Legacy V1.1 atmosphere compatibility retired or governed.
+- [x] Legacy V1.1 atmosphere compatibility retired or governed.
 - [ ] 32-component contract and implementation coverage complete.
 - [ ] System Shell contract and implementation coverage complete.
 - [ ] Light, Dark, and Deep Dark reference scenes accepted.

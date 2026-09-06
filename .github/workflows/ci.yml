@@ -22,6 +22,8 @@ jobs:
         run: python scripts/validate_glaze_v1_2_candidate.py
       - name: Validate V1.2 implementation and migration control plane
         run: python scripts/validate_glaze_v1_2_migration.py
+      - name: Validate V1.2 legacy Aura token retirement
+        run: python scripts/validate_glaze_v1_2_legacy_aura_retirement.py
       - name: Validate rendered V1.2 Frosted Optical foundation
         run: python scripts/validate_glaze_v1_2_optical_rendered.py
       - name: Validate rendered V1.2 Frosted Optical chrome

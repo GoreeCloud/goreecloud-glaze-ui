@@ -38,13 +38,14 @@
     "androidNativeReference": "bounded-candidate-evidence",
     "linuxGtkNativeReference": "bounded-candidate-evidence",
     "opticalFoundationContract": "introduced-by-this-change-set",
-    "migrationControlPlane": "introduced-by-this-change-set"
+    "migrationControlPlane": "introduced-by-this-change-set",
+    "legacyAuraTokenRetirement": "implemented-candidate"
   },
   "knownAlignmentDebt": [
     {
       "id": "legacy-v11-aura-fields",
-      "state": "open",
-      "description": "The existing Frosted Neutral Candidate token/CSS layer retains V1.1 teal/amber aura compatibility fields. The proposed V1.2 optical architecture requires Frost/Ice aura families and Ice Blue as the primary atmosphere before RC."
+      "state": "resolved-candidate",
+      "description": "The V1.2 Frosted Neutral token surface no longer carries teal/amber Aura alpha values. Frost/Ice/Crystal/Content Aura roles are authoritative in tokens/glaze-v1.2-optical-foundation.candidate.json. Inherited V1.1 --glz11-aura-teal-max and --glz11-aura-amber-max CSS variables remain only as transparent compatibility neutralizers until a future Stable source set can remove the inherited declarations."
     },
     {
       "id": "full-optical-rendering",
