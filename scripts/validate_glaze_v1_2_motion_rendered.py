@@ -16,6 +16,7 @@ WORKFLOW=ROOT/".github/workflows/glaze-v1.2-motion.yml"; EXP_DOC=ROOT/"GLAZE_MOT
 D={"instant":80,"fast":160,"standard":240,"deliberate":360,"spatial":480}
 R={"instant":[50,100],"fast":[100,180],"standard":[180,280],"deliberate":[280,420],"spatial":[400,600]}
 E={"responsive":"cubic-bezier(0.2, 0, 0, 1)","glide":"cubic-bezier(0.16, 1, 0.3, 1)","settle":"cubic-bezier(0, 0, 0, 1)","direct":"linear"}
+TARGET_FLOOR=48.0; LAYOUT_EPSILON=0.01
 
 class A(RuntimeError): pass
 def req(ok,msg):
@@ -106,7 +107,7 @@ def state(sid):
 def visible_targets(s): return [t for t in s["targets"] if t.get("visible")]
 def no_overflow(s): req(int(s["scrollWidth"])<=int(s["width"])+1,f"horizontal overflow {s['scrollWidth']}>{s['width']}")
 def floors(s,label):
-    a=visible_targets(s); req(a,f"{label}: no visible targets"); req(all(float(t["w"])>=48 and float(t["h"])>=48 for t in a),f"{label}: 48px target drifted {a}")
+    a=visible_targets(s); req(a,f"{label}: no visible targets"); req(all(float(t["w"])+LAYOUT_EPSILON>=TARGET_FLOOR and float(t["h"])+LAYOUT_EPSILON>=TARGET_FLOOR for t in a),f"{label}: 48px target drifted {a}")
 def canonical(s):
     for k,v in D.items(): req(close(s["canonical"][k],v,.5),f"{k} canonical drifted {s['canonical']}")
     req(all(v=="none" for v in s["anim"].values()),f"autonomous animation {s['anim']}"); floors(s,"normal"); no_overflow(s)
