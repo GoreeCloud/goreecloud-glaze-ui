@@ -22,6 +22,7 @@ ALLOWED_PHASES = {
     "phase-9-system-shell-and-control-center",
     "phase-10-contextual-intelligence",
     "phase-11-motion-and-continuity",
+    "phase-12-accessibility-and-resilience",
 }
 ALLOWED_WORKSTREAM_STATUSES = {
     "planned",
