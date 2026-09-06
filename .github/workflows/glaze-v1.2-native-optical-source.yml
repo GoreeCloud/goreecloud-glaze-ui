@@ -1,6 +1,9 @@
 name: Glaze V1.2 Native Frosted Optical Source Contract
 
 on:
+  push:
+    branches:
+      - feat/glaze-v1.2-migration-control-plane
   pull_request:
     paths:
       - 'contracts/v1.2/native-optical-parity.candidate.json'
@@ -20,11 +23,15 @@ permissions:
 jobs:
   source-contract:
     runs-on: ubuntu-24.04
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Check out exact Candidate revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+      - name: Verify exact Candidate revision
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
       - name: Preserve Stable and Candidate authority
         run: |
           python3 scripts/validate_glaze_v1.py
