@@ -14,19 +14,36 @@
     "material.canvas": {"implementation": "stableCanvas", "meaning": "calm base content canvas"},
     "material.surface": {"implementation": "stableSurface", "meaning": "stable local content surface"},
     "material.raised": {"implementation": "stableRaised", "meaning": "raised solid/local surface"},
-    "material.softGlaze": {"implementation": "stableGlazeFamily", "meaning": "thin, light, subtly diffused interactive material"},
-    "material.glaze": {"implementation": "stableGlazeFamily", "meaning": "standard interactive Glaze material"},
-    "material.deepGlaze": {"implementation": "stableGlazeFamily", "meaning": "optically thicker interactive parent material"},
-    "material.liveGlaze": {"implementation": "liveGlaze2", "meaning": "bounded environmentally and interaction-responsive signature material"}
+    "material.softGlaze": {"implementation": "softGlaze2", "meaning": "thin, light, subtly diffused interactive material"},
+    "material.glaze": {"implementation": "glaze2", "meaning": "standard interactive Glaze material"},
+    "material.deepGlaze": {"implementation": "deepGlaze2", "meaning": "optically thicker interactive parent material"},
+    "material.liveGlaze": {"implementation": "liveGlaze2", "meaning": "bounded environmentally and interaction-responsive signature material"},
+    "material.response.interaction": {"implementation": "interactionResponse", "meaning": "bounded physical response to supported interaction state"},
+    "material.specular": {"implementation": "adaptiveSpecular", "meaning": "geometry-aware optical highlight subordinate to focus and accessibility"},
+    "material.transmission.environment": {"implementation": "environmentalTransmission", "meaning": "bounded scene color visible through otherwise neutral material"},
+    "material.performanceTier": {"implementation": "performanceGovernor", "meaning": "local degradation tier selected without changing semantic correctness"}
   },
   "implementationValues": {
     "stableCanvas": {"source": "tokens/glaze-v1.2-frosted-neutral.candidate.json", "pointer": "/materials", "mode": "inherited-role-resolution"},
     "stableSurface": {"source": "tokens/glaze-v1.2-frosted-neutral.candidate.json", "pointer": "/materials", "mode": "inherited-role-resolution"},
     "stableRaised": {"source": "tokens/glaze-v1.2-frosted-neutral.candidate.json", "pointer": "/materials", "mode": "inherited-role-resolution"},
-    "stableGlazeFamily": {"source": "tokens/glaze-v1.2-frosted-neutral.candidate.json", "pointer": "/materials", "mode": "inherited-role-resolution"},
     "stableBlur": {"source": "tokens/glaze-v1.2-frosted-neutral.candidate.json", "pointer": "/effects/blur", "mode": "inherited-alias"},
     "stableFrost": {"source": "tokens/glaze-v1.2-optical-foundation.candidate.json", "pointer": "/frostLevels", "mode": "inherited-alias"},
-    "liveGlaze2": {"status": "architecture-established-runtime-unestablished", "ownerWorkstream": "living-material-2"}
+    "softGlaze2": {"source": "contracts/v1.3/living-material-2.candidate.json", "pointer": "/materialThickness/soft-glaze", "mode": "v1.3-semantic-material-role"},
+    "glaze2": {"source": "contracts/v1.3/living-material-2.candidate.json", "pointer": "/materialThickness/glaze", "mode": "v1.3-semantic-material-role"},
+    "deepGlaze2": {"source": "contracts/v1.3/living-material-2.candidate.json", "pointer": "/materialThickness/deep-glaze", "mode": "v1.3-semantic-material-role"},
+    "liveGlaze2": {"source": "contracts/v1.3/living-material-2.candidate.json", "pointer": "/materialThickness/live-glaze", "mode": "v1.3-semantic-material-role"},
+    "interactionResponse": {"source": "contracts/v1.3/living-material-2.candidate.json", "pointer": "/physicalInteractionResponse", "mode": "v1.3-runtime-contract"},
+    "adaptiveSpecular": {"source": "contracts/v1.3/living-material-2.candidate.json", "pointer": "/adaptiveSpecularLighting", "mode": "v1.3-runtime-contract"},
+    "environmentalTransmission": {"source": "contracts/v1.3/living-material-2.candidate.json", "pointer": "/environmentalTransmission", "mode": "v1.3-runtime-contract"},
+    "performanceGovernor": {"source": "contracts/v1.3/living-material-2.candidate.json", "pointer": "/performanceGovernor", "mode": "v1.3-runtime-contract"}
+  },
+  "performanceTiers": {
+    "0": "solid",
+    "1": "static-glaze",
+    "2": "responsive-glaze",
+    "3": "living-glaze",
+    "degradationOrder": [3, 2, 1, 0]
   },
   "rules": {
     "neutralGlassRemainsFoundation": true,
@@ -36,13 +53,17 @@
     "accessibilityMayForceSolidFallback": true,
     "materialEffectsDegradeBeforeContentCorrectness": true,
     "largerConsequentialContainersRequireOpticalStability": true,
+    "materialColorDistinctFromTransmittedColor": true,
+    "performanceGovernorUsesLocalSignalsOnly": true,
+    "performanceGovernorRequiresTelemetry": false,
     "semanticTokensMayContainRawBlurOrOpacityValues": false
   },
+  "runtimeAuthority": "js/glaze-v1.3-living-material-2.candidate.mjs",
   "notEstablished": [
-    "living-material-2-environmental-response",
-    "interaction-velocity-response",
-    "dynamic-thickness-calibration",
-    "specular-motion-runtime",
-    "v1.3-material-performance-budgets"
+    "production-v1.3-frame-time-thresholds",
+    "production-v1.3-gpu-compositor-budgets",
+    "production-v1.3-power-thermal-budgets",
+    "physical-device-material-qualification",
+    "native-material-parity"
   ]
 }
