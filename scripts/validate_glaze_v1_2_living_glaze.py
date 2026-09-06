@@ -94,6 +94,21 @@ def main() -> int:
     css = text("css/glaze-v1.2-living-glaze.candidate.css")
     for marker in ('data-glaze-clarity="clear"','data-glaze-clarity="dense"','data-material-state="pressed"','data-material-state="dragged"','data-glaze-navigation-capsule','prefers-reduced-motion','forced-colors','data-glaze-tier="0"','--glaze-v12-living-material-mix: 82%','--glaze-v12-living-material-mix: 92%','--glaze-v12-living-material-mix: 98%'):
         require(marker in css, f"CSS marker missing: {marker}")
+
+    accessibility_css = text("css/glaze-v1.2-accessibility.candidate.css")
+    for marker in (
+        'data-glz-motion="reduced"',
+        'data-glz-transparency="reduced"',
+        'data-glz-contrast="increased"',
+        'data-glz-text-scale="200"',
+        'data-glz-touch-assistance="true"',
+        '[data-glaze-living]',
+        '[data-glaze-navigation-capsule] button',
+        'forced-colors: active',
+        'var(--glz12-shell-target-assisted)',
+    ):
+        require(marker in accessibility_css, f"final accessibility binding missing for Living Frosted: {marker}")
+
     runtime = text("js/glaze-v1.2-living-glaze.candidate.mjs")
     for export in ("setGlazeClarity", "setLivingGlazeState", "setBackdropComplexity", "setGlazeComplexityTier", "connectMaterialTransformation"):
         require(f"export function {export}" in runtime, f"runtime export missing: {export}")
@@ -104,8 +119,9 @@ def main() -> int:
         require(marker in reference, f"reference marker missing: {marker}")
     entry = text("css/glaze-v1.2.0-candidate.css")
     require('glaze-v1.2-living-glaze.candidate.css' in entry, "aggregate Candidate CSS does not import Living Glaze")
+    require(entry.strip().endswith('@import url("./glaze-v1.2-accessibility.candidate.css");'), "final accessibility layer lost cascade authority")
 
-    print("GLAZE UI V1.2 Living Frosted Candidate contracts validated; Stable 1.1.0 authority preserved; no RC, Stable, human, native, or consumer acceptance implied.")
+    print("GLAZE UI V1.2 Living Frosted Candidate contracts and final accessibility bindings validated; Stable 1.1.0 authority preserved; no RC, Stable, human, native, or consumer acceptance implied.")
     return 0
 
 
