@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.living-glaze.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "theme": "Living Frosted",
+  "purpose": "Extend Frosted Neutral into a bounded interaction, ergonomic, continuity, adaptation, and performance contract without changing lifecycle authority.",
+  "governingRules": {
+    "material": "neutral-glass-material-color-accent",
+    "interaction": "glass-responds-to-interaction",
+    "ergonomic": "primary-actions-move-toward-user",
+    "continuity": "context-transforms-before-it-disappears"
+  },
+  "opticalResponse": {
+    "inputs": ["producer-or-renderer-supplied-simple", "producer-or-renderer-supplied-complex", "unknown"],
+    "privacyBoundary": "no-unrestricted-image-analysis-no-source-imagery-transmission",
+    "simple": ["clearer-material", "softer-shadow", "lower-edge-emphasis"],
+    "complex": ["stronger-diffusion", "higher-opacity", "stronger-edge-separation", "lower-transmitted-saturation"],
+    "unknown": "deterministic-balanced-token"
+  },
+  "perceivedThickness": {
+    "compact": "thin",
+    "standard": "balanced",
+    "expanded": "dense",
+    "signals": ["opacity", "diffusion", "edge", "shadow", "specular", "depth"]
+  },
+  "interactionStates": ["rest", "hover", "focus", "pressed", "dragged", "selected", "expanded", "loading", "disabled"],
+  "concentricGeometry": {
+    "required": true,
+    "rule": "nested-edge-adjacent-radius-follows-parent-curve-center",
+    "appliesTo": ["dialogs", "floating-panels", "sheets", "navigation-capsules", "quick-controls", "search", "media-controls", "windows", "sidebars", "popovers"]
+  },
+  "clarityProfiles": {
+    "clear": "greater-translucency-with-required-contrast",
+    "balanced": "default",
+    "dense": "higher-opacity-diffusion-and-edge-separation",
+    "accessibilityPrecedence": ["forced-colors", "reduced-transparency", "increased-contrast"]
+  },
+  "ergonomics": {
+    "compactZones": ["information", "transition", "primary-interaction"],
+    "primaryInteractionPriorities": ["primary-navigation", "primary-action", "frequent-context-actions", "safe-confirmation", "search-initiation", "media-controls", "contextual-toolbar"]
+  },
+  "adaptiveNavigation": {
+    "semanticDestinationsRemainStable": true,
+    "compact": "navigation-capsule",
+    "standard": "bottom-navigation-plus-context-toolbar",
+    "expanded": "navigation-rail-or-adaptive-sidebar",
+    "workspace": "persistent-sidebar-or-rail-plus-toolbar",
+    "farView": "directional-focus-navigation"
+  },
+  "continuity": {
+    "preserveWherePermitted": ["scroll", "selection", "filters", "draft", "focus", "input", "media", "unsaved-work"],
+    "connectedTransformations": ["search-entry-to-search-panel", "quick-control-to-detail", "mini-player-to-player", "notification-to-detail", "toolbar-to-sheet", "thumbnail-to-detail"],
+    "motionRequiredForCorrectness": false
+  },
+  "controlCenter": {
+    "parentMaterial": "deep-glaze",
+    "nestedBackdropBlur": false,
+    "configurable": true,
+    "governedSizes": ["compact", "wide", "tall", "expanded"],
+    "editingRequirements": ["visible-reorder-affordance", "accessible-reorder-alternative", "insertion-location", "reset", "semantic-announcement", "cancel-without-corruption"]
+  },
+  "foldable": {
+    "foldedIsCompleteEnvironment": true,
+    "unfoldAddsInformationNotOnlyScale": true,
+    "hingeAware": true,
+    "continuityRequired": true
+  },
+  "multiPane": {
+    "patterns": ["single-pane", "two-pane", "three-pane", "split-window", "floating-panel", "snapped-window", "inspector", "detachable-secondary-view"],
+    "moreSpaceDoesNotAuthorizeClutter": true
+  },
+  "componentExperience": {
+    "requiredDimensions": ["material-role", "resting-geometry", "interactive-geometry", "hover", "focus", "press", "selected", "expansion", "motion-role", "reduced-motion", "reduced-transparency", "increased-contrast", "forced-colors", "compact-layout", "expanded-layout", "touch-target", "pointer", "keyboard", "semantic-accent"]
+  },
+  "stableCompatibleMotion": {
+    "experimentalGlazeMotionRequired": false,
+    "properties": ["purposeful", "interruptible", "reversible-where-permitted", "spatially-coherent", "input-aware", "bounded", "accessibility-aware", "performance-aware"],
+    "reducedMotion": ["remove-decorative-travel", "remove-parallax", "remove-autonomous-motion", "remove-nonessential-bounce", "preserve-direct-manipulation", "preserve-semantic-state", "preserve-focus", "preserve-context"]
+  },
+  "performanceTiers": {
+    "0": "solid",
+    "1": "static-glaze",
+    "2": "responsive-glaze",
+    "3": "living-glaze",
+    "degradationOrder": [3, 2, 1, 0],
+    "neverSacrifice": ["text", "target-size", "focus", "state", "semantic-meaning", "task-completion"]
+  },
+  "implementation": {
+    "materialTokens": "tokens/glaze-v1.2-living-material.candidate.json",
+    "ergonomicTokens": "tokens/glaze-v1.2-ergonomics.candidate.json",
+    "webLayer": "css/glaze-v1.2-living-glaze.candidate.css",
+    "runtime": "js/glaze-v1.2-living-glaze.candidate.mjs",
+    "reference": "reference/v1.2/living-glaze.html",
+    "validator": "scripts/validate_glaze_v1_2_living_glaze.py",
+    "workflow": ".github/workflows/glaze-v1.2-living-glaze.yml"
+  },
+  "evidenceBoundary": {
+    "implemented": ["candidate-contract", "candidate-tokens", "bounded-web-layer", "deterministic-runtime-api", "reference-lab", "source-validator"],
+    "notEstablished": ["human-optical-acceptance", "physical-device-acceptance", "oem-parity", "assistive-technology-acceptance", "production-power-thermal-acceptance", "release-candidate", "stable", "consumer-conformance"]
+  }
+}

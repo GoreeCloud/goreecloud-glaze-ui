@@ -1,0 +1,52 @@
+name: GLAZE UI V1.2 Stable
+
+on:
+  pull_request:
+    paths:
+      - "VERSION"
+      - "registry/lifecycle.json"
+      - "GLAZE_UI_V1_2.md"
+      - "css/glaze-v1.2.0.css"
+      - "js/glaze-v1.2.0.mjs"
+      - "acceptance/v1.2-stable.md"
+      - "acceptance/v1.3-deferred-qualification.md"
+      - "contracts/v1.3/**"
+      - "tokens/glaze-v1.json"
+      - "consumers/**"
+      - "CONSUMERS.md"
+      - "scripts/validate_glaze_v1.py"
+      - "scripts/validate_glaze_v1_2_stable.py"
+  push:
+    branches: [main]
+    paths:
+      - "VERSION"
+      - "registry/lifecycle.json"
+      - "GLAZE_UI_V1_2.md"
+      - "css/glaze-v1.2.0.css"
+      - "js/glaze-v1.2.0.mjs"
+      - "acceptance/v1.2-stable.md"
+      - "acceptance/v1.3-deferred-qualification.md"
+      - "contracts/v1.3/**"
+      - "tokens/glaze-v1.json"
+      - "consumers/**"
+      - "CONSUMERS.md"
+      - "scripts/validate_glaze_v1.py"
+      - "scripts/validate_glaze_v1_2_stable.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  stable-source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - run: python scripts/validate_glaze_v1.py
+      - run: |
+          test "$(cat VERSION)" = "1.2.0"
+          echo "V1.2 Stable is a bounded design-system release; V1.3 deferred qualifications are not represented as passed."

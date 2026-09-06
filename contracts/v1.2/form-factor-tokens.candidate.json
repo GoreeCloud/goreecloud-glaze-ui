@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.form-factor-token-authority.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-form-factor-token-authority",
+  "purpose": "Establish a single Candidate owner for form-factor and capability adaptation semantics without turning viewport width into device identity or claiming complete platform/form-factor acceptance.",
+  "authority": {
+    "companionSpecification": "Glaze UI V1.2 — Responsive and Form-Factor Adaptation.docx",
+    "spatialFoundation": "contracts/v1.2/spatial-foundation.candidate.json",
+    "coreTokenAuthority": "contracts/v1.2/core-tokens.candidate.json",
+    "principle": "Adapt the experience, not merely the dimensions."
+  },
+  "compositionClasses": [
+    "compact",
+    "medium",
+    "expanded",
+    "largeFarView",
+    "wearable",
+    "spatial"
+  ],
+  "capabilityInputs": [
+    "width",
+    "height",
+    "aspect-ratio",
+    "orientation",
+    "viewing-distance",
+    "touch",
+    "pointer",
+    "keyboard",
+    "directional-input",
+    "fold-posture",
+    "safe-areas",
+    "accessibility-preferences",
+    "density-preference",
+    "performance-capability"
+  ],
+  "rules": {
+    "widthIsNotDeviceIdentity": true,
+    "deviceBrandBreakpointsProhibitedAsSemanticAuthority": true,
+    "platformAdapterSelectsCapabilityClass": true,
+    "semanticTaskPreservedAcrossComposition": true,
+    "currentLocationPreserved": true,
+    "importantStatePreserved": true,
+    "userDataPreserved": true,
+    "mobileIsFirstClass": true,
+    "safeAreasAreFunctionalConstraints": true,
+    "keyboardOcclusionIsFunctionalConstraint": true,
+    "formFactorTokenPresenceDoesNotEstablishPlatformParity": true,
+    "consumerClaimBlocked": true
+  },
+  "tokenOwnership": {
+    "owner": "tokens/glaze-v1.2-form-factor.candidate.json",
+    "pointer": "/compositionStates",
+    "spatialNumericAuthority": "tokens/glaze-v1.2-spatial-foundation.candidate.json",
+    "duplicatesSpatialGutterValues": false,
+    "duplicatesSpatialDensityValues": false
+  },
+  "implementation": {
+    "tokens": "tokens/glaze-v1.2-form-factor.candidate.json",
+    "coreManifest": "tokens/glaze-v1.2-core.candidate.json",
+    "coreContract": "contracts/v1.2/core-tokens.candidate.json",
+    "validator": "scripts/validate_glaze_v1_2_form_factor_tokens.py",
+    "workflow": ".github/workflows/glaze-v1.2-form-factor-tokens.yml",
+    "documentation": "tokens/README.md"
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "single-v1.2-form-factor-token-owner",
+      "compact-medium-expanded-large-far-view-wearable-spatial-semantic-classes",
+      "capability-driven-selection-contract",
+      "safe-area-and-keyboard-occlusion-policy",
+      "input-modality-semantic-contract",
+      "spatial-token-alias-reuse-without-gutter-duplication",
+      "exact-head-source-validation"
+    ],
+    "notEstablished": [
+      "complete-component-adaptation-contract-library",
+      "complete-mobile-table-and-dashboard-transformations",
+      "safe-area-device-matrix",
+      "foldable-posture-runtime-acceptance",
+      "tv-far-view-runtime-acceptance",
+      "wearable-runtime-acceptance",
+      "spatial-runtime-acceptance",
+      "native-form-factor-parity",
+      "human-form-factor-acceptance",
+      "production-performance-acceptance",
+      "rc",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

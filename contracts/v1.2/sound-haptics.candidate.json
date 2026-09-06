@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.sound-haptics.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-feedback-policy-evidence",
+  "purpose": "Define deterministic V1.2 Candidate semantic sound/haptic token routing and suppression policy without claiming released audio assets, physical haptic behavior, platform capability, or product state.",
+  "principles": {
+    "defining": "Sound and haptics confirm meaningful interaction, not every interaction.",
+    "silenceIsDefault": true,
+    "visualAndSemanticPresentationRemainComplete": true,
+    "soundAndHapticsAreComplementary": true,
+    "essentialStateMayDependExclusivelyOnSoundOrHaptics": false,
+    "priority": ["semantic-state", "visual-feedback", "motion", "haptics", "sound"]
+  },
+  "hapticTokens": [
+    "haptic-tick",
+    "haptic-selection",
+    "haptic-snap",
+    "haptic-commit",
+    "haptic-warning",
+    "haptic-error"
+  ],
+  "soundTokens": [
+    "sound-confirm",
+    "sound-complete",
+    "sound-notify",
+    "sound-warning",
+    "sound-error",
+    "sound-connect",
+    "sound-disconnect"
+  ],
+  "routineSilentEvents": [
+    "hover",
+    "ordinary-navigation",
+    "routine-button",
+    "routine-scroll",
+    "card-expansion",
+    "metric-update",
+    "passive-ai-generation",
+    "routine-autosave"
+  ],
+  "policyInputs": [
+    "event",
+    "semanticState",
+    "hapticsEnabled",
+    "soundEnabled",
+    "systemHapticsAllowed",
+    "systemSoundAllowed",
+    "hapticCapability",
+    "silentMode",
+    "doNotDisturb",
+    "screenReaderActive",
+    "sensoryReduction",
+    "requestedNotification",
+    "requestSound",
+    "foregroundSignificant",
+    "authoritativeVerified",
+    "repeatCount"
+  ],
+  "authorityBoundaries": {
+    "policyMayCreateProductState": false,
+    "policyMayUpgradeSecurityPrivacyIdentityRecoveryOrHealthTruth": false,
+    "authenticationStateOwnedByIdentity": true,
+    "securityStateOwnedBySecurityProducer": true,
+    "recoverySuccessRequiresProducerVerification": true,
+    "semanticStateMustPassThroughUnchanged": true,
+    "feedbackTokenIsEvidenceOfOutcome": false
+  },
+  "preferenceRules": {
+    "soundOffPreservesFunctionality": true,
+    "hapticsOffPreservesFunctionality": true,
+    "respectSilentMode": true,
+    "respectDoNotDisturb": true,
+    "respectSystemHapticPreference": true,
+    "unsupportedHapticsMapToNoOp": true,
+    "screenReaderAudioGetsPriority": true,
+    "sensoryReductionSuppressesNonessentialFeedback": true
+  },
+  "rateAndCoalescing": {
+    "oneEventNormallyOneResponseMaximum": true,
+    "rapidRepeatedEventsRequireRestraint": true,
+    "bulkCompletionUsesAggregateCue": true,
+    "continuousProgressSonification": false,
+    "routineMetricSound": false
+  },
+  "platformMapping": {
+    "nativeHapticPrimitivesPreferred": true,
+    "nativeNotificationBehaviorPreferred": true,
+    "approvedGoreeCloudSoundAssetsMayBeUsedWhenGoverned": true,
+    "unsupportedCapability": "no-op",
+    "implementedInThisCandidate": false
+  },
+  "candidateExecutionBoundary": {
+    "releasedAudioAssets": false,
+    "audioPlayback": false,
+    "navigatorVibrateCalls": false,
+    "physicalHapticExecution": false,
+    "platformCapabilityDetection": false,
+    "deviceSpecificMapping": false,
+    "policyPlanningOnly": true
+  },
+  "referenceAcceptance": {
+    "routineControlsSilent": true,
+    "selectionMayPlanHapticWhenCapabilityAndPreferencesAllow": true,
+    "completionSoundRequiresUserRequestedNotification": true,
+    "silentModeSuppressesSound": true,
+    "unsupportedHapticsNoOp": true,
+    "screenReaderActiveSuppressesCustomSoundByDefault": true,
+    "sensoryReductionSuppressesNonessentialSelectionFeedback": true,
+    "unverifiedRecoveryCannotPlanSuccessFeedback": true,
+    "soundDisabledPreservesSemanticState": true,
+    "hapticsDisabledPreservesSemanticState": true,
+    "compactViewportPx": 320,
+    "textScalePercent": 200,
+    "horizontalPageOverflowProhibited": true,
+    "minimumControlTargetPx": 48
+  },
+  "implementation": {
+    "policyModule": "js/glaze-v1.2-sound-haptics.candidate.mjs",
+    "reference": "reference/v1.2/sound-haptics.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_sound_haptics_rendered.py",
+    "workflow": ".github/workflows/glaze-v1.2-sound-haptics.yml"
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "candidate-semantic-feedback-tokens",
+      "deterministic-policy-routing",
+      "default-silence-policy",
+      "user-system-accessibility-suppression",
+      "unsupported-haptics-no-op",
+      "recovery-verification-success-guard",
+      "bulk-repeat-coalescing-intent",
+      "browser-reference-acceptance"
+    ],
+    "notEstablished": [
+      "released-sound-assets",
+      "native-haptic-mappings",
+      "physical-haptic-quality",
+      "sound-device-quality",
+      "platform-capability-evidence",
+      "screen-reader-audio-device-acceptance",
+      "physical-device-acceptance",
+      "human-sensory-review",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

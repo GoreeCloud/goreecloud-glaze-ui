@@ -1,0 +1,61 @@
+name: Glaze V1.2 Release Promotion Protocol Candidate
+
+on:
+  push:
+    paths:
+      - "contracts/v1.2/release-promotion.candidate.json"
+      - "acceptance/v1.2-rc-acceptance.template.json"
+      - "acceptance/v1.2-stable-promotion.template.json"
+      - "scripts/validate_glaze_v1_2_release_promotion.py"
+      - ".github/workflows/glaze-v1.2-release-promotion-protocol.yml"
+  pull_request:
+    paths:
+      - "contracts/v1.2/release-promotion.candidate.json"
+      - "acceptance/v1.2-rc-acceptance.template.json"
+      - "acceptance/v1.2-stable-promotion.template.json"
+      - "scripts/validate_glaze_v1_2_release_promotion.py"
+      - ".github/workflows/glaze-v1.2-release-promotion-protocol.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: glaze-v1-2-release-promotion-protocol-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fail-closed-protocol:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact Candidate revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Preserve V1.1 Stable and V1.2 Candidate authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          test "$(cat VERSION)" = "1.1.0"
+          python scripts/validate_glaze_v1.py
+          python scripts/validate_glaze_v1_2_candidate.py
+
+      - name: Validate G5 and G6 promotion protocol
+        run: |
+          python -m py_compile scripts/validate_glaze_v1_2_release_promotion.py
+          python scripts/validate_glaze_v1_2_release_promotion.py
+          python scripts/validate_glaze_v1_2_release_promotion.py --self-test
+
+      - name: Preserve lifecycle evidence boundary
+        run: |
+          echo "Templates, validators, synthetic self-tests, CI, mergeability, tags, and releases do not establish G5/G6 approval by themselves."
+          echo "V1.2 remains Candidate until separate governed exact-revision acceptance and lifecycle actions occur."

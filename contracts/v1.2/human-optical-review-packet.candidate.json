@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "id": "glaze-v1.2-human-optical-review-packet-candidate",
+  "product": "GLAZE UI",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "stableBaseline": "1.1.0",
+  "consumerEligible": false,
+  "status": "machine-handoff-ready-human-review-pending",
+  "purpose": "Bind the machine-generated G3 visual evidence classes for one exact Candidate revision into a review handoff without establishing human optical acceptance.",
+  "exactHeadBinding": {
+    "source": "git rev-parse HEAD",
+    "sameRevisionRequiredAcrossArtifacts": true,
+    "staticRevisionInContractProhibited": true
+  },
+  "evidenceClasses": [
+    {
+      "id": "provisional-visual-regression",
+      "workflow": "Glaze V1.2 Provisional Visual Regression Candidate",
+      "workflowPath": ".github/workflows/glaze-v1.2-visual-regression.yml",
+      "artifactNamePrefix": "glaze-v1.2-provisional-visual-regression-",
+      "kind": "paired-rendered-screenshots-and-zero-drift-evidence",
+      "required": true
+    },
+    {
+      "id": "application-icon-ecosystem-wall",
+      "workflow": "Glaze V1.2 Application Icon Ecosystem Wall Candidate",
+      "workflowPath": ".github/workflows/glaze-v1.2-application-icon-ecosystem-wall.yml",
+      "artifactNamePrefix": "glaze-v1.2-application-icon-ecosystem-wall-",
+      "kind": "canonical-icon-source-review-bundle",
+      "required": true
+    },
+    {
+      "id": "reference-scene-index",
+      "workflow": "Glaze V1.2 Reference Scene Index Candidate",
+      "workflowPath": ".github/workflows/glaze-v1.2-reference-scenes.yml",
+      "artifactNamePrefix": "glaze-v1.2-reference-scenes-",
+      "kind": "bounded-reference-scene-source-review-bundle",
+      "required": true
+    },
+    {
+      "id": "living-frosted",
+      "workflow": "Glaze V1.2 Living Glaze Candidate",
+      "workflowPath": ".github/workflows/glaze-v1.2-living-glaze.yml",
+      "artifactNamePrefix": "glaze-v1.2-living-glaze-",
+      "kind": "living-material-computed-optics-and-responsive-screenshots",
+      "required": true
+    },
+    {
+      "id": "personalization-appearance",
+      "workflow": "Glaze V1.2 Personalization and Appearance Candidate",
+      "workflowPath": ".github/workflows/glaze-v1.2-personalization-appearance.yml",
+      "artifactNamePrefix": "glaze-v1.2-personalization-appearance-",
+      "kind": "appearance-personalization-wallpaper-atmosphere-and-adapter-screenshots",
+      "required": true
+    },
+    {
+      "id": "exact-head-readiness",
+      "workflow": "Glaze V1.2 Exact-Head Readiness Candidate",
+      "workflowPath": ".github/workflows/glaze-v1.2-exact-head-readiness.yml",
+      "artifactNamePrefix": "glaze-v1.2-exact-head-readiness-",
+      "kind": "fail-closed-readiness-and-review-manifest",
+      "required": true
+    }
+  ],
+  "reviewDimensions": [
+    "light-dark-and-deep-dark-optical-consistency",
+    "desktop-mobile-and-responsive-composition",
+    "typography-and-large-text-quality",
+    "interaction-state-and-feedback-quality",
+    "reduced-transparency-and-increased-contrast-quality",
+    "rtl-layout-quality",
+    "living-frosted-clear-balanced-dense-differentiation-and-legibility",
+    "living-glaze-interaction-restraint-focus-and-material-continuity",
+    "navigation-capsule-reachability-hierarchy-and-context-continuity",
+    "personalization-appearance-accent-atmosphere-density-and-clarity-quality",
+    "bounded-wallpaper-atmosphere-subtlety-accessibility-and-semantic-isolation",
+    "application-icon-family-consistency",
+    "application-icon-identity-collision-review",
+    "application-icon-compact-size-legibility"
+  ],
+  "humanReview": {
+    "required": true,
+    "status": "pending",
+    "finalAuthority": true,
+    "acceptedRevision": null,
+    "reviewedAt": null,
+    "reviewer": null
+  },
+  "rules": {
+    "allReviewArtifactsMustResolveToOneExactCandidateRevision": true,
+    "artifactAssemblyMayNotSetHumanReviewComplete": true,
+    "machineEvidenceMayNotSubstituteHumanOpticalAcceptance": true,
+    "livingFrostedRenderedEvidenceMayNotSubstituteHumanAcceptance": true,
+    "personalizationRenderedEvidenceMayNotSubstituteHumanAcceptance": true,
+    "humanReviewMayNotPromoteLifecycleByItself": true,
+    "stableV11AuthorityMayNotMove": true,
+    "consumerClaimBlocked": true
+  },
+  "requiredOutputClaims": {
+    "humanOpticalAccepted": false,
+    "referenceScenesComplete": false,
+    "releaseCandidateReady": false,
+    "stableReady": false,
+    "productionReady": false,
+    "consumerEligible": false,
+    "promotionEligible": false,
+    "reviewStatus": "pending"
+  },
+  "implementation": {
+    "guide": "acceptance/v1.2-human-optical-review-packet-candidate.md",
+    "validator": "scripts/validate_glaze_v1_2_human_optical_review_packet.py",
+    "manifestArtifact": "artifacts/glaze-v1.2-human-optical-review-manifest.json",
+    "orchestratingWorkflow": ".github/workflows/glaze-v1.2-exact-head-readiness.yml"
+  },
+  "evidenceBoundary": {
+    "established": [
+      "same-revision-human-review-handoff-contract",
+      "machine-verifiable-artifact-source-bindings",
+      "living-frosted-rendered-evidence-handoff",
+      "personalization-rendered-evidence-handoff",
+      "bounded-review-dimensions",
+      "pending-human-review-state"
+    ],
+    "notEstablished": [
+      "human-collision-review",
+      "human-optical-acceptance",
+      "living-frosted-human-optical-acceptance",
+      "personalization-human-visual-acceptance",
+      "human-approved-v1.2-canonical-screenshot-baseline",
+      "phase5-reference-scenes-complete",
+      "release-candidate",
+      "stable",
+      "production-acceptance",
+      "consumer-conformance"
+    ]
+  }
+}

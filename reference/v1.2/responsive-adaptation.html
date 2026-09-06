@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GLAZE UI V1.2 Candidate — Responsive and Form-Factor Adaptation</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>body{margin:0;padding:24px;background:var(--glz1-canvas);color:var(--glz1-text-primary);font-family:var(--glz12-font-sans,system-ui,sans-serif)}main{max-inline-size:1200px;margin-inline:auto}.intro{margin-block-end:24px}.intro p{max-inline-size:72ch}</style>
+</head>
+<body>
+<main id="responsive-reference" class="glz12-adapt-library">
+  <header class="intro">
+    <h1>Responsive and Form-Factor Adaptation — Candidate reference</h1>
+    <p>Reference-only capability compositions. Platform adapters remain responsible for real capability-class selection. Width is not device identity, and no scenario on this page establishes native or physical-device acceptance.</p>
+  </header>
+
+  <section class="glz12-adapt-scene" data-adaptation-scene="320-mobile" data-glz-layout-class="compact" data-input-profile="touch">
+    <h2>320 px-class mobile</h2><p>Compact single-column task flow with safe-area-aware bottom navigation and 48 px-class targets.</p>
+    <div class="glz12-adapt-shell"><div class="glz12-adapt-region glz12-adapt-main"><strong>Primary task</strong><p>Important state and action remain visible without page-level horizontal scrolling.</p></div><nav class="glz12-adapt-region glz12-adapt-nav"><button class="glz12-adapt-action" type="button">Home</button><button class="glz12-adapt-action" type="button">Files</button><button class="glz12-adapt-action" type="button">Search</button></nav></div>
+  </section>
+
+  <section class="glz12-adapt-scene" data-adaptation-scene="modern-mobile-portrait" data-glz-layout-class="compact" data-input-profile="touch">
+    <h2>Modern mobile portrait</h2><p>Mobile remains a first-class composition rather than a squeezed desktop.</p><div class="glz12-adapt-shell"><div class="glz12-adapt-region glz12-adapt-main">Workspace · primary content first</div><div class="glz12-adapt-region glz12-adapt-inspector">Context is available after the primary task.</div></div>
+  </section>
+
+  <section class="glz12-adapt-scene" data-adaptation-scene="mobile-landscape" data-glz-layout-class="medium" data-input-profile="touch">
+    <h2>Mobile landscape</h2><p>Medium composition may use a secondary region rather than stretching portrait content.</p><div class="glz12-adapt-shell"><nav class="glz12-adapt-region glz12-adapt-nav"><button class="glz12-adapt-action" type="button">Files</button><button class="glz12-adapt-action" type="button">Search</button></nav><div class="glz12-adapt-region glz12-adapt-main">Landscape workspace</div><div class="glz12-adapt-region glz12-adapt-inspector">Secondary context</div></div>
+  </section>
+
+  <section class="glz12-adapt-scene" data-adaptation-scene="tablet-portrait" data-glz-layout-class="medium" data-input-profile="touch">
+    <h2>Tablet portrait</h2><p>Touch ergonomics remain intact while a rail and secondary context become available.</p><div class="glz12-adapt-shell"><nav class="glz12-adapt-region glz12-adapt-nav">Navigation rail</nav><div class="glz12-adapt-region glz12-adapt-main">Tablet workspace</div><div class="glz12-adapt-region glz12-adapt-inspector">Inspector follows the task</div></div>
+  </section>
+
+  <section class="glz12-adapt-scene" data-adaptation-scene="tablet-landscape" data-glz-layout-class="medium" data-input-profile="touch-pointer">
+    <h2>Tablet landscape</h2><p>Pointer may supplement touch; touch completeness remains required.</p><div class="glz12-adapt-shell"><nav class="glz12-adapt-region glz12-adapt-nav">Rail</nav><div class="glz12-adapt-region glz12-adapt-main">List + detail opportunity</div><div class="glz12-adapt-region glz12-adapt-inspector">Touch-sized contextual actions</div></div>
+  </section>
+
+  <section class="glz12-adapt-scene" data-adaptation-scene="narrow-desktop" data-glz-layout-class="compact" data-input-profile="keyboard-pointer">
+    <h2>Narrow desktop</h2><p>The same Compact capability can be selected for a desktop window while preserving keyboard and pointer behavior. This demonstrates why width is not device identity.</p><div class="glz12-adapt-shell"><div class="glz12-adapt-region glz12-adapt-main">Compact desktop workspace</div><nav class="glz12-adapt-region glz12-adapt-nav">Desktop input remains available</nav></div>
+  </section>
+
+  <section id="continuity-workspace" class="glz12-adapt-scene" data-adaptation-scene="standard-desktop" data-glz-layout-class="expanded" data-input-profile="keyboard-pointer" data-glz-responsive-reference data-current-destination="files" data-selected-record="alpha" data-fixture-state="stale">
+    <h2>Standard desktop · continuity workspace</h2><p data-recomposition-status>Reference composition: expanded. Task data and selection remain unchanged.</p>
+    <div class="glz12-adapt-shell">
+      <nav class="glz12-adapt-region glz12-adapt-nav" aria-label="Fixture destinations"><button id="dest-home" class="glz12-adapt-action" type="button" data-adapt-destination="home">Home</button><button id="dest-files" class="glz12-adapt-action" type="button" data-adapt-destination="files" aria-current="page">Files</button><button id="dest-search" class="glz12-adapt-action" type="button" data-adapt-destination="search">Search</button></nav>
+      <div class="glz12-adapt-region glz12-adapt-main"><label for="continuity-note">Fixture note</label><input id="continuity-note" class="glz12-adapt-input" value="Preserve me" autocomplete="off"><p><strong>Fixture state:</strong> Stale · last update 18 min ago.</p><div><button id="record-alpha" class="glz12-adapt-action glz12-adapt-selection" type="button" data-adapt-select="alpha" aria-selected="true">Alpha</button> <button id="record-beta" class="glz12-adapt-action glz12-adapt-selection" type="button" data-adapt-select="beta" aria-selected="false">Beta</button></div></div>
+      <aside class="glz12-adapt-region glz12-adapt-inspector"><strong>Inspector</strong><p data-adapt-inspector-status>Selected fixture record: alpha.</p><p data-adapt-secondary="true">Secondary detail may move or collapse, but selected object and state do not silently change.</p></aside>
+    </div>
+    <div class="glz12-adapt-nav" aria-label="Reference recomposition controls"><button class="glz12-adapt-action" type="button" data-recompose-to="compact">Reference Compact</button><button class="glz12-adapt-action" type="button" data-recompose-to="medium">Reference Medium</button><button class="glz12-adapt-action" type="button" data-recompose-to="expanded">Reference Expanded</button><button class="glz12-adapt-action" type="button" data-recompose-to="large">Reference Large</button></div>
+  </section>
+
+  <section class="glz12-adapt-scene" data-adaptation-scene="ultra-wide-desktop" data-glz-layout-class="expanded" data-input-profile="keyboard-pointer">
+    <h2>Ultra-wide desktop</h2><p>Additional width serves multi-pane context rather than producing unbounded text lines or stretched cards.</p><div class="glz12-adapt-shell"><nav class="glz12-adapt-region glz12-adapt-nav">Navigation</nav><div class="glz12-adapt-region glz12-adapt-main">Primary workspace with bounded reading measure</div><aside class="glz12-adapt-region glz12-adapt-inspector">Persistent inspector</aside></div>
+  </section>
+
+  <section class="glz12-adapt-scene" data-adaptation-scene="folded-foldable" data-glz-layout-class="compact" data-input-profile="touch" data-fold-posture="folded">
+    <h2>Folded foldable</h2><p>The active task remains primary in Compact composition.</p><div class="glz12-adapt-fold"><div class="glz12-adapt-region">Active fixture task · record Alpha</div><div class="glz12-adapt-hinge" aria-hidden="true"></div><div class="glz12-adapt-region glz12-adapt-fold-secondary">Supporting detail</div></div>
+  </section>
+
+  <section class="glz12-adapt-scene" data-adaptation-scene="unfolded-foldable" data-glz-layout-class="medium" data-input-profile="touch" data-fold-posture="unfolded">
+    <h2>Unfolded foldable</h2><p>Posture reveals a related second pane without changing the active task or selected fixture record.</p><div class="glz12-adapt-fold"><div class="glz12-adapt-region">Active fixture task · record Alpha</div><div class="glz12-adapt-hinge" aria-label="Reference hinge exclusion region"></div><div class="glz12-adapt-region glz12-adapt-fold-secondary">Related inspector · record Alpha</div></div>
+  </section>
+
+  <section class="glz12-adapt-scene" data-adaptation-scene="tv-far-view" data-glz-layout-class="large" data-input-profile="directional">
+    <h2>TV / far-view</h2><p>Focused navigation, reduced density, and the authoritative 56 px-class target floor support distance and directional input.</p><div class="glz12-adapt-shell"><nav class="glz12-adapt-region glz12-adapt-nav"><button class="glz12-adapt-action" type="button">Overview</button><button class="glz12-adapt-action" type="button">Storage</button></nav><div class="glz12-adapt-region glz12-adapt-main"><strong data-glz-type="large-title">System summary</strong><p>Directional focus remains spatially logical.</p></div></div>
+  </section>
+
+  <section class="glz12-adapt-scene" data-adaptation-scene="wearable" data-glz-layout-class="wearable" data-input-profile="rotary-touch">
+    <h2>Wearable</h2><div class="glz12-adapt-shell"><div class="glz12-adapt-region glz12-adapt-main"><div data-glz-type="numeric" data-adapt-primary-value>72%</div><p>Storage remaining</p><p data-adapt-secondary="true">Long diagnostics belong on a larger surface.</p><button class="glz12-adapt-action" type="button">Details</button></div><aside class="glz12-adapt-region glz12-adapt-inspector">Hidden secondary hierarchy in wearable reference.</aside></div>
+  </section>
+
+  <section class="glz12-adapt-scene" data-adaptation-scene="reduced-transparency" data-glz-layout-class="expanded" data-input-profile="keyboard-pointer">
+    <h2>Reduced Transparency</h2><p>Meaning and hierarchy remain complete on opaque/effects-free reference surfaces.</p><div class="glz12-adapt-region">No task or state depends on blur.</div>
+  </section>
+
+  <section class="glz12-adapt-scene" data-adaptation-scene="text-scale-200" data-glz-layout-class="compact" data-input-profile="touch-keyboard">
+    <h2>200% text</h2><p>Core task, labels, focus, and actions remain available under large-text composition without page-level horizontal scrolling.</p><div class="glz12-adapt-region"><label for="large-text-field">Configuration label remains visible</label><input id="large-text-field" class="glz12-adapt-input" value="Long fixture configuration value"></div>
+  </section>
+
+  <section class="glz12-adapt-scene" data-adaptation-scene="rtl" data-glz-layout-class="expanded" data-input-profile="keyboard-pointer">
+    <h2>RTL</h2><p>Logical layout preserves hierarchy and current-location cues without assuming physical left/right ownership.</p><div class="glz12-adapt-shell"><nav class="glz12-adapt-region glz12-adapt-nav"><button class="glz12-adapt-action" type="button" aria-current="page">Current</button><button class="glz12-adapt-action" type="button">Next</button></nav><div class="glz12-adapt-region glz12-adapt-main">Primary content</div><aside class="glz12-adapt-region glz12-adapt-inspector">Inspector</aside></div>
+  </section>
+</main>
+<script type="module" src="../../js/glaze-v1.2-responsive-adaptation-reference.candidate.mjs"></script>
+</body>
+</html>

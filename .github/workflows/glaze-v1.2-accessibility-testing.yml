@@ -1,0 +1,112 @@
+name: Glaze V1.2 Accessibility Testing Candidate
+
+on:
+  push:
+    branches:
+      - feat/glaze-v1.2-migration-control-plane
+  pull_request:
+    paths:
+      - "contracts/accessibility/resolution-matrix.json"
+      - "contracts/v1.2/accessibility-adaptation.candidate.json"
+      - "contracts/v1.2/accessibility-testing.candidate.json"
+      - "contracts/v1.2/responsive-adaptation-reference.candidate.json"
+      - "contracts/v1.2/living-glaze.candidate.json"
+      - "contracts/v1.2/personalization-appearance.candidate.json"
+      - "css/glaze-v1.2-accessibility.candidate.css"
+      - "css/glaze-v1.2-responsive-adaptation-reference.candidate.css"
+      - "css/glaze-v1.2-living-glaze.candidate.css"
+      - "css/glaze-v1.2-personalization-appearance.candidate.css"
+      - "css/glaze-v1.2.0-candidate.css"
+      - "reference/v1.2/accessibility-adaptation.html"
+      - "reference/v1.2/responsive-adaptation.html"
+      - "reference/v1.2/living-glaze.html"
+      - "reference/v1.2/personalization-appearance.html"
+      - "reference/v1.2/native/android/app/src/main/java/com/goreecloud/glazeui/reference/v12/MainActivity.java"
+      - "reference/v1.2/native/android/app/src/main/AndroidManifest.xml"
+      - "js/glaze-v1.2-living-glaze.candidate.mjs"
+      - "js/glaze-v1.2-personalization.candidate.mjs"
+      - "scripts/validate_glaze_v1_2_accessibility_adaptation_rendered.py"
+      - "scripts/validate_glaze_v1_2_responsive_adaptation_rendered.py"
+      - "scripts/validate_glaze_v1_2_living_glaze.py"
+      - "scripts/validate_glaze_v1_2_living_glaze_rendered.py"
+      - "scripts/validate_glaze_v1_2_personalization_accessibility.py"
+      - "scripts/validate_glaze_v1_2_accessibility_testing.py"
+      - "scripts/validate_glaze_v1_2_android_accessibility_source.py"
+      - "scripts/validate_glaze_v1_2_android_accessibility_runtime.py"
+      - ".github/workflows/glaze-v1.2-accessibility-testing.yml"
+      - ".github/workflows/glaze-v1.2-android-native.yml"
+      - "tokens/glaze-v1.2-form-factor.candidate.json"
+      - "css/glaze-v1.2-motion.candidate.css"
+      - "css/glaze-v1.2-interaction-states.candidate.css"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: glaze-v1-2-accessibility-testing-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bounded-automated-accessibility-testing:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Check out exact Candidate revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Preserve Stable and Candidate authorities
+        run: |
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          python scripts/validate_glaze_v1.py
+          python scripts/validate_glaze_v1_2_candidate.py
+          python scripts/validate_glaze_v1_2_core_tokens.py
+          python scripts/validate_glaze_v1_2_form_factor_tokens.py
+
+      - name: Compile bounded Accessibility Testing validators
+        run: |
+          python -m py_compile \
+            scripts/validate_glaze_v1_2_accessibility_testing.py \
+            scripts/validate_glaze_v1_2_living_glaze.py \
+            scripts/validate_glaze_v1_2_living_glaze_rendered.py \
+            scripts/validate_glaze_v1_2_personalization_accessibility.py \
+            scripts/validate_glaze_v1_2_android_accessibility_source.py
+
+      - name: Validate Android machine-accessibility source supplement
+        env:
+          GLAZE_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python scripts/validate_glaze_v1_2_android_accessibility_source.py
+
+      - name: Run bounded V1.2 automated Accessibility Testing
+        run: python scripts/validate_glaze_v1_2_accessibility_testing.py
+
+      - name: Run Living Frosted accessibility integration
+        run: python scripts/validate_glaze_v1_2_living_glaze_rendered.py
+
+      - name: Run Personalization accessibility integration
+        run: python scripts/validate_glaze_v1_2_personalization_accessibility.py
+
+      - name: Upload bounded V1.2 Accessibility Testing evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: glaze-v1.2-accessibility-testing-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            artifacts/glaze-v1.2-accessibility-testing-*.png
+            artifacts/glaze-v1.2-accessibility-testing-evidence.json
+            artifacts/glaze-v1.2-accessibility-adaptation-*.png
+            artifacts/glaze-v1.2-responsive-*.png
+            artifacts/glaze-v1.2-living-glaze-*.png
+            artifacts/glaze-v1.2-living-glaze-evidence.json
+            artifacts/glaze-v1.2-personalization-accessibility-*.png
+            artifacts/glaze-v1.2-personalization-accessibility-evidence.json
+            artifacts/glaze-v1.2-android-accessibility-source-readiness.json
+          if-no-files-found: error
+          retention-days: 14

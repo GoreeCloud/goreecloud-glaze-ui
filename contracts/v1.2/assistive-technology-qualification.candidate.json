@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "glaze-v1.2-assistive-technology-qualification-candidate",
+  "product": "GLAZE UI",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "stableBaseline": "1.1.0",
+  "consumerEligible": false,
+  "purpose": "Define exact-revision manual assistive-technology evidence records for V1.2 so TalkBack, Voice Access, switch-control, VoiceOver, and other claimed platform coverage can be attached and validated without treating machine accessibility checks as human assistive-technology acceptance.",
+  "authority": {
+    "accessibilityTesting": "contracts/v1.2/accessibility-testing.candidate.json",
+    "accessibilityAdaptation": "contracts/v1.2/accessibility-adaptation.candidate.json",
+    "promotionGates": "acceptance/v1.2-promotion-gates.candidate.md"
+  },
+  "currentBoundary": {
+    "protocolEstablished": true,
+    "manualAssistiveTechnologyEvidenceEstablished": false,
+    "humanAccessibilityAcceptanceEstablished": false,
+    "physicalDeviceAccessibilityAcceptanceEstablished": false,
+    "releaseCandidateEstablished": false,
+    "stableEstablished": false
+  },
+  "record": {
+    "exactSourceRevisionRequired": true,
+    "sourceRevisionFormat": "40-lowercase-hex",
+    "repository": "GoreeCloud/goreecloud-glaze-ui",
+    "physicalDeviceRequiredForPhysicalQualification": true,
+    "placeholderValuesProhibited": true,
+    "requiredTopLevelFields": [
+      "schemaVersion",
+      "recordType",
+      "sourceRevision",
+      "repository",
+      "capturedAt",
+      "operator",
+      "platform",
+      "device",
+      "assistiveTechnology",
+      "scenarios",
+      "sessionDecision"
+    ],
+    "deviceRequiredFields": [
+      "physicalDevice",
+      "emulator",
+      "manufacturer",
+      "model",
+      "osName",
+      "osVersion",
+      "osBuild"
+    ],
+    "assistiveTechnologyRequiredFields": [
+      "name",
+      "version",
+      "inputMode"
+    ],
+    "recognizedTechnologies": [
+      "TalkBack",
+      "Voice Access",
+      "Switch Access",
+      "VoiceOver",
+      "Switch Control",
+      "Orca",
+      "Other"
+    ],
+    "requiredScenarioIds": [
+      "launch-and-orient",
+      "navigate-primary-destinations",
+      "activate-primary-actions",
+      "focus-order-and-reachability",
+      "names-roles-states-and-values",
+      "error-status-and-recovery-announcement",
+      "large-text-200-percent",
+      "reduced-transparency",
+      "clarity-and-personalization-controls"
+    ],
+    "scenarioStatus": [
+      "pass",
+      "fail",
+      "not-applicable-with-reason"
+    ],
+    "sessionDecisionValues": [
+      "session-pass",
+      "session-fail"
+    ]
+  },
+  "acceptanceRules": {
+    "operatorIdentityRequired": true,
+    "technologyVersionRequired": true,
+    "manualExecutionRequired": true,
+    "machineAccessibilityTreeAloneIsManualEvidence": false,
+    "androidUiAutomatorAloneIsTalkBackEvidence": false,
+    "browserAccessibilityTreeAloneIsScreenReaderEvidence": false,
+    "emulatorSessionMaySupportDevelopmentButNotPhysicalDeviceQualification": true,
+    "sessionPassImpliesFullAccessibilityAcceptance": false,
+    "singleTechnologyPassImpliesSupportMatrixAcceptance": false,
+    "singlePlatformPassImpliesCompleteNativeParity": false,
+    "protocolValidationImpliesHumanAcceptance": false,
+    "protocolValidationImpliesReleaseCandidate": false,
+    "protocolValidationImpliesStable": false,
+    "protocolValidationImpliesConsumerConformance": false
+  },
+  "requiredObservationDimensions": [
+    "spoken-or-presented-name",
+    "role-and-state",
+    "focus-order",
+    "action-reachability",
+    "dynamic-state-announcement",
+    "error-and-recovery-feedback",
+    "large-text-reflow",
+    "accessibility-preference-precedence"
+  ],
+  "implementation": {
+    "validator": "scripts/validate_glaze_v1_2_assistive_technology_qualification.py",
+    "workflow": ".github/workflows/glaze-v1.2-external-qualification-protocol.yml",
+    "humanProcedure": "acceptance/v1.2-assistive-technology-qualification-candidate.md",
+    "recordTemplate": "acceptance/v1.2-assistive-technology-qualification.template.json"
+  },
+  "notEstablished": [
+    "human-accessibility-acceptance",
+    "manual-interaction-acceptance",
+    "screen-reader-acceptance",
+    "talkback-acceptance",
+    "voiceover-acceptance",
+    "switch-control-acceptance",
+    "voice-access-acceptance",
+    "physical-device-accessibility-acceptance",
+    "oem-accessibility-service-interoperability",
+    "complete-native-platform-accessibility-parity",
+    "release-candidate",
+    "stable",
+    "production",
+    "consumer-conformance"
+  ]
+}

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light" data-glz-material-performance="full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GLAZE UI V1.2 — Glaze Sans Optical System Candidate</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    *{box-sizing:border-box} html,body{margin:0;min-height:100%;overflow-x:hidden}
+    body{background:var(--glz11-canvas,#eef3f9);padding:clamp(16px,4vw,48px)}
+    main{max-width:1120px;margin:0 auto;display:grid;gap:24px}
+    .intro,.panel{padding:clamp(20px,3vw,32px);border-radius:24px;background:var(--glz11-surface-raised,rgba(255,255,255,.88));border:1px solid var(--glz11-border-subtle,rgba(95,116,146,.16))}
+    .intro{display:grid;gap:12px}.roles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.role{min-width:0;padding:18px;border-radius:18px;background:var(--glz11-surface-base,rgba(255,255,255,.72));border:1px solid var(--glz11-border-subtle,rgba(95,116,146,.16));display:grid;gap:6px}
+    .role p{margin:0}.role-label{margin:0 0 6px;color:var(--glz12-type-secondary);font:500 12px/1.3 var(--glz12-font-sans);letter-spacing:.08em;text-transform:uppercase}
+    .metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.metric-card{min-width:0;padding:18px;border-radius:18px;background:var(--glz11-surface-base,rgba(255,255,255,.72));border:1px solid var(--glz11-border-subtle,rgba(95,116,146,.16))}.metric-card p{margin:8px 0 0}
+    .alignment{display:flex;gap:12px;flex-wrap:wrap}.technical{padding:16px;border-radius:16px;background:var(--glz11-surface-base,rgba(255,255,255,.72));border:1px solid var(--glz11-border-subtle,rgba(95,116,146,.16))}
+    .table{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 20px;align-items:baseline}.table>*{min-width:0}
+    [data-glz-type="display"],[data-glz-type="large-title"],[data-glz-type="title"],[data-glz-type="heading"],[data-glz-type="subheading"]{margin:0}.intro [data-glz-type="body"]{margin:0}
+    .panel>h2{margin:0 0 16px}.mode-note{margin:0;color:var(--glz12-type-secondary)}
+    @media(max-width:720px){.roles,.metrics{grid-template-columns:1fr}.table{grid-template-columns:minmax(0,1fr) auto}body{padding:16px}.intro,.panel{padding:20px}}
+    @media(forced-colors:active){.intro,.panel,.role,.metric-card,.technical{background:Canvas;border-color:CanvasText}}
+  </style>
+</head>
+<body>
+<main>
+  <section class="intro" aria-labelledby="page-title">
+    <p class="role-label">V1.2 Candidate · typography reference</p>
+    <h1 id="page-title" data-glz-type="display">Soft frost. Sharp text.</h1>
+    <p data-glz-type="body">Glaze Sans Optical System keeps semantic hierarchy, numerics, technical text, and controls precise while Frosted Optical material supplies atmosphere around them.</p>
+    <p data-glz-type="caption">System/platform-native first. No remote runtime font dependency. This scene is Candidate evidence, not a Stable or consumer-conformance claim.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="roles-title">
+    <h2 id="roles-title" data-glz-type="title">Semantic role ladder</h2>
+    <div class="roles">
+      <article class="role"><p class="role-label">Large Title</p><p data-glz-type="large-title">Workspace identity</p></article>
+      <article class="role"><p class="role-label">Title</p><p data-glz-type="title">Panel and page title</p></article>
+      <article class="role"><p class="role-label">Heading</p><p data-glz-type="heading">Content hierarchy</p></article>
+      <article class="role"><p class="role-label">Subheading</p><p data-glz-type="subheading">Secondary hierarchy</p></article>
+      <article class="role"><p class="role-label">Body</p><p data-glz-type="body">Readable supporting text uses comfortable line spacing, open layout, and neutral color rather than atmospheric blue.</p></article>
+      <article class="role"><p class="role-label">UI</p><p data-glz-type="ui">Navigation · Controls · Menus · Fields</p></article>
+      <article class="role"><p class="role-label">Label</p><p data-glz-type="label">METADATA AND COMPACT LABEL</p></article>
+      <article class="role"><p class="role-label">Caption</p><p data-glz-type="caption">Secondary context and provenance</p></article>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="metrics-title">
+    <h2 id="metrics-title" data-glz-type="title">Numeric precision</h2>
+    <div class="metrics">
+      <article class="metric-card"><div class="glz12-metric" data-glz-type="numeric"><span>68</span><span class="glz12-metric-unit">GB</span></div><p data-glz-type="caption">Storage used</p></article>
+      <article class="metric-card"><div class="glz12-metric" data-glz-type="numeric"><span>38</span><span class="glz12-metric-unit">ms</span></div><p data-glz-type="caption">Network latency</p></article>
+      <article class="metric-card"><div class="glz12-metric" data-glz-type="numeric"><span>99.99</span><span class="glz12-metric-unit">%</span></div><p data-glz-type="caption">Availability</p></article>
+    </div>
+    <div class="table" style="margin-top:18px">
+      <span data-glz-type="body">Live sample A</span><span class="glz12-numeric-column" data-glz-type="ui">12,408.20</span>
+      <span data-glz-type="body">Live sample B</span><span class="glz12-numeric-column" data-glz-type="ui"> 9,004.75</span>
+      <span data-glz-type="body">Live sample C</span><span class="glz12-numeric-column" data-glz-type="ui"> 1,284.00</span>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="technical-title">
+    <h2 id="technical-title" data-glz-type="title">Technical typography</h2>
+    <div class="technical" data-glz-type="monospace">/srv/goreecloud/identity/config.yaml · 10.24.18.7:8443 · sha256:7edd4c349ff93c4e17094b5f5243ea7b5dff7e8ec818d102fbedf281fffc25de</div>
+  </section>
+
+  <section class="panel" aria-labelledby="alignment-title">
+    <h2 id="alignment-title" data-glz-type="title">Icon + label alignment</h2>
+    <div class="alignment">
+      <button class="glz1-button glz12-type-control" data-variant="glaze" type="button"><span class="glz12-type-icon-label" data-glz-type="ui"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6"></circle><path d="m16 16 4 4"></path></svg><span>Search</span></span></button>
+      <button class="glz1-button glz12-type-control" data-variant="glaze" type="button"><span class="glz12-type-icon-label" data-glz-type="ui"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg><span>Continue with a longer label</span></span></button>
+    </div>
+    <p class="mode-note" data-glz-type="caption" style="margin-top:14px">Controls permit multiline reflow instead of preserving a screenshot-specific single line.</p>
+  </section>
+</main>
+</body>
+</html>

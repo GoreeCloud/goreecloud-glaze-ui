@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "id": "glaze-v1.2-application-icon-ecosystem-wall-candidate",
+  "product": "GLAZE UI",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "stableBaseline": "1.1.0",
+  "consumerEligible": false,
+  "sceneId": "application-icon-ecosystem-wall",
+  "status": "review-artifact-generated-human-review-pending",
+  "purpose": "Provide a multi-scale visual-review wall of the current approved GoreeCloud application icons without redefining product identity, transferring branding authority, or treating automated checks as human collision acceptance.",
+  "brandingSource": {
+    "repository": "GoreeCloud/goreecloud-branding-assets",
+    "revision": "f5afcac107971d9e01c5910ac1a1c6e4ca0c6543",
+    "catalogPath": "catalog.json",
+    "catalogGitBlob": "b982ea371a25685950be0466725dc93c8eaef885",
+    "assetCollection": "products",
+    "expectedAssetCount": 38,
+    "canonicalAssetsOnly": true,
+    "referenceReviewRetrievalOnly": true,
+    "consumerRuntimeDependency": false
+  },
+  "scales": [
+    {"id": "identity", "sizePx": 96, "purpose": "silhouette, color distribution, material personality, negative space"},
+    {"id": "launcher", "sizePx": 56, "purpose": "launcher-scale recognition, visual weight, family relationship"},
+    {"id": "compact", "sizePx": 32, "purpose": "compact recognition, optical reduction, accidental collisions"}
+  ],
+  "reviewSignals": [
+    "color-clustering",
+    "repetitive-symbols",
+    "material-inconsistency",
+    "visual-weight-imbalance",
+    "weak-identity",
+    "accidental-hierarchy",
+    "silhouette-collision",
+    "negative-space-collision",
+    "compact-size-recognition"
+  ],
+  "rules": {
+    "sharedDnaWithoutSharedIdentity": true,
+    "canonicalAssetsOnly": true,
+    "localProductRedesignProhibited": true,
+    "brandingAuthorityTransferred": false,
+    "automatedCollisionAcceptance": false,
+    "humanCollisionReviewFinalAuthority": true,
+    "wallGenerationMayNotPromoteCandidate": true,
+    "wallGenerationMayNotEstablishStable": true,
+    "wallGenerationMayNotEstablishConsumerConformance": true
+  },
+  "humanReview": {
+    "required": true,
+    "status": "pending",
+    "finalAuthority": true,
+    "acceptedRevision": null,
+    "reviewedAt": null
+  },
+  "implementation": {
+    "reference": "reference/v1.2/application-icon-ecosystem-wall.html",
+    "validator": "scripts/validate_glaze_v1_2_application_icon_ecosystem_wall.py",
+    "workflow": ".github/workflows/glaze-v1.2-application-icon-ecosystem-wall.yml"
+  },
+  "evidenceBoundary": {
+    "established": [
+      "multi-scale-application-icon-review-artifact",
+      "immutable-branding-source-pin",
+      "canonical-catalog-and-asset-blob-validation",
+      "human-review-authority-preserved"
+    ],
+    "notEstablished": [
+      "human-collision-review",
+      "human-optical-acceptance",
+      "accepted-application-icon-ecosystem-wall-reference-scene",
+      "v1.2-human-approved-visual-baseline",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

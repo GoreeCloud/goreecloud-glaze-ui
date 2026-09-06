@@ -1,0 +1,10 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","schemaVersion":1,"id":"goreecloud.glaze-ui.v1.2.motion-integration.candidate","product":"GLAZE UI V1.2","version":"1.2.0-candidate","lifecycle":"candidate","consumerEligible":false,"stableBaseline":"1.1.0","extends":["contracts/v1.2/living-glaze.candidate.json","contracts/v1.2/motion.candidate.json"],
+  "contractType":"stable-compatible-semantic-motion-layer-candidate",
+  "experimentalGlazeMotionPromotionImplied":false,
+  "allowedImplementations":["platform-native-motion","future-promoted-glaze-motion","simpler-transition","immediate-state-change"],
+  "properties":["purposeful","interruptible","reversible-where-interaction-permits","spatially-coherent","input-aware","bounded","accessibility-aware","performance-aware"],
+  "preferredBehaviors":["connected-transformations","spring-assisted-press","panel-expansion","shared-element-continuity","drag-reorder","velocity-aware-snapping","navigation-continuity","sheet-detents","responsive-toolbar-transformation","window-pane-reconfiguration"],
+  "reducedMotion":["remove-decorative-travel","remove-unnecessary-scale","remove-parallax","remove-autonomous-movement","remove-nonessential-bounce","reduce-settling","preserve-direct-manipulation","preserve-semantic-state","preserve-focus","preserve-context"],
+  "evidenceBoundary":{"notEstablished":["experimental-glaze-motion-stable-promotion","all-platform-motion-parity","vestibular-human-acceptance","release-candidate","stable"]}
+}

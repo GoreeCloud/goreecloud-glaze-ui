@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GLAZE UI V1.2 Structure Components Candidate</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{margin:0;min-inline-size:0}
+    body{background:var(--glz1-base);color:var(--glz1-text-primary);font-family:system-ui,sans-serif}
+    .scene{inline-size:min(100%,1200px);margin-inline:auto;padding:24px;display:grid;gap:28px;overflow-wrap:anywhere}
+    .section{display:grid;gap:12px;min-inline-size:0}
+    .section h2,.section p{margin:0}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;min-inline-size:0}
+    .shell-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:start;min-inline-size:0}
+    .nav-stack{display:flex;gap:12px;align-items:start;min-inline-size:0}
+    .content-plane{min-inline-size:0;display:grid;gap:12px}
+    .glz12-list-option{grid-template-columns:auto minmax(0,1fr) auto}
+    .glz12-list-option .glz1-list-check{opacity:0}
+    .glz12-list-option[aria-selected="true"] .glz1-list-check{opacity:1}
+    .glz12-card-copy{display:grid;gap:6px}
+    .glz12-card-copy strong,.glz12-card-copy span{display:block}
+    .glz12-toolbar-label{font-size:.875rem;color:var(--glz1-text-secondary)}
+    @media(max-width:700px){.scene{padding:16px}.grid,.shell-row{grid-template-columns:minmax(0,1fr)}.nav-stack{inline-size:100%;flex-wrap:wrap}.glz1-sidebar{inline-size:100%}}
+    @media(max-width:420px){.scene{padding:12px}.glz1-dock{justify-content:stretch}.glz1-dock-item{min-inline-size:48px}}
+  </style>
+</head>
+<body>
+<main class="scene" aria-labelledby="page-title">
+  <header class="section">
+    <h1 id="page-title">V1.2 Structure Components</h1>
+    <p>Bounded Candidate reference: durable information surfaces, restrained floating Frost, structural state cues, and predictable keyboard/responsive behavior.</p>
+  </header>
+
+  <section class="section" aria-labelledby="card-list-title">
+    <h2 id="card-list-title">Card and List</h2>
+    <div class="grid">
+      <article id="card-interactive" class="glz1-card" data-interactive="true" data-selected="false" role="button" tabindex="0" aria-pressed="false">
+        <span class="glz1-card-selection" aria-hidden="true">✓</span>
+        <div class="glz12-card-copy">
+          <strong>Durable project card</strong>
+          <span>Press Enter or Space to select. Selection keeps a structural edge and check marker.</span>
+        </div>
+      </article>
+
+      <div id="list-sample" class="glz1-list" role="listbox" aria-label="Project views">
+        <button id="list-overview" class="glz1-list-item glz12-list-option" type="button" role="option" aria-selected="true" data-selected="true" tabindex="0">
+          <span class="glz1-list-check" aria-hidden="true">✓</span><span>Overview</span><span>12</span>
+        </button>
+        <button id="list-activity" class="glz1-list-item glz12-list-option" type="button" role="option" aria-selected="false" data-selected="false" tabindex="-1">
+          <span class="glz1-list-check" aria-hidden="true">✓</span><span>Activity</span><span>7</span>
+        </button>
+        <button id="list-archive" class="glz1-list-item glz12-list-option" type="button" role="option" aria-selected="false" data-selected="false" tabindex="-1">
+          <span class="glz1-list-check" aria-hidden="true">✓</span><span>Archive</span><span>3</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="table-title">
+    <h2 id="table-title">Table</h2>
+    <div id="table-wrap" class="glz1-table-wrap">
+      <table id="table-sample" class="glz1-table">
+        <thead><tr>
+          <th id="name-header" scope="col" aria-sort="none"><button id="table-sort" class="glz1-sort-button" type="button">Name <span id="sort-mark" aria-hidden="true">↕</span></button></th>
+          <th scope="col">State</th>
+          <th scope="col" class="glz12-numeric">Latency</th>
+          <th scope="col" class="glz12-numeric">Capacity</th>
+        </tr></thead>
+        <tbody>
+          <tr id="table-row-selected" data-selected="true"><td><span class="glz12-table-row-marker" aria-hidden="true">✓</span>Gateway</td><td>Healthy</td><td class="glz12-numeric">18 ms</td><td class="glz12-numeric">72%</td></tr>
+          <tr><td>Storage</td><td>Healthy</td><td class="glz12-numeric">24 ms</td><td class="glz12-numeric">64%</td></tr>
+          <tr><td>Worker</td><td>Maintenance</td><td class="glz12-numeric">31 ms</td><td class="glz12-numeric">48%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="tabs-title">
+    <h2 id="tabs-title">Tabs</h2>
+    <div id="tabs-sample" class="glz1-tabs" role="tablist" aria-label="Workspace sections">
+      <button id="tab-overview" class="glz1-tab" type="button" role="tab" aria-selected="true" aria-controls="panel-overview" tabindex="0">Overview</button>
+      <button id="tab-events" class="glz1-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-events" tabindex="-1">Events</button>
+      <button id="tab-access" class="glz1-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-access" tabindex="-1">Access</button>
+    </div>
+    <div id="panel-overview" class="glz1-tab-panel" role="tabpanel" aria-labelledby="tab-overview">Overview content remains on a durable reading surface.</div>
+    <div id="panel-events" class="glz1-tab-panel" role="tabpanel" aria-labelledby="tab-events" hidden>Event history.</div>
+    <div id="panel-access" class="glz1-tab-panel" role="tabpanel" aria-labelledby="tab-access" hidden>Access settings.</div>
+  </section>
+
+  <section class="section" aria-labelledby="navigation-title">
+    <h2 id="navigation-title">Sidebar, Navigation Rail, and Dock</h2>
+    <div class="shell-row">
+      <div class="nav-stack">
+        <nav id="sidebar-sample" class="glz1-sidebar" aria-label="Sidebar">
+          <div class="glz1-sidebar-header"><strong>Workspace</strong></div>
+          <button id="sidebar-home" class="glz1-sidebar-item" type="button" aria-current="page"><span aria-hidden="true">⌂</span><span class="glz1-sidebar-label">Home</span></button>
+          <button id="sidebar-files" class="glz1-sidebar-item" type="button"><span aria-hidden="true">□</span><span class="glz1-sidebar-label">Files</span></button>
+          <button id="sidebar-settings" class="glz1-sidebar-item" type="button"><span aria-hidden="true">⚙</span><span class="glz1-sidebar-label">Settings</span></button>
+        </nav>
+        <nav id="rail-sample" class="glz1-navigation-rail" aria-label="Navigation rail">
+          <button id="rail-home" class="glz1-rail-item" type="button" aria-current="page"><span class="glz1-rail-icon" aria-hidden="true">⌂</span><span>Home</span></button>
+          <button id="rail-files" class="glz1-rail-item" type="button"><span class="glz1-rail-icon" aria-hidden="true">□</span><span>Files</span></button>
+        </nav>
+      </div>
+      <div class="content-plane">
+        <p>Navigation chrome remains subordinate to durable content. The rail transforms away at narrow widths while the sidebar becomes a constrained full-width region.</p>
+        <nav id="dock-sample" class="glz1-dock" aria-label="Dock">
+          <button id="dock-home" class="glz1-dock-item" type="button" aria-current="page"><span class="glz1-dock-icon" aria-hidden="true">⌂</span><span>Home</span></button>
+          <button id="dock-search" class="glz1-dock-item" type="button"><span class="glz1-dock-icon" aria-hidden="true">⌕</span><span>Search</span></button>
+          <button id="dock-files" class="glz1-dock-item" type="button"><span class="glz1-dock-icon" aria-hidden="true">□</span><span>Files</span></button>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="toolbar-title">
+    <h2 id="toolbar-title">Toolbar priority and overflow</h2>
+    <div id="toolbar-sample" class="glz1-toolbar" role="toolbar" aria-label="Document actions">
+      <span class="glz12-toolbar-label">Actions</span>
+      <div class="glz1-toolbar-group">
+        <button id="toolbar-primary" class="glz1-button" type="button" data-priority="1">Save</button>
+        <button id="toolbar-secondary" class="glz1-button" type="button" data-priority="2">Share</button>
+        <button id="toolbar-tertiary" class="glz1-button" type="button" data-priority="3">Compare</button>
+      </div>
+      <span class="glz1-toolbar-spacer"></span>
+      <button id="toolbar-overflow" class="glz1-toolbar-overflow" type="button" aria-label="More actions">•••</button>
+    </div>
+  </section>
+</main>
+<script>
+(() => {
+  const card = document.getElementById('card-interactive');
+  const toggleCard = () => {
+    const next = card.getAttribute('aria-pressed') !== 'true';
+    card.setAttribute('aria-pressed', String(next));
+    card.dataset.selected = String(next);
+  };
+  card.addEventListener('click', toggleCard);
+  card.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); toggleCard(); }
+  });
+
+  const options = [...document.querySelectorAll('.glz12-list-option')];
+  const selectOption = option => {
+    options.forEach(item => {
+      const active = item === option;
+      item.setAttribute('aria-selected', String(active));
+      item.dataset.selected = String(active);
+      item.tabIndex = active ? 0 : -1;
+    });
+  };
+  options.forEach((option, index) => {
+    option.addEventListener('click', () => selectOption(option));
+    option.addEventListener('keydown', event => {
+      let target = index;
+      if (event.key === 'ArrowDown') target = (index + 1) % options.length;
+      else if (event.key === 'ArrowUp') target = (index - 1 + options.length) % options.length;
+      else if (event.key === 'Home') target = 0;
+      else if (event.key === 'End') target = options.length - 1;
+      else return;
+      event.preventDefault(); selectOption(options[target]); options[target].focus();
+    });
+  });
+
+  const header = document.getElementById('name-header');
+  const sortMark = document.getElementById('sort-mark');
+  document.getElementById('table-sort').addEventListener('click', () => {
+    const next = header.getAttribute('aria-sort') === 'ascending' ? 'descending' : 'ascending';
+    header.setAttribute('aria-sort', next);
+    sortMark.textContent = next === 'ascending' ? '↑' : '↓';
+  });
+
+  const tabs = [...document.querySelectorAll('[role="tab"]')];
+  const activateTab = tab => {
+    tabs.forEach(item => {
+      const active = item === tab;
+      item.setAttribute('aria-selected', String(active));
+      item.tabIndex = active ? 0 : -1;
+      document.getElementById(item.getAttribute('aria-controls')).hidden = !active;
+    });
+  };
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => activateTab(tab));
+    tab.addEventListener('keydown', event => {
+      let target = index;
+      if (event.key === 'ArrowRight') target = (index + 1) % tabs.length;
+      else if (event.key === 'ArrowLeft') target = (index - 1 + tabs.length) % tabs.length;
+      else if (event.key === 'Home') target = 0;
+      else if (event.key === 'End') target = tabs.length - 1;
+      else return;
+      event.preventDefault(); activateTab(tabs[target]); tabs[target].focus();
+    });
+  });
+
+  for (const selector of ['.glz1-sidebar-item','.glz1-rail-item','.glz1-dock-item']) {
+    const items = [...document.querySelectorAll(selector)];
+    items.forEach(item => item.addEventListener('click', () => {
+      items.forEach(candidate => candidate.removeAttribute('aria-current'));
+      item.setAttribute('aria-current','page');
+    }));
+  }
+})();
+</script>
+</body>
+</html>

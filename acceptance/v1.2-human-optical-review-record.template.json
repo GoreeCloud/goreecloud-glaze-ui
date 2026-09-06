@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "recordType": "glaze-v1.2-human-optical-review",
+  "sourceRevision": "REPLACE_WITH_EXACT_40_CHAR_SOURCE_SHA",
+  "repository": "GoreeCloud/goreecloud-glaze-ui",
+  "reviewedAt": "REPLACE_WITH_ISO_8601_TIMESTAMP_WITH_TIMEZONE",
+  "reviewer": "REPLACE_WITH_AUTHORIZED_HUMAN_REVIEWER",
+  "reviewerRole": "REPLACE_WITH_REVIEWER_ROLE",
+  "evidenceArtifacts": [
+    {"id": "provisional-visual-regression", "sourceRevision": "REPLACE_WITH_EXACT_40_CHAR_SOURCE_SHA", "artifact": "REPLACE_WITH_EXACT_HEAD_ARTIFACT_IDENTIFIER", "reviewed": false},
+    {"id": "application-icon-ecosystem-wall", "sourceRevision": "REPLACE_WITH_EXACT_40_CHAR_SOURCE_SHA", "artifact": "REPLACE_WITH_EXACT_HEAD_ARTIFACT_IDENTIFIER", "reviewed": false},
+    {"id": "reference-scene-index", "sourceRevision": "REPLACE_WITH_EXACT_40_CHAR_SOURCE_SHA", "artifact": "REPLACE_WITH_EXACT_HEAD_ARTIFACT_IDENTIFIER", "reviewed": false},
+    {"id": "living-frosted", "sourceRevision": "REPLACE_WITH_EXACT_40_CHAR_SOURCE_SHA", "artifact": "REPLACE_WITH_EXACT_HEAD_ARTIFACT_IDENTIFIER", "reviewed": false},
+    {"id": "personalization-appearance", "sourceRevision": "REPLACE_WITH_EXACT_40_CHAR_SOURCE_SHA", "artifact": "REPLACE_WITH_EXACT_HEAD_ARTIFACT_IDENTIFIER", "reviewed": false},
+    {"id": "exact-head-readiness", "sourceRevision": "REPLACE_WITH_EXACT_40_CHAR_SOURCE_SHA", "artifact": "REPLACE_WITH_EXACT_HEAD_ARTIFACT_IDENTIFIER", "reviewed": false}
+  ],
+  "dimensions": [
+    {"id": "light-dark-and-deep-dark-optical-consistency", "status": "fail", "finding": "REPLACE_WITH_HUMAN_FINDING"},
+    {"id": "desktop-mobile-and-responsive-composition", "status": "fail", "finding": "REPLACE_WITH_HUMAN_FINDING"},
+    {"id": "typography-and-large-text-quality", "status": "fail", "finding": "REPLACE_WITH_HUMAN_FINDING"},
+    {"id": "interaction-state-and-feedback-quality", "status": "fail", "finding": "REPLACE_WITH_HUMAN_FINDING"},
+    {"id": "reduced-transparency-and-increased-contrast-quality", "status": "fail", "finding": "REPLACE_WITH_HUMAN_FINDING"},
+    {"id": "rtl-layout-quality", "status": "fail", "finding": "REPLACE_WITH_HUMAN_FINDING"},
+    {"id": "living-frosted-clear-balanced-dense-differentiation-and-legibility", "status": "fail", "finding": "REPLACE_WITH_HUMAN_FINDING"},
+    {"id": "living-glaze-interaction-restraint-focus-and-material-continuity", "status": "fail", "finding": "REPLACE_WITH_HUMAN_FINDING"},
+    {"id": "navigation-capsule-reachability-hierarchy-and-context-continuity", "status": "fail", "finding": "REPLACE_WITH_HUMAN_FINDING"},
+    {"id": "personalization-appearance-accent-atmosphere-density-and-clarity-quality", "status": "fail", "finding": "REPLACE_WITH_HUMAN_FINDING"},
+    {"id": "bounded-wallpaper-atmosphere-subtlety-accessibility-and-semantic-isolation", "status": "fail", "finding": "REPLACE_WITH_HUMAN_FINDING"},
+    {"id": "application-icon-family-consistency", "status": "fail", "finding": "REPLACE_WITH_HUMAN_FINDING"},
+    {"id": "application-icon-identity-collision-review", "status": "fail", "finding": "REPLACE_WITH_HUMAN_FINDING"},
+    {"id": "application-icon-compact-size-legibility", "status": "fail", "finding": "REPLACE_WITH_HUMAN_FINDING"}
+  ],
+  "exceptions": [],
+  "decision": "rejected",
+  "summary": "Fail-closed template only. This file is not human optical acceptance until every placeholder is replaced, every exact-head artifact is reviewed, every required dimension passes, and an authorized human reviewer records an accepted decision."
+}

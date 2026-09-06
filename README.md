@@ -1,48 +1,37 @@
-# GLAZE UI V1.1
+# GLAZE UI V1.2
 
-GLAZE UI V1.1 is GoreeCloud's current Stable shared visual and interaction design system. **Beauty is a requirement, not a regression risk.** Machine version: **1.1.0**.
+GLAZE UI V1.2 is GoreeCloud's current Stable shared visual and interaction design system. **Beauty is a requirement, not a regression risk.** Machine version: **1.2.0**.
 
-## Core rule
+## Core rules
+
+**Neutral glass is the material. Color is an accent.**
 
 **Solid where users read or make explicit critical decisions. Glazed where users interact with transient navigation, command, search, control, or feedback chrome.**
 
-V1.1 preserves the V1 System Shell, 32-component catalog, semantic color, accessibility, material, performance, and native-mapping contracts while adding the approved Optical Refinement and **Deep Teal + Soft Amber** atmospheric system.
+V1.2 promotes the Frosted Neutral + Living Frosted system: Clear/Balanced/Dense clarity, adaptive optical response, Living Glaze interaction states, the inherited 32-component catalog and System Shell, adaptive navigation, responsive/form-factor composition, Personalization interfaces, accessibility precedence, and Tier 3 → Tier 0 graceful degradation.
 
-The atmosphere is intentionally subordinate: neutral structure remains dominant; protected semantic meaning, focus, accessibility, and required boundaries always resolve first. Environmental Color Memory remains optional and is not required by the first Stable implementation.
+## Stable source authority
 
-## Next upgrade track — V1.2 Frosted Neutral
-
-The next Glaze UI upgrade is being developed around a new governing optical rule: **Neutral glass is the material. Color is an accent.**
-
-The V1.2 Candidate shifts default glazed surfaces toward frosty white, pearl, clear-neutral, soft gray, and neutral graphite glass with stronger blur, translucency, specular edge light, and depth. Teal, green, aqua, amber, and other chromatic colors are removed from the default material substrate and remain available for intentional active, focus, selection, progress, semantic, icon, and branding treatments.
-
-Candidate source:
-- `GLAZE_UI_V1_2_CANDIDATE.md` — next-upgrade contract
-- `tokens/glaze-v1.2-frosted-neutral.candidate.json` — machine-readable material tokens
-- `css/glaze-v1.2.0-candidate.css` — preview entrypoint layered over V1.1 Stable
-- `reference/v1.2/frosted-neutral.html` — frosted-neutral visual reference
-- `scripts/validate_glaze_v1_2_candidate.py` — fail-closed Candidate validator
-
-V1.1 remains the current Stable and mandatory source authority until the V1.2 candidate passes its governed visual, accessibility, performance, regression, and promotion gates. The Candidate does not automatically migrate downstream GoreeCloud applications.
-
-## Stable evidence
-
-Project-owner optical approval was recorded on 2026-09-03. Exact release-candidate revision `b37538f6748d95680ca5f6fe4a5e412a38ef87a7` reproduced the five approved web reference PNG hashes and passed fresh Android handheld emulator acceptance for Light/48dp, Dark + Reduced Transparency/48dp, and Deep Dark + 200% text + Touch Assistance/56dp in release-evidence workflow `33750604928`.
-
-Current source authority:
-- `VERSION` — `1.1.0`
-- `GLAZE_UI_V1_1.md` — official Stable contract
+- `VERSION` — `1.2.0`
+- `GLAZE_UI_V1_2.md` — official Stable contract
 - `registry/lifecycle.json` — lifecycle authority
-- `css/glaze-v1.1.0.css` — Stable web entrypoint
-- `js/glaze-v1.1.0.mjs` — Stable runtime entrypoint
-- `contracts/v1.1/optical-refinement.json` — Stable optical contract
-- `tokens/glaze-v1.1-atmosphere.json` — Stable atmosphere tokens
-- `contracts/regression/visual-baselines-v1.json` — approved visual baseline authority
-- `acceptance/v1.1-stable.md` — Stable acceptance boundary
+- `css/glaze-v1.2.0.css` — Stable web entrypoint
+- `js/glaze-v1.2.0.mjs` — Stable runtime entrypoint
+- `tokens/glaze-v1.json` — current Stable V1 token manifest
+- `acceptance/v1.2-stable.md` — V1.2 Stable acceptance/scope record
+- `consumers/registry.json` — current consumer target and adoption state
 
-The V1.0 contract and candidate/RC records remain historical audit evidence, not current consumer targets. No downstream GoreeCloud application auto-upgrades or gains production eligibility by declaration.
+The promoted V1.2 source keeps historical `.candidate` filenames internally where changing those names/selectors at release time would alter or unnecessarily churn proven rendering behavior. Those filenames are provenance only; they do not make the current lifecycle Candidate.
 
-Glaze Motion remains separately Experimental.
+## V1.3 follow-up
+
+On 2026-09-06 the GoreeCloud project owner moved the remaining V1.2 qualification blockers to V1.3. Human/manual/physical qualification that was not completed is **not** relabeled as passed V1.2 evidence. The carry-forward list is recorded in `acceptance/v1.3-deferred-qualification.md` and `contracts/v1.3/deferred-qualification.plan.json`.
+
+## Consumer boundary
+
+No downstream GoreeCloud application auto-upgrades or becomes production-eligible because V1.2 is Stable. Every applicable consumer must explicitly migrate to `1.2.0` and produce fresh repository-local evidence for its actual platform, accessibility, performance, and product acceptance boundary.
+
+GLAZE UI V1.1 / `1.1.0` remains preserved as the prior known-good Stable rollback anchor. Glaze Motion remains separately Experimental unless explicitly incorporated by a Stable contract.
 
 ## License
 

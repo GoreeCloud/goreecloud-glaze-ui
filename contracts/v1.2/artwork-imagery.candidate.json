@@ -1,0 +1,290 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.artwork-imagery.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-artwork-illustration-imagery-treatment-evidence",
+  "purpose": "Define bounded V1.2 Candidate treatment, provenance, accessibility, and truth-labeling rules for artwork, illustration, and imagery without creating or replacing canonical product artwork or manufacturing product/system state.",
+  "authority": {
+    "companionSpecification": "Glaze UI V1.2 — Artwork, Illustration, and Imagery.docx",
+    "canonicalAssetOwnership": "external-authoritative-asset-source",
+    "candidateMayCreateCanonicalProductArtwork": false,
+    "candidateMayOverrideProductIdentity": false,
+    "principle": "Artwork deepens meaning and atmosphere without competing with interface hierarchy or becoming evidence of system truth."
+  },
+  "categories": [
+    "identity-artwork",
+    "functional-illustration",
+    "atmospheric-artwork",
+    "content-imagery",
+    "technical-visualization",
+    "editorial-imagery"
+  ],
+  "treatmentRules": {
+    "functionalPriority": [
+      "task",
+      "content",
+      "state",
+      "interaction",
+      "information-hierarchy",
+      "artwork"
+    ],
+    "artworkCharacter": {
+      "required": [
+        "refined",
+        "calm",
+        "precise",
+        "atmospheric",
+        "recognizably-goreecloud",
+        "contemporary",
+        "purposeful"
+      ],
+      "materialIdentity": [
+        "light",
+        "frost",
+        "refraction",
+        "geometry",
+        "layering",
+        "depth",
+        "edge-illumination",
+        "negative-space"
+      ],
+      "literalGlassEverywhere": false,
+      "routineHighSaturationGradientBranding": false
+    },
+    "illustrationStyle": {
+      "preferred": [
+        "strong-silhouettes",
+        "clean-geometric-construction",
+        "controlled-depth",
+        "soft-atmospheric-lighting",
+        "restrained-detail",
+        "deliberate-negative-space"
+      ],
+      "flatPresentationAllowedWhenItImprovesRecognitionAccessibilityOrCost": true,
+      "restrainedDimensionalPresentationAllowed": true,
+      "chaoticVisualComplexity": false,
+      "exaggeratedPlastic3d": false
+    },
+    "heroImagery": {
+      "routineProductivityDefault": false,
+      "allowedContexts": [
+        "major-first-use",
+        "product-introduction",
+        "immersive-content",
+        "high-value-identity-moment"
+      ],
+      "quietZonesRequiredFor": [
+        "title",
+        "supporting-copy",
+        "primary-action"
+      ],
+      "essentialTextMayOverlayBusiestRegion": false
+    },
+    "emptyState": {
+      "compact": true,
+      "optionalWhenUnnecessary": true,
+      "understandingPriority": [
+        "what-is-empty",
+        "why-it-is-empty",
+        "available-action"
+      ],
+      "domainRelevantSymbolismRequired": true,
+      "routineArtworkMayConsumeMostOfViewport": false,
+      "mayImplySuccessOrRecoveryBeforeAuthoritativeConfirmation": false
+    },
+    "wallpaper": {
+      "role": "background-non-semantic",
+      "subordinateToApplicationContent": true,
+      "materialProtection": [
+        "opacity",
+        "saturation-reduction",
+        "blur-or-equivalent-fallback",
+        "local-contrast",
+        "frost-density"
+      ],
+      "mayDetermineSemanticStatusFocusSecurityPrivacyOrCriticalMeaning": false,
+      "requiredForGlazeIdentity": false,
+      "reducedMotionRequiresStillOrSimplifiedNonessentialMotion": true,
+      "lowPerformanceMayUseStaticOrSimplifiedPresentation": true
+    },
+    "mediaThumbnail": {
+      "contentRecognitionMustBePreserved": true,
+      "minimalOverlaysOnly": true,
+      "allowedOverlays": [
+        "duration",
+        "media-type",
+        "selection",
+        "play-affordance"
+      ],
+      "meaningfulSubjectCropPreferred": true,
+      "loadingPlaceholderPreservesFinalAspectRatio": true
+    },
+    "screenshots": {
+      "mustBeActualOrClearlyConceptual": true,
+      "mustRemainVersionAligned": true,
+      "allowedFraming": [
+        "subtle-device-frame",
+        "frosted-surrounding-card",
+        "clean-crop",
+        "restrained-shadow"
+      ],
+      "interfaceMustRemainReadable": true,
+      "speculativeMockupMayClaimImplementedBehavior": false
+    },
+    "imageIntegration": {
+      "cornerRadiusToken": "--glz12-radius-surface",
+      "cornerGeometryMustFollowSharedGlazeGeometry": true,
+      "frostOverlay": {
+        "defaultRequired": false,
+        "allowedWhen": "text-overlaps-variable-imagery",
+        "mustPreserveContentRecognition": true,
+        "reducedTransparencyFallbackRequired": true
+      },
+      "textProtection": {
+        "liveInterfaceTypographyPreferred": true,
+        "essentialTextMustNotDependOnBusyImageRegion": true,
+        "localContrastProtectionRequiredWhenTextOverlapsImagery": true,
+        "embeddedEssentialUntranslatedTextWithoutAlternativeAllowed": false
+      },
+      "environmentalTint": {
+        "rawWallpaperOrImageSamplingOwnedByGlaze": false,
+        "producerSuppliedLocalRgbSummaryOnly": true,
+        "remoteSampling": false,
+        "semanticStateDerivation": false,
+        "reducedTransparencyMaySuppressDecorativeTint": true
+      }
+    }
+  },
+  "sourceAndProvenance": {
+    "sharedArtworkRequiresCanonicalSource": true,
+    "consumersReferenceApprovedAssetsInsteadOfDriftingCopies": true,
+    "materialIdentityChangesVersionedAndTraceable": true,
+    "remoteStockArtRequiredForGlazeIdentity": false,
+    "firstPartyIdentityArtworkRequiresExplicitOwnershipAndLifecycle": true,
+    "thirdPartyLogosMustPreserveBrandIntegrity": true,
+    "generatedMediaMustBeExplicitlyLabeledWhenConceptual": true,
+    "conceptualMediaMayClaimImplementedReality": false,
+    "screenshotsMustBeActualOrClearlyConceptualAndVersionAligned": true,
+    "glazeUiIdentity": {
+      "authoritativeRepository": "GoreeCloud/goreecloud-branding-assets",
+      "canonicalPath": "systems/glaze-ui/glaze-ui-mark.svg",
+      "canonicalGitBlob": "af8b70387bdaedb8d8388a1660b2d2ca29548fe2",
+      "canonicalStatus": "approved",
+      "consumerRepository": "GoreeCloud/goreecloud-glaze-ui",
+      "packagedDerivativePath": "assets/identity/official/facet/glaze-ui-mark.svg",
+      "packagedDerivativeMustMatchCanonicalBlob": true,
+      "scope": "glaze-ui-product-identity-only",
+      "establishesSharedArtworkLibrary": false
+    }
+  },
+  "truthBoundaries": {
+    "decorativeColorMayEncodeSemanticState": false,
+    "illustrationMayManufactureHealthConnectivitySecurityPrivacyBackupOrRecoveryState": false,
+    "emptyErrorRecoveryArtworkMayImplySuccessBeforeAuthoritativeConfirmation": false,
+    "wallpaperMayDetermineSemanticStatusFocusSecurityPrivacyOrCriticalMeaning": false,
+    "technicalVisualizationMustPreserveAuthoritativeBoundaries": true,
+    "interfaceTaskContentStateInteractionAndInformationHierarchyHavePriority": true
+  },
+  "accessibility": {
+    "artworkMayBeSoleCarrierOfCriticalMeaning": false,
+    "decorativeArtworkMustAvoidAssistiveTechnologyNoise": true,
+    "informativeImageryRequiresEquivalentDescriptionOrSummary": true,
+    "complexVisualizationRequiresTextualOrDataEquivalent": true,
+    "forcedColorsMustRemainUnderstandable": true,
+    "reducedTransparencyMustSuppressDecorativeFrostOverlays": true,
+    "grayscaleMustRemainUnderstandable": true,
+    "largeTextMustNotCauseHorizontalPageOverflow": true
+  },
+  "referenceLibrary": {
+    "containsCanonicalProductArtwork": false,
+    "containsThirdPartyLogoArtwork": false,
+    "containsRemoteImages": false,
+    "containsDocumentaryPhotography": false,
+    "containsConceptualCssGeometryOnly": true,
+    "conceptualLabelRequired": "Conceptual demonstration — not product-state evidence",
+    "assetMetadataExample": {
+      "assetId": "demo.functional-illustration.reference-only",
+      "purpose": "demonstrate treatment metadata without defining a shared asset",
+      "category": "functional-illustration",
+      "appearanceSupport": ["light", "dark", "deep-dark"],
+      "accessibleDescriptionGuidance": "Provide purpose and meaningful content; omit decorative geometry from assistive technology.",
+      "canonicalAsset": false
+    }
+  },
+  "prohibited": {
+    "copiedCanonicalProductArtwork": true,
+    "unlabeledGeneratedDocumentaryMedia": true,
+    "semanticStateByDecorationOnly": true,
+    "decorativeRemoteAssetDependency": true,
+    "thirdPartyLogoRecolorForAestheticFit": true,
+    "blurredTechnicalLabels": true,
+    "fabricatedHardwareCapability": true,
+    "fabricatedSystemState": true
+  },
+  "acceptance": {
+    "conceptualLabelRequired": true,
+    "decorativeArtAriaHiddenRequired": true,
+    "criticalStateHasTextEquivalentRequired": true,
+    "technicalDiagramLabelsRemainReadableRequired": true,
+    "reducedTransparencyRemovesDecorativeOverlayRequired": true,
+    "forcedColorsFallbackRequired": true,
+    "compactViewportPx": 320,
+    "textScalePercent": 200,
+    "horizontalPageOverflowProhibited": true,
+    "screenshotsRequired": true,
+    "humanArtworkReviewRequiredForCanonicalAcceptance": true
+  },
+  "implementation": {
+    "candidateLayer": "css/glaze-v1.2-artwork-imagery.candidate.css",
+    "reference": "reference/v1.2/artwork-imagery.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_artwork_imagery_rendered.py",
+    "workflow": ".github/workflows/glaze-v1.2-artwork-imagery.yml",
+    "candidateEntrypoint": "css/glaze-v1.2.0-candidate.css",
+    "mustLoadBeforeFinalAccessibilityLayer": true
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "bounded-media-treatment-rules",
+      "artwork-style-contract",
+      "illustration-style-contract",
+      "hero-imagery-treatment-contract",
+      "empty-state-artwork-contract",
+      "wallpaper-material-interaction-contract",
+      "media-thumbnail-treatment-contract",
+      "screenshot-treatment-contract",
+      "image-corner-geometry-contract",
+      "conditional-frost-overlay-contract",
+      "image-text-protection-contract",
+      "bounded-environmental-tint-contract",
+      "functional-content-priority-contract",
+      "conceptual-media-labeling",
+      "source-and-provenance-boundaries",
+      "approved-glaze-ui-identity-provenance",
+      "semantic-truth-isolation",
+      "decorative-accessibility-isolation",
+      "reduced-transparency-media-fallback",
+      "forced-colors-media-fallback",
+      "compact-200-percent-text-reference",
+      "exact-head-rendered-browser-acceptance"
+    ],
+    "notEstablished": [
+      "canonical-v1.2-product-artwork-library",
+      "shared-illustration-asset-library",
+      "wallpaper-library",
+      "photography-library",
+      "human-artwork-review",
+      "human-optical-acceptance",
+      "assistive-technology-acceptance",
+      "native-platform-parity",
+      "physical-device-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

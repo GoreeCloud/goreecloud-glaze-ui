@@ -1,0 +1,8 @@
+{
+  "schemaVersion":1,"version":"1.2.0-candidate","lifecycle":"candidate","consumerEligible":false,"stableBaseline":"1.1.0",
+  "semanticDurationsMs":{"instant":0,"fast":120,"standard":180,"deliberate":260},
+  "press":{"durationMs":120,"scale":0.985,"springOptional":true},
+  "connectedTransformation":{"durationMs":260,"sharedElementOptional":true,"correctnessDependsOnMotion":false},
+  "reducedMotion":{"durationMs":0,"directManipulationImmediate":true,"preserveFocus":true,"preserveContext":true},
+  "experimentalGlazeMotionRequired":false
+}

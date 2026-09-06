@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "glaze-v1.2-device-performance-qualification-candidate",
+  "product": "GLAZE UI",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "stableBaseline": "1.1.0",
+  "consumerEligible": false,
+  "purpose": "Define the fail-closed physical-device and production-performance evidence protocol for GLAZE UI V1.2 without inventing numeric budgets or treating browser/emulator evidence as physical-device acceptance.",
+  "authority": {
+    "canonicalBudget": "contracts/performance/glaze-v1-performance-budget.json",
+    "requiredBudgetStatusUntilAccepted": "revalidation-required",
+    "performanceTesting": "contracts/v1.2/performance-testing.candidate.json",
+    "performanceAdaptation": "contracts/v1.2/performance-adaptation.candidate.json",
+    "promotionGates": "acceptance/v1.2-promotion-gates.candidate.md"
+  },
+  "currentBoundary": {
+    "protocolEstablished": true,
+    "physicalDeviceEvidenceEstablished": false,
+    "acceptedNumericRuntimeBudgetEstablished": false,
+    "acceptedPlatformBudgetEstablished": false,
+    "productionPerformanceAcceptanceEstablished": false,
+    "releaseCandidateEstablished": false,
+    "stableEstablished": false
+  },
+  "record": {
+    "exactSourceRevisionRequired": true,
+    "sourceRevisionFormat": "40-lowercase-hex",
+    "repository": "GoreeCloud/goreecloud-glaze-ui",
+    "physicalDeviceRequired": true,
+    "emulatorOrSimulatorProhibitedForPhysicalQualification": true,
+    "placeholderValuesProhibited": true,
+    "requiredTopLevelFields": [
+      "schemaVersion",
+      "recordType",
+      "sourceRevision",
+      "repository",
+      "capturedAt",
+      "capturedBy",
+      "device",
+      "environment",
+      "scenarios",
+      "decision"
+    ],
+    "deviceRequiredFields": [
+      "physicalDevice",
+      "emulator",
+      "manufacturer",
+      "model",
+      "osName",
+      "osVersion",
+      "osBuild",
+      "architecture",
+      "gpu",
+      "displayRefreshHz"
+    ],
+    "environmentRequiredFields": [
+      "powerSource",
+      "batteryPercent",
+      "thermalStateBefore",
+      "thermalStateAfter",
+      "backgroundLoad",
+      "appearanceMode",
+      "accessibilityModes"
+    ],
+    "requiredScenarioIds": [
+      "appearance-light-dark-deep-dark",
+      "clarity-clear-balanced-dense",
+      "living-glaze-tier-3-to-0",
+      "productive-scroll-and-large-list",
+      "navigation-and-interaction",
+      "large-text-200-touch-assistance",
+      "reduced-transparency-and-motion",
+      "personalization-and-atmosphere"
+    ],
+    "requiredMetricFamilies": [
+      "frameTiming",
+      "interactionLatency",
+      "memory",
+      "compositorOrGpu",
+      "power",
+      "thermal"
+    ],
+    "metricObservationStatus": [
+      "measured",
+      "not-available-with-reason"
+    ],
+    "scenarioStatus": [
+      "observed",
+      "failed"
+    ],
+    "decisionValues": [
+      "observation-only",
+      "not-accepted",
+      "accepted"
+    ]
+  },
+  "acceptanceRules": {
+    "acceptedDecisionRequiresAcceptedCanonicalBudget": true,
+    "acceptedDecisionRequiresNumericRuntimeBudget": true,
+    "acceptedDecisionRequiresPlatformBudget": true,
+    "acceptedDecisionRequiresAllRequiredScenariosObserved": true,
+    "acceptedDecisionRequiresAllMetricFamiliesMeasured": true,
+    "observationOnlyMayUseUnavailableMetricsWithExplicitReason": true,
+    "ciSelfTestIsEvidence": false,
+    "browserCiIsPhysicalDeviceEvidence": false,
+    "androidEmulatorIsPhysicalDeviceEvidence": false,
+    "simulatorIsPhysicalDeviceEvidence": false,
+    "oneDeviceImpliesPlatformQualification": false,
+    "onePlatformImpliesCompleteNativeParity": false,
+    "protocolValidationImpliesProductionAcceptance": false,
+    "protocolValidationImpliesReleaseCandidate": false,
+    "protocolValidationImpliesStable": false,
+    "protocolValidationImpliesConsumerConformance": false
+  },
+  "requiredReviewDimensions": [
+    "frame-pacing-and-jank",
+    "interaction-latency",
+    "memory-pressure",
+    "gpu-or-compositor-behavior",
+    "power-impact",
+    "thermal-behavior",
+    "visual-fidelity-under-degradation",
+    "semantic-and-accessibility-preservation"
+  ],
+  "implementation": {
+    "validator": "scripts/validate_glaze_v1_2_device_performance_qualification.py",
+    "workflow": ".github/workflows/glaze-v1.2-external-qualification-protocol.yml",
+    "humanProcedure": "acceptance/v1.2-device-performance-qualification-candidate.md",
+    "recordTemplate": "acceptance/v1.2-device-performance-qualification.template.json"
+  },
+  "notEstablished": [
+    "accepted-numeric-runtime-budget",
+    "accepted-platform-performance-budget",
+    "gpu-budget",
+    "compositor-budget",
+    "memory-budget",
+    "power-budget",
+    "thermal-budget",
+    "mobile-gpu-performance-acceptance",
+    "physical-device-performance-acceptance",
+    "production-performance-acceptance",
+    "complete-native-platform-performance-parity",
+    "release-candidate",
+    "stable",
+    "consumer-conformance"
+  ]
+}

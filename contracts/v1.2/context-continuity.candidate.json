@@ -1,0 +1,10 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","schemaVersion":1,"id":"goreecloud.glaze-ui.v1.2.context-continuity.candidate","product":"GLAZE UI V1.2","version":"1.2.0-candidate","lifecycle":"candidate","consumerEligible":false,"stableBaseline":"1.1.0","extends":"contracts/v1.2/living-glaze.candidate.json",
+  "principle":"context-transforms-before-it-disappears",
+  "preserveWherePermitted":["scroll-position","selection","filter-state","draft-state","focus-restoration","input","media-state","unsaved-work"],
+  "connectedTransformations":["search-capsule-to-search-panel","navigation-item-to-destination-header","quick-control-to-expanded-control","mini-player-to-player","notification-to-detail","floating-toolbar-to-contextual-sheet","thumbnail-to-detail"],
+  "events":["navigation","resize","fold","unfold","rotation","multi-window","search-expansion","panel-transition","application-restoration"],
+  "securityBoundary":"producer-security-and-privacy-policy-may-prohibit-restoration",
+  "motionRequiredForCorrectness":false,
+  "evidenceBoundary":{"notEstablished":["cross-process-restoration-parity","all-platform-state-restoration","release-candidate","stable"]}
+}

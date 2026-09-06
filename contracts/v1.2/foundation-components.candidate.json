@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.foundation-components.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-foundation-component-implementation",
+  "tier": "foundation",
+  "authority": {
+    "proposal": "Glaze UI V1.2 — Components and Interaction States",
+    "stableCatalog": "contracts/components/v1/catalog.json",
+    "coreTokenAuthority": "contracts/v1.2/core-tokens.candidate.json"
+  },
+  "components": [
+    {
+      "id": "GlzButton",
+      "selector": ".glz1-button",
+      "nativePrimitive": "button",
+      "variants": ["primary", "secondary", "subtle", "destructive"],
+      "states": ["rest", "hover", "focus", "pressed", "selected", "loading", "disabled"],
+      "requirements": {"selectedHasStructuralCue": true, "loadingPreservesLabel": true, "loadingRequiresAriaBusy": true, "destructiveMeaningRequiresTextOrAccessibleName": true}
+    },
+    {
+      "id": "GlzIconButton",
+      "selector": ".glz1-icon-button",
+      "nativePrimitive": "button",
+      "states": ["rest", "hover", "focus", "pressed", "selected", "disabled"],
+      "requirements": {"accessibleNameRequired": true, "selectedHasStructuralCue": true, "ambiguousMeaningCannotDependOnIconAlone": true}
+    },
+    {
+      "id": "GlzTextField",
+      "selector": ".glz1-field-control",
+      "nativePrimitive": "input",
+      "states": ["empty", "filled", "focused", "read-only", "disabled", "valid", "warning", "error", "loading", "autofilled"],
+      "requirements": {"persistentLabel": true, "errorRequiresAriaInvalid": true, "errorRequiresAssociatedMessage": true, "errorHasNonColorCue": true}
+    },
+    {
+      "id": "GlzSelect",
+      "selector": ".glz1-select",
+      "nativePrimitive": "select",
+      "states": ["rest", "focus", "disabled", "error"],
+      "requirements": {"currentValueVisible": true, "expandAffordanceVisible": true, "nativeKeyboardBehaviorPreserved": true}
+    },
+    {
+      "id": "GlzCheckbox",
+      "selector": ".glz1-choice[data-kind=\"checkbox\"]",
+      "nativePrimitive": "input[type=checkbox]",
+      "states": ["unchecked", "checked", "indeterminate", "focus", "disabled", "error"],
+      "requirements": {"checkedGeometryPrimary": true, "indeterminateGeometryPrimary": true, "colorOnlySelectionProhibited": true}
+    },
+    {
+      "id": "GlzRadio",
+      "selector": ".glz1-choice[data-kind=\"radio\"]",
+      "nativePrimitive": "input[type=radio]",
+      "states": ["unchecked", "checked", "focus", "disabled"],
+      "requirements": {"checkedDotGeometryPrimary": true, "groupNameRequired": true, "colorOnlySelectionProhibited": true}
+    },
+    {
+      "id": "GlzSwitch",
+      "selector": ".glz1-switch",
+      "nativePrimitive": "input[type=checkbox][role=switch]",
+      "states": ["off", "on", "focus", "disabled", "error"],
+      "requirements": {"thumbPositionCarriesState": true, "shapeReinforcesState": true, "continuousThumbIdentity": true, "colorOnlyStateProhibited": true}
+    },
+    {
+      "id": "GlzSlider",
+      "selector": ".glz1-slider",
+      "nativePrimitive": "input[type=range]",
+      "states": ["rest", "focus", "disabled"],
+      "requirements": {"currentValueExposed": true, "nativeKeyboardBehaviorPreserved": true, "accessibleValueRequired": true}
+    }
+  ],
+  "universalRules": {
+    "clarityBeforeMaterial": true,
+    "minimumTargetPx": 48,
+    "assistedTargetPx": 56,
+    "focusDistinctFromHoverAndSelection": true,
+    "semanticMeaningCannotDependOnlyOnAtmosphericColor": true,
+    "disabledSuppressesInteractionMotion": true,
+    "loadingMustMaintainLayoutStability": true,
+    "reducedMotionRequired": true,
+    "reducedTransparencyRequired": true,
+    "increasedContrastRequired": true,
+    "forcedColorsPlatformAuthoritative": true,
+    "textScale200Required": true,
+    "rtlWhereApplicable": true,
+    "nativeSemanticsPreferred": true,
+    "noNewRuntimeDependency": true
+  },
+  "stateTokenBoundary": {
+    "completeV12StateTokenOwnerEstablished": false,
+    "componentSpecificStateImplementationAllowed": true,
+    "mayImportTokensStatesJsonAsV12Authority": false
+  },
+  "implementation": {
+    "webLayer": "css/glaze-v1.2-foundation-components.candidate.css",
+    "webEntrypoint": "css/glaze-v1.2.0-candidate.css",
+    "reference": "reference/v1.2/foundation-components.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_foundation_components_rendered.py",
+    "workflow": ".github/workflows/glaze-v1.2-foundation-components.yml"
+  },
+  "evidenceBoundary": {
+    "implemented": ["bounded-eight-family-web-foundation-scene", "native-html-keyboard-primitives", "non-color-selection-error-loading-cues", "rendered-accessibility-mode-matrix"],
+    "notEstablished": ["complete-universal-state-token-system", "all-foundation-variants-and-semantic-states", "native-platform-foundation-parity", "touch-screen-reader-human-acceptance", "complete-32-component-v1.2-coverage", "rc", "stable", "consumer-conformance"]
+  }
+}

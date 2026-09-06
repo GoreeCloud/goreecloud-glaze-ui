@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GLAZE UI V1.2 Data Visualization Candidate</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{margin:0;min-inline-size:0}
+    body{background:var(--glz1-canvas);color:var(--glz1-text-primary);font-family:system-ui,sans-serif}
+    main{inline-size:min(100%,1240px);margin-inline:auto;padding:24px;min-inline-size:0;overflow-wrap:anywhere}
+    h1,h2,h3,p{margin-block-start:0}
+    .fixture-note{font-size:.875rem;color:var(--glz1-text-secondary)}
+    .source-line{font-size:.875rem;color:var(--glz1-text-secondary)}
+    .health-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--glz12-space-control)}
+    .health-item{padding:var(--glz12-space-standard-cluster);border:1px solid var(--glz12-structural-border);border-radius:var(--glz12-radius-control);background:var(--glz1-raised)}
+    .health-item strong{display:block}
+    .health-item [data-state]::before{display:inline-block;inline-size:1.5em;font-weight:800}
+    .health-item [data-state="healthy"]::before{content:"✓"}.health-item [data-state="degraded"]::before{content:"!"}.health-item [data-state="unknown"]::before{content:"?"}
+    .timeline{display:grid;gap:var(--glz12-space-control);border-inline-start:2px solid var(--glz12-structural-border);padding-inline-start:var(--glz12-space-standard-cluster)}
+    .timeline article{position:relative}.timeline article::before{content:"";position:absolute;inline-size:10px;block-size:10px;border:2px solid currentColor;border-radius:50%;background:var(--glz1-base);inset-inline-start:calc(-1 * var(--glz12-space-standard-cluster) - 6px);inset-block-start:.4em}
+    [data-glz-layout-class="compact"] .health-grid{grid-template-columns:minmax(0,1fr)}
+    [data-glz-text-scale="200"] .health-grid{grid-template-columns:minmax(0,1fr)}
+  </style>
+</head>
+<body>
+<main aria-labelledby="page-title">
+  <header>
+    <h1 id="page-title">V1.2 Data Visualization and Metrics</h1>
+    <p>Bounded Candidate reference. All values, health labels, thresholds, events, estimates, and forecasts are explicit fixture data; this page does not query or reinterpret producer-authoritative GoreeCloud state.</p>
+  </header>
+
+  <div id="viz-reference" class="glz12-viz-library" data-glz-layout-class="expanded">
+    <section id="viz-dashboard" class="glz12-viz-scene" data-viz-scene="metrics-dashboard" data-glz-viz-root aria-labelledby="viz-dashboard-title">
+      <div><h2 id="viz-dashboard-title">Metrics dashboard</h2><p class="fixture-note">Hierarchy: overall state → exception → primary metrics → trend → source.</p></div>
+      <div class="glz12-viz-metric-grid">
+        <article class="glz12-viz-metric"><span>Storage used</span><div class="glz12-viz-metric-value">4.8 <span class="glz12-viz-unit">TB</span></div><p>of fixture total 8.0 TB</p><p class="source-line">Updated 2 min ago · Fixture storage source</p></article>
+        <article class="glz12-viz-metric"><span>Latency</span><div class="glz12-viz-metric-value">38 <span class="glz12-viz-unit">ms</span></div><p>Comparison: 4 ms lower than previous fixture hour</p><p class="source-line">Updated now · Fixture network source</p></article>
+        <article class="glz12-viz-metric"><span>Availability</span><div class="glz12-viz-metric-value">99.9 <span class="glz12-viz-unit">%</span></div><p>Fixture measured interval only</p><p class="source-line">Updated 1 min ago · Fixture service source</p></article>
+      </div>
+      <div class="glz12-viz-state" data-state="stale" role="status"><strong>Freshness:</strong> backup-freshness fixture is stale; no current producer state is asserted.</div>
+    </section>
+
+    <section id="viz-time-series" class="glz12-viz-scene" data-viz-scene="time-series" data-glz-viz-root aria-labelledby="time-title">
+      <div><h2 id="time-title">Time-series comparison</h2><p class="fixture-note">CPU uses a solid line with circle markers; memory uses a dashed line with square markers. Color is not the sole series cue.</p></div>
+      <div class="glz12-viz-range-row" aria-label="Reference time range"><button class="glz12-viz-range" type="button" data-viz-range="15m" aria-pressed="false">15 min</button><button class="glz12-viz-range" type="button" data-viz-range="1h" aria-pressed="true">1 hour</button><button class="glz12-viz-range" type="button" data-viz-range="24h" aria-pressed="false">24 hours</button><span data-viz-range-status>Reference range: 1 hour. Fixture values are static.</span></div>
+      <figure class="glz12-viz-chart">
+        <svg viewBox="0 0 640 240" role="img" aria-labelledby="timeseries-svg-title timeseries-svg-desc"><title id="timeseries-svg-title">Fixture CPU and memory trend</title><desc id="timeseries-svg-desc">CPU rises from 42 to 61 percent then ends at 55 percent. Memory is a dashed series ranging from 63 to 69 percent.</desc>
+          <path class="glz12-viz-gridline" d="M40 40H610M40 100H610M40 160H610M40 220H610"/>
+          <path class="glz12-viz-series-primary" d="M60 150 L190 126 L320 88 L450 112 L590 102"/><circle class="glz12-viz-marker-primary" cx="60" cy="150" r="6"/><circle class="glz12-viz-marker-primary" cx="190" cy="126" r="6"/><circle class="glz12-viz-marker-primary" cx="320" cy="88" r="6"/><circle class="glz12-viz-marker-primary" cx="450" cy="112" r="6"/><circle class="glz12-viz-marker-primary" cx="590" cy="102" r="6"/>
+          <path class="glz12-viz-series-secondary" d="M60 112 L190 106 L320 100 L450 94 L590 98"/><rect class="glz12-viz-marker-secondary" x="55" y="107" width="10" height="10"/><rect class="glz12-viz-marker-secondary" x="185" y="101" width="10" height="10"/><rect class="glz12-viz-marker-secondary" x="315" y="95" width="10" height="10"/><rect class="glz12-viz-marker-secondary" x="445" y="89" width="10" height="10"/><rect class="glz12-viz-marker-secondary" x="585" y="93" width="10" height="10"/>
+          <text class="glz12-viz-label" x="545" y="84">CPU · solid ○</text><text class="glz12-viz-label" x="500" y="130">Memory · dashed □</text>
+        </svg>
+        <figcaption>Fixture time zone: UTC · sampling shown for reference only.</figcaption>
+      </figure>
+      <div class="glz12-viz-legend" aria-label="Series legend"><span class="glz12-viz-legend-item"><span class="glz12-viz-legend-mark"></span>CPU · solid circle</span><span class="glz12-viz-legend-item"><span class="glz12-viz-legend-mark" data-pattern="dash"></span>Memory · dashed square</span></div>
+      <div class="glz12-viz-point-row" aria-label="Inspect CPU fixture points"><button class="glz12-viz-point" type="button" data-viz-point data-point-id="cpu-0900" data-label="09:00 CPU" data-value="42" data-unit="percent" data-state="Measured fixture value" aria-pressed="true">09:00 · 42%</button><button class="glz12-viz-point" type="button" data-viz-point data-point-id="cpu-0930" data-label="09:30 CPU" data-value="61" data-unit="percent" data-state="Measured fixture value" aria-pressed="false">09:30 · 61%</button><button class="glz12-viz-point" type="button" data-viz-point data-point-id="cpu-1000" data-label="10:00 CPU" data-value="55" data-unit="percent" data-state="Measured fixture value" aria-pressed="false">10:00 · 55%</button></div>
+      <div class="glz12-viz-inspection" data-viz-inspection aria-live="polite">09:00 CPU: 42 percent. Measured fixture value.</div>
+      <table class="glz12-viz-data-table"><caption>Accessible fixture data equivalent</caption><thead><tr><th>Time UTC</th><th>CPU</th><th>Memory</th></tr></thead><tbody><tr><td>09:00</td><td>42%</td><td>63%</td></tr><tr><td>09:30</td><td>61%</td><td>69%</td></tr><tr><td>10:00</td><td>55%</td><td>67%</td></tr></tbody></table>
+    </section>
+
+    <section id="viz-capacity" class="glz12-viz-scene" data-viz-scene="capacity-storage" data-glz-viz-root aria-labelledby="capacity-title">
+      <div><h2 id="capacity-title">Capacity and storage</h2><p class="fixture-note">Used, available, reserved, and total are labeled explicitly.</p></div>
+      <div class="glz12-viz-capacity"><figure class="glz12-viz-chart glz12-viz-ring"><svg viewBox="0 0 120 120" role="img" aria-labelledby="ring-title ring-desc"><title id="ring-title">Fixture storage capacity</title><desc id="ring-desc">60 percent used, 30 percent available, 10 percent reserved.</desc><circle cx="60" cy="60" r="46" fill="none" stroke="currentColor" opacity=".16" stroke-width="14"/><circle cx="60" cy="60" r="46" fill="none" stroke="var(--glz1-focus)" stroke-width="14" stroke-dasharray="173 289" transform="rotate(-90 60 60)"/><text class="glz12-viz-label" x="60" y="58" text-anchor="middle">4.8 TB used</text><text class="glz12-viz-label" x="60" y="75" text-anchor="middle">of 8.0 TB</text></svg><figcaption>Fixture capacity, not producer state.</figcaption></figure><table class="glz12-viz-data-table"><caption>Fixture capacity breakdown</caption><tbody><tr><th>Used</th><td>4.8 TB · 60%</td></tr><tr><th>Available</th><td>2.4 TB · 30%</td></tr><tr><th>Reserved</th><td>0.8 TB · 10%</td></tr><tr><th>Total</th><td>8.0 TB</td></tr></tbody></table></div>
+    </section>
+
+    <section id="viz-network" class="glz12-viz-scene" data-viz-scene="network-performance" data-glz-viz-root aria-labelledby="network-viz-title">
+      <div><h2 id="network-viz-title">Network performance</h2><p class="fixture-note">Upload and download use different line patterns and direct labels.</p></div>
+      <figure class="glz12-viz-chart"><svg viewBox="0 0 640 220" role="img" aria-labelledby="net-svg-title net-svg-desc"><title id="net-svg-title">Fixture network throughput</title><desc id="net-svg-desc">Download solid series peaks at 2.4 gigabits per second. Upload dashed series peaks at 820 megabits per second.</desc><path class="glz12-viz-gridline" d="M40 40H610M40 100H610M40 160H610"/><path class="glz12-viz-series-primary" d="M60 150 L190 90 L320 72 L450 102 L590 82"/><path class="glz12-viz-series-secondary" d="M60 178 L190 164 L320 148 L450 156 L590 144"/><text class="glz12-viz-label" x="470" y="66">Download · solid</text><text class="glz12-viz-label" x="460" y="178">Upload · dashed</text></svg><figcaption>Fixture network values · no real stream connected.</figcaption></figure>
+      <div class="glz12-viz-range-row"><button id="network-live-toggle" class="glz12-viz-range" type="button" data-viz-live-toggle aria-pressed="false">Pause visual updates</button><span data-viz-live-status>Visual updates live for this static fixture presentation. No producer stream is connected.</span></div>
+    </section>
+
+    <section id="viz-health" class="glz12-viz-scene" data-viz-scene="health-status" data-glz-viz-root aria-labelledby="health-title">
+      <div><h2 id="health-title">Health status</h2><p class="fixture-note">Unknown remains distinct from Healthy and Degraded; this reference does not compute overall health.</p></div>
+      <div class="health-grid"><article class="health-item"><strong>Gateway</strong><span data-state="healthy">Healthy</span><p>Fixture health label</p></article><article class="health-item"><strong>Indexer</strong><span data-state="degraded">Degraded</span><p>Fixture health label</p></article><article class="health-item"><strong>Archive probe</strong><span data-state="unknown">Unknown</span><p>No fixture health result</p></article></div>
+      <div class="glz12-viz-state" data-state="unknown" role="status"><strong>Overall health: Unknown.</strong> Missing archive-probe data is not upgraded to a positive state.</div>
+    </section>
+
+    <section id="viz-timeline" class="glz12-viz-scene" data-viz-scene="timeline-events" data-glz-viz-root aria-labelledby="timeline-title">
+      <div><h2 id="timeline-title">Timeline and events</h2><p class="fixture-note">Chronological alignment supports comparison. It does not assert causation.</p></div>
+      <div class="timeline"><article><strong>09:05 · Fixture deployment</strong><p>Reference event marker.</p></article><article><strong>09:12 · Latency rise observed</strong><p>Occurred after the fixture deployment. This reference does not claim the deployment caused the rise.</p></article><article><strong>09:24 · Latency returned to fixture baseline</strong><p>Reference recovery event.</p></article></div>
+    </section>
+
+    <section id="viz-comparison" class="glz12-viz-scene" data-viz-scene="comparison-bars" data-glz-viz-root aria-labelledby="compare-title">
+      <div><h2 id="compare-title">Discrete comparison</h2><p class="fixture-note">Baseline: previous fixture hour. Shared scale: 0–100 requests/s.</p></div>
+      <div class="glz12-viz-bar-grid" role="img" aria-label="Fixture throughput comparison: Gateway A 72 requests per second, Gateway B 54, Gateway C 91"><div class="glz12-viz-bar-row"><span>Gateway A</span><div class="glz12-viz-bar-track"><div class="glz12-viz-bar-fill" style="inline-size:72%"></div></div><strong>72</strong></div><div class="glz12-viz-bar-row"><span>Gateway B</span><div class="glz12-viz-bar-track"><div class="glz12-viz-bar-fill" style="inline-size:54%"></div></div><strong>54</strong></div><div class="glz12-viz-bar-row"><span>Gateway C</span><div class="glz12-viz-bar-track"><div class="glz12-viz-bar-fill" style="inline-size:91%"></div></div><strong>91</strong></div></div>
+      <p>Comparison change: Gateway A is +8 requests/s versus the explicitly identified previous fixture hour. The positive sign describes arithmetic direction, not semantic health.</p>
+    </section>
+
+    <section id="viz-missing" class="glz12-viz-scene" data-viz-scene="missing-and-forecast" data-glz-viz-root aria-labelledby="missing-title">
+      <div><h2 id="missing-title">Missing, estimated, and forecast data</h2><p class="fixture-note">Measured, missing, estimated, forecast, zero, unavailable, and unknown remain different states.</p></div>
+      <figure class="glz12-viz-chart"><svg viewBox="0 0 640 220" role="img" aria-labelledby="forecast-title forecast-desc"><title id="forecast-title">Fixture measured and forecast capacity trend</title><desc id="forecast-desc">Measured solid line ends before a visible missing gap. Estimated values use a dotted line, followed by a dashed forecast segment labeled Forecast.</desc><path class="glz12-viz-gridline" d="M40 50H610M40 110H610M40 170H610"/><path class="glz12-viz-series-primary" d="M60 150 L170 132 L280 118"/><path class="glz12-viz-series-estimated" d="M340 108 L410 100"/><path class="glz12-viz-series-forecast" d="M410 100 L500 86 L590 70"/><text class="glz12-viz-label" x="285" y="145">Missing gap</text><text class="glz12-viz-label" x="342" y="92">Estimated</text><text class="glz12-viz-label" x="510" y="58">Forecast</text></svg><figcaption>Fixture forecast; no model confidence or producer forecast quality is asserted.</figcaption></figure>
+      <table class="glz12-viz-data-table"><caption>Truth-state examples</caption><tbody><tr><th>Measured</th><td>42 GB</td></tr><tr><th>Zero</th><td>0 GB</td></tr><tr><th>Missing</th><td>No sample</td></tr><tr><th>Unavailable</th><td>Source unavailable</td></tr><tr><th>Unknown</th><td>State cannot be determined from fixture</td></tr><tr><th>Estimated</th><td>46 GB · modeled fixture value</td></tr><tr><th>Forecast</th><td>51 GB · forecast fixture value, not certainty</td></tr></tbody></table>
+      <div class="glz12-viz-state" data-state="stale"><strong>Fixture threshold:</strong> warning at 80% is a reference threshold only; this page does not claim it is producer configuration.</div>
+    </section>
+  </div>
+</main>
+<script type="module" src="../../js/glaze-v1.2-data-visualization.candidate.mjs"></script>
+</body>
+</html>

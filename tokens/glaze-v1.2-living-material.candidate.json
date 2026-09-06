@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "clarity": {
+    "clear": {"materialMixPercent": 82, "blurDeltaPx": -4, "edgeSpecularPercent": 28},
+    "balanced": {"materialMixPercent": 92, "blurDeltaPx": 0, "edgeSpecularPercent": 45},
+    "dense": {"materialMixPercent": 98, "blurDeltaPx": 6, "edgeSpecularPercent": 68}
+  },
+  "backdrop": {
+    "simple": {"materialMixDeltaPercent": -4, "blurDeltaPx": -4, "saturation": 1.08},
+    "complex": {"materialMixDeltaPercent": 2, "blurDeltaPx": 8, "saturation": 0.92},
+    "unknown": {"materialMixDeltaPercent": 0, "blurDeltaPx": 0, "profile": "selected-clarity"}
+  },
+  "thickness": {
+    "thin": {"depthPx": 2, "shadowPx": 10, "specular": 0.72},
+    "balanced": {"depthPx": 4, "shadowPx": 18, "specular": 0.9},
+    "dense": {"depthPx": 7, "shadowPx": 28, "specular": 1.0}
+  },
+  "interaction": {
+    "rest": {"scale": 1.0, "elevationDeltaPx": 0},
+    "hover": {"scale": 1.0, "elevationDeltaPx": 1},
+    "focus": {"scale": 1.0, "elevationDeltaPx": 1},
+    "pressed": {"scale": 0.985, "elevationDeltaPx": -2},
+    "dragged": {"scale": 1.01, "elevationDeltaPx": 4},
+    "selected": {"scale": 1.0, "elevationDeltaPx": 1},
+    "expanded": {"scale": 1.0, "elevationDeltaPx": 3},
+    "loading": {"scale": 1.0, "elevationDeltaPx": 0},
+    "disabled": {"scale": 1.0, "elevationDeltaPx": 0}
+  },
+  "performanceTiers": {"0": "solid", "1": "static-glaze", "2": "responsive-glaze", "3": "living-glaze"},
+  "accessibilityPrecedence": ["forced-colors", "reduced-transparency", "increased-contrast", "clarity-personalization"]
+}

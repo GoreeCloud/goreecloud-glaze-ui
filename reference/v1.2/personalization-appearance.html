@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance-preference="follow-system" data-glz-appearance="light" data-glz-accent="ice" data-glz-atmosphere="balanced" data-glz-density="standard" data-glaze-clarity="balanced">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GLAZE UI V1.2 Candidate — Personalization and Appearance</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    *{box-sizing:border-box}html,body{min-inline-size:0}body{margin:0;padding:16px;background:var(--glz1-canvas);color:var(--glz1-text-primary);font-family:var(--glz12-font-sans,system-ui,sans-serif)}
+    main{inline-size:100%;max-inline-size:920px;min-inline-size:0;margin-inline:auto;display:grid;grid-template-columns:minmax(0,1fr);gap:18px}header{min-inline-size:0}header p{max-inline-size:72ch}.glz12-personalization-surface>:first-child{margin-block-start:0}.glz12-personalization-surface>:last-child{margin-block-end:0}.glz12-personalization-chip{padding:12px;border:1px solid var(--glz12-structural-border);border-radius:var(--glz12-radius-control,12px)}.control-row{display:flex;flex-wrap:wrap;gap:8px;margin-block:12px}.control-row button{min-block-size:48px;padding-inline:14px}.status{font-family:ui-monospace,monospace;overflow-wrap:anywhere}
+  </style>
+</head>
+<body>
+<main id="personalization-reference" class="glz12-personalization-library">
+  <header>
+    <p>Candidate reference only. V1.1 / 1.1.0 remains Stable. Personalization changes expression, never security/privacy meaning, semantic state, accessibility authority, product identity, or system truth.</p>
+    <h1>Personalization and Appearance</h1>
+  </header>
+  <section id="adapter-controls" class="glz12-personalization-surface" aria-labelledby="adapter-title">
+    <h2 id="adapter-title">System and preference adapters</h2>
+    <p>Follow System resolves through a bounded platform adapter. This reference opts into local browser storage only to exercise the consumer persistence-adapter contract. Cross-device sync remains separately governed by GoreeCloud Sync.</p>
+    <div class="control-row" aria-label="Appearance preference">
+      <button type="button" data-appearance="follow-system">Follow System</button>
+      <button type="button" data-appearance="light">Light</button>
+      <button type="button" data-appearance="dark">Dark</button>
+      <button type="button" data-appearance="deep-dark">Deep Dark</button>
+    </div>
+    <div class="control-row" aria-label="Glaze clarity">
+      <button type="button" data-clarity="clear">Clear</button>
+      <button type="button" data-clarity="balanced">Balanced</button>
+      <button type="button" data-clarity="dense">Dense</button>
+    </div>
+    <div class="control-row" aria-label="Wallpaper atmosphere">
+      <button id="apply-wallpaper-atmosphere" type="button">Apply local wallpaper color summary</button>
+      <button id="clear-wallpaper-atmosphere" type="button">Clear wallpaper atmosphere</button>
+    </div>
+    <p>Wallpaper adaptation is deliberately data-minimized: Glaze never fetches, decodes, or inspects wallpaper pixels. A platform or consumer adapter may provide a local RGB summary; Glaze only derives a bounded, desaturated, low-intensity atmosphere from that summary.</p>
+    <div class="control-row">
+      <button id="persist-preferences" type="button">Persist current preferences</button>
+      <button id="clear-preferences" type="button">Clear persisted preferences</button>
+    </div>
+    <p id="adapter-status" class="status" aria-live="polite"></p>
+  </section>
+  <section id="expression" class="glz12-personalization-surface glz12-personalization-atmosphere" aria-labelledby="expression-title">
+    <h2 id="expression-title">Governed expression</h2>
+    <div id="personal-grid" class="glz12-personalization-grid">
+      <article id="accent-card" class="glz12-personalization-chip glz12-personalization-accent"><strong>Accent expression</strong><p>Governed accents decorate non-semantic presentation only.</p></article>
+      <article id="semantic-warning" class="glz12-semantic-state" data-semantic="warning"><strong>Security review required</strong><p>This semantic warning is producer-owned and must not be recolored by personalization.</p></article>
+      <article class="glz12-personalization-chip"><strong>Density</strong><p>Comfortable, Standard, Productive, and Immersive alter spacing without changing semantics.</p></article>
+      <article class="glz12-personalization-chip"><strong>Appearance</strong><p>Light, Dark, and Deep Dark remain readable; Follow System resolves through the platform-adapter contract.</p></article>
+      <article class="glz12-personalization-chip"><strong>Clarity</strong><p>Clear, Balanced, and Dense personalize Living Frosted material within accessibility limits.</p></article>
+      <article class="glz12-personalization-chip"><strong>Wallpaper atmosphere</strong><p>A local RGB summary may gently influence environmental color while semantic colors and accessibility remain authoritative.</p></article>
+    </div>
+    <p><button id="action" class="glz1-button glz12-personalization-action" type="button">Personalization action</button></p>
+  </section>
+  <section class="glz12-personalization-surface">
+    <h2>Boundaries</h2>
+    <p id="boundary-copy">No raw blur, saturation, or shadow sliders. No arbitrary icon packs. No semantic-color remapping. Glaze does not own cross-device preference sync, native platform acceptance, or wallpaper pixel acquisition.</p>
+  </section>
+</main>
+<script type="module">
+  import {
+    applyWallpaperAtmosphere,
+    createBrowserSystemAppearanceAdapter,
+    createPersonalizationController,
+    createWebStoragePreferenceAdapter,
+    deriveWallpaperAtmosphere
+  } from '../../js/glaze-v1.2-personalization.candidate.mjs';
+
+  const storageKey='goreecloud.glaze.v1.2.personalization.reference';
+  const persistenceAdapter=createWebStoragePreferenceAdapter(localStorage,storageKey);
+  const systemAdapter=createBrowserSystemAppearanceAdapter();
+  const controller=createPersonalizationController({target:document,systemAdapter,persistenceAdapter});
+  const status=document.getElementById('adapter-status');
+  const renderStatus=()=>{
+    status.textContent=JSON.stringify({
+      preference:document.documentElement.dataset.glzAppearancePreference,
+      resolved:document.documentElement.dataset.glzAppearance,
+      clarity:document.documentElement.dataset.glazeClarity,
+      wallpaperAtmosphere:document.documentElement.dataset.glzWallpaperAtmosphere || 'none',
+      persistenceEnabled:controller.persistenceEnabled
+    });
+  };
+  controller.start();
+  renderStatus();
+  document.querySelectorAll('[data-appearance]').forEach(button=>button.addEventListener('click',()=>{controller.set({appearance:button.dataset.appearance});renderStatus();}));
+  document.querySelectorAll('[data-clarity]').forEach(button=>button.addEventListener('click',()=>{controller.set({clarity:button.dataset.clarity});renderStatus();}));
+  document.getElementById('apply-wallpaper-atmosphere').addEventListener('click',()=>{applyWallpaperAtmosphere(document,{r:232,g:72,b:154});renderStatus();});
+  document.getElementById('clear-wallpaper-atmosphere').addEventListener('click',()=>{applyWallpaperAtmosphere(document,null);renderStatus();});
+  document.getElementById('persist-preferences').addEventListener('click',()=>{controller.set({}, {persist:true});renderStatus();});
+  document.getElementById('clear-preferences').addEventListener('click',()=>{controller.clearPersisted();renderStatus();});
+  window.glazePersonalizationReference={controller,systemAdapter,persistenceAdapter,storageKey,renderStatus,applyWallpaperAtmosphere,deriveWallpaperAtmosphere};
+  window.personalizationReady=true;
+</script>
+</body>
+</html>

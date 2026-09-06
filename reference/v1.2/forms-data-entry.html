@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light" data-glz-material-performance="full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GLAZE UI V1.2 Forms and Data Entry Candidate</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { min-width: 0; }
+    body { margin: 0; min-height: 100vh; overflow-x: hidden; }
+    .forms-reference { max-width: 1180px; margin-inline: auto; padding: var(--glz12-space-section); }
+    .forms-reference > header { display: grid; gap: var(--glz12-space-compact-cluster); margin-block-end: var(--glz12-space-section); }
+    .forms-reference h1, .forms-reference h2, .forms-reference h3, .forms-reference p { margin: 0; }
+    .forms-reference p, .forms-reference span, .forms-reference label, .forms-reference button { overflow-wrap: anywhere; }
+    .scene-heading { display: grid; gap: var(--glz12-space-control); }
+    .glz1-field { inline-size: 100%; }
+    .glz1-field-control, .glz1-select { max-inline-size: 100%; }
+    .glz1-field-control > input.glz12-form-native-target { inline-size: 100%; }
+    .native-standalone { inline-size: 100%; padding-inline: var(--glz12-space-standard-cluster); border: 1px solid var(--glz12-structural-border); border-radius: var(--glz12-radius-field); background: var(--glz1-base); color: var(--glz1-text-primary); font: inherit; }
+    .reference-note { color: var(--glz1-text-secondary); }
+  </style>
+</head>
+<body>
+  <main id="forms-reference" class="forms-reference glz12-form-library" data-glz-layout-class="expanded" aria-labelledby="forms-title">
+    <header>
+      <p data-glz-type="label">Forms and Data Entry · Candidate</p>
+      <h1 id="forms-title" data-glz-type="display">Calm before interaction. Precise during input. Clear before commitment.</h1>
+      <p data-glz-type="body">These reference scenes compose existing Foundation controls and native input semantics. They do not authenticate, persist, upload, synchronize, or manufacture producer state.</p>
+    </header>
+
+    <section id="scene-profile" class="glz12-form-surface" data-form-scene="simple-profile" aria-labelledby="profile-title">
+      <div class="scene-heading"><h2 id="profile-title">Simple profile form</h2><p class="glz12-form-model-label">Deferred commit · changes apply only after Save profile.</p></div>
+      <form id="profile-form" data-glz-form data-glz-form-model="deferred" novalidate>
+        <div class="glz12-form-section">
+          <div class="glz12-form-error-summary" data-glz-error-summary role="alert" tabindex="-1" hidden><strong data-glz-error-heading>Review this form.</strong><ul data-glz-error-list></ul></div>
+          <label class="glz1-field">
+            <span class="glz1-field-label">Display name <span class="glz12-form-requirement">Required</span></span>
+            <span class="glz1-field-control"><input id="profile-display-name" class="glz12-form-native-target" name="display-name" value="GoreeCloud Operator" required data-glz-validate data-glz-error-target="profile-name-error" data-glz-error-message="Enter a display name."></span>
+            <span id="profile-name-error" class="glz1-field-message glz12-field-status" data-kind="error" hidden><span class="glz12-field-status-mark" aria-hidden="true">!</span><span data-glz-error-copy>Enter a display name.</span></span>
+          </label>
+          <label class="glz1-field">
+            <span class="glz1-field-label">Public profile URL <span class="glz12-form-requirement">Optional</span></span>
+            <span class="glz1-field-control"><input id="profile-url" class="glz12-form-native-target" name="profile-url" type="url" value="https://example.invalid/goreecloud"></span>
+            <span class="glz1-field-message">Optional public link; the reference does not publish it.</span>
+          </label>
+          <div class="glz12-form-actions"><button class="glz1-button glz12-form-action" data-variant="primary" data-glz-submit type="submit"><span data-glz-submit-label>Save profile</span><span class="glz12-control-status" data-glz-submit-progress hidden><span class="glz12-control-status-mark" aria-hidden="true">…</span><span>Saving</span></span></button><button class="glz1-button glz12-form-action" data-variant="secondary" type="reset">Reset</button></div>
+          <div class="glz12-form-status" data-glz-form-status data-state="saved" role="status">Saved reference baseline</div>
+        </div>
+      </form>
+    </section>
+
+    <section id="scene-settings" class="glz12-form-surface" data-form-scene="settings" aria-labelledby="settings-title">
+      <div class="scene-heading"><h2 id="settings-title">Settings</h2><p class="glz12-form-model-label">Immediate control · request applies when the switch changes; producer state remains authoritative.</p></div>
+      <form id="settings-form" data-glz-form data-glz-form-model="immediate">
+        <label class="glz1-switch" data-glz-commit="immediate"><input id="automatic-backups" type="checkbox" role="switch" checked data-glz-immediate-on="Automatic backups enable request sent; producer confirmation is still required." data-glz-immediate-off="Automatic backups disable request sent; producer confirmation is still required."><span class="glz1-switch-track"><span class="glz1-switch-thumb"></span></span><span>Automatic backups</span></label>
+        <p class="glz12-form-authority-note" data-glz-immediate-status role="status">Current displayed setting is reference data; the UI does not infer backend success.</p>
+      </form>
+    </section>
+
+    <section id="scene-technical" class="glz12-form-surface" data-form-scene="long-technical-configuration" aria-labelledby="technical-title">
+      <div class="scene-heading"><h2 id="technical-title">Long technical configuration form</h2><p class="glz12-form-model-label">Deferred commit · specific validation precedes the producer request.</p></div>
+      <form id="technical-form" data-glz-form data-glz-form-model="deferred" novalidate>
+        <div class="glz12-form-section">
+          <div id="technical-error-summary" class="glz12-form-error-summary" data-glz-error-summary role="alert" tabindex="-1" hidden><strong data-glz-error-heading>Review this configuration.</strong><ul data-glz-error-list></ul></div>
+          <div class="glz12-form-pair">
+            <label class="glz1-field"><span class="glz1-field-label">Server name <span class="glz12-form-requirement">Required</span></span><span class="glz1-field-control"><input id="technical-server" class="glz12-form-native-target" name="server" value="edge-01" required data-glz-validate data-glz-error-target="technical-server-error" data-glz-error-message="Enter the server name."></span><span id="technical-server-error" class="glz1-field-message glz12-field-status" data-kind="error" hidden><span class="glz12-field-status-mark" aria-hidden="true">!</span><span data-glz-error-copy>Enter the server name.</span></span></label>
+            <label class="glz1-field"><span class="glz1-field-label">Port <span class="glz12-form-requirement">Required</span></span><span class="glz1-field-control"><input id="technical-port" class="glz12-form-native-target" name="port" type="number" inputmode="numeric" min="1" max="65535" value="70000" required data-glz-validate data-glz-error-target="technical-port-error" data-glz-error-message="Port must be between 1 and 65535."></span><span id="technical-port-error" class="glz1-field-message glz12-field-status" data-kind="error" hidden><span class="glz12-field-status-mark" aria-hidden="true">!</span><span data-glz-error-copy>Port must be between 1 and 65535.</span></span></label>
+          </div>
+          <label class="glz1-field" for="technical-environment"><span class="glz1-field-label">Environment <span class="glz12-form-requirement">Required</span></span><select id="technical-environment" class="glz1-select glz12-form-native-target" name="environment" required data-glz-validate data-glz-error-target="technical-environment-error" data-glz-error-message="Select an environment."><option value="">Choose one</option><option value="staging" selected>Staging</option><option value="production">Production</option></select><span id="technical-environment-error" class="glz1-field-message glz12-field-status" data-kind="error" hidden><span class="glz12-field-status-mark" aria-hidden="true">!</span><span data-glz-error-copy>Select an environment.</span></span></label>
+          <label class="glz1-field"><span class="glz1-field-label">Managed repository</span><span class="glz1-field-control"><input class="glz12-form-native-target" value="goreecloud-glaze-ui" readonly></span><span class="glz1-field-message">Read-only producer-managed context.</span></label>
+          <div class="glz12-form-actions"><button id="technical-submit" class="glz1-button glz12-form-action" data-variant="primary" data-glz-submit type="submit"><span data-glz-submit-label>Save configuration</span><span class="glz12-control-status" data-glz-submit-progress hidden><span class="glz12-control-status-mark" aria-hidden="true">…</span><span>Saving</span></span></button><button class="glz1-button glz12-form-action" data-variant="secondary" type="reset">Cancel changes</button></div>
+          <div id="technical-status" class="glz12-form-status" data-glz-form-status data-state="saved" role="status">Saved reference baseline</div>
+        </div>
+      </form>
+    </section>
+
+    <section id="scene-authentication" class="glz12-form-surface" data-form-scene="authentication" aria-labelledby="authentication-title">
+      <div class="scene-heading"><h2 id="authentication-title">Authentication presentation</h2><p class="glz12-form-authority-note">No identity method is claimed or simulated. A consuming product must hand off to the authoritative identity or native trusted flow it actually supports.</p></div>
+      <form id="authentication-form" data-glz-form data-glz-form-model="authentication-handoff">
+        <div class="glz12-form-fields">
+          <label class="glz1-field"><span class="glz1-field-label">Account</span><span class="glz1-field-control"><input id="auth-username" class="glz12-form-native-target" name="username" autocomplete="username" value="operator@example.invalid"></span></label>
+          <label class="glz1-field"><span class="glz1-field-label">Password</span><span class="glz1-field-control"><input id="auth-password" class="glz12-form-native-target" name="password" type="password" autocomplete="current-password"></span></label>
+          <div class="glz12-form-actions"><button class="glz1-button glz12-form-action" data-variant="primary" type="submit">Continue to authoritative sign-in</button></div>
+          <div class="glz12-form-status" data-glz-form-status data-state="saved" role="status">No authentication attempted</div>
+        </div>
+      </form>
+    </section>
+
+    <section id="scene-password" class="glz12-form-surface" data-form-scene="password-field" aria-labelledby="password-title">
+      <div class="scene-heading"><h2 id="password-title">Password field</h2><p class="glz12-form-sensitive-note">Reveal is explicit and changes only visibility, never the field value. This scene contains reference-only non-credential text.</p></div>
+      <label class="glz1-field"><span class="glz1-field-label">Reference password</span><span class="glz1-field-control"><input id="password-reference" class="glz12-form-native-target" type="password" autocomplete="new-password" value="reference-only-value"></span></label>
+      <div class="glz12-form-actions"><button id="password-reveal" class="glz1-button glz12-form-action" data-variant="secondary" type="button" data-glz-password-reveal aria-controls="password-reference" aria-pressed="false" aria-label="Show password"><span data-glz-password-reveal-label>Show password</span></button></div>
+    </section>
+
+    <section id="scene-otp" class="glz12-form-surface" data-form-scene="one-time-code" aria-labelledby="otp-title">
+      <div class="scene-heading"><h2 id="otp-title">One-time code</h2><p class="reference-note">One field accepts the whole code, paste, and platform autofill; the reference does not validate a real code.</p></div>
+      <label class="glz1-field"><span class="glz1-field-label">Verification code</span><span class="glz1-field-control"><input id="otp-code" class="glz12-form-native-target" name="one-time-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="123456"></span><span class="glz1-field-message">Enter or paste the complete six-digit code.</span></label>
+    </section>
+
+    <section id="scene-schedule" class="glz12-form-surface" data-form-scene="date-time-scheduling" aria-labelledby="schedule-title">
+      <div class="scene-heading"><h2 id="schedule-title">Date and time scheduling</h2><p class="glz12-form-authority-note">Native date/time controls are used. The time zone is visible; no scheduling operation is performed.</p></div>
+      <div class="glz12-form-pair">
+        <label class="glz1-field"><span class="glz1-field-label">Date</span><input id="schedule-date" class="native-standalone glz12-form-native-target" type="date"></label>
+        <label class="glz1-field"><span class="glz1-field-label">Time</span><input id="schedule-time" class="native-standalone glz12-form-native-target" type="time"></label>
+      </div>
+      <label class="glz1-field" for="schedule-zone"><span class="glz1-field-label">Time zone</span><select id="schedule-zone" class="glz1-select glz12-form-native-target"><option>America/Chicago</option><option>UTC</option></select></label>
+    </section>
+
+    <section id="scene-file" class="glz12-form-surface" data-form-scene="file-selection" aria-labelledby="file-title">
+      <div class="scene-heading"><h2 id="file-title">File selection</h2><p class="reference-note">Native Browse remains available. Drag-and-drop is presented only as a supplement; no upload runtime exists in this Candidate slice.</p></div>
+      <label class="glz12-form-file-zone"><span class="glz1-field-label">Configuration file</span><input id="file-picker" class="glz12-form-native-target" type="file"><span class="glz12-form-supporting">Browse for a file, or use drag-and-drop where the consuming product implements it.</span></label>
+    </section>
+
+    <section id="scene-validation" class="glz12-form-surface" data-form-scene="validation-failure" aria-labelledby="validation-title">
+      <div class="scene-heading"><h2 id="validation-title">Validation failure</h2><p class="reference-note">Errors identify what is wrong and how to fix it without relying on color alone.</p></div>
+      <label class="glz1-field"><span class="glz1-field-label">Workspace alias <span class="glz12-form-requirement">Required</span></span><span class="glz1-field-control"><input id="validation-alias" class="glz12-form-native-target" value="" aria-invalid="true" aria-describedby="validation-alias-error"></span><span id="validation-alias-error" class="glz1-field-message glz12-field-status" data-kind="error"><span class="glz12-field-status-mark" aria-hidden="true">!</span><span>Enter a workspace alias before continuing.</span></span></label>
+    </section>
+
+    <section id="scene-destructive" class="glz12-form-destructive" data-form-scene="destructive-confirmation" data-glz-destructive-confirmation data-glz-destructive-action="delete-workspace" aria-labelledby="destructive-title">
+      <div class="scene-heading"><h2 id="destructive-title">Destructive confirmation</h2><p>Delete workspace <strong>Reference Workspace</strong>. This action is irreversible in this example and would remove the workspace from the consuming product. No destructive operation is executed by this reference.</p></div>
+      <label class="glz1-field"><span class="glz1-field-label">Type DELETE WORKSPACE to confirm</span><span class="glz1-field-control"><input id="destructive-confirm" class="glz12-form-native-target" data-glz-confirm-input data-glz-confirm-phrase="DELETE WORKSPACE" autocomplete="off"></span></label>
+      <div class="glz12-form-actions"><button id="destructive-button" class="glz1-button glz12-form-action" data-variant="destructive" data-glz-confirm-button type="button" disabled>Delete Reference Workspace</button></div>
+    </section>
+
+    <section id="scene-multistep" class="glz12-form-surface" data-form-scene="multi-step-setup" aria-labelledby="multistep-title">
+      <div class="scene-heading"><h2 id="multistep-title">Multi-step setup</h2><p class="reference-note">Progress is explicit and structural rather than communicated through animation alone.</p></div>
+      <ol class="glz12-form-steps" aria-label="Setup progress"><li>1 · Basics</li><li aria-current="step">2 · Connection</li><li>3 · Review</li></ol>
+      <label class="glz1-field"><span class="glz1-field-label">Device address</span><span class="glz1-field-control"><input id="multistep-address" class="glz12-form-native-target" inputmode="url" placeholder="device.example.invalid"></span></label>
+      <div class="glz12-form-actions"><button class="glz1-button glz12-form-action" data-variant="secondary" type="button">Back</button><button class="glz1-button glz12-form-action" data-variant="primary" type="button">Continue to review</button></div>
+    </section>
+  </main>
+  <script type="module" src="../../js/glaze-v1.2-forms.candidate.mjs"></script>
+</body>
+</html>

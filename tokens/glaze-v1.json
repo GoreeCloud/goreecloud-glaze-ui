@@ -1,12 +1,14 @@
 {
-  "product": "GLAZE UI V1.1",
-  "version": "1.1.0",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0",
   "status": "stable",
   "sources": [
     "glaze.tokens.json",
     "materials.json",
     "semantic-colors.json",
-    "glaze-v1.1-atmosphere.json"
+    "glaze-v1.1-atmosphere.json",
+    "glaze-v1.2-frosted-neutral.candidate.json",
+    "glaze-v1.2-optical-foundation.candidate.json"
   ],
-  "note": "Current Stable V1 token manifest. V1.1 adds the approved optical-atmosphere layer while preserving inherited V1 material, semantic, accessibility, component, and system-shell authority."
+  "note": "Current Stable V1 token manifest. V1.2 promotes Frosted Neutral + Living Frosted material authority while preserving inherited semantic, accessibility, component, System Shell, and truth boundaries. Historical .candidate filenames are retained as immutable promoted source provenance."
 }

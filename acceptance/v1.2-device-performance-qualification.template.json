@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "recordType": "glaze-v1.2-device-performance-qualification",
+  "sourceRevision": "REPLACE_WITH_EXACT_40_CHAR_SOURCE_SHA",
+  "repository": "GoreeCloud/goreecloud-glaze-ui",
+  "capturedAt": "REPLACE_WITH_ISO_8601_TIMESTAMP_WITH_TIMEZONE",
+  "capturedBy": "REPLACE_WITH_OPERATOR_NAME",
+  "device": {
+    "physicalDevice": false,
+    "emulator": false,
+    "manufacturer": "REPLACE_WITH_MANUFACTURER",
+    "model": "REPLACE_WITH_MODEL",
+    "osName": "REPLACE_WITH_OS_NAME",
+    "osVersion": "REPLACE_WITH_OS_VERSION",
+    "osBuild": "REPLACE_WITH_OS_BUILD",
+    "architecture": "REPLACE_WITH_ARCHITECTURE",
+    "gpu": "REPLACE_WITH_GPU_OR_COMPOSITOR_IDENTITY",
+    "displayRefreshHz": 0
+  },
+  "environment": {
+    "powerSource": "REPLACE_WITH_POWER_SOURCE",
+    "batteryPercent": 0,
+    "thermalStateBefore": "REPLACE_WITH_THERMAL_STATE",
+    "thermalStateAfter": "REPLACE_WITH_THERMAL_STATE",
+    "backgroundLoad": "REPLACE_WITH_BACKGROUND_LOAD_DESCRIPTION",
+    "appearanceMode": "REPLACE_WITH_APPEARANCE_MATRIX_USED",
+    "accessibilityModes": []
+  },
+  "scenarios": [
+    {
+      "id": "appearance-light-dark-deep-dark",
+      "status": "failed",
+      "metrics": {
+        "frameTiming": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "interactionLatency": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "memory": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "compositorOrGpu": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "power": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "thermal": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"}
+      },
+      "notes": "Template placeholder; not qualification evidence."
+    },
+    {
+      "id": "clarity-clear-balanced-dense",
+      "status": "failed",
+      "metrics": {
+        "frameTiming": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "interactionLatency": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "memory": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "compositorOrGpu": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "power": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "thermal": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"}
+      },
+      "notes": "Template placeholder; not qualification evidence."
+    },
+    {
+      "id": "living-glaze-tier-3-to-0",
+      "status": "failed",
+      "metrics": {
+        "frameTiming": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "interactionLatency": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "memory": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "compositorOrGpu": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "power": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "thermal": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"}
+      },
+      "notes": "Template placeholder; not qualification evidence."
+    },
+    {
+      "id": "productive-scroll-and-large-list",
+      "status": "failed",
+      "metrics": {
+        "frameTiming": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "interactionLatency": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "memory": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "compositorOrGpu": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "power": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "thermal": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"}
+      },
+      "notes": "Template placeholder; not qualification evidence."
+    },
+    {
+      "id": "navigation-and-interaction",
+      "status": "failed",
+      "metrics": {
+        "frameTiming": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "interactionLatency": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "memory": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "compositorOrGpu": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "power": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "thermal": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"}
+      },
+      "notes": "Template placeholder; not qualification evidence."
+    },
+    {
+      "id": "large-text-200-touch-assistance",
+      "status": "failed",
+      "metrics": {
+        "frameTiming": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "interactionLatency": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "memory": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "compositorOrGpu": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "power": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "thermal": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"}
+      },
+      "notes": "Template placeholder; not qualification evidence."
+    },
+    {
+      "id": "reduced-transparency-and-motion",
+      "status": "failed",
+      "metrics": {
+        "frameTiming": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "interactionLatency": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "memory": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "compositorOrGpu": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "power": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "thermal": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"}
+      },
+      "notes": "Template placeholder; not qualification evidence."
+    },
+    {
+      "id": "personalization-and-atmosphere",
+      "status": "failed",
+      "metrics": {
+        "frameTiming": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "interactionLatency": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "memory": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "compositorOrGpu": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "power": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"},
+        "thermal": {"status": "not-available-with-reason", "reason": "REPLACE_WITH_MEASUREMENT_OR_REASON"}
+      },
+      "notes": "Template placeholder; not qualification evidence."
+    }
+  ],
+  "decision": "not-accepted",
+  "decisionRationale": "Fail-closed template only. Replace every placeholder, record real physical-device observations for the exact source revision, and validate the completed record before it can be treated as evidence."
+}

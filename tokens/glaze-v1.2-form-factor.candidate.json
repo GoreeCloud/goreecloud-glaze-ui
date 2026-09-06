@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.form-factor.tokens.candidate",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-form-factor-token-authority",
+  "authority": {
+    "companionSpecification": "Glaze UI V1.2 — Responsive and Form-Factor Adaptation.docx",
+    "principle": "Adapt the experience, not merely the dimensions."
+  },
+  "compositionStates": {
+    "compact": {
+      "layoutClass": "compact",
+      "gutterRef": {
+        "source": "tokens/glaze-v1.2-spatial-foundation.candidate.json",
+        "pointer": "/guttersPx/compact"
+      },
+      "gridColumnsRef": {
+        "source": "tokens/glaze-v1.2-spatial-foundation.candidate.json",
+        "pointer": "/gridColumns/compact"
+      },
+      "navigation": [
+        "bottom-navigation",
+        "compact-top-bar",
+        "contextual-sheet"
+      ],
+      "persistentSecondaryPanels": false,
+      "primaryContentFlow": "single-column"
+    },
+    "medium": {
+      "layoutClass": "medium",
+      "gutterRef": {
+        "source": "tokens/glaze-v1.2-spatial-foundation.candidate.json",
+        "pointer": "/guttersPx/medium"
+      },
+      "gridColumnsRef": {
+        "source": "tokens/glaze-v1.2-spatial-foundation.candidate.json",
+        "pointer": "/gridColumns/medium"
+      },
+      "navigation": [
+        "navigation-rail",
+        "compact-sidebar",
+        "bottom-navigation-when-constrained"
+      ],
+      "persistentSecondaryPanels": "conditional",
+      "primaryContentFlow": "split-or-secondary-column"
+    },
+    "expanded": {
+      "layoutClass": "expanded",
+      "gutterRef": {
+        "source": "tokens/glaze-v1.2-spatial-foundation.candidate.json",
+        "pointer": "/guttersPx/expanded"
+      },
+      "gridColumnsRef": {
+        "source": "tokens/glaze-v1.2-spatial-foundation.candidate.json",
+        "pointer": "/gridColumns/expanded"
+      },
+      "navigation": [
+        "persistent-sidebar",
+        "navigation-rail",
+        "toolbar",
+        "universal-search"
+      ],
+      "persistentSecondaryPanels": true,
+      "primaryContentFlow": "multi-pane"
+    },
+    "largeFarView": {
+      "layoutClass": "large",
+      "gutterRef": {
+        "source": "tokens/glaze-v1.2-spatial-foundation.candidate.json",
+        "pointer": "/guttersPx/large"
+      },
+      "gridColumnsRef": {
+        "source": "tokens/glaze-v1.2-spatial-foundation.candidate.json",
+        "pointer": "/gridColumns/large"
+      },
+      "navigation": [
+        "focused-navigation",
+        "directional-navigation"
+      ],
+      "persistentSecondaryPanels": "task-dependent",
+      "primaryContentFlow": "structured-large-regions",
+      "minimumInteractiveTargetPx": 56
+    },
+    "wearable": {
+      "layoutClass": "wearable",
+      "navigation": [
+        "shallow-list",
+        "single-action",
+        "platform-rotary-or-swipe"
+      ],
+      "persistentSecondaryPanels": false,
+      "primaryContentFlow": "glanceable-single-focus",
+      "numericPriority": "primary-value-first"
+    },
+    "spatial": {
+      "layoutClass": "spatial",
+      "navigation": [
+        "spatial-focus",
+        "gaze-or-hand-where-supported"
+      ],
+      "persistentSecondaryPanels": "environment-dependent",
+      "primaryContentFlow": "anchored-depth-regions",
+      "semanticDepthRequired": true
+    }
+  },
+  "inputModalities": {
+    "touch": {
+      "largeHitAreasRequired": true,
+      "hoverRequired": false
+    },
+    "pointer": {
+      "hoverMaySupplement": true,
+      "precisionInteractionAllowed": true
+    },
+    "keyboard": {
+      "completeCoreOperationRequired": true,
+      "visibleFocusRequired": true
+    },
+    "directional": {
+      "spatiallyLogicalFocusPathRequired": true
+    },
+    "rotary": {
+      "platformNativeWhereAvailable": true
+    },
+    "voice": {
+      "mustNotBeSoleAccessPath": true
+    },
+    "assistiveSwitch": {
+      "semanticActionEquivalenceRequired": true
+    },
+    "gaze": {
+      "focusBeforeActivationRequired": true,
+      "accidentalActivationPreventionRequired": true
+    },
+    "hand": {
+      "forgivingTargetsRequired": true,
+      "directManipulationWhereAppropriate": true
+    }
+  },
+  "safeAreaPolicy": {
+    "platformProvidedInsetsRequired": true,
+    "hardCodedDeviceCutoutInsetsProhibited": true,
+    "regions": [
+      "top",
+      "inline-start",
+      "inline-end",
+      "bottom"
+    ],
+    "keyboardOcclusionIsLayoutConstraint": true
+  },
+  "adaptationRules": {
+    "widthIsDeviceIdentity": false,
+    "deviceBrandBreakpointsCanonical": false,
+    "platformAdapterOwnsCapabilitySelection": true,
+    "semanticMeaningPreservedAcrossRecomposition": true,
+    "currentLocationPreservedAcrossRecomposition": true,
+    "userEnteredDataPreservedAcrossRecomposition": true,
+    "focusPreservedWherePractical": true,
+    "scrollContextPreservedWherePractical": true,
+    "desktopSqueezedIntoMobileProhibited": true,
+    "mobileFirstClassDesignSurface": true,
+    "touchCompletenessRequiredOnTouchCapableDesktop": true
+  },
+  "acceptanceBoundaries": {
+    "narrowWebWidthClassPx": 320,
+    "minimumInteractiveTargetPx": 48,
+    "farViewMinimumInteractiveTargetPx": 56,
+    "textScalePercent": 200,
+    "rtlRequiredWhereApplicable": true,
+    "reducedTransparencyRequired": true
+  },
+  "rules": {
+    "routineAdaptationRulesCentralized": true,
+    "numericGuttersRemainSpatialTokenAuthority": true,
+    "densityRemainsSpatialTokenAuthority": true,
+    "componentSpecificPanelWidthsRemainComponentContractAuthorityUntilSpecified": true,
+    "tokenOwnerDoesNotEstablishPlatformAcceptance": true,
+    "consumerClaimBlockedUntilGovernedPromotion": true
+  }
+}

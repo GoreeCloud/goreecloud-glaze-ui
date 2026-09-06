@@ -77,18 +77,8 @@
     "environmentalAuraOptional": true,
     "environmentalAuraMayPassThroughBackdrop": true,
     "environmentalAuraMustRemainOutsideSubstrate": true,
-    "lightAuraMaxAlpha": {
-      "teal": 0.025,
-      "amber": 0.012
-    },
-    "darkAuraMaxAlpha": {
-      "teal": 0.04,
-      "amber": 0.02
-    },
-    "deepDarkAuraMaxAlpha": {
-      "teal": 0.05,
-      "amber": 0.025
-    }
+    "auraPaletteAuthority": "tokens/glaze-v1.2-optical-foundation.candidate.json",
+    "legacyV11AuraCompatibility": "retired-to-frost-ice"
   },
   "materialHierarchy": [
     "canvas",

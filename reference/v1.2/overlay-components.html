@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GLAZE UI V1.2 Overlay Components Candidate</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{margin:0;min-inline-size:0}
+    body{background:var(--glz1-base);color:var(--glz1-text-primary);font-family:system-ui,sans-serif;min-block-size:100vh}
+    .scene{inline-size:min(100%,1120px);margin-inline:auto;padding:24px;display:grid;gap:28px;overflow-wrap:anywhere}
+    .section{display:grid;gap:12px;min-inline-size:0}
+    .section h1,.section h2,.section p{margin:0}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;min-inline-size:0}
+    .demo{min-inline-size:0;min-block-size:160px;padding:16px;border:1px solid var(--glz1-line);border-radius:18px;background:var(--glz1-base);display:grid;align-content:start;gap:12px}
+    .demo p{color:var(--glz1-text-secondary)}
+    .trigger-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+    .critical-wrap{display:grid;gap:10px}
+    .glz12-overlay-trigger{padding:8px 14px;border:1px solid var(--glz1-line);border-radius:12px;background:var(--glz1-raised);color:var(--glz1-text-primary);font:inherit;cursor:pointer}
+    .glz12-overlay-trigger:focus-visible{outline:var(--glz1-focus-width) solid var(--glz1-focus);outline-offset:2px}
+    .glz1-popover,.glz1-menu{inset:auto}
+    .glz1-menu-item .shortcut{justify-self:end;color:var(--glz1-text-secondary);font-size:.85em}
+    .glz1-sheet{border:1px solid var(--glz1-line)}
+    .glz12-sheet-content p{margin:0;color:var(--glz1-text-secondary)}
+    .glz12-persistent-failure button{min-block-size:48px;min-inline-size:48px}
+    @media(max-width:700px){.scene{padding:16px}.grid{grid-template-columns:minmax(0,1fr)}}
+    @media(max-width:420px){.scene{padding:12px}.demo{padding:12px}.glz12-overlay-trigger{flex:1 1 auto}}
+  </style>
+</head>
+<body>
+<main class="scene" aria-labelledby="page-title">
+  <header class="section">
+    <h1 id="page-title">V1.2 Overlay Components</h1>
+    <p>Bounded Candidate reference: transient Frost for interaction, opaque decision content, predictable dismissal, focus restoration, responsive sheets, and feedback that never manufactures system truth.</p>
+  </header>
+
+  <section class="section" aria-labelledby="anchored-title">
+    <h2 id="anchored-title">Anchored overlays</h2>
+    <div class="grid">
+      <article class="demo">
+        <strong>GlzTooltip</strong>
+        <p id="tooltip-help">The same meaning remains available in this visible help text; the tooltip is supplementary.</p>
+        <div class="trigger-row">
+          <button id="tooltip-trigger" class="glz12-overlay-trigger" type="button" aria-describedby="tooltip-help tooltip-sample">Details</button>
+        </div>
+        <div id="tooltip-sample" class="glz1-tooltip glz1-thick-overlay" role="tooltip" data-open="false" aria-hidden="true">Explains the Details control without owning critical content.</div>
+      </article>
+
+      <article class="demo">
+        <strong>GlzPopover</strong>
+        <p>Anchored task content closes with Escape, explicit Close, or outside interaction.</p>
+        <div class="trigger-row">
+          <button id="popover-trigger" class="glz12-overlay-trigger" type="button" aria-haspopup="dialog" aria-controls="popover-sample" aria-expanded="false">Rename</button>
+        </div>
+        <div id="popover-sample" class="glz1-popover glz1-thick-overlay" role="dialog" aria-modal="false" aria-labelledby="popover-title" data-open="false" aria-hidden="true">
+          <h3 id="popover-title">Rename item</h3>
+          <label for="popover-input">Name <input id="popover-input" value="Gateway"></label>
+          <div class="trigger-row"><button id="popover-save" class="glz1-overlay-button" type="button" data-primary="true">Save</button><button id="popover-close" class="glz1-overlay-button" type="button">Close</button></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="menu-title">
+    <h2 id="menu-title">GlzMenu</h2>
+    <article class="demo">
+      <p>Arrow keys, Home/End, checkbox and radio states, disabled items, destructive separation, Escape, and focus restoration are exercised.</p>
+      <div class="trigger-row"><button id="menu-trigger" class="glz12-overlay-trigger" type="button" aria-haspopup="menu" aria-controls="menu-sample" aria-expanded="false">Actions</button></div>
+      <div id="menu-sample" class="glz1-menu glz1-thick-overlay" role="menu" aria-label="Item actions" data-open="false" aria-hidden="true">
+        <button id="menu-open" class="glz1-menu-item" type="button" role="menuitem" tabindex="-1"><span class="glz12-menu-mark" aria-hidden="true">↗</span><span>Open</span><span class="shortcut">Enter</span></button>
+        <button id="menu-pin" class="glz1-menu-item" type="button" role="menuitemcheckbox" aria-checked="false" tabindex="-1"><span class="glz12-menu-mark" aria-hidden="true"></span><span>Pin</span><span class="shortcut">P</span></button>
+        <button id="menu-compact" class="glz1-menu-item" type="button" role="menuitemradio" aria-checked="true" data-group="density" tabindex="-1"><span class="glz12-menu-mark" aria-hidden="true">●</span><span>Compact density</span><span></span></button>
+        <button id="menu-comfortable" class="glz1-menu-item" type="button" role="menuitemradio" aria-checked="false" data-group="density" tabindex="-1"><span class="glz12-menu-mark" aria-hidden="true"></span><span>Comfortable density</span><span></span></button>
+        <button id="menu-disabled" class="glz1-menu-item" type="button" role="menuitem" aria-disabled="true" tabindex="-1"><span class="glz12-menu-mark" aria-hidden="true">—</span><span>Unavailable action</span><span></span></button>
+        <button id="menu-delete" class="glz1-menu-item" type="button" role="menuitem" data-destructive="true" tabindex="-1"><span class="glz12-menu-mark" aria-hidden="true">×</span><span>Delete…</span><span></span></button>
+      </div>
+    </article>
+  </section>
+
+  <section class="section" aria-labelledby="modal-title">
+    <h2 id="modal-title">Decision and responsive surfaces</h2>
+    <div class="grid">
+      <article class="demo">
+        <strong>GlzDialog</strong>
+        <p>Consequential content is opaque/near-opaque and does not depend on sampled background.</p>
+        <button id="dialog-trigger" class="glz12-overlay-trigger" type="button">Disconnect device</button>
+        <dialog id="dialog-sample" class="glz1-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description">
+          <div class="glz1-dialog-inner">
+            <h2 id="dialog-title">Disconnect device?</h2>
+            <p id="dialog-description">The device will lose access until it is authorized again.</p>
+            <div class="glz12-dialog-warning"><span aria-hidden="true">!</span><span>This changes access. The action can be reversed by authorizing the device again.</span></div>
+            <div class="glz1-dialog-actions"><button id="dialog-cancel" class="glz1-overlay-button" type="button">Cancel</button><button id="dialog-confirm" class="glz1-overlay-button" type="button" data-destructive="true">Disconnect</button></div>
+          </div>
+        </dialog>
+      </article>
+
+      <article class="demo">
+        <strong>GlzSheet</strong>
+        <p>Bottom sheet on compact widths; side sheet on larger widths; logical side flips in RTL.</p>
+        <button id="sheet-trigger" class="glz12-overlay-trigger" type="button" aria-haspopup="dialog" aria-controls="sheet-layer" aria-expanded="false">Open inspector</button>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="feedback-title">
+    <h2 id="feedback-title">GlzToast and persistent failure</h2>
+    <div class="critical-wrap">
+      <div class="trigger-row">
+        <button id="toast-trigger" class="glz12-overlay-trigger" type="button">Show saved toast</button>
+        <button id="critical-trigger" class="glz12-overlay-trigger" type="button">Show critical failure</button>
+      </div>
+      <div id="persistent-failure" class="glz12-persistent-failure" role="alert" hidden>
+        <span aria-hidden="true">!</span>
+        <span><strong>Backup verification failed.</strong> The persistent message remains available after transient feedback disappears.</span>
+        <button id="persistent-retry" class="glz1-overlay-button" type="button">Retry</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="sheet-layer" class="glz1-sheet-layer" role="dialog" aria-modal="true" aria-labelledby="sheet-title" data-open="false" aria-hidden="true">
+  <div id="sheet-scrim" class="glz1-sheet-scrim"></div>
+  <section id="sheet-sample" class="glz1-sheet glz1-thick-overlay">
+    <div class="glz1-sheet-handle" aria-hidden="true"></div>
+    <div class="glz12-sheet-content">
+      <h2 id="sheet-title">Inspector</h2>
+      <div class="glz12-sheet-reading-plane"><strong>Gateway</strong><p>Healthy · 18 ms latency · Last checked just now.</p></div>
+      <div class="glz1-sheet-actions"><button id="sheet-close" class="glz1-overlay-button" type="button">Close</button><button class="glz1-overlay-button" type="button" data-primary="true">Open details</button></div>
+    </div>
+  </section>
+</div>
+
+<div id="toast-region" class="glz1-toast-region" aria-label="Status messages">
+  <div id="toast-routine" class="glz1-toast glz1-thick-overlay" role="status" aria-live="polite" aria-atomic="true" data-open="false" aria-hidden="true"><span class="glz12-toast-icon" aria-hidden="true">✓</span><span>Settings saved.</span><button id="toast-undo" type="button">Undo</button></div>
+  <div id="toast-critical" class="glz1-toast glz1-thick-overlay" role="status" aria-live="polite" aria-atomic="true" data-open="false" aria-hidden="true"><span class="glz12-toast-icon" aria-hidden="true">!</span><span>Backup verification failed. Persistent details are shown on the page.</span><button id="toast-dismiss" type="button">Dismiss</button></div>
+  <div id="toast-third" class="glz1-toast glz1-thick-overlay" role="status" aria-live="polite" data-open="false" aria-hidden="true"><span class="glz12-toast-icon" aria-hidden="true">i</span><span>Third bounded status.</span><button type="button">Close</button></div>
+  <div id="toast-fourth" class="glz1-toast glz1-thick-overlay" role="status" aria-live="polite" data-open="false" aria-hidden="true"><span class="glz12-toast-icon" aria-hidden="true">i</span><span>Fourth status is suppressed by the bounded stack.</span><button type="button">Close</button></div>
+</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const focusableMenuItems = () => [...$('menu-sample').querySelectorAll('.glz1-menu-item')].filter(el => el.getAttribute('aria-disabled') !== 'true');
+  let popoverReturn = null, menuReturn = null, dialogReturn = null, sheetReturn = null;
+
+  function positionAnchored(trigger, overlay) {
+    const r = trigger.getBoundingClientRect();
+    const maxLeft = Math.max(12, innerWidth - Math.min(360, innerWidth - 24) - 12);
+    const left = Math.min(Math.max(12, r.left), maxLeft);
+    overlay.style.left = `${left}px`;
+    overlay.style.top = `${Math.min(innerHeight - 80, r.bottom + 10)}px`;
+    overlay.style.setProperty('--glz12-overlay-anchor-inline', `${Math.max(16, Math.min(r.width / 2, 56))}px`);
+  }
+
+  function setOpen(overlay, trigger, open) {
+    overlay.dataset.open = open ? 'true' : 'false';
+    overlay.setAttribute('aria-hidden', open ? 'false' : 'true');
+    if (trigger) trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  const tooltip = $('tooltip-sample');
+  const tooltipTrigger = $('tooltip-trigger');
+  function showTooltip() { positionAnchored(tooltipTrigger, tooltip); setOpen(tooltip, null, true); }
+  function hideTooltip() { setOpen(tooltip, null, false); }
+  tooltipTrigger.addEventListener('focus', showTooltip);
+  tooltipTrigger.addEventListener('blur', hideTooltip);
+  tooltipTrigger.addEventListener('mouseenter', showTooltip);
+  tooltipTrigger.addEventListener('mouseleave', hideTooltip);
+
+  const popover = $('popover-sample');
+  const popoverTrigger = $('popover-trigger');
+  function openPopover() {
+    popoverReturn = popoverTrigger;
+    positionAnchored(popoverTrigger, popover);
+    setOpen(popover, popoverTrigger, true);
+    $('popover-input').focus();
+  }
+  function closePopover(restore = true) {
+    setOpen(popover, popoverTrigger, false);
+    if (restore && popoverReturn) popoverReturn.focus();
+  }
+  popoverTrigger.addEventListener('click', openPopover);
+  $('popover-close').addEventListener('click', () => closePopover(true));
+  $('popover-save').addEventListener('click', () => closePopover(true));
+  document.addEventListener('pointerdown', event => {
+    if (popover.dataset.open === 'true' && !popover.contains(event.target) && event.target !== popoverTrigger) closePopover(false);
+  });
+
+  const menu = $('menu-sample');
+  const menuTrigger = $('menu-trigger');
+  function syncMenuMarks() {
+    for (const item of menu.querySelectorAll('[role="menuitemcheckbox"],[role="menuitemradio"]')) {
+      const mark = item.querySelector('.glz12-menu-mark');
+      mark.textContent = item.getAttribute('aria-checked') === 'true' ? (item.getAttribute('role') === 'menuitemradio' ? '●' : '✓') : '';
+    }
+  }
+  function roveMenu(item) {
+    for (const el of menu.querySelectorAll('.glz1-menu-item')) el.tabIndex = -1;
+    item.tabIndex = 0;
+    item.focus();
+  }
+  function openMenu() {
+    menuReturn = menuTrigger;
+    positionAnchored(menuTrigger, menu);
+    setOpen(menu, menuTrigger, true);
+    const first = focusableMenuItems()[0];
+    if (first) roveMenu(first);
+  }
+  function closeMenu(restore = true) {
+    setOpen(menu, menuTrigger, false);
+    for (const el of menu.querySelectorAll('.glz1-menu-item')) el.tabIndex = -1;
+    if (restore && menuReturn) menuReturn.focus();
+  }
+  menuTrigger.addEventListener('click', openMenu);
+  menu.addEventListener('keydown', event => {
+    const items = focusableMenuItems();
+    const index = Math.max(0, items.indexOf(document.activeElement));
+    if (event.key === 'ArrowDown') { event.preventDefault(); roveMenu(items[(index + 1) % items.length]); }
+    else if (event.key === 'ArrowUp') { event.preventDefault(); roveMenu(items[(index - 1 + items.length) % items.length]); }
+    else if (event.key === 'Home') { event.preventDefault(); roveMenu(items[0]); }
+    else if (event.key === 'End') { event.preventDefault(); roveMenu(items[items.length - 1]); }
+    else if (event.key === 'Escape') { event.preventDefault(); closeMenu(true); }
+    else if ((event.key === ' ' || event.key === 'Enter') && document.activeElement) {
+      const item = document.activeElement;
+      const role = item.getAttribute('role');
+      if (role === 'menuitemcheckbox') {
+        event.preventDefault(); item.setAttribute('aria-checked', item.getAttribute('aria-checked') === 'true' ? 'false' : 'true'); syncMenuMarks();
+      } else if (role === 'menuitemradio') {
+        event.preventDefault();
+        const group = item.dataset.group;
+        for (const radio of menu.querySelectorAll(`[role="menuitemradio"][data-group="${group}"]`)) radio.setAttribute('aria-checked', radio === item ? 'true' : 'false');
+        syncMenuMarks();
+      }
+    }
+  });
+  document.addEventListener('pointerdown', event => {
+    if (menu.dataset.open === 'true' && !menu.contains(event.target) && event.target !== menuTrigger) closeMenu(false);
+  });
+  syncMenuMarks();
+
+  const dialog = $('dialog-sample');
+  const dialogTrigger = $('dialog-trigger');
+  dialogTrigger.addEventListener('click', () => {
+    dialogReturn = dialogTrigger;
+    dialog.showModal();
+    $('dialog-cancel').focus();
+  });
+  $('dialog-cancel').addEventListener('click', () => dialog.close('cancel'));
+  $('dialog-confirm').addEventListener('click', () => dialog.close('disconnect'));
+  dialog.addEventListener('close', () => { if (dialogReturn) dialogReturn.focus(); });
+
+  const sheetLayer = $('sheet-layer');
+  const sheetTrigger = $('sheet-trigger');
+  function openSheet() {
+    sheetReturn = sheetTrigger;
+    sheetLayer.dataset.open = 'true';
+    sheetLayer.setAttribute('aria-hidden', 'false');
+    sheetTrigger.setAttribute('aria-expanded', 'true');
+    $('sheet-close').focus();
+  }
+  function closeSheet() {
+    sheetLayer.dataset.open = 'false';
+    sheetLayer.setAttribute('aria-hidden', 'true');
+    sheetTrigger.setAttribute('aria-expanded', 'false');
+    if (sheetReturn) sheetReturn.focus();
+  }
+  sheetTrigger.addEventListener('click', openSheet);
+  $('sheet-close').addEventListener('click', closeSheet);
+  $('sheet-scrim').addEventListener('click', closeSheet);
+
+  function showToast(id) {
+    const toast = $(id);
+    toast.dataset.open = 'true';
+    toast.setAttribute('aria-hidden', 'false');
+  }
+  function hideToast(id) {
+    const toast = $(id);
+    toast.dataset.open = 'false';
+    toast.setAttribute('aria-hidden', 'true');
+  }
+  $('toast-trigger').addEventListener('click', () => showToast('toast-routine'));
+  $('toast-undo').addEventListener('click', () => hideToast('toast-routine'));
+  $('toast-dismiss').addEventListener('click', () => hideToast('toast-critical'));
+  $('critical-trigger').addEventListener('click', () => {
+    $('persistent-failure').hidden = false;
+    showToast('toast-critical');
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    if (popover.dataset.open === 'true') { event.preventDefault(); closePopover(true); }
+    else if (menu.dataset.open === 'true') { event.preventDefault(); closeMenu(true); }
+    else if (sheetLayer.dataset.open === 'true') { event.preventDefault(); closeSheet(); }
+  });
+
+  window.__glazeOverlay = {openPopover,closePopover,openMenu,closeMenu,openSheet,closeSheet,showToast,hideToast};
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "repository": "GoreeCloud/goreecloud-glaze-ui",
+  "purpose": "Define the bounded source-selection and integrity rules used to generate an exact-head Glaze UI V1.2 Candidate source inventory.",
+  "selectors": [
+    {
+      "id": "candidate-contracts",
+      "prefix": "contracts/v1.2/",
+      "suffix": ".candidate.json",
+      "minCount": 1
+    },
+    {
+      "id": "candidate-tokens",
+      "prefix": "tokens/glaze-v1.2-",
+      "suffix": ".candidate.json",
+      "minCount": 1
+    },
+    {
+      "id": "candidate-css",
+      "prefix": "css/glaze-v1.2-",
+      "suffix": ".candidate.css",
+      "minCount": 1
+    },
+    {
+      "id": "candidate-javascript",
+      "prefix": "js/glaze-v1.2-",
+      "suffix": ".candidate.mjs",
+      "minCount": 1
+    },
+    {
+      "id": "candidate-references",
+      "prefix": "reference/v1.2/",
+      "minCount": 1
+    },
+    {
+      "id": "candidate-validators",
+      "prefix": "scripts/validate_glaze_v1_2_",
+      "suffix": ".py",
+      "minCount": 1
+    },
+    {
+      "id": "candidate-workflows",
+      "prefix": ".github/workflows/glaze-v1.2-",
+      "suffix": ".yml",
+      "minCount": 1
+    },
+    {
+      "id": "candidate-acceptance-sources",
+      "prefix": "acceptance/v1.2-",
+      "contains": "candidate",
+      "minCount": 1
+    }
+  ],
+  "requiredAnchors": [
+    "VERSION",
+    "registry/lifecycle.json",
+    "GLAZE_UI_V1_2_CANDIDATE.md",
+    "MIGRATION_V1_1_TO_V1_2.md",
+    "css/glaze-v1.2.0-candidate.css",
+    "scripts/glaze_v1_2_visual_regression.py"
+  ],
+  "integrity": {
+    "gitTrackedOnly": true,
+    "exactHeadRequired": true,
+    "caseFoldUniquePaths": true,
+    "parseSelectedJson": true,
+    "inventoryFields": [
+      "path",
+      "categories",
+      "bytes",
+      "gitBlobSha1",
+      "sha256"
+    ]
+  },
+  "authority": {
+    "currentStable": "1.1.0",
+    "currentOfficial": "1.1.0",
+    "activeCandidate": "1.2.0-candidate",
+    "inventoryImpliesAcceptance": false,
+    "inventoryImpliesReleaseCandidate": false,
+    "inventoryImpliesStable": false,
+    "inventoryImpliesConsumerConformance": false,
+    "inventoryImpliesHumanAcceptance": false,
+    "inventoryImpliesRuntimeAcceptance": false
+  },
+  "boundaries": [
+    "Inventory membership means only that a source file is Git-tracked and selected by this Candidate source-integrity contract at the exact inspected revision.",
+    "The generated inventory is CI evidence and is not committed back into the repository, avoiding a self-referential source hash.",
+    "A source inventory does not approve the inventoried source, satisfy human review, establish native or physical-device acceptance, or promote lifecycle state.",
+    "Downstream consumers remain pinned to the current Stable authority until separately governed migration and acceptance are completed."
+  ]
+}

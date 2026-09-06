@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.geometry.candidate",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-web-candidate",
+  "authority": {
+    "masterProposal": "Glaze UI V1.2 — Master Specification.docx",
+    "componentsProposal": "Glaze UI V1.2 — Components and Interaction States.docx",
+    "layoutProposal": "Glaze UI V1.2 — Layout, Spacing, and Composition.docx",
+    "rule": "Geometry varies by component purpose; nested radii remain coordinated; numerical radii below are bounded Candidate calibration derived from the current repository geometry rather than a universal proposal mandate."
+  },
+  "rules": {
+    "purposeSpecificCurvature": true,
+    "uniformRoundingProhibited": true,
+    "outerNormallyGteNested": true,
+    "innerFollowsOuterContour": true,
+    "radiusVariesWith": [
+      "size",
+      "function",
+      "material",
+      "depth"
+    ],
+    "pillReservedForPillSemantics": true,
+    "accessibilityMayChangeLayoutButNotEraseHierarchy": true,
+    "geometryIntroducesBackdropBlur": false
+  },
+  "calibrationPx": {
+    "checkbox": 7,
+    "compact": 10,
+    "control": 12,
+    "field": 14,
+    "floatingControl": 16,
+    "surface": 20,
+    "panel": 24,
+    "signature": 26,
+    "sheet": 28,
+    "pill": 999
+  },
+  "bindings": {
+    "checkbox": [
+      ".glz1-choice[data-kind=\"checkbox\"] .glz1-choice-control"
+    ],
+    "compact": [
+      ".glz1-tooltip",
+      ".glz1-menu-item",
+      ".glz1-button[data-size=\"xs\"]",
+      ".glz1-button[data-size=\"sm\"]"
+    ],
+    "control": [
+      ".glz1-button",
+      ".glz1-icon-button",
+      ".glz1-overlay-button",
+      ".glz1-sidebar-item"
+    ],
+    "field": [
+      ".glz1-field-control",
+      ".glz1-select"
+    ],
+    "floatingControl": [
+      ".glz1-toolbar",
+      ".glz1-menu",
+      ".glz1-dock-item",
+      ".glz1-rail-item"
+    ],
+    "surface": [
+      ".glz1-card",
+      ".glz1-list",
+      ".glz1-table-wrap",
+      ".glz1-sidebar",
+      ".glz1-navigation-rail",
+      ".glz1-popover",
+      ".glz1-toast"
+    ],
+    "panel": [
+      ".glz1-dialog",
+      ".glz1-morph-card",
+      ".glz1-capsule[data-expanded=\"true\"]",
+      ".glz1-universal-search[data-open=\"true\"] .glz1-search-entry"
+    ],
+    "signature": [
+      ".glz1-smart-rail",
+      ".glz1-aurora",
+      ".glz1-search-panel"
+    ],
+    "sheet": [
+      ".glz1-sheet",
+      ".glz1-dock",
+      ".glz1-morph-card[aria-expanded=\"true\"]"
+    ],
+    "pill": [
+      ".glz1-capsule:not([data-expanded=\"true\"])",
+      ".glz1-search-entry",
+      ".glz1-source-chip",
+      ".glz1-switch-track"
+    ]
+  },
+  "opticalSizeEvidence": {
+    "buttonXsPx": 10,
+    "buttonMdPx": 12,
+    "buttonLgPx": 14,
+    "buttonXlPx": 16,
+    "capsuleCollapsedPx": 999,
+    "capsuleExpandedPx": 24,
+    "morphCollapsedPx": 24,
+    "morphExpandedPx": 28
+  },
+  "nestedExamples": [
+    {
+      "outer": "card",
+      "outerPx": 20,
+      "inner": "button",
+      "innerPx": 12
+    },
+    {
+      "outer": "popover",
+      "outerPx": 20,
+      "inner": "field",
+      "innerPx": 14
+    },
+    {
+      "outer": "dock",
+      "outerPx": 28,
+      "inner": "dock-item",
+      "innerPx": 16
+    },
+    {
+      "outer": "sheet",
+      "outerPx": 28,
+      "inner": "button",
+      "innerPx": 12
+    }
+  ],
+  "implementation": {
+    "tokens": "tokens/glaze-v1.2-geometry.candidate.json",
+    "webLayer": "css/glaze-v1.2-geometry.candidate.css",
+    "webEntrypoint": "css/glaze-v1.2.0-candidate.css",
+    "reference": "reference/v1.2/geometry.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_geometry_rendered.py",
+    "workflow": ".github/workflows/glaze-v1.2-geometry.yml"
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "bounded-web-radius-calibration",
+      "purpose-specific-curvature",
+      "nested-radius-hierarchy",
+      "multi-size-button-geometry",
+      "capsule-and-morph-state-curvature",
+      "light-dark-deep-dark-browser-consistency",
+      "reduced-transparency-forced-colors-rtl-large-text-browser-gates"
+    ],
+    "notEstablished": [
+      "universal-numeric-radius-mandate",
+      "complete-32-component-geometry-acceptance",
+      "native-geometry-parity",
+      "safe-area-device-curvature-mapping",
+      "human-optical-geometry-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

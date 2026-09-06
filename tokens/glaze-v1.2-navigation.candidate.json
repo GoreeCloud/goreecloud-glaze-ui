@@ -1,0 +1,6 @@
+{
+  "schemaVersion":1,"version":"1.2.0-candidate","lifecycle":"candidate","consumerEligible":false,"stableBaseline":"1.1.0",
+  "capsule":{"minimumHeightPx":56,"minimumTargetPx":48,"touchAssistanceTargetPx":56,"radius":"capsule","safeAreaAware":true,"detachedEdgeInsetPx":12},
+  "recomposition":{"compact":"capsule","standard":"bottom-plus-context-toolbar","expanded":"rail-or-sidebar","workspace":"persistent-sidebar-or-rail","farView":"directional-focus"},
+  "semanticDestinationOrderStable":true
+}

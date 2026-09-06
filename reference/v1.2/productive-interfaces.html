@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light" data-glaze-density-profile="productive">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GLAZE UI V1.2 Productive Interfaces Candidate</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{margin:0;min-inline-size:0}
+    body{background:var(--glz1-canvas);color:var(--glz1-text-primary);font-family:system-ui,sans-serif}
+    main{inline-size:min(100%,1240px);margin-inline:auto;padding:24px;min-inline-size:0;overflow-wrap:anywhere}
+    h1,h2,h3,p{margin-block-start:0}
+    .fixture-note{font-size:.875rem;color:var(--glz1-text-secondary)}
+    .scope-label{font-weight:700}
+    .scene-copy{max-inline-size:72ch}
+    .compact-value{font-variant-numeric:tabular-nums}
+    .glz12-bulk-bar[hidden], [data-no-results][hidden]{display:none!important}
+    [data-record-row][data-focused="true"]{outline:var(--glz12-state-focus-width) solid var(--glz1-focus);outline-offset:calc(-1 * var(--glz12-state-focus-offset))}
+    [data-record-row][hidden]{display:none}
+    .glz12-state-banner[data-state="partial"]{border-inline-start-color:var(--glz1-warning)}
+    .glz12-state-banner[data-state="stale"]{border-inline-start-style:dashed}
+    .glz12-state-banner[data-state="unknown"]{border-inline-start-color:currentColor;border-inline-start-style:dotted}
+    .glz12-progress-indeterminate{display:inline-flex;align-items:center;gap:8px;font-weight:700}
+    .glz12-progress-indeterminate::before{content:"…";inline-size:1.5em;text-align:center;border:1px solid currentColor;border-radius:var(--glz12-radius-pill)}
+    [data-glz-text-scale="200"] main{padding:16px}
+  </style>
+</head>
+<body>
+<main aria-labelledby="page-title">
+  <header>
+    <h1 id="page-title">V1.2 Tables and Productive Interfaces</h1>
+    <p class="scene-copy">Bounded Candidate reference built from canonical GlzTable and existing Foundation/Structure controls. Every record and status below is fixture data; no authoritative GoreeCloud service is queried, updated, or persisted by this page.</p>
+  </header>
+
+  <div id="productive-reference" class="glz12-productive-library" data-glz-layout-class="expanded">
+    <section id="scene-file-browser" class="glz12-productive-scene" data-productive-scene="file-browser" data-glz-productive-root aria-labelledby="file-browser-title">
+      <div><h2 id="file-browser-title">File browser</h2><p class="fixture-note">Fixture path: /Projects/Glaze · Search scope: <span class="scope-label">Current folder</span></p></div>
+      <div class="glz12-command-bar" role="toolbar" aria-label="File commands">
+        <button class="glz1-button glz12-productivity-action" type="button" data-command-priority="primary">New folder</button>
+        <button class="glz1-button glz12-productivity-action" type="button">Upload</button>
+        <span class="glz12-command-spacer"></span><button class="glz1-button glz12-productivity-action" type="button">More</button>
+      </div>
+      <div class="glz12-table-scroll" data-mobile-transform="structured-list">
+        <table class="glz1-table glz12-productive-table"><thead><tr><th>Name</th><th>Type</th><th class="glz12-numeric">Size</th><th>Modified</th></tr></thead><tbody>
+          <tr><td title="architecture-reference-final.svg">architecture-reference-final.svg</td><td>SVG</td><td class="glz12-numeric">128 KB</td><td>Today 09:42</td></tr>
+          <tr><td>release-notes.md</td><td>Markdown</td><td class="glz12-numeric">18 KB</td><td>Yesterday 18:10</td></tr>
+        </tbody></table>
+      </div>
+      <div class="glz12-structured-list" aria-label="Compact file list">
+        <article class="glz12-record-card"><strong>architecture-reference-final.svg</strong><span>SVG · 128 KB</span><span>Modified Today 09:42</span></article>
+        <article class="glz12-record-card"><strong>release-notes.md</strong><span>Markdown · 18 KB</span><span>Modified Yesterday 18:10</span></article>
+      </div>
+    </section>
+
+    <section id="scene-device-manager" class="glz12-productive-scene" data-productive-scene="device-manager" data-glz-productive-root aria-labelledby="device-title">
+      <div><h2 id="device-title">Device manager</h2><p class="fixture-note">Fixture availability states. Unknown is not inferred as healthy or offline.</p></div>
+      <div class="glz12-state-banner" data-state="unknown" role="status"><strong>Unknown state:</strong> Probe result for edge-node-03 is not available from this fixture source.</div>
+      <div class="glz12-table-scroll"><table class="glz1-table glz12-productive-table"><thead><tr><th>Device</th><th>Status</th><th>Address</th><th>Last activity</th></tr></thead><tbody>
+        <tr><td>edge-node-01</td><td><span class="glz12-status-cell" data-state="healthy">Healthy</span></td><td>10.0.0.11</td><td>12 s ago</td></tr>
+        <tr><td>edge-node-02</td><td><span class="glz12-status-cell" data-state="offline">Offline</span></td><td>10.0.0.12</td><td>18 min ago</td></tr>
+        <tr><td>edge-node-03</td><td><span class="glz12-status-cell" data-state="unknown">Unknown</span></td><td>10.0.0.13</td><td>Unknown</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section id="scene-service-manager" class="glz12-productive-scene" data-productive-scene="service-manager" data-glz-productive-root aria-labelledby="service-title">
+      <div><h2 id="service-title">Service manager</h2><p class="fixture-note">Fixture service table with visible freshness.</p></div>
+      <div class="glz12-state-banner" data-state="stale" role="status"><strong>Stale fixture data:</strong> Last reference refresh was 14 minutes ago. Current producer state is not asserted.</div>
+      <div class="glz12-table-scroll"><table class="glz1-table glz12-productive-table"><thead><tr><th>Service</th><th>Host</th><th>Status</th><th>Version</th></tr></thead><tbody>
+        <tr><td>Mesh Relay</td><td>core-01</td><td><span class="glz12-status-cell" data-state="healthy">Healthy</span></td><td>fixture-2.4</td></tr>
+        <tr><td>Index Worker</td><td>worker-04</td><td><span class="glz12-status-cell" data-state="warning">Degraded</span></td><td>fixture-2.4</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section id="scene-metrics-table" class="glz12-productive-scene" data-productive-scene="metrics-table" data-glz-productive-root aria-labelledby="metrics-title">
+      <div><h2 id="metrics-title">Metrics table</h2><p class="fixture-note">Numeric comparison uses tabular numerals and end alignment.</p></div>
+      <div class="glz12-state-banner" data-state="partial" role="alert"><strong>Partial fixture result:</strong> CPU and memory rows are available; GPU telemetry is unavailable. Usable rows remain visible.</div>
+      <div class="glz12-table-scroll"><table class="glz1-table glz12-productive-table"><thead><tr><th>Resource</th><th class="glz12-numeric">Current</th><th class="glz12-numeric">Peak</th><th>State</th></tr></thead><tbody>
+        <tr><td>CPU</td><td class="glz12-numeric">42%</td><td class="glz12-numeric">78%</td><td><span class="glz12-status-cell" data-state="healthy">Available</span></td></tr>
+        <tr><td>Memory</td><td class="glz12-numeric">6.4 GB</td><td class="glz12-numeric">7.1 GB</td><td><span class="glz12-status-cell" data-state="healthy">Available</span></td></tr>
+        <tr><td>GPU</td><td class="glz12-numeric">—</td><td class="glz12-numeric">—</td><td><span class="glz12-status-cell" data-state="unknown">Unavailable</span></td></tr>
+      </tbody></table></div>
+      <div role="status"><span class="glz12-progress-indeterminate">Indexing reference rows — duration unknown</span></div>
+    </section>
+
+    <section id="scene-log-viewer" class="glz12-productive-scene" data-productive-scene="log-viewer" data-glz-productive-root aria-labelledby="log-title">
+      <div><h2 id="log-title">Log viewer</h2><p class="fixture-note">Static fixture stream. Scrolling away from the live edge pauses the reference live-follow state.</p></div>
+      <div class="glz12-command-bar"><button id="log-toggle" class="glz1-button glz12-productivity-action" type="button" data-log-toggle aria-pressed="false">Pause live log</button><span class="scope-label">Source: fixture gateway log</span></div>
+      <div id="log-viewer" class="glz12-log-viewer" data-log-viewer tabindex="0" aria-label="Fixture log entries">
+        <div class="glz12-log-entry"><time>10:00:01</time><strong>INFO</strong><span>Fixture listener initialized.</span></div>
+        <div class="glz12-log-entry"><time>10:00:02</time><strong>INFO</strong><span>Reference route registered.</span></div>
+        <div class="glz12-log-entry"><time>10:00:03</time><strong>WARN</strong><span>Fixture latency exceeded reference threshold.</span></div>
+        <div class="glz12-log-entry"><time>10:00:04</time><strong>INFO</strong><span>Fixture connection retained.</span></div>
+        <div class="glz12-log-entry"><time>10:00:05</time><strong>INFO</strong><span>Reference cache inspected.</span></div>
+        <div class="glz12-log-entry"><time>10:00:06</time><strong>INFO</strong><span>Fixture event six recorded.</span></div>
+        <div class="glz12-log-entry"><time>10:00:07</time><strong>WARN</strong><span>Fixture retry scheduled.</span></div>
+        <div class="glz12-log-entry"><time>10:00:08</time><strong>INFO</strong><span>Reference retry completed.</span></div>
+        <div class="glz12-log-entry"><time>10:00:09</time><strong>INFO</strong><span>Fixture event nine recorded.</span></div>
+        <div class="glz12-log-entry"><time>10:00:10</time><strong>INFO</strong><span>Fixture event ten recorded.</span></div>
+        <div class="glz12-log-entry"><time>10:00:11</time><strong>WARN</strong><span>Fixture queue depth elevated.</span></div>
+        <div class="glz12-log-entry"><time>10:00:12</time><strong>INFO</strong><span>Reference queue recovered.</span></div>
+        <div class="glz12-log-entry"><time>10:00:13</time><strong>INFO</strong><span>Fixture event thirteen recorded.</span></div>
+        <div class="glz12-log-entry"><time>10:00:14</time><strong>INFO</strong><span>Fixture live edge.</span></div>
+      </div>
+    </section>
+
+    <section id="scene-network-records" class="glz12-productive-scene" data-productive-scene="network-records" data-glz-productive-root aria-labelledby="network-title">
+      <div><h2 id="network-title">Network records</h2><p class="fixture-note">Wide technical data scrolls inside the table region, not the page.</p></div>
+      <div class="glz12-table-scroll"><table class="glz1-table glz12-productive-table"><thead><tr><th>Name</th><th>Type</th><th>Target</th><th class="glz12-numeric">TTL</th><th>Source</th></tr></thead><tbody>
+        <tr><td>api.example.test</td><td>A</td><td>192.0.2.40</td><td class="glz12-numeric">300 s</td><td>Fixture DNS source</td></tr>
+        <tr><td>edge.example.test</td><td>AAAA</td><td title="2001:db8:abcd:1234:5678:90ab:cdef:0042">2001:db8:abcd:1234:5678:90ab:cdef:0042</td><td class="glz12-numeric">900 s</td><td>Fixture DNS source</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section id="scene-identity" class="glz12-productive-scene" data-productive-scene="identity-administration" data-glz-productive-root aria-labelledby="identity-title">
+      <div><h2 id="identity-title">User and identity administration</h2><p class="fixture-note">Display-only fixture roles. No identity or authorization system is changed.</p></div>
+      <div class="glz12-table-scroll"><table class="glz1-table glz12-productive-table"><thead><tr><th>User</th><th>Role</th><th>Status</th><th>Source</th></tr></thead><tbody>
+        <tr><td>Alex Rivera</td><td>Workspace admin</td><td><span class="glz12-status-cell" data-state="healthy">Active</span></td><td>Fixture identity source</td></tr>
+        <tr><td>Sam Lee</td><td>Viewer</td><td><span class="glz12-status-cell" data-state="unknown">Unknown</span></td><td>Fixture identity source</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section id="scene-bulk" class="glz12-productive-scene" data-productive-scene="bulk-selection" data-glz-productive-root aria-labelledby="bulk-title">
+      <div><h2 id="bulk-title">Bulk selection</h2><p class="fixture-note">Selection count and affected scope remain explicit.</p></div>
+      <div class="glz12-bulk-bar" data-bulk-bar hidden role="region" aria-label="Bulk actions"><strong data-selection-count>0 selected</strong><span>Scope: selected fixture records only</span><button class="glz1-button glz12-productivity-action" type="button">Export selected</button><button class="glz1-button glz12-productivity-action" type="button" data-variant="destructive">Delete selected…</button></div>
+      <div class="glz12-table-scroll"><table class="glz1-table glz12-productive-table"><thead><tr><th><input id="bulk-all" class="glz12-selection-control" data-select-all type="checkbox" aria-label="Select all fixture records"></th><th>Name</th><th>Status</th></tr></thead><tbody data-record-body>
+        <tr data-record-row data-name="Archive A" data-state="healthy" data-source="Fixture source" data-selected="false" tabindex="0" class="glz12-row-focus"><td><input id="bulk-a" class="glz12-selection-control" data-row-select type="checkbox" aria-label="Select Archive A"></td><td>Archive A</td><td><span class="glz12-status-cell" data-state="healthy">Ready</span></td></tr>
+        <tr data-record-row data-name="Archive B" data-state="warning" data-source="Fixture source" data-selected="false" tabindex="0" class="glz12-row-focus"><td><input id="bulk-b" class="glz12-selection-control" data-row-select type="checkbox" aria-label="Select Archive B"></td><td>Archive B</td><td><span class="glz12-status-cell" data-state="warning">Needs review</span></td></tr>
+      </tbody></table></div>
+      <aside class="glz12-inspector" aria-label="Bulk selection inspector"><h3 data-inspector-title>No record selected</h3><p data-inspector-body>Select a record to inspect its fixture details.</p></aside>
+    </section>
+
+    <section id="scene-filtering" class="glz12-productive-scene" data-productive-scene="advanced-filtering" data-glz-productive-root aria-labelledby="filter-title">
+      <div><h2 id="filter-title">Advanced filtering and sorting</h2><p class="fixture-note">Search scope: <span class="scope-label">Current fixture table</span>. Active constraints remain visible.</p></div>
+      <div class="glz12-filter-bar">
+        <label for="table-search">Search current table</label><input id="table-search" class="glz1-field-control glz12-productivity-action" data-table-search type="search" autocomplete="off">
+        <label for="status-filter">Status</label><select id="status-filter" class="glz1-select glz12-productivity-action" data-filter-status><option value="all">All statuses</option><option value="healthy">Healthy</option><option value="offline">Offline</option><option value="unknown">Unknown</option></select>
+        <button id="clear-filters" class="glz1-button glz12-productivity-action" data-clear-filters type="button">Clear filters</button>
+        <span id="filter-count" data-filter-count>Filters · 0</span>
+      </div>
+      <div id="active-filters" class="glz12-filter-bar" data-active-filters aria-live="polite"></div>
+      <div class="glz12-table-scroll" data-mobile-transform="structured-list"><table class="glz1-table glz12-productive-table"><thead><tr><th aria-sort="none"><button id="sort-name" class="glz12-sort-button" type="button" data-sort-key="name">Name <span data-sort-mark aria-hidden="true">↕</span></button></th><th>Status</th><th class="glz12-numeric">Latency</th><th>Source</th></tr></thead><tbody data-record-body>
+        <tr data-record-row data-name="Zulu" data-state="healthy" data-latency="18" data-source="Fixture A" data-search-text="Zulu healthy gateway" tabindex="0" class="glz12-row-focus"><td>Zulu</td><td><span class="glz12-status-cell" data-state="healthy">Healthy</span></td><td class="glz12-numeric">18 ms</td><td>Fixture A</td></tr>
+        <tr data-record-row data-name="Alpha" data-state="offline" data-latency="0" data-source="Fixture B" data-search-text="Alpha offline worker" tabindex="0" class="glz12-row-focus"><td>Alpha</td><td><span class="glz12-status-cell" data-state="offline">Offline</span></td><td class="glz12-numeric">—</td><td>Fixture B</td></tr>
+        <tr data-record-row data-name="Beta" data-state="unknown" data-latency="0" data-source="Fixture C" data-search-text="Beta unknown node" tabindex="0" class="glz12-row-focus"><td>Beta</td><td><span class="glz12-status-cell" data-state="unknown">Unknown</span></td><td class="glz12-numeric">—</td><td>Fixture C</td></tr>
+      </tbody></table></div>
+      <div class="glz12-structured-list" aria-label="Compact filtered records"><article class="glz12-record-card"><strong>Zulu</strong><span>Healthy · 18 ms</span></article><article class="glz12-record-card"><strong>Alpha</strong><span>Offline</span></article><article class="glz12-record-card"><strong>Beta</strong><span>Unknown</span></article></div>
+      <div id="no-results" data-no-results hidden role="status"><strong>No results</strong><p>Current query: <span data-no-results-query></span>. The fixture dataset itself is not declared empty.</p></div>
+    </section>
+
+    <section id="scene-inspector" class="glz12-productive-scene" data-productive-scene="table-inspector" data-glz-productive-root aria-labelledby="inspector-title-scene">
+      <div><h2 id="inspector-title-scene">Table + inspector</h2><p class="fixture-note">Selection and keyboard focus remain distinct. Multi-selection changes the inspector to bulk scope.</p></div>
+      <div class="glz12-table-inspector-layout">
+        <div class="glz12-table-scroll"><table class="glz1-table glz12-productive-table"><thead><tr><th>Select</th><th>Name</th><th>Status</th><th>Source</th></tr></thead><tbody data-record-body>
+          <tr id="inspect-row-a" data-record-row data-name="Gateway North" data-state="healthy" data-source="Fixture inventory" data-selected="false" tabindex="0" class="glz12-row-focus"><td><input id="inspect-a" class="glz12-selection-control" data-row-select type="checkbox" aria-label="Select Gateway North"></td><td>Gateway North</td><td><span class="glz12-status-cell" data-state="healthy">Healthy</span></td><td>Fixture inventory</td></tr>
+          <tr id="inspect-row-b" data-record-row data-name="Gateway South" data-state="unknown" data-source="Fixture inventory" data-selected="false" tabindex="0" class="glz12-row-focus"><td><input id="inspect-b" class="glz12-selection-control" data-row-select type="checkbox" aria-label="Select Gateway South"></td><td>Gateway South</td><td><span class="glz12-status-cell" data-state="unknown">Unknown</span></td><td>Fixture inventory</td></tr>
+        </tbody></table></div>
+        <aside id="record-inspector" class="glz12-inspector" aria-label="Record inspector"><h3 data-inspector-title>No record selected</h3><p data-inspector-body>Select a record to inspect its fixture details.</p><p><strong data-selection-count>0 selected</strong></p><div class="glz12-bulk-bar" data-bulk-bar hidden><span>Bulk scope: selected fixture records</span></div></aside>
+      </div>
+    </section>
+  </div>
+</main>
+<script type="module" src="../../js/glaze-v1.2-productive-interfaces.candidate.mjs"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+name: Glaze V1.2 Source Inventory Candidate
+
+on:
+  pull_request:
+    paths:
+      - "contracts/v1.2/**"
+      - "tokens/glaze-v1.2*"
+      - "css/glaze-v1.2*"
+      - "js/glaze-v1.2*"
+      - "reference/v1.2/**"
+      - "scripts/validate_glaze_v1_2_*"
+      - "scripts/glaze_v1_2_visual_regression.py"
+      - ".github/workflows/glaze-v1.2-*"
+      - "acceptance/v1.2-*"
+      - "VERSION"
+      - "registry/lifecycle.json"
+      - "GLAZE_UI_V1_2_CANDIDATE.md"
+      - "MIGRATION_V1_1_TO_V1_2.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: glaze-v1-2-source-inventory-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-inventory:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact Candidate revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Preserve Stable and Candidate authorities
+        run: |
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          python scripts/validate_glaze_v1.py
+          python scripts/validate_glaze_v1_2_candidate.py
+
+      - name: Generate exact-head V1.2 Candidate source inventory
+        run: |
+          python scripts/validate_glaze_v1_2_source_inventory.py \
+            --output "artifacts/glaze-v1.2-source-inventory-${{ github.event.pull_request.head.sha || github.sha }}.json"
+
+      - name: Compile bounded source-inventory validator
+        run: python -m py_compile scripts/validate_glaze_v1_2_source_inventory.py
+
+      - name: Verify validator did not mutate tracked source
+        run: git diff --exit-code
+
+      - name: Upload exact-head source inventory evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: glaze-v1.2-source-inventory-${{ github.event.pull_request.head.sha || github.sha }}
+          path: artifacts/glaze-v1.2-source-inventory-${{ github.event.pull_request.head.sha || github.sha }}.json
+          if-no-files-found: error
+          retention-days: 14

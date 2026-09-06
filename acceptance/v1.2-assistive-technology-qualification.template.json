@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "recordType": "glaze-v1.2-assistive-technology-qualification",
+  "sourceRevision": "REPLACE_WITH_EXACT_40_CHAR_SOURCE_SHA",
+  "repository": "GoreeCloud/goreecloud-glaze-ui",
+  "capturedAt": "REPLACE_WITH_ISO_8601_TIMESTAMP_WITH_TIMEZONE",
+  "operator": "REPLACE_WITH_OPERATOR_NAME",
+  "manualExecution": false,
+  "platform": "REPLACE_WITH_PLATFORM",
+  "device": {
+    "physicalDevice": false,
+    "emulator": false,
+    "manufacturer": "REPLACE_WITH_MANUFACTURER",
+    "model": "REPLACE_WITH_MODEL",
+    "osName": "REPLACE_WITH_OS_NAME",
+    "osVersion": "REPLACE_WITH_OS_VERSION",
+    "osBuild": "REPLACE_WITH_OS_BUILD"
+  },
+  "assistiveTechnology": {
+    "name": "Other",
+    "version": "REPLACE_WITH_ASSISTIVE_TECHNOLOGY_VERSION",
+    "inputMode": "REPLACE_WITH_INPUT_MODE",
+    "otherName": "REPLACE_WITH_TECHNOLOGY_NAME_WHEN_OTHER"
+  },
+  "scenarios": [
+    {"id": "launch-and-orient", "status": "fail", "observation": "REPLACE_WITH_MANUAL_OBSERVATION", "defectOrFinding": "Template placeholder; not qualification evidence."},
+    {"id": "navigate-primary-destinations", "status": "fail", "observation": "REPLACE_WITH_MANUAL_OBSERVATION", "defectOrFinding": "Template placeholder; not qualification evidence."},
+    {"id": "activate-primary-actions", "status": "fail", "observation": "REPLACE_WITH_MANUAL_OBSERVATION", "defectOrFinding": "Template placeholder; not qualification evidence."},
+    {"id": "focus-order-and-reachability", "status": "fail", "observation": "REPLACE_WITH_MANUAL_OBSERVATION", "defectOrFinding": "Template placeholder; not qualification evidence."},
+    {"id": "names-roles-states-and-values", "status": "fail", "observation": "REPLACE_WITH_MANUAL_OBSERVATION", "defectOrFinding": "Template placeholder; not qualification evidence."},
+    {"id": "error-status-and-recovery-announcement", "status": "fail", "observation": "REPLACE_WITH_MANUAL_OBSERVATION", "defectOrFinding": "Template placeholder; not qualification evidence."},
+    {"id": "large-text-200-percent", "status": "fail", "observation": "REPLACE_WITH_MANUAL_OBSERVATION", "defectOrFinding": "Template placeholder; not qualification evidence."},
+    {"id": "reduced-transparency", "status": "fail", "observation": "REPLACE_WITH_MANUAL_OBSERVATION", "defectOrFinding": "Template placeholder; not qualification evidence."},
+    {"id": "clarity-and-personalization-controls", "status": "fail", "observation": "REPLACE_WITH_MANUAL_OBSERVATION", "defectOrFinding": "Template placeholder; not qualification evidence."}
+  ],
+  "sessionDecision": "session-fail",
+  "sessionSummary": "Fail-closed template only. Replace every placeholder, set manualExecution true only after a real manual session on the exact source revision, and validate the completed record before it can be treated as evidence."
+}

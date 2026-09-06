@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "glaze-v1.2-frosted-optical-foundation-candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "stableBaseline": "1.1.0",
+  "currentStableToken": false,
+  "implementationStatus": "candidate-web-optical-layer",
+  "extends": "tokens/glaze-v1.2-frosted-neutral.candidate.json",
+  "implementationBindings": {
+    "webLayer": "css/glaze-v1.2-optical.candidate.css",
+    "webEntrypoint": "css/glaze-v1.2.0-candidate.css",
+    "reference": "reference/v1.2/optical-foundation.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_optical_rendered.py"
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "web-optical-roles",
+      "web-frost-levels",
+      "web-aura-families",
+      "web-performance-profiles",
+      "universal-search-signature"
+    ],
+    "notEstablished": [
+      "rc",
+      "stable",
+      "native-optical-parity",
+      "downstream-consumer-conformance",
+      "production-acceptance"
+    ]
+  },
+  "governingPrinciples": [
+    "The material is the identity.",
+    "White behaves as light.",
+    "Blue behaves as atmosphere.",
+    "Translucency behaves as depth.",
+    "Accessibility, semantics, truthful state, resilience, and material budgets take precedence over optical effects."
+  ],
+  "identity": {
+    "primaryMaterial": "frost-white",
+    "primaryAtmosphere": "ice-blue",
+    "secondaryAtmosphere": "glacier-blue",
+    "primaryNeutral": "cloud-gray",
+    "darkNeutral": "cool-graphite",
+    "deepDarkBase": "blue-black",
+    "primaryHighlight": "crystal-white",
+    "translucencyStyle": "clear-to-frosted-glaze",
+    "colorPhilosophy": "atmospheric-not-decorative"
+  },
+  "opticalPalette": {
+    "frostWhite": "#F4F8FA",
+    "crystalWhite": "#FBFDFE",
+    "iceBlue": "#DCECF6",
+    "glacierBlue": "#8FC4E8",
+    "clearSkyBlue": "#68AEE0",
+    "cloudGray": "#DCE3E8",
+    "slateGray": "#7E8D99",
+    "coolGraphite": "#151C22",
+    "deepGraphite": "#0E1419",
+    "blueBlack": "#070C11"
+  },
+  "paletteAuthority": "initial-optical-references-not-protected-semantic-values",
+  "materialHierarchy": [
+    "canvas",
+    "surface",
+    "soft-glaze",
+    "glaze",
+    "deep-glaze",
+    "live-glaze"
+  ],
+  "frostLevels": {
+    "clear": {
+      "intent": "minimal-diffusion",
+      "preferredUse": [
+        "floating-controls",
+        "compact-toolbars",
+        "search-entry",
+        "temporary-command-regions",
+        "media-controls",
+        "contextual-overlays"
+      ]
+    },
+    "mist": {
+      "intent": "light-visual-softening",
+      "preferredUse": [
+        "low-priority-transient-chrome",
+        "subtle-navigation-chrome"
+      ]
+    },
+    "frost": {
+      "intent": "standard-glaze-treatment",
+      "preferredUse": [
+        "glaze",
+        "universal-search",
+        "floating-navigation"
+      ]
+    },
+    "dense-frost": {
+      "intent": "greater-environmental-abstraction",
+      "preferredUse": [
+        "deep-glaze",
+        "priority-floating-panels",
+        "control-center"
+      ]
+    },
+    "opaque-frost": {
+      "intent": "near-solid-accessibility-or-performance-fallback",
+      "preferredUse": [
+        "reduced-transparency",
+        "minimal-performance",
+        "readability-protection"
+      ]
+    }
+  },
+  "visualDistribution": {
+    "neutralPercent": {
+      "min": 65,
+      "max": 80
+    },
+    "frostedTranslucentPercent": {
+      "min": 15,
+      "max": 25
+    },
+    "iceBlueAtmospherePercent": {
+      "min": 3,
+      "max": 10
+    },
+    "strongerAccent": "minimal"
+  },
+  "auraFamilies": {
+    "frostAura": "diffuse-white-illumination",
+    "iceAura": "pale-cool-blue-environmental-light",
+    "crystalAura": "near-white-concentrated-highlight-for-rare-high-value-regions",
+    "contentAura": "very-restrained-sampled-environmental-influence"
+  },
+  "auraPolicy": {
+    "behavesAs": "atmospheric-light-not-glow",
+    "defaultAtmosphere": "ice-blue",
+    "tealDefaultAtmosphereAllowed": false,
+    "purpleDefaultAtmosphereAllowed": false,
+    "highSaturationGlowAllowed": false,
+    "legacyV11TealAmberAuraFields": "retired-in-v1.2-web-optical-layer",
+    "legacyAuraPromotionRequirement": "retire-or-map-to-frost-ice-before-rc"
+  },
+  "appearanceDirection": {
+    "light": [
+      "soft-white-or-cloud-gray-canvas",
+      "bright-not-pure-white-durable-surfaces",
+      "frost-white-translucent-navigation",
+      "pale-ice-blue-environmental-reflections",
+      "crystal-blue-white-edges",
+      "cool-graphite-text",
+      "broad-soft-shadows"
+    ],
+    "dark": [
+      "cool-graphite-canvas",
+      "charcoal-durable-surfaces",
+      "smoky-translucent-glaze",
+      "cool-white-illuminated-edges",
+      "restrained-ice-blue-reflections",
+      "minimal-saturated-color"
+    ],
+    "deepDark": [
+      "blue-black-canvas",
+      "cool-graphite-surfaces",
+      "charcoal-translucent-glaze",
+      "frost-white-edge-illumination",
+      "faint-ice-blue-environmental-reflection"
+    ]
+  },
+  "performanceProfiles": {
+    "full": {
+      "blur": true,
+      "environmentalTint": true,
+      "aura": true,
+      "adaptiveOpacity": true,
+      "connectedMaterialTransitions": true
+    },
+    "reduced": {
+      "blur": "lower",
+      "shadows": "simplified",
+      "environmentalTint": "static",
+      "aura": "reduced",
+      "connectedMaterialTransitions": "bounded"
+    },
+    "minimal": {
+      "surfaces": "near-solid",
+      "blur": false,
+      "edgeTreatment": "basic",
+      "aura": false,
+      "preserveHierarchy": true
+    }
+  },
+  "accessibility": {
+    "reducedTransparency": "opaque-frost-white-or-graphite-with-no-background-blur",
+    "increasedContrast": "increase-functional-separation-while-decreasing-decorative-frost-and-atmosphere",
+    "forcedColors": "platform-authoritative",
+    "reducedMotion": "remove-nonessential-travel-and-dynamic-optical-motion",
+    "textScaling": "200-percent-plus-without-critical-clipping",
+    "rtl": "required",
+    "assistiveTechnology": "required"
+  },
+  "gradientPolicy": {
+    "routineDecorativeGradientsAllowed": false,
+    "allowedPurposes": [
+      "soft-white-to-transparent-frost",
+      "pale-blue-atmospheric-fields",
+      "surface-luminance-transitions",
+      "hero-environmental-lighting",
+      "subtle-depth-variation"
+    ],
+    "mustRemainOpticallySubtle": true
+  },
+  "antiPatterns": [
+    "purple-default-atmosphere",
+    "teal-default-atmosphere",
+    "saturated-dual-color-palette",
+    "neon-effects",
+    "bright-cyan-glow",
+    "rainbow-refraction",
+    "excessive-transparent-cards",
+    "blur-behind-dense-reading-content",
+    "colored-borders-everywhere",
+    "pure-white-everywhere",
+    "black-without-tonal-layering",
+    "strong-gradients-on-routine-controls",
+    "overly-glossy-glass",
+    "excessive-reflectivity",
+    "liquid-like-distortion-that-harms-readability"
+  ],
+  "promotionBoundary": {
+    "stableVersionRemains": "1.1.0",
+    "consumerMigrationTarget": false,
+    "requiresBeforeRC": [
+      "rendered-optical-alignment",
+      "legacy-aura-retirement-or-mapping",
+      "accessibility-and-resilience-validation",
+      "performance-profile-validation",
+      "visual-acceptance-review"
+    ]
+  }
+}

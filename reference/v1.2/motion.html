@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light" data-glz-material-performance="full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GLAZE UI V1.2 Motion and Connected Transformation Candidate</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { min-width: 0; }
+    body { margin: 0; min-height: 100vh; }
+    .motion-demo { max-width: 1120px; margin-inline: auto; padding: 32px; display: grid; gap: 28px; }
+    .motion-demo h1, .motion-demo h2, .motion-demo h3, .motion-demo p { margin: 0; }
+    .motion-demo p { overflow-wrap: anywhere; }
+    .intro { display: grid; gap: 12px; max-width: 780px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+    .sample { min-width: 0; padding: 20px; border: 1px solid var(--glz12-structural-border); border-radius: var(--glz12-radius-surface, 20px); display: grid; gap: 14px; align-content: start; }
+    .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .glz12-motion-selection-track { display: grid; grid-template-columns: repeat(3, 96px); gap: 8px; padding: 4px; inline-size: fit-content; max-inline-size: 100%; }
+    .selection-option { inline-size: 96px; min-block-size: 48px; position: relative; z-index: 1; }
+    .glz12-motion-selection-indicator { position: absolute; inset-block: 4px; inset-inline-start: 4px; inline-size: 96px; border: 2px solid currentColor; border-radius: var(--glz12-radius-control, 12px); pointer-events: none; }
+    .surface-stage { min-block-size: 230px; display: grid; align-content: end; gap: 12px; overflow: hidden; }
+    .motion-surface { padding: 18px; border: 1px solid var(--glz12-structural-border); border-radius: var(--glz12-radius-surface, 20px); background: var(--glz1-raised); min-inline-size: 0; }
+    #motion-popover { max-inline-size: 320px; }
+    #motion-dialog { max-inline-size: 420px; justify-self: center; }
+    #motion-sheet { border-radius: var(--glz12-radius-sheet, 28px); }
+    #motion-search { inline-size: 100%; }
+    #motion-search .glz1-search-panel { position: relative; inset: auto; }
+    #motion-card { inline-size: 100%; }
+    .direct-stage { overflow: hidden; padding: 16px; border: 1px dashed var(--glz12-structural-border); border-radius: var(--glz12-radius-control, 12px); }
+    #direct-object { inline-size: 56px; block-size: 56px; display: grid; place-items: center; border: 1px solid var(--glz12-structural-border); border-radius: 16px; background: var(--glz1-raised); }
+    #direct-range { inline-size: min(360px, 100%); min-block-size: 48px; }
+    .motion-note { font-family: ui-monospace, monospace; font-size: 12px; }
+    @media (max-width: 700px) {
+      .motion-demo { padding: 16px; gap: 22px; }
+      .grid { grid-template-columns: 1fr; }
+      .glz12-motion-selection-track { grid-template-columns: repeat(3, minmax(72px, 1fr)); inline-size: 100%; }
+      .selection-option { inline-size: auto; }
+      .glz12-motion-selection-indicator { inline-size: calc((100% - 16px) / 3); }
+    }
+    @media (forced-colors: active) { .sample, .motion-surface, .direct-stage, #direct-object { border-color: CanvasText; } }
+  </style>
+</head>
+<body>
+  <main class="motion-demo">
+    <header class="intro">
+      <p data-glz-type="label">Motion + Connected Transformation · Candidate</p>
+      <h1 data-glz-type="display">Respond immediately. Preserve continuity. Settle quietly.</h1>
+      <p data-glz-type="body">This bounded V1.2 reference treats motion as explanation rather than decoration. State updates happen synchronously; connected objects preserve identity; direct manipulation follows input; and Reduced Motion removes nonessential travel without removing meaning.</p>
+    </header>
+
+    <section class="grid">
+      <article class="sample">
+        <h2 data-glz-type="heading">Immediate feedback</h2>
+        <div class="row">
+          <button id="press-control" class="glz1-button glz12-spatial-action" data-glz-motion="press" type="button">Press response</button>
+          <span class="motion-note">Instant · 80 ms</span>
+        </div>
+        <div id="selection-track" class="glz12-motion-selection-track" role="tablist" aria-label="Motion selection example">
+          <span id="selection-indicator" class="glz12-motion-selection-indicator" aria-hidden="true"></span>
+          <button id="select-one" class="glz1-button glz12-spatial-action selection-option" role="tab" aria-selected="true" type="button">One</button>
+          <button id="select-two" class="glz1-button glz12-spatial-action selection-option" role="tab" aria-selected="false" type="button">Two</button>
+          <button id="select-three" class="glz1-button glz12-spatial-action selection-option" role="tab" aria-selected="false" type="button">Three</button>
+        </div>
+        <span class="motion-note">Selection · Standard / Glide</span>
+      </article>
+
+      <article class="sample">
+        <h2 data-glz-type="heading">Direct manipulation</h2>
+        <label for="direct-range">Position</label>
+        <input id="direct-range" class="glz12-spatial-action" type="range" min="0" max="80" value="0">
+        <div class="direct-stage"><div id="direct-object" data-glz-direct-manipulation="true" aria-label="Directly manipulated object">↔</div></div>
+        <span class="motion-note">Live input tracking remains immediate in Reduced Motion.</span>
+      </article>
+    </section>
+
+    <section class="grid">
+      <article class="sample">
+        <h2 data-glz-type="heading">Anchored and modal surfaces</h2>
+        <div class="row">
+          <button id="popover-toggle" class="glz1-button glz12-spatial-action" type="button" aria-controls="motion-popover" aria-expanded="false">Popover</button>
+          <button id="dialog-toggle" class="glz1-button glz12-spatial-action" type="button" aria-controls="motion-dialog" aria-expanded="false">Dialog</button>
+        </div>
+        <div class="surface-stage">
+          <aside id="motion-popover" class="motion-surface" data-glz-motion-surface="popover" data-open="false"><strong>Anchored action</strong><p>Fast motion connects this surface to its trigger without row cascades.</p></aside>
+          <section id="motion-dialog" class="motion-surface" role="dialog" aria-modal="false" aria-label="Motion dialog" data-glz-motion-surface="dialog" data-open="false"><strong>Decision surface</strong><p>Standard small-scale + opacity + depth; no dramatic zoom.</p></section>
+        </div>
+      </article>
+
+      <article class="sample">
+        <h2 data-glz-type="heading">Spatial sheet</h2>
+        <button id="sheet-toggle" class="glz1-button glz12-spatial-action" type="button" aria-controls="motion-sheet" aria-expanded="false">Toggle sheet</button>
+        <div class="surface-stage">
+          <section id="motion-sheet" class="motion-surface" data-glz-motion-surface="sheet" data-open="false"><strong>Bottom-origin sheet</strong><p>Deliberate travel starts at the actual spatial edge and settles to the final durable state.</p></section>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid">
+      <article class="sample">
+        <h2 data-glz-type="heading">Universal Search continuity</h2>
+        <section id="motion-search" class="glz1-universal-search" data-glz-connected="search" data-open="false">
+          <div class="glz1-search-entry">
+            <span aria-hidden="true">⌕</span>
+            <input id="search-query" aria-label="Universal Search query" value="identity">
+            <button id="search-toggle" class="glz1-icon-button glz12-spatial-action" type="button" aria-controls="search-panel" aria-expanded="false" aria-label="Toggle Universal Search">↕</button>
+          </div>
+          <div id="search-panel" class="glz1-search-panel"><div class="glz1-search-group"><h3 data-glz-type="title">Same query, same object</h3><button class="glz1-search-result glz12-spatial-action" type="button"><span>⌘</span><strong>Connected result</strong></button></div></div>
+        </section>
+        <span class="motion-note">Search · Deliberate / Glide · query and focus preserved.</span>
+      </article>
+
+      <article class="sample">
+        <h2 data-glz-type="heading">MorphCard continuity</h2>
+        <button id="motion-card" class="glz1-morph-card" data-glz-connected="card-detail" aria-expanded="false" type="button">
+          <span class="glz1-morph-media" aria-hidden="true">◇</span>
+          <span class="glz1-morph-copy"><strong id="motion-card-title">Continuity object</strong><span>One object becomes the detail surface.</span></span>
+          <span class="glz1-morph-detail">Expanded detail becomes more durable without replacing the title object.</span>
+        </button>
+        <span class="motion-note">MorphCard · Deliberate / Glide · reversible and interruptible.</span>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const toggleSurface = (buttonId, surfaceId) => {
+        const button = document.getElementById(buttonId);
+        const surface = document.getElementById(surfaceId);
+        button.addEventListener('click', () => {
+          const next = surface.dataset.open !== 'true';
+          surface.dataset.open = String(next);
+          button.setAttribute('aria-expanded', String(next));
+        });
+      };
+      toggleSurface('popover-toggle', 'motion-popover');
+      toggleSurface('dialog-toggle', 'motion-dialog');
+      toggleSurface('sheet-toggle', 'motion-sheet');
+
+      const track = document.getElementById('selection-track');
+      const indicator = document.getElementById('selection-indicator');
+      const options = [...track.querySelectorAll('[role="tab"]')];
+      const select = (button) => {
+        options.forEach(item => item.setAttribute('aria-selected', String(item === button)));
+        const trackBox = track.getBoundingClientRect();
+        const box = button.getBoundingClientRect();
+        indicator.style.setProperty('--glz12-selection-x', `${box.left - trackBox.left - 4}px`);
+      };
+      options.forEach(button => button.addEventListener('click', () => select(button)));
+      requestAnimationFrame(() => select(options[0]));
+
+      const range = document.getElementById('direct-range');
+      const direct = document.getElementById('direct-object');
+      const trackDirect = () => direct.style.setProperty('--glz12-direct-x', `${range.value}px`);
+      range.addEventListener('input', trackDirect);
+      trackDirect();
+
+      const search = document.getElementById('motion-search');
+      const query = document.getElementById('search-query');
+      const searchToggle = document.getElementById('search-toggle');
+      searchToggle.addEventListener('click', () => {
+        const next = search.dataset.open !== 'true';
+        search.dataset.open = String(next);
+        searchToggle.setAttribute('aria-expanded', String(next));
+        query.focus({ preventScroll: true });
+      });
+
+      const card = document.getElementById('motion-card');
+      card.addEventListener('click', () => {
+        const next = card.getAttribute('aria-expanded') !== 'true';
+        card.setAttribute('aria-expanded', String(next));
+      });
+      root.dataset.motionReferenceReady = 'true';
+    })();
+  </script>
+</body>
+</html>

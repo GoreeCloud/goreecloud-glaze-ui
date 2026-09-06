@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.intelligence-components.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-web-intelligence-component-implementation",
+  "tier": "intelligence",
+  "purpose": "Implement the five canonical Intelligence families with explicit provenance, uncertainty, user-control, action-safety, and readability rules while preserving GLAZE UI V1.1 as Stable.",
+  "components": [
+    {"id":"GlzAIAction","defaultMaterial":"control-local","requirements":["visible-effect-description","visible-data-use-description","visible-state-change-description","confirmation-when-required","no-authority-inflation"]},
+    {"id":"GlzAISuggestion","defaultMaterial":"surface","requirements":["explicit-suggestion-label","distinct-from-system-truth","distinct-from-user-data","dismissible-or-ignorable-where-appropriate"]},
+    {"id":"GlzAIAnswer","defaultMaterial":"surface","requirements":["generated-content-label","source-separation","uncertainty-where-applicable","actions-separated","system-truth-separated","no-manufactured-certainty"]},
+    {"id":"GlzSmartSummary","defaultMaterial":"surface","requirements":["scan-first-heading","short-summary","key-values","relevant-state","optional-expansion","source-access-where-applicable"]},
+    {"id":"GlzSourceChip","defaultMaterial":"raised","optionalMaterial":"soft-glaze","requirements":["source-identity","type","availability","selection","openability","small-size-readability"]}
+  ],
+  "identityRules": {
+    "unrelatedPurpleOrNeonAIIdentityProhibited": true,
+    "differentiateBy": ["symbol","composition","label","context","provenance","interaction-pattern"],
+    "arbitraryColorAsPrimaryDifferentiatorProhibited": true,
+    "semanticMeaningMayDependOnColorAlone": false
+  },
+  "universalRules": {
+    "durableReadingBackdropDependencyProhibited": true,
+    "consequentialDecisionBackdropDependencyProhibited": true,
+    "minimumInteractiveTargetPx": 48,
+    "assistedInteractiveTargetPx": 56,
+    "keyboardRequired": true,
+    "reducedMotionRequired": true,
+    "reducedTransparencyRequired": true,
+    "increasedContrastRequired": true,
+    "forcedColorsPlatformAuthoritative": true,
+    "textScale200Required": true,
+    "rtlWhereApplicable": true,
+    "noNewRuntimeDependency": true
+  },
+  "materialAuthority": {
+    "componentMaterials": "contracts/v1.2/component-materials.candidate.json",
+    "newNumericMaterialCalibrationIntroduced": false
+  },
+  "runtimeBoundary": {
+    "candidateRuntime": "js/glaze-v1.2-intelligence.candidate.mjs",
+    "stableRuntimeModified": false,
+    "confirmationStateMustPersistAcrossConsecutiveActivation": true,
+    "dismissedSuggestionMustBeRemovedFromInteractionFlow": true,
+    "summaryExpansionMustSynchronizeAriaAndData": true
+  },
+  "implementation": {
+    "inheritedApi": "css/glaze-v1.advanced.css",
+    "webLayer": "css/glaze-v1.2-intelligence-components.candidate.css",
+    "candidateRuntime": "js/glaze-v1.2-intelligence.candidate.mjs",
+    "reference": "reference/v1.2/intelligence-components.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_intelligence_components_rendered.py",
+    "workflow": ".github/workflows/glaze-v1.2-intelligence-components.yml",
+    "catalog": "contracts/components/v1/catalog.json",
+    "candidateEntrypoint": "css/glaze-v1.2.0-candidate.css"
+  },
+  "acceptance": {
+    "appearance": ["light","dark","deep-dark"],
+    "accessibility": ["reduced-transparency","reduced-motion","increased-contrast","forced-colors","text-200","rtl"],
+    "responsiveWidthsPx": [1280,390],
+    "interactionScenarios": ["ai-action-two-step-confirmation","suggestion-dismiss","smart-summary-toggle","source-chip-keyboard-focus"],
+    "contentScenarios": ["visible-ai-label","visible-data-and-state-impact","generated-vs-system-truth","source-provenance","uncertainty"]
+  },
+  "evidenceBoundary": {
+    "implemented": ["bounded-web-intelligence-reference","visible-ai-provenance-and-uncertainty","candidate-action-confirmation","candidate-suggestion-dismissal","candidate-summary-disclosure","exact-head-rendered-acceptance"],
+    "notEstablished": ["complete-32-family-component-coverage","complete-v1.2-interaction-state-system","native-intelligence-parity","assistive-technology-completeness","human-intelligence-acceptance","production-intelligence-performance-acceptance","rc","stable","consumer-conformance"]
+  }
+}

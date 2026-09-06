@@ -1,0 +1,8 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","schemaVersion":1,"id":"goreecloud.glaze-ui.v1.2.ergonomic-layout.candidate","product":"GLAZE UI V1.2","version":"1.2.0-candidate","lifecycle":"candidate","consumerEligible":false,"stableBaseline":"1.1.0","extends":"contracts/v1.2/living-glaze.candidate.json",
+  "compactZones":{"information":{"purpose":["title","context","content","status","passive-information"]},"transition":{"purpose":["secondary-actions","in-content-interaction"]},"primaryInteraction":{"purpose":["primary-navigation","primary-action","frequent-context-actions","safe-confirmation","search-initiation","media-controls","contextual-toolbars"]}},
+  "recompositionStates":["compact","standard","expanded","workspace","far-view"],
+  "inputs":["available-dimensions","orientation","posture","input-modality","viewing-distance","task","content-density","platform-conventions","safe-areas"],
+  "requirements":{"primaryActionsEvaluateReach":true,"desktopPlacementMustNotBlindlyMapToMobile":true,"largeTextReflows":true,"rtlAware":true,"touchTargetPx":48,"touchAssistanceTargetPx":56},
+  "evidenceBoundary":{"notEstablished":["anthropometric-device-lab-acceptance","physical-device-reachability-acceptance","release-candidate","stable"]}
+}

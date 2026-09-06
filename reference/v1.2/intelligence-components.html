@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GLAZE UI V1.2 Intelligence Components Candidate</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    body{margin:0;min-height:100vh;padding:28px;background:var(--glz1-canvas);color:var(--glz1-text-primary);font:16px/1.5 system-ui,sans-serif}main{max-inline-size:1050px;margin:auto;display:grid;gap:24px}.stage{padding:20px;border:1px solid var(--glz1-line);border-radius:28px;background:var(--glz1-base)}h1,h2,h3,h4,p{max-inline-size:70ch}.stack{display:grid;gap:14px}.sr-only{position:absolute;inline-size:1px;block-size:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}@media(max-width:700px){body{padding:12px}.stage{padding:14px}}
+  </style>
+</head>
+<body><main>
+<header><p>Candidate reference — GLAZE UI V1.1 / 1.1.0 remains Stable.</p><h1>Intelligence components</h1></header>
+
+<section aria-labelledby="action-title"><h2 id="action-title">GlzAIAction</h2><div class="stage stack">
+  <div><span class="glz12-ai-label">AI-assisted action</span><h3>Organize selected files</h3><p>This action proposes folders from filenames and metadata. It never appears more authoritative than an equivalent manual command.</p>
+    <div class="glz12-ai-impact" id="action-impact"><span>Uses: selected file metadata</span><span>Changes state: yes</span><span>Confirmation: required</span></div></div>
+  <button id="ai-action" class="glz1-ai-action" type="button" data-user-data="true" data-state-change="true" data-confirmation-required="true" data-action-label="organize selected files" aria-describedby="action-impact action-status">Organize with AI</button>
+  <p id="action-status" role="status" aria-live="polite">Not run</p>
+</div></section>
+
+<section aria-labelledby="suggestion-title"><h2 id="suggestion-title">GlzAISuggestion</h2><div class="stage">
+  <article id="ai-suggestion" class="glz1-ai-suggestion" aria-labelledby="suggestion-heading"><div class="glz12-ai-suggestion-head"><div><span class="glz12-ai-label">AI suggestion</span><h3 id="suggestion-heading">You could archive 12 inactive items</h3></div><button id="suggestion-dismiss" class="glz12-ai-dismiss" type="button" aria-label="Dismiss AI suggestion">Dismiss</button></div><p>This is optional guidance, not confirmed system state or a required action.</p></article>
+  <p id="suggestion-status" role="status" aria-live="polite">Suggestion available</p>
+</div></section>
+
+<section aria-labelledby="answer-title"><h2 id="answer-title">GlzAIAnswer</h2><div class="stage">
+  <article id="ai-answer" class="glz1-ai-answer"><div class="glz12-ai-answer-head"><div><span class="glz12-ai-label">AI-generated answer</span><h3>Why did storage use increase?</h3></div></div>
+    <div class="glz12-ai-answer-section"><h4>Generated content</h4><p class="glz1-answer-body">Most of the increase appears to come from two recent backup snapshots and a video upload.</p><p class="glz12-ai-uncertainty"><strong>Uncertainty:</strong> this explanation is based on indexed storage events and may omit data that has not finished indexing.</p></div>
+    <div class="glz12-system-truth"><strong>Verified system state:</strong> storage usage is 74% as reported by the storage service.</div>
+    <div class="glz12-ai-answer-section"><h4>Sources</h4><div class="glz1-source-row"><button id="source-chip" class="glz1-source-chip" type="button" data-source-type="system-event" data-available="true" aria-selected="false"><span>Storage events</span><span class="glz12-source-type">System event</span></button><span class="glz1-source-chip" data-source-type="snapshot" data-available="true"><span>Snapshot log</span><span class="glz12-source-type">Record</span></span></div></div>
+  </article>
+</div></section>
+
+<section aria-labelledby="summary-title"><h2 id="summary-title">GlzSmartSummary</h2><div class="stage">
+  <article id="smart-summary" class="glz1-smart-summary" data-expanded="false"><div class="glz12-summary-head"><div><span class="glz12-ai-label">Smart summary</span><h3>Workspace health</h3><p>Two items need attention; all critical services are available.</p></div><button id="summary-toggle" class="glz12-summary-toggle" type="button" aria-expanded="false" aria-controls="summary-detail">Details</button></div>
+    <div class="glz12-summary-values"><div class="glz12-summary-value"><strong>2</strong><span>Needs attention</span></div><div class="glz12-summary-value"><strong>100%</strong><span>Critical services available</span></div></div>
+    <div id="summary-detail" class="glz1-summary-detail" hidden><p>One backup verification is pending and one device has not synced recently.</p><div class="glz1-source-row"><span class="glz1-source-chip">Health telemetry <span class="glz12-source-type">System source</span></span></div></div>
+  </article>
+</div></section>
+</main>
+<script type="module">
+import {bindV12AIAction,bindV12AISuggestion,bindV12SmartSummary} from "../../js/glaze-v1.2-intelligence.candidate.mjs";
+const action=bindV12AIAction({button:document.querySelector('#ai-action'),status:document.querySelector('#action-status')});
+const suggestion=bindV12AISuggestion({root:document.querySelector('#ai-suggestion'),dismissButton:document.querySelector('#suggestion-dismiss'),status:document.querySelector('#suggestion-status')});
+const summary=bindV12SmartSummary({root:document.querySelector('#smart-summary'),toggle:document.querySelector('#summary-toggle'),detail:document.querySelector('#summary-detail')});
+window.intelligenceControllers={action,suggestion,summary};window.intelligenceReady=true;
+</script></body></html>

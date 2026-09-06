@@ -1,0 +1,5 @@
+{
+  "schemaVersion":1,"version":"1.2.0-candidate","lifecycle":"candidate","consumerEligible":false,"stableBaseline":"1.1.0",
+  "states":{"rest":{"depthDelta":0},"hover":{"depthDelta":1,"edgeGain":0.08},"focus":{"depthDelta":1,"focusAuthoritative":true},"pressed":{"depthDelta":-2,"scale":0.985},"dragged":{"depthDelta":4,"scale":1.01},"selected":{"depthDelta":1,"accentLocal":true},"expanded":{"depthDelta":3,"density":"dense"},"loading":{"depthDelta":0,"semanticBusyRequired":true},"disabled":{"depthDelta":0,"opacityAloneForbidden":true}},
+  "directManipulationPersistsUnderReducedMotion":true
+}

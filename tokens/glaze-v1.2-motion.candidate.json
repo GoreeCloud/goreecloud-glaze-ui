@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.motion.tokens.candidate",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "durationsMs": {"instant": 80, "fast": 160, "standard": 240, "deliberate": 360, "spatial": 480},
+  "easing": {
+    "responsive": "cubic-bezier(0.2, 0, 0, 1)",
+    "glide": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "settle": "cubic-bezier(0, 0, 0, 1)",
+    "direct": "linear"
+  },
+  "distancePx": {"micro": 2, "short": 8, "medium": 16, "long": 32, "spatial": 48},
+  "scale": {"press": 0.98, "enterSubtle": 0.985},
+  "profiles": {
+    "full": {"durationsMs": {"instant": 80, "fast": 160, "standard": 240, "deliberate": 360, "spatial": 480}, "distancePx": {"short": 8, "medium": 16, "long": 32}},
+    "reduced": {"durationsMs": {"instant": 60, "fast": 120, "standard": 180, "deliberate": 270, "spatial": 360}, "distancePx": {"short": 4, "medium": 8, "long": 16}},
+    "minimal": {"durationsMs": {"instant": 0, "fast": 0, "standard": 0, "deliberate": 0, "spatial": 0}, "distancePx": {"short": 0, "medium": 0, "long": 0}}
+  },
+  "reducedMotion": {"fadeMs": 80, "spatialTravelMs": 0, "directManipulationTrackingMs": 0},
+  "notes": {
+    "calibration": "Bounded V1.2 Candidate calibration within the Proposed companion ranges and aligned with existing GoreeCloud motion timing/curve history.",
+    "spatial": "480 ms is reserved for explicitly justified large spatial relationships and is not the default connected-transition duration.",
+    "experimental": "These V1.2 tokens do not promote or depend on the separate Experimental Glaze Motion runtime."
+  }
+}

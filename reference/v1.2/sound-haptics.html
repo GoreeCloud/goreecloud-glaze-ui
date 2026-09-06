@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GLAZE UI V1.2 Candidate — Sound and Haptics Policy</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    *{box-sizing:border-box}html,body{min-inline-size:0}body{margin:0;padding:16px;background:var(--glz1-canvas);color:var(--glz1-text-primary);font-family:var(--glz12-font-sans,system-ui,sans-serif)}
+    main{inline-size:100%;max-inline-size:900px;min-inline-size:0;margin-inline:auto;display:grid;grid-template-columns:minmax(0,1fr);gap:18px}.panel{min-inline-size:0;padding:18px;border:1px solid var(--glz12-structural-border);border-radius:20px;background:var(--glz1-base)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;min-inline-size:0}.grid>*{min-inline-size:0}button{min-block-size:48px;min-inline-size:48px;max-inline-size:100%;padding:10px 14px;white-space:normal;overflow-wrap:anywhere}.plan{min-block-size:72px;padding:12px;border:1px solid var(--glz12-structural-border);border-radius:12px;background:var(--glz1-raised);overflow-wrap:anywhere}.note{max-inline-size:72ch}@media(max-width:560px){.grid{grid-template-columns:minmax(0,1fr)}}html[data-glz-text-scale="200"] .grid{grid-template-columns:minmax(0,1fr)}html[data-glz-text-scale="200"] :is(main,.panel,.grid,.grid>*,h1,h2,p,button,.plan){min-inline-size:0;max-inline-size:100%;overflow-wrap:anywhere;white-space:normal}
+  </style>
+  <script type="module" src="../../js/glaze-v1.2-sound-haptics.candidate.mjs"></script>
+</head>
+<body>
+<main data-feedback-root data-haptic-capability="true" data-haptics-enabled="true" data-sound-enabled="true" data-system-haptics-allowed="true" data-system-sound-allowed="true">
+  <header>
+    <p>Candidate policy reference only. V1.1 / 1.1.0 remains Stable. This page plays no audio and executes no vibration; it only plans semantic feedback tokens.</p>
+    <h1>Sound and Haptics</h1>
+    <p class="note">Sound and haptics confirm meaningful interaction, not every interaction. Semantic and visual state remain complete when both channels are disabled.</p>
+  </header>
+
+  <section class="panel" aria-labelledby="state-title">
+    <h2 id="state-title">Authoritative semantic state remains primary</h2>
+    <p data-semantic-state>Recovery verification: pending</p>
+    <p>The policy module cannot upgrade this text, create recovery truth, or infer security, privacy, identity, health, or connectivity state.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="events-title">
+    <h2 id="events-title">Deterministic token planning</h2>
+    <div class="grid">
+      <button type="button" data-feedback-event="routine-button">Routine control — stay silent</button>
+      <button type="button" data-feedback-event="selection">Selection — haptic when supported</button>
+      <button type="button" data-feedback-event="complete" data-requested-notification="true">Requested long-task completion</button>
+      <button type="button" data-feedback-event="warning" data-request-sound="true">Explicit warning feedback</button>
+      <button type="button" data-feedback-event="recovery-complete" data-requested-notification="true" data-authoritative-verified="false">Recovery completion before verification — blocked</button>
+      <button type="button" data-feedback-event="recovery-complete" data-requested-notification="true" data-authoritative-verified="true">Recovery completion after authoritative verification</button>
+      <button type="button" data-feedback-event="complete" data-requested-notification="true" data-repeat-count="10">Bulk completion — one aggregate cue</button>
+    </div>
+    <p class="plan" data-feedback-plan role="status" aria-live="polite">No feedback planned yet. Semantic state remains unchanged.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="boundary-title">
+    <h2 id="boundary-title">Execution boundary</h2>
+    <p>No released sound assets, audio playback, vibration calls, device probing, native haptic mappings, telemetry, or platform-capability claims are present here. Unsupported haptics map to no-op. Silent mode, Do Not Disturb, screen-reader audio priority, and user/system settings suppress optional feedback.</p>
+  </section>
+</main>
+</body>
+</html>

@@ -8,19 +8,37 @@ jobs:
   validate-v1:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.12'
+      - name: Validate GitHub Actions runtime and immutable pin integrity
+        run: |
+          python -m py_compile scripts/validate_github_actions_runtime_integrity.py
+          python scripts/validate_github_actions_runtime_integrity.py
       - name: Validate current GLAZE UI V1.1 Stable contract
         run: python scripts/validate_glaze_v1.py
       - name: Validate V1.2 Frosted Neutral Candidate track
         run: python scripts/validate_glaze_v1_2_candidate.py
+      - name: Validate V1.2 implementation and migration control plane
+        run: python scripts/validate_glaze_v1_2_migration.py
+      - name: Validate V1.2 legacy Aura token retirement
+        run: python scripts/validate_glaze_v1_2_legacy_aura_retirement.py
+      - name: Validate rendered V1.2 Frosted Optical foundation
+        run: python scripts/validate_glaze_v1_2_optical_rendered.py
+      - name: Validate rendered V1.2 Frosted Optical chrome
+        run: python scripts/validate_glaze_v1_2_chrome_rendered.py
+      - name: Validate rendered V1.2 Crystal Icon System
+        run: python scripts/validate_glaze_v1_2_crystal_icons_rendered.py
+      - name: Validate rendered V1.2 Glaze Sans Optical typography
+        run: python scripts/validate_glaze_v1_2_typography_rendered.py
+      - name: Validate rendered V1.2 spatial foundation
+        run: python scripts/validate_glaze_v1_2_spatial_rendered.py
       - name: Validate rendered V1.2 Frosted Neutral Candidate
         run: python scripts/validate_glaze_v1_2_rendered.py
       - name: Upload V1.2 Frosted Neutral rendered evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: glaze-v1.2-frosted-neutral-rendered
           path: artifacts/glaze-v1.2-*.png
@@ -33,7 +51,7 @@ jobs:
         run: python scripts/validate_design_center_mobile.py
       - name: Upload Design Center Mobile UI review evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: design-center-mobile-ui
           path: artifacts/design-center-mobile-*.png
@@ -49,7 +67,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Check out exact Candidate revision
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Compile Linux native Candidate sources
@@ -92,7 +110,7 @@ jobs:
             python3 scripts/validate_glaze_v1_2_linux_runtime.py
       - name: Upload V1.2 Linux GTK native Candidate evidence
         if: success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: glaze-v1.2-linux-gtk-native-candidate-${{ github.event.pull_request.head.sha || github.sha }}
           path: |

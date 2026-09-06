@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "repository": "GoreeCloud/goreecloud-glaze-ui",
+  "purpose": "Govern canonical file naming for the ordinary Glaze UI V1.2 Candidate-controlled source surface without renaming ecosystem-required native/framework paths or established root controls.",
+  "temporaryTokens": ["old", "copy", "temp", "latest", "final", "backup", "new"],
+  "ordinaryNamespaces": {
+    "candidateContracts": {
+      "prefix": "contracts/v1.2/",
+      "pattern": "^contracts/v1\\.2/[a-z0-9]+(?:-[a-z0-9]+)*\\.candidate\\.json$"
+    },
+    "candidateTokens": {
+      "prefix": "tokens/glaze-v1.2-",
+      "pattern": "^tokens/glaze-v1\\.2-[a-z0-9]+(?:-[a-z0-9]+)*\\.candidate\\.json$"
+    },
+    "candidateCss": {
+      "prefix": "css/glaze-v1.2-",
+      "pattern": "^css/glaze-v1\\.2-[a-z0-9]+(?:-[a-z0-9]+)*\\.candidate\\.css$"
+    },
+    "candidateJavascript": {
+      "prefix": "js/glaze-v1.2-",
+      "pattern": "^js/glaze-v1\\.2-[a-z0-9]+(?:-[a-z0-9]+)*\\.candidate\\.mjs$"
+    },
+    "candidateWorkflows": {
+      "prefix": ".github/workflows/glaze-v1.2-",
+      "pattern": "^\\.github/workflows/glaze-v1\\.2-[a-z0-9]+(?:-[a-z0-9]+)*\\.yml$"
+    },
+    "candidateValidators": {
+      "prefix": "scripts/validate_glaze_v1_2_",
+      "pattern": "^scripts/validate_glaze_v1_2_[a-z0-9]+(?:_[a-z0-9]+)*\\.py$"
+    },
+    "candidateWebReferences": {
+      "prefix": "reference/v1.2/",
+      "immediateFilesOnly": true,
+      "pattern": "^reference/v1\\.2/[a-z0-9]+(?:-[a-z0-9]+)*\\.html$"
+    },
+    "candidateAcceptance": {
+      "prefix": "acceptance/v1.2-",
+      "contains": "candidate",
+      "pattern": "^acceptance/v1\\.2-[a-z0-9]+(?:-[a-z0-9]+)*-candidate\\.md$"
+    }
+  },
+  "explicitPathExceptions": {
+    "css/glaze-v1.2.0-candidate.css": "Canonical V1.2 aggregate CSS entrypoint preserves the product-version form established by the Candidate implementation.",
+    "scripts/glaze_v1_2_visual_regression.py": "Established V1.2 visual-regression harness uses the repository's Python snake_case convention without the validate_ prefix.",
+    "acceptance/v1.2-promotion-gates.candidate.md": "Governance authority source is explicitly bound by the exact-head readiness validator; the dot-candidate form distinguishes it from target/platform acceptance records.",
+    "GLAZE_UI_V1_2_CANDIDATE.md": "Required descriptive root governance document; uppercase root control is an approved repository-level exception.",
+    "MIGRATION_V1_1_TO_V1_2.md": "Required descriptive root migration control; uppercase root control is an approved repository-level exception.",
+    "VERSION": "Required conventional root version control file."
+  },
+  "frameworkBoundaries": {
+    "nestedReferencePaths": "report-but-do-not-normalize",
+    "nativeFrameworkPaths": "repository-or-framework-convention-wins",
+    "reason": "Android, Linux/native, generated, build-system, or framework-required names must not be cosmetically normalized by Glaze naming governance."
+  },
+  "integrity": {
+    "gitTrackedOnly": true,
+    "exactHeadRequired": true,
+    "caseFoldUniqueControlledPaths": true,
+    "spacesProhibitedInOrdinaryControlledPaths": true,
+    "temporaryTokensProhibitedAsCompleteNameTokens": true,
+    "automaticRenamesProhibited": true
+  },
+  "authority": {
+    "currentStable": "1.1.0",
+    "currentOfficial": "1.1.0",
+    "activeCandidate": "1.2.0-candidate",
+    "namingValidationImpliesSourceApproval": false,
+    "namingValidationImpliesReleaseCandidate": false,
+    "namingValidationImpliesStable": false,
+    "namingValidationImpliesConsumerConformance": false,
+    "namingValidationImpliesRuntimeAcceptance": false,
+    "namingValidationImpliesHumanAcceptance": false
+  },
+  "boundaries": [
+    "Canonical naming validation enforces stable descriptive path shape; it does not authorize cosmetic repository-wide renames.",
+    "An explicit exception documents an established controlled path and does not broaden naming exceptions to adjacent paths.",
+    "Nested native/framework reference trees are reported separately and remain governed by their ecosystem conventions.",
+    "A green naming workflow does not approve file contents or establish implementation, human, native, physical-device, runtime, RC, Stable, or consumer acceptance."
+  ]
+}

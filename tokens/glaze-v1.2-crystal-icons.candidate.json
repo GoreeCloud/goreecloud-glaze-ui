@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.crystal-icons.tokens.candidate",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "viewBox": 24,
+  "sizes": {
+    "dense": 16,
+    "compact": 20,
+    "standard": 24,
+    "prominent": 28,
+    "navigation": 32,
+    "featureMin": 40,
+    "featureMax": 48,
+    "heroMin": 64
+  },
+  "strokeViewBox": {
+    "16": 2.4,
+    "20": 2.2,
+    "24": 2.0,
+    "28": 1.85,
+    "32": 1.7
+  },
+  "strokeGrammar": {
+    "linecap": "round",
+    "linejoin": "round",
+    "outlineFill": "none",
+    "filledStroke": "none",
+    "opticalScaling": "smaller-icons-use-heavier-relative-stroke"
+  },
+  "state": {
+    "unselectedBorderPx": 1,
+    "selectedBorderPx": 2,
+    "selectedGeometry": "filled-or-heavier",
+    "selectedBackground": "Ice Blue atmosphere with non-color structural reinforcement",
+    "monochromeSelectedBackground": "neutral",
+    "monochromeKeepsSelectedBorderAndFilledGeometry": true
+  },
+  "motion": {
+    "stateDurationMs": 140,
+    "stateEasing": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+    "activityRotationMs": 900,
+    "continuousOnlyForMeaningfulActivity": true,
+    "reducedMotionDisablesActivityAnimation": true
+  },
+  "dimensional": {
+    "shadow": "0 1px 1px rgba(7, 12, 17, 0.16)",
+    "maximumUse": "higher-value identity/presentation contexts",
+    "defaultSystemControls": false
+  },
+  "rules": {
+    "crispOpaqueSymbols": true,
+    "literalTransparentIcons": false,
+    "selectionBlueOnly": false,
+    "nonColorMeaningRequired": true,
+    "accessibleInteractiveNameRequired": true,
+    "forcedColorsSupported": true,
+    "reducedMotionSupported": true
+  }
+}

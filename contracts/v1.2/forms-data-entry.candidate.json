@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.forms-data-entry.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-forms-data-entry-behavior",
+  "purpose": "Compose the existing canonical Foundation controls and native HTML input semantics into bounded V1.2 form workflows without expanding the canonical component catalog or claiming authentication, persistence, synchronization, security, or native-platform capabilities that belong to producer systems.",
+  "authority": {
+    "companionSpecification": "Glaze UI V1.2 — Forms and Data Entry.docx",
+    "foundationComponents": "contracts/v1.2/foundation-components.candidate.json",
+    "interactionStates": "contracts/v1.2/interaction-states.candidate.json",
+    "formFactorContract": "contracts/v1.2/form-factor-tokens.candidate.json",
+    "principle": "Data entry should feel calm before interaction, precise during input, and unmistakably clear before commitment."
+  },
+  "canonicalComponentBoundary": {
+    "catalog": "contracts/components/v1/catalog.json",
+    "catalogExtensionIntroduced": false,
+    "usesCanonicalComponents": ["GlzButton", "GlzIconButton", "GlzTextField", "GlzSelect", "GlzCheckbox", "GlzRadio", "GlzSwitch", "GlzSlider"],
+    "nativePrimitivesMaySupplement": ["form", "fieldset", "legend", "input", "select", "button", "output", "progress", "time"],
+    "proposedExtensionsRemainNonCanonical": ["GlzTextArea", "GlzNumberField", "GlzDateField", "GlzTimeField", "GlzDateTimeField", "GlzPasswordField", "GlzFilePicker", "GlzFormSection", "GlzFieldGroup", "GlzValidationMessage", "GlzFormActions", "GlzStepIndicator"]
+  },
+  "rules": {
+    "clarityBeforeMaterial": true,
+    "durableLongAndConsequentialForms": true,
+    "persistentLabelsRequiredForImportantFields": true,
+    "placeholderCannotCarryEssentialMeaning": true,
+    "requiredStateCannotDependOnColorAlone": true,
+    "singleColumnPreferredForSequentialEntry": true,
+    "immediateAndDeferredCommitModelsMustBeExplicit": true,
+    "validationMustExplainWhatWhereAndHowToFix": true,
+    "validationMustBeProgrammaticallyAssociated": true,
+    "failedSubmissionMovesFocusToUsefulErrorContext": true,
+    "dirtyStateMustBeVisibleWhenMeaningfulWorkCouldBeLost": true,
+    "saveStateMustDistinguishSavedUnsavedSavingAndFailed": true,
+    "authoritativePersistenceRequiredBeforeSavedClaim": true,
+    "duplicateSubmissionGuardRequiredForConsequentialCommit": true,
+    "offlineCapabilityMayNotBeImpliedWithoutConsumerImplementation": true,
+    "destructiveConfirmationStatesObjectReversibilityAndConsequence": true,
+    "nativePickersPreferredWhenTheyImproveAccessibilityLocalizationOrReliability": true,
+    "passwordManagersAndAutofillMustNotBeDisabledForVisualControl": true,
+    "passwordRevealMustNotChangeStoredValue": true,
+    "oneTimeCodeMustSupportWholeCodePasteAndAutofill": true,
+    "dragAndDropCannotBeSoleFileSelectionMethod": true,
+    "noRuntimeNetworkRequest": true,
+    "noRuntimeCredentialPersistence": true,
+    "noNewMaterialCalibration": true,
+    "noNewCanonicalComponent": true
+  },
+  "commitModels": {
+    "immediate": {
+      "descriptionRequired": true,
+      "producerAcknowledgementRemainsAuthoritative": true,
+      "mustNotMasqueradeAsDeferredSave": true
+    },
+    "deferred": {
+      "explicitCommitActionRequired": true,
+      "dirtyStateRequiredWhenMeaningful": true,
+      "pendingStateRequired": true,
+      "producerResultRequiredBeforeSavedState": true,
+      "duplicateSubmissionSuppressedWhilePending": true
+    }
+  },
+  "referenceScenes": [
+    "simple-profile",
+    "settings",
+    "long-technical-configuration",
+    "authentication",
+    "password-field",
+    "one-time-code",
+    "date-time-scheduling",
+    "file-selection",
+    "validation-failure",
+    "destructive-confirmation",
+    "multi-step-setup"
+  ],
+  "authenticationBoundary": {
+    "realAuthenticationPerformed": false,
+    "supportedIdentityMethodInferred": false,
+    "credentialsIncludedInCustomEvents": false,
+    "passwordManagerCompatibilityPreserved": true,
+    "nativeTrustedPromptSimulationProhibited": true
+  },
+  "persistenceBoundary": {
+    "runtimePersistsUserData": false,
+    "runtimeCallsRemotePersistence": false,
+    "savedStateRequiresExplicitProducerResultEvent": true,
+    "referenceProducerResultIsTestEvidenceOnly": true
+  },
+  "acceptance": {
+    "minimumInteractiveTargetPx": 48,
+    "assistedTargetPx": 56,
+    "layoutClasses": ["expanded", "compact"],
+    "textScalePercent": 200,
+    "rtlRequiredWhereApplicable": true,
+    "reducedMotionRequired": true,
+    "reducedTransparencyRequired": true,
+    "increasedContrastRequired": true,
+    "forcedColorsRequired": true,
+    "deepDarkRequired": true,
+    "horizontalPageOverflowProhibited": true,
+    "requiredBehavior": [
+      "deferred-dirty-state",
+      "specific-inline-validation",
+      "error-summary-focus",
+      "pending-submit-state",
+      "duplicate-submit-suppression",
+      "producer-result-before-saved",
+      "password-reveal-value-preservation",
+      "destructive-typed-confirmation",
+      "whole-code-otp-input",
+      "native-file-picker-presence"
+    ]
+  },
+  "implementation": {
+    "webLayer": "css/glaze-v1.2-forms.candidate.css",
+    "runtime": "js/glaze-v1.2-forms.candidate.mjs",
+    "reference": "reference/v1.2/forms-data-entry.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_forms_rendered.py",
+    "workflow": ".github/workflows/glaze-v1.2-forms.yml",
+    "candidateEntrypoint": "css/glaze-v1.2.0-candidate.css"
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "bounded-eleven-scene-web-form-reference",
+      "existing-foundation-control-composition",
+      "deferred-dirty-validation-pending-and-producer-result-state-machine",
+      "duplicate-submit-reference-guard",
+      "password-reveal-without-value-mutation",
+      "whole-code-otp-native-input-reference",
+      "native-date-time-and-file-input-reference",
+      "destructive-typed-confirmation-reference",
+      "compact-200-percent-text-rtl-deep-dark-reduced-transparency-forced-colors-rendered-gates",
+      "exact-head-rendered-acceptance"
+    ],
+    "notEstablished": [
+      "canonical-adoption-of-proposed-form-extension-components",
+      "real-authentication-method-support",
+      "real-persistence-or-autosave",
+      "offline-form-support",
+      "conflict-resolution-runtime",
+      "upload-runtime",
+      "native-form-platform-parity",
+      "password-manager-human-acceptance",
+      "mobile-keyboard-device-matrix",
+      "assistive-technology-human-acceptance",
+      "production-performance-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

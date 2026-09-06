@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.system-shell-navigation.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-system-shell-navigation-behavior",
+  "purpose": "Extend the existing V1.2 System Shell material specialization with capability-class navigation, orientation, search-scope, notification, and critical-state presentation behavior without replacing V1.1 Stable or claiming native shell parity.",
+  "authority": {
+    "companionSpecification": "Glaze UI V1.2 — System Shell and Navigation.docx",
+    "inheritedShell": "contracts/system-shell/glaze-system-shell-v1.json",
+    "materialContract": "contracts/v1.2/system-shell-materials.candidate.json",
+    "formFactorContract": "contracts/v1.2/form-factor-tokens.candidate.json",
+    "formFactorTokenOwner": "tokens/glaze-v1.2-form-factor.candidate.json",
+    "signatureContract": "contracts/v1.2/signature-components.candidate.json",
+    "principle": "The shell should always help users understand where they are, what is happening, and where they can go next."
+  },
+  "shellRegions": [
+    "workspace",
+    "navigation",
+    "universal-search",
+    "control-center",
+    "critical-system"
+  ],
+  "hierarchy": [
+    "environment",
+    "shell",
+    "application",
+    "workspace",
+    "content"
+  ],
+  "navigationLayers": [
+    "global",
+    "application",
+    "contextual",
+    "local"
+  ],
+  "rules": {
+    "shellFramesApplicationWithoutDominating": true,
+    "stableSpatialMemoryRequired": true,
+    "predictionMayNotReorderPrimaryNavigation": true,
+    "currentDestinationRequiresStructuralCue": true,
+    "currentDestinationCannotDependOnColorAlone": true,
+    "applicationIdentityDistinctFromAccountIdentity": true,
+    "globalAndLocalActionsRemainDistinct": true,
+    "platformNativeWindowControlsPreferredWhereApplicable": true,
+    "criticalStateProducerAuthoritative": true,
+    "criticalDecisionsBackdropDependent": false,
+    "denseNotificationHistoryBackdropDependent": false,
+    "universalSearchScopeVisible": true,
+    "destructiveSearchActionRequiresConfirmation": true,
+    "searchGeneratedResultsDistinctFromSystemTruth": true,
+    "viewportWidthIsNotCanonicalDeviceIdentity": true,
+    "platformAdapterOwnsCompositionClassSelection": true,
+    "noNewMaterialCalibration": true,
+    "noNewNumericSpatialCalibration": true
+  },
+  "composition": {
+    "expanded": {
+      "primaryNavigation": "persistent-sidebar-or-rail",
+      "controlCenter": "side-or-overlay-panel",
+      "navigationOrderStable": true
+    },
+    "medium": {
+      "primaryNavigation": "navigation-rail",
+      "controlCenter": "side-or-overlay-panel",
+      "navigationOrderStable": true
+    },
+    "compact": {
+      "primaryNavigation": "bottom-navigation",
+      "majorDestinationCount": {"minimum": 3, "maximum": 5},
+      "controlCenter": "bottom-sheet-or-dedicated-panel",
+      "safeAreaAware": true,
+      "lowerReachabilityPreferred": true,
+      "navigationOrderStable": true
+    },
+    "largeFarView": {
+      "primaryNavigation": "focused-navigation",
+      "directionalFocusRequired": true,
+      "minimumInteractiveTargetPx": 56,
+      "navigationOrderStable": true
+    }
+  },
+  "renderedLayoutClassMapping": {
+    "source": "tokens/glaze-v1.2-form-factor.candidate.json#/compositionStates",
+    "semanticToRendered": {
+      "expanded": "expanded",
+      "medium": "medium",
+      "compact": "compact",
+      "largeFarView": "large"
+    }
+  },
+  "systemCommunication": {
+    "notificationRequiredFields": ["source", "event", "time", "priority", "available-action-when-applicable"],
+    "priorityChangesPersistenceBeforeDrama": true,
+    "criticalRegionRequiresAuthoritativeSource": true,
+    "criticalRegionRequiresRequiredActionWhereApplicable": true,
+    "routineStatusCannotFlashOrPulseContinuously": true,
+    "criticalFailureCannotBeToastOnly": true
+  },
+  "acceptance": {
+    "layoutClasses": ["expanded", "medium", "compact", "largeFarView"],
+    "layoutClassesAreSemanticCompositionStates": true,
+    "renderedLayoutClassValues": ["expanded", "medium", "compact", "large"],
+    "minimumInteractiveTargetPx": 48,
+    "farViewMinimumInteractiveTargetPx": 56,
+    "textScalePercent": 200,
+    "rtlRequiredWhereApplicable": true,
+    "forcedColorsRequired": true,
+    "reducedTransparencyRequired": true,
+    "stableNavigationOrderRequired": true,
+    "horizontalPageOverflowProhibited": true,
+    "canonicalLayerMayContainViewportBreakpoints": false
+  },
+  "implementation": {
+    "webLayer": "css/glaze-v1.2-system-shell-navigation.candidate.css",
+    "reference": "reference/v1.2/system-shell-navigation.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_system_shell_navigation_rendered.py",
+    "workflow": ".github/workflows/glaze-v1.2-system-shell-navigation.yml",
+    "candidateEntrypoint": "css/glaze-v1.2.0-candidate.css"
+  },
+  "compatibilityBoundary": {
+    "legacyMaterialLayer": "css/glaze-v1.2-system-shell.candidate.css",
+    "legacyViewportMediaFallbackRemainsPresent": true,
+    "legacyViewportMediaFallbackIsCanonicalCompositionAuthority": false,
+    "canonicalBehaviorLayerUsesExplicitLayoutClasses": true,
+    "renderedLayoutClassMappingConsumesFormFactorTokenOwner": true,
+    "legacyFallbackRemovalRequiredBeforeStable": true
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "five-region-shell-behavior-contract",
+      "expanded-medium-compact-large-far-view-reference-composition",
+      "form-factor-semantic-to-rendered-layout-class-mapping",
+      "stable-primary-navigation-order",
+      "structural-current-location-cue",
+      "compact-safe-area-aware-bottom-navigation-reference",
+      "visible-universal-search-scope-reference",
+      "durable-notification-history-reference",
+      "producer-authoritative-critical-region-reference",
+      "200-percent-text-rtl-reduced-transparency-forced-colors-rendered-gates",
+      "exact-head-rendered-acceptance"
+    ],
+    "notEstablished": [
+      "legacy-viewport-fallback-removal",
+      "full-notification-center-runtime",
+      "complete-navigation-history-runtime",
+      "multi-window-shell-runtime",
+      "native-window-control-parity",
+      "tv-wearable-spatial-shell-runtime",
+      "assistive-technology-human-acceptance",
+      "production-performance-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.depth.candidate",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-web-candidate",
+  "authority": {
+    "proposal": "Plan — Glaze UI V1.2 Frosted Optical Material Update",
+    "taskSection": "Glaze UI V1 Task List / 10. Depth and Elevation",
+    "rule": "Depth is communicated through restrained shadow separation, frost policy, upper-edge illumination, local contrast, and purposeful motion. Numeric shadow values are bounded Candidate calibration derived from current repository shadows rather than a universal proposal mandate."
+  },
+  "hierarchy": [
+    "embedded",
+    "base",
+    "raised",
+    "floating",
+    "overlay",
+    "modal",
+    "spatialHero"
+  ],
+  "rules": {
+    "depthBeforeDecoration": true,
+    "blueShadowAsDepthCueAllowed": false,
+    "neonEdgeGlowAllowed": false,
+    "frostIsNotMonotonicProxyForDepth": true,
+    "consequentialModalMayRemainOpaque": true,
+    "durableReadingMayRemainOpaque": true,
+    "nestedGlassShadowStackingAllowed": false,
+    "nestedBackdropBlurAllowed": false,
+    "accessibilityOverridesOpticalDepth": true,
+    "performanceProfilesPreserveHierarchy": true,
+    "motionMaySupportDepthChangeButNotCarryMeaning": true
+  },
+  "calibration": {
+    "embedded": {"rank": 0, "shadowYpx": 0, "shadowBlurPx": 4, "shadowKind": "inset-occlusion", "frost": "opaque-frost", "frostBlurPx": 0, "edgeOpacity": 0.03, "motionMs": 0},
+    "base": {"rank": 1, "shadowYpx": 0, "shadowBlurPx": 0, "shadowKind": "none", "frost": "opaque-frost", "frostBlurPx": 0, "edgeOpacity": 0.04, "motionMs": 0},
+    "raised": {"rank": 2, "shadowYpx": 8, "shadowBlurPx": 24, "shadowKind": "broad-soft", "frost": "mist", "frostBlurPx": 18, "edgeOpacity": 0.10, "motionMs": 140},
+    "floating": {"rank": 3, "shadowYpx": 14, "shadowBlurPx": 38, "shadowKind": "broad-soft", "frost": "mist", "frostBlurPx": 18, "edgeOpacity": 0.16, "motionMs": 160},
+    "overlay": {"rank": 4, "shadowYpx": 18, "shadowBlurPx": 52, "shadowKind": "broad-soft", "frost": "frost", "frostBlurPx": 28, "edgeOpacity": 0.20, "motionMs": 180},
+    "modal": {"rank": 5, "shadowYpx": 28, "shadowBlurPx": 80, "shadowKind": "broad-soft", "frost": "opaque-frost", "frostBlurPx": 0, "edgeOpacity": 0.22, "motionMs": 220},
+    "spatialHero": {"rank": 6, "shadowYpx": 36, "shadowBlurPx": 110, "shadowKind": "broad-ambient", "frost": "frost", "frostBlurPx": 28, "edgeOpacity": 0.18, "motionMs": 260}
+  },
+  "deepDark": {
+    "rule": "Increase separation primarily through dark occlusion and restrained Frost White edge light; do not use neon blue, glowing outlines, or saturated shadows.",
+    "edgeOpacityScale": 0.64,
+    "shadowOpacityIncreasesWithDepth": true
+  },
+  "profiles": {
+    "full": {"shadowScale": 1.0, "blurPolicy": "role-default"},
+    "reduced": {"shadowScale": 0.64, "blurPolicy": "lower-cost-role-default"},
+    "minimal": {"shadowScale": 0.0, "blurPolicy": "none", "structuralBoundaryRequired": true}
+  },
+  "fallbacks": {
+    "reducedTransparency": "remove-depth-backdrop-blur-preserve-shadow-and-boundary",
+    "forcedColors": "platform-colors-no-custom-shadow-no-backdrop-blur",
+    "reducedMotion": "no-depth-transition-transform",
+    "nestedDepthChild": "parent-owns-depth-no-second-shadow-no-second-backdrop-blur"
+  },
+  "implementation": {
+    "tokens": "tokens/glaze-v1.2-depth.candidate.json",
+    "webLayer": "css/glaze-v1.2-depth.candidate.css",
+    "webEntrypoint": "css/glaze-v1.2.0-candidate.css",
+    "reference": "reference/v1.2/depth.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_depth_rendered.py",
+    "workflow": ".github/workflows/glaze-v1.2-depth.yml"
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "bounded-web-seven-role-depth-hierarchy",
+      "shadow-frost-edge-motion-depth-map",
+      "deep-dark-depth-treatment",
+      "full-reduced-minimal-depth-profiles",
+      "nested-glass-depth-suppression",
+      "reduced-transparency-forced-colors-reduced-motion-browser-gates"
+    ],
+    "notEstablished": [
+      "universal-numeric-shadow-mandate",
+      "complete-component-elevation-mapping",
+      "native-depth-parity",
+      "production-compositor-shadow-parity",
+      "human-optical-depth-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

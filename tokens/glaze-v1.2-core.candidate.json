@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.core.tokens.candidate",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "manifestKind": "ownership-and-composition-index",
+  "rawValueAuthority": false,
+  "aliases": {
+    "color.opticalPalette": {"source": "tokens/glaze-v1.2-optical-foundation.candidate.json", "pointer": "/opticalPalette"},
+    "atmosphere.auraFamilies": {"source": "tokens/glaze-v1.2-optical-foundation.candidate.json", "pointer": "/auraFamilies"},
+    "material.appearance": {"source": "tokens/glaze-v1.2-frosted-neutral.candidate.json", "pointer": "/materials"},
+    "frost.levels": {"source": "tokens/glaze-v1.2-optical-foundation.candidate.json", "pointer": "/frostLevels"},
+    "blur.material": {"source": "tokens/glaze-v1.2-frosted-neutral.candidate.json", "pointer": "/effects/blur"},
+    "opacity.material": {"source": "tokens/glaze-v1.2-frosted-neutral.candidate.json", "pointer": "/materials"},
+    "spacing.scale": {"source": "tokens/glaze-v1.2-spatial-foundation.candidate.json", "pointer": "/spacePx"},
+    "density.profiles": {"source": "tokens/glaze-v1.2-spatial-foundation.candidate.json", "pointer": "/density"},
+    "radius.roles": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx"},
+    "shadow.roles": {"source": "tokens/glaze-v1.2-depth.candidate.json", "pointer": "/depth"},
+    "elevation.roles": {"source": "tokens/glaze-v1.2-depth.candidate.json", "pointer": "/depth"},
+    "typography.roles": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles"},
+    "icon.sizes": {"source": "tokens/glaze-v1.2-crystal-icons.candidate.json", "pointer": "/sizes"},
+    "icon.strokes": {"source": "tokens/glaze-v1.2-crystal-icons.candidate.json", "pointer": "/strokeViewBox"},
+    "motion.durations": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/durationsMs"},
+    "semanticColor.roles": {"source": "tokens/semantic-colors.json", "pointer": "/roles"},
+    "state.interaction": {"source": "tokens/glaze-v1.2-states.candidate.json", "pointer": "/states"},
+    "formFactor.compositionStates": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/compositionStates"}
+  },
+  "unestablished": {},
+  "rules": {
+    "aliasesResolveToExistingSources": true,
+    "aliasesContainNoCopiedRawValues": true,
+    "oneFamilyOneOwner": true,
+    "unestablishedFamiliesCannotBePresentedAsImplemented": true,
+    "semanticColorMeaningDoesNotAuthorizeHardCodedPigment": true,
+    "candidateCannotBecomeConsumerTargetByManifestPresence": true
+  }
+}

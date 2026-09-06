@@ -1,0 +1,33 @@
+name: Glaze V1.2 Motion and Connected Transformation Candidate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  motion-rendered:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact Candidate revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - name: Preserve Stable and Candidate source authority
+        run: |
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          python scripts/validate_glaze_v1.py
+          python scripts/validate_glaze_v1_2_candidate.py
+      - name: Validate rendered V1.2 Motion and Connected Transformation Candidate
+        run: python scripts/validate_glaze_v1_2_motion_rendered.py
+      - name: Upload V1.2 Motion evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: glaze-v1.2-motion-${{ github.event.pull_request.head.sha || github.sha }}
+          path: artifacts/glaze-v1.2-motion-*.png
+          if-no-files-found: error
+          retention-days: 30

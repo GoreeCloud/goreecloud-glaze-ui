@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.geometry.tokens.candidate",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "radiusPx": {
+    "checkbox": 7,
+    "compact": 10,
+    "control": 12,
+    "field": 14,
+    "floatingControl": 16,
+    "surface": 20,
+    "panel": 24,
+    "signature": 26,
+    "sheet": 28,
+    "pill": 999
+  },
+  "notes": {
+    "pill": "Semantic full-pill sentinel; platforms may implement as maximum/capsule curvature rather than a literal 999 px radius.",
+    "calibration": "Candidate values are calibrated from current repository component geometry and remain governed by role, size, material, depth, and optical review."
+  }
+}

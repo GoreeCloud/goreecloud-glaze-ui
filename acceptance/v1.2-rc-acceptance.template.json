@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "recordType": "glaze-v1.2-rc-acceptance",
+  "candidateRevision": "REPLACE_WITH_EXACT_40_CHAR_SOURCE_SHA",
+  "repository": "GoreeCloud/goreecloud-glaze-ui",
+  "candidateVersion": "1.2.0-candidate",
+  "reviewedAt": "REPLACE_WITH_ISO_8601_TIMESTAMP_WITH_TIMEZONE",
+  "reviewer": "REPLACE_WITH_AUTHORIZED_REVIEWER",
+  "reviewerRole": "REPLACE_WITH_REVIEWER_ROLE",
+  "pullRequest": 0,
+  "gates": [
+    {"id": "G0", "status": "fail", "evidence": []},
+    {"id": "G1", "status": "fail", "evidence": []},
+    {"id": "G2", "status": "fail", "evidence": []},
+    {"id": "G3", "status": "fail", "evidence": []},
+    {"id": "G4", "status": "fail", "evidence": []}
+  ],
+  "evidenceClasses": [
+    {"id": "exact-head-automated", "status": "missing", "references": []},
+    {"id": "human-optical", "status": "missing", "references": []},
+    {"id": "manual-assistive-technology", "status": "missing", "references": []},
+    {"id": "native-platform", "status": "missing", "references": []},
+    {"id": "physical-device-performance", "status": "missing", "references": []},
+    {"id": "migration-rollback", "status": "missing", "references": []},
+    {"id": "release-blocker-review", "status": "missing", "references": []}
+  ],
+  "migrationRollback": {
+    "reviewed": false,
+    "rollbackTargetVersion": "1.1.0",
+    "rollbackTargetTag": "v1.1.0",
+    "reference": "REPLACE_WITH_MIGRATION_AND_ROLLBACK_RECORD"
+  },
+  "releaseBlockers": {
+    "reviewed": false,
+    "open": ["Template placeholder: perform the governed release-blocker review."]
+  },
+  "decision": "rejected",
+  "summary": "Fail-closed template only. G5 remains blocked until every required gate and evidence class is current for one exact Candidate revision, rollback is reviewed, release-blocking defects are resolved, and an authorized reviewer records approved-for-rc."
+}

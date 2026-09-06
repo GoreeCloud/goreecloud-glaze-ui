@@ -1,0 +1,105 @@
+name: Glaze V1.2 Application Icon Ecosystem Wall Candidate
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: glaze-v1.2-ecosystem-wall-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact Glaze source revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify exact Glaze source revision
+        env:
+          EXPECTED_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+
+      - name: Resolve immutable branding source revision
+        id: branding
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          import re
+          from pathlib import Path
+
+          contract = json.loads(Path("contracts/v1.2/application-icon-ecosystem-wall.candidate.json").read_text(encoding="utf-8"))
+          revision = contract["brandingSource"]["revision"]
+          if re.fullmatch(r"[0-9a-f]{40}", revision) is None:
+              raise SystemExit("Ecosystem Wall branding revision is not immutable")
+          print(f"revision={revision}")
+          PY
+
+      - name: Check out exact canonical branding source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: GoreeCloud/goreecloud-branding-assets
+          ref: ${{ steps.branding.outputs.revision }}
+          path: .branding-sources/goreecloud-branding-assets
+          persist-credentials: false
+
+      - name: Verify exact canonical branding revision
+        env:
+          EXPECTED_BRANDING_SHA: ${{ steps.branding.outputs.revision }}
+        run: test "$(git -C .branding-sources/goreecloud-branding-assets rev-parse HEAD)" = "$EXPECTED_BRANDING_SHA"
+
+      - name: Validate Stable V1.1 boundary
+        run: python scripts/validate_glaze_v1.py
+
+      - name: Validate V1.2 Candidate boundary
+        run: python scripts/validate_glaze_v1_2_candidate.py
+
+      - name: Validate Ecosystem Wall canonical branding provenance
+        run: python scripts/validate_glaze_v1_2_application_icon_ecosystem_wall.py
+
+      - name: Validate bounded Reference Scene index
+        run: python scripts/validate_glaze_v1_2_reference_scene_index.py
+
+      - name: Compile Ecosystem Wall validator
+        run: python -m py_compile scripts/validate_glaze_v1_2_application_icon_ecosystem_wall.py
+
+      - name: Stage exact-revision Ecosystem Wall review sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="artifacts/application-icon-ecosystem-wall"
+          mkdir -p "$out/contracts" "$out/reference" "$out/branding/products"
+          git rev-parse HEAD > "$out/REVISION"
+          git -C .branding-sources/goreecloud-branding-assets rev-parse HEAD > "$out/BRANDING_REVISION"
+          cp contracts/v1.2/application-icon-ecosystem-wall.candidate.json "$out/contracts/"
+          cp reference/v1.2/application-icon-ecosystem-wall.html "$out/reference/"
+          cp .branding-sources/goreecloud-branding-assets/catalog.json "$out/branding/"
+          while IFS= read -r asset; do
+            product="$(basename "$(dirname "$asset")")"
+            mkdir -p "$out/branding/products/$product"
+            cp "$asset" "$out/branding/products/$product/app-icon.svg"
+          done < <(find .branding-sources/goreecloud-branding-assets/products -mindepth 2 -maxdepth 2 -name app-icon.svg -type f | sort)
+          test "$(find "$out/branding/products" -name app-icon.svg -type f | wc -l)" -eq 38
+
+      - name: Upload exact-revision Ecosystem Wall review sources
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: glaze-v1.2-application-icon-ecosystem-wall-${{ github.event.pull_request.head.sha || github.sha }}
+          path: artifacts/application-icon-ecosystem-wall/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6

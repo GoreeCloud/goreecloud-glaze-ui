@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 1,
+  "id": "glaze-v1.2-exact-head-readiness-candidate",
+  "product": "GLAZE UI",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "stableBaseline": "1.1.0",
+  "consumerEligible": false,
+  "phase": "Phase 5 — Exact-Head Readiness Evidence",
+  "purpose": "Generate a fail-closed exact-revision V1.2 Candidate readiness report from the checked-out Git HEAD without converting design-system evidence into Release Candidate, Stable, production, or consumer-conformance acceptance.",
+  "reportKind": "candidate-readiness-not-conformance",
+  "runtimeRevisionBinding": {
+    "source": "git rev-parse HEAD",
+    "exactHeadRequired": true,
+    "staticSourceRevisionInContractProhibited": true,
+    "artifactPath": "artifacts/glaze-v1.2-exact-head-readiness.json"
+  },
+  "authoritativeInputs": [
+    "VERSION",
+    "registry/lifecycle.json",
+    "contracts/v1.2/migration.candidate.json",
+    "contracts/v1.2/living-glaze.candidate.json",
+    "tokens/glaze-v1.2-living-material.candidate.json",
+    "css/glaze-v1.2-living-glaze.candidate.css",
+    "js/glaze-v1.2-living-glaze.candidate.mjs",
+    "reference/v1.2/living-glaze.html",
+    "scripts/validate_glaze_v1_2_living_glaze.py",
+    "scripts/validate_glaze_v1_2_living_glaze_rendered.py",
+    ".github/workflows/glaze-v1.2-living-glaze.yml",
+    "contracts/v1.2/personalization-appearance.candidate.json",
+    "css/glaze-v1.2-personalization-appearance.candidate.css",
+    "js/glaze-v1.2-personalization.candidate.mjs",
+    "reference/v1.2/personalization-appearance.html",
+    "scripts/validate_glaze_v1_2_personalization_readiness.py",
+    "scripts/validate_glaze_v1_2_personalization_appearance_rendered.py",
+    ".github/workflows/glaze-v1.2-personalization-appearance.yml",
+    "contracts/v1.2/responsive-adaptation-reference.candidate.json",
+    "reference/v1.2/native/linux-gtk/window_adaptation.py",
+    "scripts/validate_glaze_v1_2_linux_window_adaptation_source.py",
+    "scripts/validate_glaze_v1_2_linux_window_adaptation_runtime.py",
+    ".github/workflows/glaze-v1.2-linux-native.yml",
+    "acceptance/v1.2-linux-native-candidate.md",
+    "contracts/v1.2/reference-scenes.candidate.json",
+    "contracts/v1.2/accessibility-testing.candidate.json",
+    "contracts/v1.2/performance-testing.candidate.json",
+    "contracts/v1.2/visual-regression.candidate.json",
+    "contracts/performance/glaze-v1-performance-budget.json",
+    "contracts/glaze.conformance-evidence.schema.json",
+    "acceptance/v1.2-living-frosted-candidate.md",
+    "acceptance/v1.2-promotion-gates.candidate.md"
+  ],
+  "gateOrder": ["G0", "G1", "G2", "G3", "G4", "G5", "G6", "G7"],
+  "gateReporting": {
+    "G0": {
+      "status": "bounded-evidence-present",
+      "meaning": "Stable-baseline and Candidate-isolation invariants are machine-observable at the exact checked-out revision; this is not a promotion action."
+    },
+    "G1": {
+      "status": "bounded-evidence-present",
+      "meaning": "Frosted Neutral plus Living Frosted Candidate optical/material contracts, deterministic token authority, and fail-closed source validation are present; downstream acceptance categories remain independent."
+    },
+    "G2": {
+      "status": "bounded-evidence-present",
+      "meaning": "Candidate component/System Shell, Living Frosted interaction/navigation/ergonomic/continuity, bounded Personalization browser/adapter contracts, and exact-head Linux desktop window-recomposition source evidence are present; this does not establish complete native parity, physical foldable qualification, or release acceptance."
+    },
+    "G3": {
+      "status": "blocked",
+      "blockers": [
+        "phase5-reference-scenes-human-review-incomplete",
+        "application-icon-ecosystem-wall-human-collision-review-pending",
+        "human-approved-v1.2-visual-baseline-absent",
+        "final-perceptual-thresholds-absent",
+        "living-frosted-human-optical-acceptance-absent",
+        "personalization-human-visual-acceptance-absent",
+        "human-optical-acceptance-absent"
+      ]
+    },
+    "G4": {
+      "status": "blocked",
+      "blockers": [
+        "phase5-accessibility-testing-incomplete",
+        "real-assistive-technology-acceptance-absent",
+        "phase5-performance-testing-incomplete",
+        "living-frosted-physical-device-performance-acceptance-absent",
+        "personalization-native-system-adapter-acceptance-absent",
+        "personalization-consumer-platform-persistence-acceptance-absent",
+        "personalization-native-wallpaper-source-adapter-acceptance-absent",
+        "linux-window-adaptation-physical-device-acceptance-absent",
+        "real-foldable-hinge-posture-runtime-acceptance-absent",
+        "accepted-runtime-and-platform-performance-budgets-absent",
+        "physical-device-and-production-performance-acceptance-absent",
+        "complete-native-platform-accessibility-and-performance-parity-absent"
+      ]
+    },
+    "G5": {
+      "status": "blocked",
+      "blockers": [
+        "G3-incomplete",
+        "G4-incomplete",
+        "human-optical-review-not-approved-for-exact-candidate",
+        "complete-supported-platform-evidence-absent",
+        "release-governance-evidence-incomplete"
+      ]
+    },
+    "G6": {
+      "status": "not-eligible",
+      "reason": "Stable promotion is prohibited before all prior blocking gates and governed lifecycle approval are complete."
+    },
+    "G7": {
+      "status": "not-eligible",
+      "reason": "Consumer migration/conformance is prohibited until Stable 1.2.0 exists and each consumer independently revalidates."
+    }
+  },
+  "rules": {
+    "exactRevisionRequired": true,
+    "evidenceCategoriesRemainIndependent": true,
+    "livingFrostedSourceEvidenceMayNotSubstituteHumanAcceptance": true,
+    "personalizationBrowserEvidenceMayNotSubstituteNativeOrHumanAcceptance": true,
+    "personalizationCrossDeviceSyncMustRemainSeparateGoreeCloudSyncAuthority": true,
+    "linuxWindowSourceEvidenceMayNotSubstituteRenderedNativeOrPhysicalDeviceAcceptance": true,
+    "linuxWindowWidthMayNotInferDeviceIdentity": true,
+    "automatedChecksMayNotSubstituteHumanOpticalReview": true,
+    "browserAccessibilityEvidenceMayNotSubstituteRealAssistiveTechnologyAcceptance": true,
+    "browserPerformanceObservationsMayNotSubstituteAcceptedProductionBudgets": true,
+    "emulatorEvidenceMayNotSubstitutePhysicalDeviceAcceptance": true,
+    "v11ConformanceSchemaMustRemainV11Only": true,
+    "candidateReadinessReportIsConsumerConformance": false,
+    "candidateReadinessReportIsReleaseCandidateAcceptance": false,
+    "candidateReadinessReportIsStableAcceptance": false,
+    "greenReadinessWorkflowMayAutoPromote": false,
+    "consumerClaimBlocked": true
+  },
+  "requiredOutputClaims": {
+    "promotionReady": false,
+    "rcReady": false,
+    "stableReady": false,
+    "productionReady": false,
+    "consumerEligible": false,
+    "consumerConformanceClaim": false,
+    "reportStatus": "fail-closed-blocked"
+  },
+  "implementation": {
+    "validator": "scripts/validate_glaze_v1_2_exact_head_readiness.py",
+    "workflow": ".github/workflows/glaze-v1.2-exact-head-readiness.yml",
+    "artifact": "artifacts/glaze-v1.2-exact-head-readiness.json"
+  },
+  "evidenceBoundary": {
+    "boundedExactHeadReadinessReportingEstablished": true,
+    "livingFrostedBoundedSourceEvidenceIntegrated": true,
+    "personalizationBoundedExactHeadEvidenceIntegrated": true,
+    "linuxWindowAdaptationBoundedSourceEvidenceIntegrated": true,
+    "boundedReferenceSceneSourcesComplete": true,
+    "phase5ExactRevisionConformanceEvidenceComplete": false,
+    "established": [
+      "runtime-git-head-binding",
+      "stable-v1.1-authority-preservation-check",
+      "candidate-lifecycle-and-consumer-isolation-check",
+      "living-frosted-source-and-token-binding",
+      "personalization-browser-system-adapter-binding",
+      "personalization-consumer-persistence-adapter-interface-binding",
+      "personalization-bounded-local-wallpaper-atmosphere-binding",
+      "linux-gtk-window-adaptation-exact-head-source-binding",
+      "linux-gtk-compact-expanded-recomposition-source-binding",
+      "linux-gtk-primary-task-continuity-source-binding",
+      "linux-gtk-device-identity-non-inference-source-binding",
+      "all-17-bounded-reference-scene-source-binding",
+      "ordered-G0-through-G7-readiness-accounting",
+      "fail-closed-G3-G4-G5-blocker-reporting",
+      "v1.1-conformance-schema-isolation-check"
+    ],
+    "notEstablished": [
+      "release-candidate-readiness",
+      "stable-readiness",
+      "production-readiness",
+      "consumer-conformance",
+      "phase5-reference-scenes-human-accepted",
+      "application-icon-ecosystem-wall-human-collision-review",
+      "living-frosted-human-optical-acceptance",
+      "personalization-human-visual-acceptance",
+      "personalization-native-system-adapter-acceptance",
+      "personalization-consumer-platform-persistence-acceptance",
+      "personalization-native-wallpaper-source-adapter-acceptance",
+      "personalization-cross-device-preference-sync",
+      "linux-window-adaptation-physical-device-acceptance",
+      "real-foldable-hinge-posture-runtime-acceptance",
+      "physical-foldable-qualification",
+      "human-optical-acceptance",
+      "assistive-technology-acceptance",
+      "accepted-production-performance-budgets",
+      "living-frosted-physical-device-performance-acceptance",
+      "physical-device-performance-acceptance",
+      "complete-native-platform-parity",
+      "complete-supported-platform-evidence",
+      "governed-lifecycle-promotion"
+    ]
+  }
+}

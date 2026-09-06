@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "glaze-v1.2-chrome-optics-candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "stableBaseline": "1.1.0",
+  "consumerEligible": false,
+  "extends": [
+    "contracts/v1.2/component-materials.candidate.json",
+    "tokens/glaze-v1.2-optical-foundation.candidate.json"
+  ],
+  "implementation": {
+    "webLayer": "css/glaze-v1.2-chrome-optics.candidate.css",
+    "webEntrypoint": "css/glaze-v1.2.0-candidate.css",
+    "reference": "reference/v1.2/chrome-optics.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_chrome_rendered.py"
+  },
+  "rules": {
+    "depthBeforeHue": true,
+    "blueIsAtmosphericNotSemantic": true,
+    "durableReadingSurfacesRemainNonBackdropDependent": true,
+    "consequentialDecisionSurfacesRemainNonBackdropDependent": true,
+    "nestedBackdropBlurAllowed": false,
+    "persistentNavigationMayUseGlassOnlyWhenDetachedOrFloating": true,
+    "accessibilityOverridesOpticalFidelity": true,
+    "performanceProfilesPreserveHierarchy": true
+  },
+  "components": {
+    "GlzButton": {"selector": ".glz1-button[data-variant=\"glaze\"]", "material": "glaze", "frost": "clear", "edge": "crystal", "stateAtmosphere": "ice"},
+    "GlzIconButton": {"selector": ".glz1-icon-button[data-variant=\"glaze\"]", "material": "glaze", "frost": "clear", "edge": "crystal", "stateAtmosphere": "ice"},
+    "GlzTextField": {"selector": ".glz1-field-control[data-variant=\"glaze\"]", "material": "soft-glaze", "frost": "mist", "edge": "crystal", "stateAtmosphere": "ice"},
+    "GlzSelect": {"selector": ".glz1-select[data-variant=\"glaze\"]", "material": "soft-glaze", "frost": "mist", "edge": "crystal", "stateAtmosphere": "ice"},
+    "GlzSidebar": {"selector": ".glz1-sidebar[data-variant=\"floating\"]", "material": "glaze", "frost": "mist", "edge": "crystal", "stateAtmosphere": "ice"},
+    "GlzNavigationRail": {"selector": ".glz1-navigation-rail[data-variant=\"floating\"]", "material": "glaze", "frost": "mist", "edge": "crystal", "stateAtmosphere": "ice"},
+    "GlzDock": {"selector": ".glz1-dock", "material": "glaze", "frost": "frost", "edge": "crystal", "stateAtmosphere": "ice"},
+    "GlzToolbar": {"selector": ".glz1-toolbar[data-variant=\"floating\"]", "material": "glaze", "frost": "frost", "edge": "crystal", "stateAtmosphere": "ice"},
+    "GlzTooltip": {"selector": ".glz1-tooltip", "material": "glaze", "frost": "clear", "edge": "crystal", "stateAtmosphere": "none"},
+    "GlzPopover": {"selector": ".glz1-popover", "material": "glaze", "frost": "frost", "edge": "crystal", "stateAtmosphere": "ice"},
+    "GlzMenu": {"selector": ".glz1-menu", "material": "glaze", "frost": "frost", "edge": "crystal", "stateAtmosphere": "ice"},
+    "GlzSheet": {"selector": ".glz1-sheet", "material": "deep-glaze", "frost": "dense-frost", "edge": "crystal", "stateAtmosphere": "ice"},
+    "GlzToast": {"selector": ".glz1-toast", "material": "glaze", "frost": "frost", "edge": "crystal", "stateAtmosphere": "ice"},
+    "GlzCapsule": {"selector": ".glz1-capsule", "material": "glaze", "frost": "frost", "edge": "crystal", "stateAtmosphere": "ice"},
+    "GlzSmartRail": {"selector": ".glz1-smart-rail", "material": "glaze", "frost": "frost", "edge": "crystal", "stateAtmosphere": "ice"},
+    "GlzSourceChip": {"selector": ".glz1-source-chip[data-material=\"frosted\"]", "material": "soft-glaze", "frost": "mist", "edge": "crystal", "stateAtmosphere": "ice"}
+  },
+  "fallbacks": {
+    "minimalPerformance": "near-solid-no-blur-preserve-hierarchy",
+    "reducedTransparency": "solid-raised-no-blur",
+    "forcedColors": "platform-canvas-highlight-authority",
+    "backdropFilterUnavailable": "solid-raised-preserve-boundaries",
+    "nestedFrostedChild": "parent-material-wins-no-second-blur"
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "web-floating-navigation-optics",
+      "web-transient-overlay-optics",
+      "web-explicit-glaze-control-optics",
+      "web-nested-blur-suppression",
+      "web-chrome-performance-accessibility-fallbacks"
+    ],
+    "notEstablished": [
+      "rc",
+      "stable",
+      "native-optical-parity",
+      "downstream-consumer-conformance",
+      "production-acceptance",
+      "human-optical-acceptance"
+    ]
+  }
+}

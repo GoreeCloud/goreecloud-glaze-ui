@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.personalization-appearance.candidate",
+  "product": "GLAZE UI V1.2",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-personalization-appearance-and-adapter-evidence",
+  "purpose": "Provide bounded V1.2 Candidate appearance, accent, atmosphere, density, clarity, system-resolution, local wallpaper-derived atmosphere, and consumer-adapter behavior without allowing personalization to override semantic truth, accessibility, product identity, security/privacy meaning, or platform authority.",
+  "authority": {
+    "companionSpecification": "Glaze UI V1.2 — Personalization and Appearance.docx",
+    "accessibilityResolution": "contracts/v1.2/accessibility-adaptation.candidate.json",
+    "livingGlaze": "contracts/v1.2/living-glaze.candidate.json",
+    "formFactorTokens": "tokens/glaze-v1.2-form-factor.candidate.json",
+    "spatialTokens": "tokens/glaze-v1.2-spatial-foundation.candidate.json",
+    "principle": "Personalize expression, not truth or control semantics."
+  },
+  "preferencePrecedence": [
+    "accessibility",
+    "platform-system",
+    "goreecloud-user",
+    "application-specific-when-allowed",
+    "glaze-default"
+  ],
+  "appearance": {
+    "modes": ["follow-system", "light", "dark", "deep-dark"],
+    "manualModeMayOverrideSystemFollowing": true,
+    "platformAdapterOwnsSystemResolution": true,
+    "browserSystemAdapterImplemented": true,
+    "nativeSystemAdapterReferencesImplemented": true,
+    "nativeSystemAdapterReferencePlatforms": ["android", "linux-gtk"],
+    "nativeSystemAdapterAcceptanceRequired": true
+  },
+  "accentProfiles": {
+    "default": "ice",
+    "allowed": ["ice", "slate", "indigo", "aqua", "rose", "amber"],
+    "semanticRoleOverrideAllowed": false,
+    "platformForcedColorsOverrideAllowed": false,
+    "arbitraryUnsafeAccentAllowed": false
+  },
+  "atmosphereProfiles": {
+    "default": "balanced",
+    "allowed": ["calm", "balanced", "expressive"],
+    "semanticRoleOverrideAllowed": false,
+    "wallpaperSampling": {
+      "implementationStatus": "bounded-local-derivation-implemented",
+      "inputAuthority": "consumer-platform-adapter",
+      "acceptedInput": "producer-supplied-local-rgb-summary",
+      "directPixelAcquisitionOwnedByGlaze": false,
+      "boundedLocalDerivationImplemented": true,
+      "nativeRgbSummaryAdapterReferencesImplemented": true,
+      "nativeRgbSummaryAdapterReferencePlatforms": ["android", "linux-gtk"],
+      "nativeWallpaperSourceAdapterAcceptanceRequired": true,
+      "requiredProperties": ["local", "bounded", "low-intensity", "filtered", "desaturated"],
+      "maximumAlpha": 0.12,
+      "maximumChromaRetention": 0.28,
+      "remoteContentRequired": false,
+      "telemetryAllowed": false,
+      "rawWallpaperPixelsRetained": false
+    }
+  },
+  "densityProfiles": {
+    "default": "standard",
+    "allowed": ["comfortable", "standard", "productive", "immersive"],
+    "minimumInteractiveTargetPx": 48,
+    "mayChangeSemantics": false,
+    "mayHideEssentialNavigation": false
+  },
+  "clarityProfiles": {
+    "default": "balanced",
+    "allowed": ["clear", "balanced", "dense"],
+    "authority": "contracts/v1.2/living-glaze.candidate.json",
+    "accessibilityMayOverride": true
+  },
+  "accessibilityOverrides": {
+    "reducedTransparencyOverridesAtmosphere": true,
+    "reducedTransparencyOverridesClarity": true,
+    "reducedMotionOverridesDecorativeMotion": true,
+    "increasedContrastOverridesDecorativeBoundaryStrength": true,
+    "forcedColorsOverridesAccentRendering": true,
+    "largeTextMayRelaxDensity": true,
+    "touchAssistanceRaisesHitAreaFloor": true
+  },
+  "prohibited": {
+    "semanticColorRemapping": true,
+    "securityOrPrivacyMeaningOverride": true,
+    "arbitraryIconPacks": true,
+    "arbitraryComponentGeometry": true,
+    "rawBlurSlider": true,
+    "rawSaturationSlider": true,
+    "rawShadowSlider": true,
+    "telemetryForPersonalization": true,
+    "remoteWallpaperSamplingRequirement": true,
+    "glazeOwnedWallpaperPixelAcquisition": true,
+    "wallpaperImageTransmission": true
+  },
+  "persistenceAndSync": {
+    "persistenceAuthority": "consumer-platform-adapter",
+    "adapterInterfaceImplemented": true,
+    "webStorageAdapterHelperAvailable": true,
+    "directPersistenceOwnedByGlaze": false,
+    "persistenceRequiresConsumerOptIn": true,
+    "syncAuthority": "separate-governed-goreecloud-sync-integration",
+    "crossDeviceSyncImplementedByThisCandidate": false,
+    "privacyReviewRequiredBeforeCrossDeviceSync": true
+  },
+  "runtimeContract": {
+    "normalizationFailsClosedToGovernedDefaults": true,
+    "browserFollowSystemUsesPrefersColorScheme": true,
+    "systemChangesMayReResolveFollowSystem": true,
+    "manualAppearanceDoesNotTrackSystemChanges": true,
+    "nativeReferenceFollowSystemAdaptersImplemented": true,
+    "nativeReferenceReducedTransparencySuppressesWallpaperAtmosphere": true,
+    "persistenceAdapterIsOptional": true,
+    "malformedStoredPreferenceFallsBackSafely": true,
+    "storageEnvelopeSchemaVersion": 1,
+    "wallpaperInputIsProducerSuppliedRgbOnly": true,
+    "wallpaperInvalidInputFailsClosedToTransparent": true,
+    "wallpaperAtmosphereIsLocallyDerived": true,
+    "wallpaperAtmosphereMaximumAlpha": 0.12,
+    "wallpaperAtmosphereMaximumChromaRetention": 0.28
+  },
+  "acceptance": {
+    "accentDoesNotChangeSemanticStateRequired": true,
+    "atmosphereProfileDifferentiationRequired": true,
+    "clarityProfileDifferentiationRequired": true,
+    "wallpaperAtmosphereLocalDerivationRequired": true,
+    "wallpaperAtmosphereInvalidInputFailsClosedRequired": true,
+    "wallpaperAtmosphereAccessibilityPrecedenceRequired": true,
+    "reducedTransparencyDisablesDecorativeAtmosphereRequired": true,
+    "densityProfileDifferentiationRequired": true,
+    "followSystemBrowserResolutionRequired": true,
+    "nativeAdapterSourceReadinessRequired": true,
+    "nativeAdapterExecutionAcceptanceIndependent": true,
+    "injectedPersistenceAdapterRoundTripRequired": true,
+    "invalidPersistenceFallbackRequired": true,
+    "minimumInteractiveTargetPx": 48,
+    "lightDarkDeepDarkRequired": true,
+    "compactViewportPx": 320,
+    "textScalePercent": 200,
+    "horizontalPageOverflowProhibited": true,
+    "screenshotsRequired": true
+  },
+  "implementation": {
+    "candidateLayer": "css/glaze-v1.2-personalization-appearance.candidate.css",
+    "runtime": "js/glaze-v1.2-personalization.candidate.mjs",
+    "reference": "reference/v1.2/personalization-appearance.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_personalization_appearance_rendered.py",
+    "workflow": ".github/workflows/glaze-v1.2-personalization-appearance.yml",
+    "candidateEntrypoint": "css/glaze-v1.2.0-candidate.css",
+    "mustLoadBeforeFinalAccessibilityLayer": true,
+    "nativeAdapterReferences": {
+      "android": {
+        "source": "reference/v1.2/native/android/app/src/main/java/com/goreecloud/glazeui/reference/v12/PersonalizationActivity.java",
+        "validator": "scripts/validate_glaze_v1_2_android_personalization_runtime.py",
+        "workflow": ".github/workflows/glaze-v1.2-android-native.yml"
+      },
+      "linuxGtk": {
+        "source": "reference/v1.2/native/linux-gtk/personalization.py",
+        "validator": "scripts/validate_glaze_v1_2_linux_personalization_runtime.py",
+        "workflow": ".github/workflows/glaze-v1.2-linux-native.yml"
+      },
+      "sourceReadinessValidator": "scripts/validate_glaze_v1_2_native_personalization_source.py"
+    }
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "bounded-governed-accent-profiles",
+      "bounded-atmosphere-profiles",
+      "bounded-local-wallpaper-atmosphere-derivation",
+      "bounded-density-profiles",
+      "bounded-living-glaze-clarity-profiles",
+      "manual-light-dark-deep-dark-reference",
+      "browser-follow-system-resolution-adapter",
+      "android-follow-system-adapter-reference",
+      "linux-gtk-follow-system-adapter-reference",
+      "native-rgb-summary-atmosphere-adapter-references",
+      "native-reduced-transparency-atmosphere-precedence-source",
+      "optional-consumer-persistence-adapter-interface",
+      "web-storage-adapter-helper",
+      "semantic-state-isolation",
+      "reduced-transparency-precedence",
+      "compact-200-percent-text-reference",
+      "exact-head-rendered-browser-acceptance"
+    ],
+    "notEstablished": [
+      "native-follow-system-platform-adapter-acceptance",
+      "consumer-platform-persistence-acceptance",
+      "cross-device-preference-sync",
+      "native-wallpaper-source-adapter-acceptance",
+      "human-visual-review",
+      "assistive-technology-acceptance",
+      "native-platform-parity",
+      "physical-device-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

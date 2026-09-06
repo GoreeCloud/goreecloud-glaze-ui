@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.2.spatial-foundation.candidate",
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "status": "bounded-web-candidate",
+  "authority": {
+    "masterSpecification": "GLAZE UI V1.2 — Master Specification.docx",
+    "companionSpecification": "Glaze UI V1.2 — Layout, Spacing, and Composition.docx",
+    "principle": "Space establishes hierarchy before decoration does.",
+    "duplicateCompanionBoundary": "The first Candidate slice uses only requirements cross-confirmed by the V1.2 Master Specification and the accessible companion copies; copy-specific disputed details remain out of scope until canonical-file identity is resolved."
+  },
+  "spatialHierarchy": ["page", "region", "section", "cluster", "element"],
+  "spacingScalePx": [2, 4, 8, 12, 16, 24, 32, 48, 64, 96],
+  "spacingRoles": {
+    "micro": 2,
+    "hairline": 4,
+    "control": 8,
+    "compactCluster": 12,
+    "standardCluster": 16,
+    "content": 24,
+    "section": 32,
+    "region": 48,
+    "majorRegion": 64,
+    "pageHero": 96
+  },
+  "layoutCapabilityClasses": {
+    "compact": {"gutterPx": 16, "gridColumns": 4},
+    "medium": {"gutterPx": 24, "gridColumns": 8},
+    "expanded": {"gutterPx": 32, "gridColumns": 12},
+    "large": {"gutterPx": 48, "gridColumns": 12}
+  },
+  "capabilityClassRule": {
+    "deviceBrandBreakpointsAreCanonical": false,
+    "platformAdapterSelectsCapabilityClass": true,
+    "webReferenceUsesExplicitDataAttribute": "data-glz-layout-class",
+    "note": "This bounded web Candidate proves the composition-class contract without inventing universal device-brand breakpoints."
+  },
+  "quietZones": {
+    "formalConcept": true,
+    "defaultBlockSpacePx": 48,
+    "mustExceedOrdinarySectionSpace": true,
+    "decorationNotRequiredForEmphasis": true
+  },
+  "densityProfiles": {
+    "comfortable": {"clusterPx": 24, "sectionPx": 48},
+    "standard": {"clusterPx": 16, "sectionPx": 32},
+    "productive": {"clusterPx": 12, "sectionPx": 24},
+    "immersive": {"clusterPx": 24, "sectionPx": 48}
+  },
+  "densityRules": {
+    "densityIsNotScale": true,
+    "minimumInteractiveTargetPx": 48,
+    "mayModify": ["spacing", "padding", "information-grouping", "secondary-content-visibility"],
+    "mayNotReduce": ["required-interactive-target-size", "text-legibility", "semantic-order"]
+  },
+  "surfaceRelationship": {
+    "durableReadingZonesBackdropDependent": false,
+    "floatingInteractionZonesMayUseExistingGlazeMaterial": true,
+    "spatialLayerIntroducesNewBackdropBlur": false
+  },
+  "responsiveRules": {
+    "transformCompositionRatherThanOnlyResize": true,
+    "compactSingleColumnPriority": true,
+    "horizontalOverflowAllowedAt200PercentText": false,
+    "safeAreaHandlingRequiredBeforeRelease": true
+  },
+  "implementation": {
+    "tokens": "tokens/glaze-v1.2-spatial-foundation.candidate.json",
+    "webLayer": "css/glaze-v1.2-spatial-foundation.candidate.css",
+    "webEntrypoint": "css/glaze-v1.2.0-candidate.css",
+    "reference": "reference/v1.2/spatial-foundation.html",
+    "renderedValidator": "scripts/validate_glaze_v1_2_spatial_rendered.py"
+  },
+  "evidenceBoundary": {
+    "implemented": [
+      "semantic-spacing-scale-and-role-map",
+      "explicit-layout-capability-gutters-and-grid-columns",
+      "quiet-zone-hierarchy",
+      "comfortable-standard-productive-immersive-density-spacing",
+      "48px-target-floor-preservation",
+      "durable-versus-floating-zone-composition",
+      "compact-200-percent-text-reflow-browser-gate",
+      "forced-colors-layout-invariance-browser-gate"
+    ],
+    "notEstablished": [
+      "universal-breakpoint-thresholds",
+      "all-form-factor-transformations",
+      "safe-area-device-matrix",
+      "foldable-posture-acceptance",
+      "tv-wearable-spatial-parity",
+      "native-spatial-parity",
+      "human-optical-composition-acceptance",
+      "complete-reference-composition-library",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}
