@@ -43,3 +43,22 @@ jobs:
 
       - name: Validate bounded V1.2 Phase 5 reference-scene index
         run: python scripts/validate_glaze_v1_2_reference_scene_index.py
+
+      - name: Stage exact-revision Reference Scene review sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="artifacts/reference-scenes"
+          mkdir -p "$out/contracts"
+          git rev-parse HEAD > "$out/REVISION"
+          cp contracts/v1.2/reference-scenes.candidate.json "$out/contracts/"
+          cp -R reference/v1.2 "$out/reference"
+
+      - name: Upload exact-revision Reference Scene review sources
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: glaze-v1.2-reference-scenes-${{ github.event.pull_request.head.sha || github.sha }}
+          path: artifacts/reference-scenes/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
