@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.adaptive-navigation.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "extends": [
+    "contracts/v1.2/adaptive-navigation.candidate.json",
+    "contracts/v1.2/system-shell-navigation.candidate.json",
+    "contracts/v1.3/reachability.candidate.json"
+  ],
+  "purpose": "Evolve primary navigation into a stable semantic destination model whose presentation adapts by declared layout environment, input modality, posture, reachability, and accessibility constraints without using raw viewport width or prediction to reorder destinations.",
+  "principles": {
+    "destinationsRemainStable": true,
+    "presentationMayTransform": true,
+    "currentLocationMustPersist": true,
+    "destinationOrderMustPersist": true,
+    "predictionMayReorderPrimaryDestinations": false,
+    "viewportWidthAloneIsCompositionAuthority": false,
+    "platformAdapterOwnsEnvironmentSelection": true,
+    "reachabilityAffectsPlacementNotMeaning": true,
+    "accessibilityMayForceInFlowPresentation": true
+  },
+  "environments": {
+    "compact": {
+      "defaultPresentation": "navigation-capsule",
+      "placement": "lower-reachable-region",
+      "detachedAllowed": true,
+      "primaryDestinationMinimum": 3,
+      "primaryDestinationMaximum": 5,
+      "overflowPresentation": "more-destination",
+      "minimumTargetPx": 48,
+      "touchAssistanceTargetPx": 56,
+      "safeAreaAware": true
+    },
+    "medium": {
+      "defaultPresentation": "navigation-rail",
+      "alternatePresentation": "adaptive-sidebar",
+      "persistent": true,
+      "minimumTargetPx": 48
+    },
+    "expanded": {
+      "defaultPresentation": "persistent-sidebar",
+      "alternatePresentation": "navigation-rail",
+      "toolbarMaySupplement": true,
+      "persistent": true,
+      "minimumTargetPx": 48
+    },
+    "workspace": {
+      "defaultPresentation": "persistent-sidebar-plus-toolbar",
+      "inspectorMaySupplement": true,
+      "persistent": true,
+      "minimumTargetPx": 48
+    },
+    "farView": {
+      "defaultPresentation": "directional-focus-navigation",
+      "directionalFocusRequired": true,
+      "minimumTargetPx": 56,
+      "focusBeforeActivation": true
+    },
+    "wearable": {
+      "defaultPresentation": "shallow-list",
+      "alternatePresentation": "platform-rotary-or-swipe",
+      "singleFocusPreferred": true,
+      "minimumTargetPx": 48
+    }
+  },
+  "compactCapsule": {
+    "materialAuthority": "living-material-2-or-accessibility-fallback",
+    "lowerReachabilityPreferred": true,
+    "frequentNavigationMustIntersectInteractionZone": true,
+    "detachedPresentationConditions": {
+      "largeText": false,
+      "touchAssistance": false,
+      "safeAreaObstruction": false,
+      "keyboardOcclusion": false
+    },
+    "forcedInFlowConditions": [
+      "large-text-or-reflow",
+      "touch-assistance",
+      "safe-area-obstruction",
+      "keyboard-occlusion",
+      "visible-content-occlusion"
+    ],
+    "labelsMayCollapseWithoutShrinkingTargets": true,
+    "currentDestinationRequiresStructuralCue": true,
+    "currentDestinationMayDependOnColorAlone": false
+  },
+  "environmentSelection": {
+    "inputs": [
+      "layout-environment",
+      "input-modality",
+      "posture",
+      "safe-area",
+      "keyboard-occlusion",
+      "large-text-and-reflow",
+      "touch-assistance",
+      "directional-focus-capability",
+      "persistent-sidebar-capability",
+      "task"
+    ],
+    "rawViewportWidthInputRequired": false,
+    "numericBreakpointsCanonical": false,
+    "deviceBrandBreakpointsCanonical": false,
+    "unknownEnvironmentFallback": "compact",
+    "environmentChangeMayReorderDestinations": false,
+    "environmentChangeMayChangeDestinationIdentity": false
+  },
+  "continuity": {
+    "preserve": [
+      "current-destination",
+      "destination-order",
+      "selection",
+      "focus-where-practical",
+      "scroll-context-where-practical",
+      "filters",
+      "drafts",
+      "logical-back-history"
+    ],
+    "presentationTransformationMayResetTaskState": false,
+    "currentDestinationMustExistInDestinationModel": true,
+    "newDestinationsMayAppearOnlyFromProductOrPermissionSemantics": true,
+    "predictionMayInventDestination": false
+  },
+  "inputModality": {
+    "touch": {"largeHitAreasRequired": true, "hoverRequired": false},
+    "pointer": {"hoverMaySupplement": true, "precisionMaySupplement": true},
+    "keyboard": {"completeCoreOperationRequired": true, "visibleFocusRequired": true},
+    "directional": {"spatiallyLogicalFocusPathRequired": true},
+    "rotary": {"platformNativeWhereAvailable": true},
+    "assistiveSwitch": {"semanticActionEquivalenceRequired": true},
+    "voice": {"mustNotBeSoleAccessPath": true}
+  },
+  "accessibility": {
+    "precedence": [
+      "platform-accessibility",
+      "large-text-and-reflow",
+      "safe-area-and-occlusion",
+      "semantic-destination-model",
+      "declared-layout-environment",
+      "input-modality",
+      "expressive-presentation"
+    ],
+    "minimumInteractiveTargetPx": 48,
+    "touchAssistanceTargetPx": 56,
+    "farViewMinimumInteractiveTargetPx": 56,
+    "forcedColorsRequiresStructuralCurrentCue": true,
+    "reducedTransparencyMayUseSolidNavigationSurface": true,
+    "reducedMotionMayUseImmediatePresentationChange": true,
+    "rtlLogicalOrderRequired": true,
+    "horizontalPageOverflowToPreserveNavigationProhibited": true,
+    "targetSizeMayShrinkToPreserveDetachedCapsule": false
+  },
+  "implementation": {
+    "runtime": "js/glaze-v1.3-adaptive-navigation.candidate.mjs",
+    "tests": "tests/glaze-v1.3-adaptive-navigation.test.mjs",
+    "validator": "scripts/validate_glaze_v1_3_adaptive_navigation.py",
+    "workflow": ".github/workflows/glaze-v1.3-adaptive-navigation.yml"
+  },
+  "evidenceBoundary": {
+    "implementedByWorkstream": [
+      "stable-semantic-destination-model",
+      "environment-to-presentation-resolution",
+      "reachability-aware-compact-capsule-policy",
+      "accessibility-forced-in-flow-policy",
+      "input-modality-aware-presentation-policy",
+      "continuity-preserving-navigation-model-transform",
+      "automated-contract-and-runtime-tests"
+    ],
+    "notEstablished": [
+      "platform-specific-environment-threshold-calibration",
+      "human-navigation-acceptance",
+      "assistive-technology-human-acceptance",
+      "physical-device-navigation-acceptance",
+      "foldable-posture-physical-acceptance",
+      "far-view-physical-distance-acceptance",
+      "wearable-production-support",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}
