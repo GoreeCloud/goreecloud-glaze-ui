@@ -57,6 +57,17 @@ def validate_source() -> None:
     require(contract.get("appearance", {}).get("nativeSystemAdapterAcceptanceRequired") is True, "native system resolution acceptance boundary weakened")
     require(contract.get("accentProfiles", {}).get("allowed") == ["ice","slate","indigo","aqua","rose","amber"], "accent set drifted")
     require(contract.get("atmosphereProfiles", {}).get("allowed") == ["calm","balanced","expressive"], "atmosphere set drifted")
+
+    wallpaper = contract.get("atmosphereProfiles", {}).get("wallpaperSampling", {})
+    require(wallpaper.get("implementationStatus") == "bounded-local-derivation-implemented", "wallpaper atmosphere derivation status drifted")
+    require(wallpaper.get("inputAuthority") == "consumer-platform-adapter", "wallpaper input authority drifted")
+    require(wallpaper.get("acceptedInput") == "producer-supplied-local-rgb-summary", "wallpaper input contract broadened")
+    require(wallpaper.get("directPixelAcquisitionOwnedByGlaze") is False, "Glaze took wallpaper pixel acquisition authority")
+    require(wallpaper.get("boundedLocalDerivationImplemented") is True, "bounded wallpaper derivation missing")
+    require(wallpaper.get("requiredProperties") == ["local","bounded","low-intensity","filtered","desaturated"], "wallpaper privacy/optical properties drifted")
+    require(wallpaper.get("maximumAlpha") == 0.12 and wallpaper.get("maximumChromaRetention") == 0.28, "wallpaper atmosphere bounds drifted")
+    require(wallpaper.get("remoteContentRequired") is False and wallpaper.get("telemetryAllowed") is False and wallpaper.get("rawWallpaperPixelsRetained") is False, "wallpaper privacy boundary weakened")
+
     require(contract.get("densityProfiles", {}).get("allowed") == ["comfortable","standard","productive","immersive"], "density set drifted")
     require(contract.get("densityProfiles", {}).get("minimumInteractiveTargetPx") == 48, "target floor drifted")
     require(contract.get("clarityProfiles", {}).get("allowed") == ["clear","balanced","dense"], "Clarity profile set drifted")
@@ -67,16 +78,65 @@ def validate_source() -> None:
     require(persistence.get("crossDeviceSyncImplementedByThisCandidate") is False, "Candidate overclaimed cross-device sync")
     require(persistence.get("syncAuthority") == "separate-governed-goreecloud-sync-integration", "sync authority drifted")
     runtime_contract = contract.get("runtimeContract", {})
-    for key in ("normalizationFailsClosedToGovernedDefaults","browserFollowSystemUsesPrefersColorScheme","systemChangesMayReResolveFollowSystem","manualAppearanceDoesNotTrackSystemChanges","persistenceAdapterIsOptional","malformedStoredPreferenceFallsBackSafely"):
+    for key in (
+        "normalizationFailsClosedToGovernedDefaults",
+        "browserFollowSystemUsesPrefersColorScheme",
+        "systemChangesMayReResolveFollowSystem",
+        "manualAppearanceDoesNotTrackSystemChanges",
+        "persistenceAdapterIsOptional",
+        "malformedStoredPreferenceFallsBackSafely",
+        "wallpaperInputIsProducerSuppliedRgbOnly",
+        "wallpaperInvalidInputFailsClosedToTransparent",
+        "wallpaperAtmosphereIsLocallyDerived",
+    ):
         require(runtime_contract.get(key) is True, f"runtime contract weakened: {key}")
+    require(runtime_contract.get("wallpaperAtmosphereMaximumAlpha") == 0.12, "runtime wallpaper alpha bound drifted")
+    require(runtime_contract.get("wallpaperAtmosphereMaximumChromaRetention") == 0.28, "runtime wallpaper chroma bound drifted")
+
     prohibited = contract.get("prohibited", {})
-    for key in ("semanticColorRemapping","securityOrPrivacyMeaningOverride","arbitraryIconPacks","arbitraryComponentGeometry","rawBlurSlider","rawSaturationSlider","rawShadowSlider","telemetryForPersonalization","remoteWallpaperSamplingRequirement"):
+    for key in (
+        "semanticColorRemapping",
+        "securityOrPrivacyMeaningOverride",
+        "arbitraryIconPacks",
+        "arbitraryComponentGeometry",
+        "rawBlurSlider",
+        "rawSaturationSlider",
+        "rawShadowSlider",
+        "telemetryForPersonalization",
+        "remoteWallpaperSamplingRequirement",
+        "glazeOwnedWallpaperPixelAcquisition",
+        "wallpaperImageTransmission",
+    ):
         require(prohibited.get(key) is True, f"fail-closed personalization prohibition drifted: {key}")
     not_established = set(contract.get("evidenceBoundary", {}).get("notEstablished", []))
-    require({"native-follow-system-platform-adapter-acceptance","consumer-platform-persistence-acceptance","cross-device-preference-sync","wallpaper-sampling","human-visual-review","native-platform-parity","physical-device-acceptance","stable","consumer-conformance"}.issubset(not_established), "personalization evidence boundary overclaims acceptance")
+    require({
+        "native-follow-system-platform-adapter-acceptance",
+        "consumer-platform-persistence-acceptance",
+        "cross-device-preference-sync",
+        "native-wallpaper-source-adapter-acceptance",
+        "human-visual-review",
+        "native-platform-parity",
+        "physical-device-acceptance",
+        "stable",
+        "consumer-conformance",
+    }.issubset(not_established), "personalization evidence boundary overclaims acceptance")
+    implemented = set(contract.get("evidenceBoundary", {}).get("implemented", []))
+    require("bounded-local-wallpaper-atmosphere-derivation" in implemented, "wallpaper derivation evidence marker missing")
 
     css = CSS.read_text(encoding="utf-8")
-    for marker in ('data-glz-accent="ice"','data-glz-accent="rose"','data-glz-atmosphere="calm"','data-glz-atmosphere="expressive"','data-glz-density="productive"','data-glz-transparency="reduced"','data-glz-text-scale="200"','@media (forced-colors: active)','min-block-size: 48px'):
+    for marker in (
+        'data-glz-accent="ice"',
+        'data-glz-accent="rose"',
+        'data-glz-atmosphere="calm"',
+        'data-glz-atmosphere="expressive"',
+        'data-glz-density="productive"',
+        'data-glz-transparency="reduced"',
+        'data-glz-text-scale="200"',
+        '@media (forced-colors: active)',
+        'min-block-size: 48px',
+        '--glz12-wallpaper-atmosphere: transparent',
+        'var(--glz12-wallpaper-atmosphere)',
+    ):
         require(marker in css, f"personalization CSS marker missing: {marker}")
     for forbidden in ("--glz1-danger", "--glz1-warning", "--glz1-success", "hue-rotate("):
         require(forbidden not in css, f"personalization layer attempted protected semantic/global remapping: {forbidden}")
@@ -86,17 +146,31 @@ def validate_source() -> None:
         "export function normalizePersonalization",
         "export function createBrowserSystemAppearanceAdapter",
         "export function createWebStoragePreferenceAdapter",
+        "export function deriveWallpaperAtmosphere",
+        "export function applyWallpaperAtmosphere",
         "export function resolveAppearance",
         "export function applyPersonalization",
         "export function createPersonalizationController",
         "persistenceAuthority: 'consumer-platform-adapter'",
         "crossDeviceSyncAuthority: 'separate-governed-goreecloud-sync-integration'",
         "directCrossDeviceSyncImplemented: false",
-        "directWallpaperSamplingImplemented: false",
+        "wallpaperSourceAuthority: 'consumer-platform-adapter'",
+        "directWallpaperPixelAcquisitionImplemented: false",
+        "boundedWallpaperAtmosphereDerivationImplemented: true",
     ):
         require(marker in runtime, f"personalization runtime marker missing: {marker}")
-    for forbidden in ("fetch(", "XMLHttpRequest", "navigator.sendBeacon", "WebSocket", "indexedDB.open"):
-        require(forbidden not in runtime, f"personalization runtime introduced ungoverned remote/persistent mechanism: {forbidden}")
+    for forbidden in (
+        "fetch(",
+        "XMLHttpRequest",
+        "navigator.sendBeacon",
+        "WebSocket",
+        "indexedDB.open",
+        "drawImage(",
+        "getImageData(",
+        "createImageBitmap(",
+        "FileReader(",
+    ):
+        require(forbidden not in runtime, f"personalization runtime introduced ungoverned remote/pixel mechanism: {forbidden}")
 
     entry = ENTRYPOINT.read_text(encoding="utf-8")
     personal = '@import url("./glaze-v1.2-personalization-appearance.candidate.css");'
@@ -112,8 +186,11 @@ def validate_source() -> None:
         "No raw blur, saturation, or shadow sliders",
         "Follow System resolves through a bounded platform adapter",
         "Cross-device sync remains separately governed by GoreeCloud Sync",
+        "Glaze never fetches, decodes, or inspects wallpaper pixels",
         "createPersonalizationController",
         "createWebStoragePreferenceAdapter",
+        "applyWallpaperAtmosphere",
+        "deriveWallpaperAtmosphere",
         "data-clarity=\"dense\"",
     ):
         require(marker in reference, f"personalization reference marker missing: {marker}")
@@ -210,6 +287,22 @@ def main() -> int:
         require(base.get("warningBorder") == rose.get("warningBorder"), "accent personalization changed protected semantic warning state")
         screenshot(sid,"accent-isolation")
 
+        wallpaper = execute(sid,"""const api=window.glazePersonalizationReference;const derived=api.applyWallpaperAtmosphere(document,{r:255,g:0,b:96});const root=getComputedStyle(document.documentElement);const surface=getComputedStyle(document.getElementById('expression'));return {...derived,token:root.getPropertyValue('--glz12-wallpaper-atmosphere').trim(),state:document.documentElement.dataset.glzWallpaperAtmosphere||null,image:surface.backgroundImage};""")
+        require(wallpaper.get("source") == "producer-supplied-local-rgb-summary", f"wallpaper source contract drifted: {wallpaper}")
+        require(wallpaper.get("state") == "local-bounded", "wallpaper atmosphere state marker missing")
+        require(float(wallpaper.get("alpha", 1)) <= 0.12 and float(wallpaper.get("chromaRetention", 1)) <= 0.28, "wallpaper atmosphere exceeded bounded intensity/chroma")
+        channels = [int(wallpaper.get(key, 0)) for key in ("r","g","b")]
+        require(max(channels) - min(channels) < 90, f"wallpaper atmosphere was not sufficiently desaturated: {channels}")
+        require(wallpaper.get("token") not in ("", "transparent"), "wallpaper atmosphere token did not render")
+        require("gradient" in str(wallpaper.get("image", "")), "wallpaper atmosphere did not participate in governed atmosphere rendering")
+        screenshot(sid,"wallpaper-atmosphere")
+
+        invalid_wallpaper = execute(sid,"""const api=window.glazePersonalizationReference;const result=api.applyWallpaperAtmosphere(document,{r:'invalid',g:2,b:3});const root=getComputedStyle(document.documentElement);return {result,state:document.documentElement.dataset.glzWallpaperAtmosphere||null,token:root.getPropertyValue('--glz12-wallpaper-atmosphere').trim()};""")
+        require(invalid_wallpaper.get("result") is None, "invalid wallpaper input did not fail closed")
+        require(invalid_wallpaper.get("state") is None, "invalid wallpaper input retained active state")
+        require(invalid_wallpaper.get("token") == "transparent", f"invalid wallpaper input did not clear to transparent: {invalid_wallpaper}")
+        execute(sid,"window.glazePersonalizationReference.applyWallpaperAtmosphere(document,{r:255,g:0,b:96});return true;")
+
         execute(sid,"window.glazePersonalizationReference.controller.set({accent:'ice',atmosphere:'calm'});return true;")
         calm = execute(sid,"""const r=getComputedStyle(document.documentElement),s=getComputedStyle(document.getElementById('expression'));return {strength:parseFloat(r.getPropertyValue('--glz12-personal-atmosphere-strength')),image:s.backgroundImage};""")
         execute(sid,"window.glazePersonalizationReference.controller.set({atmosphere:'expressive'});return true;")
@@ -218,7 +311,7 @@ def main() -> int:
         require(expressive.get("image") != "none", "expressive atmosphere did not render")
         execute(sid,"document.documentElement.dataset.glzTransparency='reduced';return true;")
         reduced = execute(sid,"return getComputedStyle(document.getElementById('expression')).backgroundImage")
-        require(reduced == "none", f"Reduced Transparency did not suppress decorative atmosphere: {reduced}")
+        require(reduced == "none", f"Reduced Transparency did not suppress decorative atmosphere including wallpaper-derived color: {reduced}")
         screenshot(sid,"reduced-transparency")
         execute(sid,"document.documentElement.removeAttribute('data-glz-transparency');return true;")
 
@@ -255,7 +348,7 @@ def main() -> int:
         screenshot(sid,"deep-dark")
 
         persisted = execute(sid,"""const r=window.glazePersonalizationReference;c=r.controller;r.persistenceAdapter.clear();c.set({appearance:'dark',accent:'rose',atmosphere:'calm',density:'comfortable',clarity:'dense'},{persist:true});return localStorage.getItem(r.storageKey);""")
-        require(isinstance(persisted,str) and '"schemaVersion":1' in persisted and '"accent":"rose"' in persisted, "persistence adapter did not write versioned bounded envelope")
+        require(isinstance(persisted,str) and '\"schemaVersion\":1' in persisted and '\"accent\":\"rose\"' in persisted, "persistence adapter did not write versioned bounded envelope")
         execute(sid,"window.glazePersonalizationReference.controller.set({appearance:'light',accent:'ice',atmosphere:'expressive',density:'productive',clarity:'clear'});window.glazePersonalizationReference.controller.load();return true;")
         restored = execute(sid,"return {preference:document.documentElement.dataset.glzAppearancePreference,resolved:document.documentElement.dataset.glzAppearance,accent:document.documentElement.dataset.glzAccent,atmosphere:document.documentElement.dataset.glzAtmosphere,density:document.documentElement.dataset.glzDensity,clarity:document.documentElement.dataset.glazeClarity}")
         require(restored.get("preference") == "dark" and restored.get("resolved") == "dark" and restored.get("accent") == "rose" and restored.get("atmosphere") == "calm" and restored.get("density") == "comfortable" and restored.get("clarity") == "dense", f"persistence adapter round trip failed: {restored}")
@@ -263,8 +356,8 @@ def main() -> int:
         execute(sid,"localStorage.setItem(window.glazePersonalizationReference.storageKey,'{malformed');return true;")
         request("POST",f"/session/{sid}/url",{"url":f"{SERVER}/{REFERENCE}"})
         wait_reference(sid)
-        fallback = execute(sid,"return {preference:document.documentElement.dataset.glzAppearancePreference,accent:document.documentElement.dataset.glzAccent,atmosphere:document.documentElement.dataset.glzAtmosphere,density:document.documentElement.dataset.glzDensity,clarity:document.documentElement.dataset.glazeClarity}")
-        require(fallback == {"preference":"follow-system","accent":"ice","atmosphere":"balanced","density":"standard","clarity":"balanced"}, f"malformed stored preference did not fail closed: {fallback}")
+        fallback = execute(sid,"return {preference:document.documentElement.dataset.glzAppearancePreference,accent:document.documentElement.dataset.glzAccent,atmosphere:document.documentElement.dataset.glzAtmosphere,density:document.documentElement.dataset.glzDensity,clarity:document.documentElement.dataset.glazeClarity,wallpaper:document.documentElement.dataset.glzWallpaperAtmosphere||null}")
+        require(fallback == {"preference":"follow-system","accent":"ice","atmosphere":"balanced","density":"standard","clarity":"balanced","wallpaper":None}, f"malformed stored preference did not fail closed: {fallback}")
         execute(sid,"window.glazePersonalizationReference.persistenceAdapter.clear();return true;")
 
         cdp(sid,"Emulation.setDeviceMetricsOverride",{"width":320,"height":1200,"deviceScaleFactor":1,"mobile":False,"screenWidth":320,"screenHeight":1200})
