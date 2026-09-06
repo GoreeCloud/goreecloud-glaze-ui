@@ -32,6 +32,10 @@ on:
       - 'VERSION'
       - '.github/workflows/glaze-v1.3-living-material-2.yml'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   validate-v1-3-living-material-2:
     runs-on: ubuntu-latest
