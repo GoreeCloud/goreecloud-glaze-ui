@@ -170,7 +170,7 @@
     },
     {
       "id": "accessibility-and-resilience",
-      "status": "implementation-complete-validation-pending",
+      "status": "implemented-and-validated",
       "dependsOn": [
         "adaptive-dynamic-color",
         "variable-responsive-typography",
