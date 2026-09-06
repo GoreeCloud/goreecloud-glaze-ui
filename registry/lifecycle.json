@@ -1,12 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": 1,
-  "updated": "2026-09-05",
+  "updated": "2026-09-06",
   "officialProductLabel": "GLAZE UI V1.1",
-  "currentOfficial": "1.1.0",
-  "currentStable": "1.1.0",
+  "currentOfficial": "1.1.1",
+  "currentStable": "1.1.1",
   "activeCandidate": "1.2.0-candidate",
-  "activePatchReleaseCandidate": "1.1.1-rc.1",
+  "activePatchReleaseCandidate": null,
   "resetState": "stable",
   "releases": [
     {
@@ -16,38 +16,51 @@
       "consumerEligible": false,
       "contract": "GLAZE_UI_V1_0.md",
       "acceptance": "acceptance/v1.0-stable.md",
-      "note": "The V1.0 namespace is official. Production consumer eligibility requires fresh post-reset acceptance evidence."
+      "note": "The V1.0 namespace is official historical audit evidence."
     },
     {
       "version": "1.1.0",
       "label": "GLAZE UI V1.1",
-      "status": "stable",
-      "consumerEligible": true,
+      "status": "superseded-stable",
+      "consumerEligible": false,
       "contract": "GLAZE_UI_V1_1.md",
       "acceptance": "acceptance/v1.1-stable.md",
-      "note": "Current immutable Stable shared design-system release. Its known CSS import-closure defect is handled by the separate 1.1.1 patch Release Candidate; downstream consumers remain independently migration- and acceptance-gated."
+      "note": "Immutable previous Stable release. Superseded for current consumer adoption because V1.1.1 corrects its CSS import-closure defect without changing the approved V1.1 visual baseline."
     },
     {
       "version": "1.1.1-rc.1",
       "label": "GLAZE UI V1.1.1 — Import Closure Patch",
-      "status": "release-candidate",
+      "status": "historical-release-candidate",
       "consumerEligible": false,
       "stableBaseline": "1.1.0",
       "contract": "contracts/v1.1/patch-1.1.1-candidate.json",
       "acceptance": "acceptance/v1.1.1-patch-candidate.md",
-      "note": "Corrective Stable-line Release Candidate. It does not replace current Stable/current official authority until separate post-merge qualification and immutable 1.1.1 promotion complete."
+      "note": "Qualified corrective Release Candidate retained as promotion audit evidence."
+    },
+    {
+      "version": "1.1.1",
+      "label": "GLAZE UI V1.1.1 — Stable Maintenance",
+      "status": "stable",
+      "consumerEligible": true,
+      "stableBaseline": "1.1.0",
+      "contract": "contracts/v1.1/patch-1.1.1.json",
+      "acceptance": "acceptance/v1.1.1-stable.md",
+      "webEntrypoint": "css/glaze-v1.1.1.css",
+      "runtimeEntrypoint": "js/glaze-v1.1.1.mjs",
+      "note": "Current Stable V1.1 maintenance release. Corrects CSS import closure while preserving the human-approved V1.1 visual, semantic, accessibility, component, and System Shell baseline."
     },
     {
       "version": "1.2.0-candidate",
       "label": "GLAZE UI V1.2 — Frosted Neutral",
       "status": "candidate",
       "consumerEligible": false,
-      "stableBaseline": "1.1.0",
+      "stableBaseline": "1.1.1",
+      "visualBaseline": "1.1.0",
       "contract": "GLAZE_UI_V1_2_CANDIDATE.md",
       "tokens": "tokens/glaze-v1.2-frosted-neutral.candidate.json",
       "webEntrypoint": "css/glaze-v1.2.0-candidate.css",
       "reference": "reference/v1.2/frosted-neutral.html",
-      "note": "Next-upgrade material candidate. Neutral frosted glass is the default substrate; chromatic color is reserved for intentional accents, semantics, focus, selection, progress, and product identity. Stable authority remains V1.1 until governed promotion."
+      "note": "Next-upgrade material candidate. Neutral frosted glass is the default substrate; chromatic color is reserved for intentional accents, semantics, focus, selection, progress, and product identity. V1.1.1 is the current Stable package; the V1.1.0 visual baseline remains unchanged by the maintenance patch."
     }
   ],
   "capabilities": {
@@ -64,12 +77,12 @@
     "web-entrypoint": {
       "status": "stable",
       "since": "1.1.0",
-      "implementation": "css/glaze-v1.1.0.css"
+      "implementation": "css/glaze-v1.1.1.css"
     },
     "runtime-entrypoint": {
       "status": "stable",
       "since": "1.1.0",
-      "implementation": "js/glaze-v1.1.0.mjs"
+      "implementation": "js/glaze-v1.1.1.mjs"
     },
     "performance-budget": {
       "status": "stable-inherited",
