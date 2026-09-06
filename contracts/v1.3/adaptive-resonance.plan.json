@@ -9,7 +9,7 @@
   "releaseContract": "GLAZE_UI_V1_3.md",
   "deferredQualification": "contracts/v1.3/deferred-qualification.plan.json",
   "deferredQualificationAcceptance": "acceptance/v1.3-deferred-qualification.md",
-  "phase": "phase-3-living-material-2",
+  "phase": "phase-4-human-reachability",
   "phaseEffect": "implementation-workstream-active-no-lifecycle-promotion",
   "workstreams": [
     {
@@ -75,10 +75,14 @@
     },
     {
       "id": "human-reachability",
-      "status": "planned",
+      "status": "implementation-in-progress",
       "dependsOn": ["contract-and-token-architecture"],
       "expectedArtifacts": [
-        "contracts/v1.3/reachability.candidate.json"
+        "contracts/v1.3/reachability.candidate.json",
+        "js/glaze-v1.3-reachability.candidate.mjs",
+        "tests/glaze-v1.3-reachability.test.mjs",
+        "scripts/validate_glaze_v1_3_reachability.py",
+        ".github/workflows/glaze-v1.3-reachability.yml"
       ]
     },
     {
