@@ -20,31 +20,75 @@
     "type.numeral": {"implementation": "numeral", "meaning": "numeric metric and aligned numeric display"}
   },
   "implementationValues": {
-    "display": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/display", "mode": "inherited-baseline"},
-    "title": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/title", "mode": "inherited-baseline"},
-    "heading": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/heading", "mode": "inherited-baseline"},
-    "body": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/body", "mode": "inherited-baseline"},
-    "label": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/label", "mode": "inherited-baseline"},
-    "caption": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/caption", "mode": "inherited-baseline"},
-    "numeral": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/numeric", "mode": "inherited-baseline"},
-    "variableAxes": {"status": "architecture-established-runtime-unestablished", "ownerWorkstream": "variable-responsive-typography", "allowedAxes": ["weight", "width", "optical-size", "grade"]},
-    "layoutEnvironmentAdaptation": {"status": "architecture-established-runtime-unestablished", "ownerWorkstream": "variable-responsive-typography"}
+    "display": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/display", "mode": "inherited-semantic-baseline"},
+    "title": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/title", "mode": "inherited-semantic-baseline"},
+    "heading": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/heading", "mode": "inherited-semantic-baseline"},
+    "body": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/body", "mode": "inherited-semantic-baseline"},
+    "label": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/label", "mode": "inherited-semantic-baseline"},
+    "caption": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/caption", "mode": "inherited-semantic-baseline"},
+    "numeral": {"source": "tokens/glaze-v1.2-typography.candidate.json", "pointer": "/roles/numeric", "mode": "inherited-semantic-baseline"},
+    "variableAxes": {
+      "status": "implemented-candidate-runtime",
+      "ownerWorkstream": "variable-responsive-typography",
+      "capabilityModel": "adapter-declared-local-font-axis-capabilities",
+      "allowedAxes": {
+        "weight": "wght",
+        "width": "wdth",
+        "opticalSize": "opsz",
+        "grade": "GRAD"
+      },
+      "unsupportedAxisFallback": "omit-axis-and-preserve-semantic-static-style"
+    },
+    "layoutEnvironmentAdaptation": {
+      "status": "implemented-candidate-runtime",
+      "ownerWorkstream": "variable-responsive-typography",
+      "uniformScaleOnly": false,
+      "roleSizeRem": {
+        "compact": {"display": 2.5, "title": 1.5, "heading": 1.25, "body": 1.0, "label": 0.875, "caption": 0.8125, "numeral": 1.75},
+        "medium": {"display": 3.0, "title": 1.75, "heading": 1.375, "body": 1.0, "label": 0.875, "caption": 0.8125, "numeral": 2.0},
+        "expanded": {"display": 3.5, "title": 1.875, "heading": 1.5, "body": 1.0, "label": 0.875, "caption": 0.8125, "numeral": 2.25},
+        "workspace": {"display": 3.25, "title": 1.75, "heading": 1.375, "body": 1.0, "label": 0.8125, "caption": 0.75, "numeral": 2.0},
+        "farView": {"display": 4.5, "title": 2.5, "heading": 2.0, "body": 1.5, "label": 1.25, "caption": 1.125, "numeral": 3.5},
+        "wearable": {"display": 2.0, "title": 1.375, "heading": 1.125, "body": 1.0, "label": 0.875, "caption": 0.8125, "numeral": 1.75}
+      }
+    },
+    "stateDrivenAdjustments": {
+      "status": "implemented-candidate-runtime",
+      "ownerWorkstream": "variable-responsive-typography",
+      "states": ["default", "current", "selected", "prominent", "compressed"],
+      "expressionProfiles": {
+        "calm": {"stateWeightDelta": 0, "stateGradeDelta": 0, "compressedWidthPercentRequest": 98},
+        "balanced": {"stateWeightDelta": 50, "stateGradeDelta": 20, "compressedWidthPercentRequest": 96},
+        "expressive": {"stateWeightDelta": 75, "stateGradeDelta": 35, "compressedWidthPercentRequest": 94}
+      }
+    },
+    "fontSourcePolicy": {
+      "status": "implemented-candidate-policy",
+      "default": "system-platform-native-first",
+      "locallyBundledApprovedFontAllowed": true,
+      "remoteRuntimeFontDependencyAllowed": false
+    }
   },
   "rules": {
     "semanticHierarchyBeforeRawFontValues": true,
     "variableAxisChangesMustBeRestrained": true,
+    "variableAxisCapabilityMustBeDeclaredByAdapter": true,
+    "variableAxisRequestsMustClampToDeclaredRange": true,
+    "unsupportedVariableAxesMustFallBackToStaticTypography": true,
     "continuousWobblePulseOrMorphAllowed": false,
     "remoteRuntimeFontDependencyAllowed": false,
     "largeTextAndReflowOverrideExpression": true,
+    "largeTextDisablesWidthCompression": true,
     "rtlLogicalAlignmentRequired": true,
     "phoneTypographyIsScaledDesktopTypographyOnly": false,
     "farViewTypographyIsScaledPhoneTypographyOnly": false,
     "semanticTokensMayContainRawFontValues": false
   },
   "notEstablished": [
-    "variable-font-selection",
-    "axis-calibration",
-    "responsive-role-environment-values",
-    "state-driven-type-adjustments"
+    "specific-variable-font-family-authority",
+    "platform-font-axis-calibration",
+    "human-readability-acceptance",
+    "assistive-technology-acceptance",
+    "physical-device-rendering-acceptance"
   ]
 }
