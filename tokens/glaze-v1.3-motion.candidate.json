@@ -26,23 +26,55 @@
     "spatial": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/durationsMs/spatial", "mode": "inherited-baseline"},
     "reduced": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/profiles/reduced", "mode": "inherited-baseline"},
     "minimal": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/profiles/minimal", "mode": "inherited-baseline"},
-    "expressive": {"status": "architecture-established-runtime-unestablished", "ownerWorkstream": "motion-and-continuity"},
-    "springSemantics": {"status": "architecture-established-runtime-unestablished", "ownerWorkstream": "motion-and-continuity"}
+    "expressive": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/durationsMs/deliberate", "mode": "v1.3-semantic-binding-to-governed-baseline"},
+    "springSemantics": {
+      "status": "implemented-candidate-policy",
+      "ownerWorkstream": "motion-and-continuity",
+      "newSpringRuntimeIntroduced": false,
+      "newSpringCalibrationIntroduced": false,
+      "settleUsesExistingGovernedEasing": true
+    },
+    "connectedTransformations": {
+      "status": "implemented-candidate-runtime",
+      "ownerWorkstream": "motion-and-continuity",
+      "relationships": [
+        "search-capsule-to-search-panel",
+        "navigation-item-to-destination-header",
+        "quick-control-to-expanded-control",
+        "mini-player-to-player",
+        "notification-to-detail",
+        "floating-toolbar-to-contextual-sheet",
+        "thumbnail-to-detail"
+      ]
+    },
+    "expressionProfiles": {
+      "status": "implemented-candidate-policy",
+      "ownerWorkstream": "motion-and-continuity",
+      "calm": ["micro", "standard"],
+      "balanced": ["standard", "connected"],
+      "expressive": ["connected", "expressive", "spatial-when-explicitly-justified"]
+    }
   },
   "rules": {
     "motionMustPreserveContext": true,
     "animationForAnimationSakeAllowed": false,
     "continuousRestlessAnimationAllowed": false,
+    "routineWobblePulseOrBounceAllowed": false,
     "reducedMotionPreservesSemanticStateChange": true,
     "reducedMotionMayCollapseTravel": true,
     "directManipulationTrackingRemainsImmediate": true,
     "motionMayMisrepresentActualProgress": false,
+    "stateMayWaitForAnimationCompletion": false,
+    "focusMayWaitForAnimationCompletion": false,
+    "spatialMotionRequiresExplicitRelationshipJustification": true,
+    "newSpringRuntimeIntroduced": false,
     "semanticTokensMayContainRawDurationsOrCurves": false
   },
   "notEstablished": [
     "v1.3-spring-calibration",
-    "connected-transformation-matrix",
-    "expression-profile-motion-deltas",
-    "interaction-velocity-motion-response"
+    "interaction-velocity-motion-response",
+    "native-motion-parity",
+    "physical-device-motion-acceptance",
+    "representative-frame-pacing-acceptance"
   ]
 }
