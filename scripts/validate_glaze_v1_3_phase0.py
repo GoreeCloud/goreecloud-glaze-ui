@@ -19,6 +19,7 @@ ALLOWED_PHASES = {
     "phase-6-variable-responsive-typography",
     "phase-7-adaptive-navigation",
     "phase-8-multi-pane-foldable-desktop",
+    "phase-9-system-shell-and-control-center",
 }
 ALLOWED_WORKSTREAM_STATUSES = {
     "planned",
