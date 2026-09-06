@@ -85,7 +85,7 @@ def validate_source() -> None:
     identity = provenance.get("glazeUiIdentity", {})
     require(identity.get("authoritativeRepository") == "GoreeCloud/goreecloud-branding-assets", "Glaze identity authority repository drifted")
     require(identity.get("canonicalPath") == "systems/glaze-ui/glaze-ui-mark.svg", "Glaze identity canonical path drifted")
-    require(identity.get("canonicalGitBlob") == "7756ca8f04a588286e05e37e9a141dbea7f1965d", "Glaze identity canonical blob drifted")
+    require(identity.get("canonicalGitBlob") == "af8b70387bdaedb8d8388a1660b2d2ca29548fe2", "Glaze identity canonical blob drifted")
     require(identity.get("canonicalStatus") == "approved", "Glaze identity canonical approval status drifted")
     require(identity.get("consumerRepository") == "GoreeCloud/goreecloud-glaze-ui", "Glaze identity consumer repository drifted")
     require(identity.get("packagedDerivativePath") == "assets/identity/official/facet/glaze-ui-mark.svg", "Glaze identity packaged derivative path drifted")

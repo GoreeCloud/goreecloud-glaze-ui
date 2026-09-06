@@ -37,7 +37,7 @@
     "glazeUiIdentity": {
       "authoritativeRepository": "GoreeCloud/goreecloud-branding-assets",
       "canonicalPath": "systems/glaze-ui/glaze-ui-mark.svg",
-      "canonicalGitBlob": "7756ca8f04a588286e05e37e9a141dbea7f1965d",
+      "canonicalGitBlob": "af8b70387bdaedb8d8388a1660b2d2ca29548fe2",
       "canonicalStatus": "approved",
       "consumerRepository": "GoreeCloud/goreecloud-glaze-ui",
       "packagedDerivativePath": "assets/identity/official/facet/glaze-ui-mark.svg",
