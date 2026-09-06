@@ -1,7 +1,7 @@
 /*
- * GLAZE UI V1.0 Foundation Components — Candidate implementation source
- * Lifecycle: Planned until exact-head rendered/component acceptance passes.
- * Current Stable consumer target remains GLAZE UI V1.0.
+ * GLAZE UI V1.0-origin Foundation Components — retained implementation source.
+ * This V1 structural layer is inherited by current GLAZE UI V1.1 Stable where not superseded.
+ * Current Stable consumer target is GLAZE UI V1.1 / 1.1.0.
  */
 @import url("./glaze-v1.candidate.css");
 
