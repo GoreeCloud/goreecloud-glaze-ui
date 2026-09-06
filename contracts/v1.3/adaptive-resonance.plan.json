@@ -28,7 +28,7 @@
     },
     {
       "id": "adaptive-dynamic-color",
-      "status": "implementation-in-progress",
+      "status": "implementation-complete-validation-pending",
       "dependsOn": ["contract-and-token-architecture"],
       "expectedArtifacts": [
         "contracts/v1.3/dynamic-color.candidate.json",
