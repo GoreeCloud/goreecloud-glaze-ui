@@ -27,6 +27,13 @@
     "scripts/validate_glaze_v1_2_living_glaze.py",
     "scripts/validate_glaze_v1_2_living_glaze_rendered.py",
     ".github/workflows/glaze-v1.2-living-glaze.yml",
+    "contracts/v1.2/personalization-appearance.candidate.json",
+    "css/glaze-v1.2-personalization-appearance.candidate.css",
+    "js/glaze-v1.2-personalization.candidate.mjs",
+    "reference/v1.2/personalization-appearance.html",
+    "scripts/validate_glaze_v1_2_personalization_readiness.py",
+    "scripts/validate_glaze_v1_2_personalization_appearance_rendered.py",
+    ".github/workflows/glaze-v1.2-personalization-appearance.yml",
     "contracts/v1.2/reference-scenes.candidate.json",
     "contracts/v1.2/accessibility-testing.candidate.json",
     "contracts/v1.2/performance-testing.candidate.json",
@@ -48,7 +55,7 @@
     },
     "G2": {
       "status": "bounded-evidence-present",
-      "meaning": "Candidate component/System Shell and Living Frosted interaction/navigation/ergonomic/continuity contract evidence are present; this does not establish complete native parity or release acceptance."
+      "meaning": "Candidate component/System Shell, Living Frosted interaction/navigation/ergonomic/continuity, and bounded Personalization browser/adapter contract evidence are present; this does not establish complete native parity or release acceptance."
     },
     "G3": {
       "status": "blocked",
@@ -58,6 +65,7 @@
         "human-approved-v1.2-visual-baseline-absent",
         "final-perceptual-thresholds-absent",
         "living-frosted-human-optical-acceptance-absent",
+        "personalization-human-visual-acceptance-absent",
         "human-optical-acceptance-absent"
       ]
     },
@@ -68,6 +76,9 @@
         "real-assistive-technology-acceptance-absent",
         "phase5-performance-testing-incomplete",
         "living-frosted-physical-device-performance-acceptance-absent",
+        "personalization-native-system-adapter-acceptance-absent",
+        "personalization-consumer-platform-persistence-acceptance-absent",
+        "personalization-native-wallpaper-source-adapter-acceptance-absent",
         "accepted-runtime-and-platform-performance-budgets-absent",
         "physical-device-and-production-performance-acceptance-absent",
         "complete-native-platform-accessibility-and-performance-parity-absent"
@@ -96,6 +107,8 @@
     "exactRevisionRequired": true,
     "evidenceCategoriesRemainIndependent": true,
     "livingFrostedSourceEvidenceMayNotSubstituteHumanAcceptance": true,
+    "personalizationBrowserEvidenceMayNotSubstituteNativeOrHumanAcceptance": true,
+    "personalizationCrossDeviceSyncMustRemainSeparateGoreeCloudSyncAuthority": true,
     "automatedChecksMayNotSubstituteHumanOpticalReview": true,
     "browserAccessibilityEvidenceMayNotSubstituteRealAssistiveTechnologyAcceptance": true,
     "browserPerformanceObservationsMayNotSubstituteAcceptedProductionBudgets": true,
@@ -119,11 +132,14 @@
   "implementation": {
     "validator": "scripts/validate_glaze_v1_2_exact_head_readiness.py",
     "workflow": ".github/workflows/glaze-v1.2-exact-head-readiness.yml",
-    "artifact": "artifacts/glaze-v1.2-exact-head-readiness.json"
+    "artifact": "artifacts/glaze-v1.2-exact-head-readiness.json",
+    "personalizationCompanionValidator": "scripts/validate_glaze_v1_2_personalization_readiness.py",
+    "personalizationCompanionArtifact": "artifacts/glaze-v1.2-personalization-readiness.json"
   },
   "evidenceBoundary": {
     "boundedExactHeadReadinessReportingEstablished": true,
     "livingFrostedBoundedSourceEvidenceIntegrated": true,
+    "personalizationBoundedExactHeadEvidenceIntegrated": true,
     "boundedReferenceSceneSourcesComplete": true,
     "phase5ExactRevisionConformanceEvidenceComplete": false,
     "established": [
@@ -131,6 +147,9 @@
       "stable-v1.1-authority-preservation-check",
       "candidate-lifecycle-and-consumer-isolation-check",
       "living-frosted-source-and-token-binding",
+      "personalization-browser-system-adapter-binding",
+      "personalization-consumer-persistence-adapter-interface-binding",
+      "personalization-bounded-local-wallpaper-atmosphere-binding",
       "all-17-bounded-reference-scene-source-binding",
       "ordered-G0-through-G7-readiness-accounting",
       "fail-closed-G3-G4-G5-blocker-reporting",
@@ -144,6 +163,11 @@
       "phase5-reference-scenes-human-accepted",
       "application-icon-ecosystem-wall-human-collision-review",
       "living-frosted-human-optical-acceptance",
+      "personalization-human-visual-acceptance",
+      "personalization-native-system-adapter-acceptance",
+      "personalization-consumer-platform-persistence-acceptance",
+      "personalization-native-wallpaper-source-adapter-acceptance",
+      "personalization-cross-device-preference-sync",
       "human-optical-acceptance",
       "assistive-technology-acceptance",
       "accepted-production-performance-budgets",
