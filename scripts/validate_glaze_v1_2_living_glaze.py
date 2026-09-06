@@ -76,6 +76,13 @@ def main() -> int:
     ergonomics = load("tokens/glaze-v1.2-ergonomics.candidate.json")
     motion_tokens = load("tokens/glaze-v1.2-motion-integration.candidate.json")
     require(list(material.get("clarity", {}).keys()) == ["clear","balanced","dense"], "material clarity tokens drifted")
+    require(material.get("clarity", {}).get("clear") == {"materialMixPercent":82,"blurDeltaPx":-4,"edgeSpecularPercent":28}, "Clear optical tokens drifted")
+    require(material.get("clarity", {}).get("balanced") == {"materialMixPercent":92,"blurDeltaPx":0,"edgeSpecularPercent":45}, "Balanced optical tokens drifted")
+    require(material.get("clarity", {}).get("dense") == {"materialMixPercent":98,"blurDeltaPx":6,"edgeSpecularPercent":68}, "Dense optical tokens drifted")
+    require(material.get("backdrop", {}).get("simple", {}).get("materialMixDeltaPercent") == -4, "simple backdrop density delta drifted")
+    require(material.get("backdrop", {}).get("complex", {}).get("materialMixDeltaPercent") == 2, "complex backdrop density delta drifted")
+    require(material.get("backdrop", {}).get("unknown", {}).get("materialMixDeltaPercent") == 0, "unknown backdrop must fail closed")
+    require(material.get("accessibilityPrecedence") == ["forced-colors","reduced-transparency","increased-contrast","clarity-personalization"], "material accessibility precedence drifted")
     require(material.get("performanceTiers") == {"0":"solid","1":"static-glaze","2":"responsive-glaze","3":"living-glaze"}, "material tier tokens drifted")
     require(interaction.get("states", {}).get("disabled", {}).get("opacityAloneForbidden") is True, "disabled state became opacity-only")
     require(navigation.get("semanticDestinationOrderStable") is True, "navigation destination semantics drifted")
@@ -85,7 +92,7 @@ def main() -> int:
     require(motion_tokens.get("experimentalGlazeMotionRequired") is False, "motion tokens require Experimental runtime")
 
     css = text("css/glaze-v1.2-living-glaze.candidate.css")
-    for marker in ('data-glaze-clarity="clear"','data-glaze-clarity="dense"','data-material-state="pressed"','data-material-state="dragged"','data-glaze-navigation-capsule','prefers-reduced-motion','forced-colors','data-glaze-tier="0"'):
+    for marker in ('data-glaze-clarity="clear"','data-glaze-clarity="dense"','data-material-state="pressed"','data-material-state="dragged"','data-glaze-navigation-capsule','prefers-reduced-motion','forced-colors','data-glaze-tier="0"','--glaze-v12-living-material-mix: 82%','--glaze-v12-living-material-mix: 92%','--glaze-v12-living-material-mix: 98%'):
         require(marker in css, f"CSS marker missing: {marker}")
     runtime = text("js/glaze-v1.2-living-glaze.candidate.mjs")
     for export in ("setGlazeClarity", "setLivingGlazeState", "setBackdropComplexity", "setGlazeComplexityTier", "connectMaterialTransformation"):
@@ -93,7 +100,7 @@ def main() -> int:
     require("producer-or-renderer-supplied-complexity-only" in runtime, "runtime privacy boundary missing")
 
     reference = text("reference/v1.2/living-glaze.html")
-    for marker in ("Living Glaze Material Lab", "Simple backdrop", "Complex backdrop", "Fail closed", "Adaptive Navigation Capsule"):
+    for marker in ("Living Glaze Material Lab", "Simple backdrop", "Complex backdrop", "Fail closed", "Adaptive Navigation Capsule", "glz12-glaze"):
         require(marker in reference, f"reference marker missing: {marker}")
     entry = text("css/glaze-v1.2.0-candidate.css")
     require('glaze-v1.2-living-glaze.candidate.css' in entry, "aggregate Candidate CSS does not import Living Glaze")
