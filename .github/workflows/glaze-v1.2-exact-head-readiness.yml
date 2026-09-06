@@ -9,8 +9,13 @@ on:
       - "contracts/performance/glaze-v1-performance-budget.json"
       - "contracts/glaze.conformance-evidence.schema.json"
       - "acceptance/v1.2-promotion-gates.candidate.md"
+      - "acceptance/v1.2-human-optical-review-packet.candidate.md"
       - "scripts/validate_glaze_v1_2_exact_head_readiness.py"
+      - "scripts/validate_glaze_v1_2_human_optical_review_packet.py"
       - ".github/workflows/glaze-v1.2-exact-head-readiness.yml"
+      - ".github/workflows/glaze-v1.2-visual-regression.yml"
+      - ".github/workflows/glaze-v1.2-application-icon-ecosystem-wall.yml"
+      - ".github/workflows/glaze-v1.2-reference-scenes.yml"
   workflow_dispatch:
 
 permissions:
@@ -41,17 +46,22 @@ jobs:
           python scripts/validate_glaze_v1.py
           python scripts/validate_glaze_v1_2_candidate.py
 
-      - name: Compile exact-head readiness validator
-        run: python -m py_compile scripts/validate_glaze_v1_2_exact_head_readiness.py
+      - name: Compile exact-head readiness and review-handoff validators
+        run: python -m py_compile scripts/validate_glaze_v1_2_exact_head_readiness.py scripts/validate_glaze_v1_2_human_optical_review_packet.py
 
       - name: Generate fail-closed exact-head readiness evidence
         run: python scripts/validate_glaze_v1_2_exact_head_readiness.py
+
+      - name: Generate fail-closed human optical review manifest
+        run: python scripts/validate_glaze_v1_2_human_optical_review_packet.py
 
       - name: Upload bounded exact-head readiness evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: glaze-v1.2-exact-head-readiness-${{ github.event.pull_request.head.sha || github.sha }}
-          path: artifacts/glaze-v1.2-exact-head-readiness.json
+          path: |
+            artifacts/glaze-v1.2-exact-head-readiness.json
+            artifacts/glaze-v1.2-human-optical-review-manifest.json
           if-no-files-found: error
           retention-days: 14
           compression-level: 6
