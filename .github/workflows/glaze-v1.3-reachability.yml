@@ -1,0 +1,61 @@
+name: GLAZE UI V1.3 Human Reachability
+
+on:
+  push:
+    branches:
+      - feat/glaze-ui-v1.3-adaptive-resonance
+    paths:
+      - 'contracts/v1.3/adaptive-resonance.plan.json'
+      - 'contracts/v1.3/reachability.candidate.json'
+      - 'js/glaze-v1.3-reachability.candidate.mjs'
+      - 'tests/glaze-v1.3-reachability.test.mjs'
+      - 'scripts/validate_glaze_v1_3_reachability.py'
+      - 'scripts/validate_glaze_v1_3_token_architecture.py'
+      - 'scripts/validate_glaze_v1_3_phase0.py'
+      - 'registry/lifecycle.json'
+      - 'VERSION'
+      - '.github/workflows/glaze-v1.3-reachability.yml'
+  pull_request:
+    paths:
+      - 'contracts/v1.3/adaptive-resonance.plan.json'
+      - 'contracts/v1.3/reachability.candidate.json'
+      - 'js/glaze-v1.3-reachability.candidate.mjs'
+      - 'tests/glaze-v1.3-reachability.test.mjs'
+      - 'scripts/validate_glaze_v1_3_reachability.py'
+      - 'scripts/validate_glaze_v1_3_token_architecture.py'
+      - 'scripts/validate_glaze_v1_3_phase0.py'
+      - 'registry/lifecycle.json'
+      - 'VERSION'
+      - '.github/workflows/glaze-v1.3-reachability.yml'
+
+jobs:
+  validate-v1-3-human-reachability:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - name: Compile V1.3 validators
+        run: |
+          python -m py_compile scripts/validate_glaze_v1_3_phase0.py
+          python -m py_compile scripts/validate_glaze_v1_3_token_architecture.py
+          python -m py_compile scripts/validate_glaze_v1_3_reachability.py
+      - name: Preserve V1.2 Stable authority
+        run: python scripts/validate_glaze_v1_2_stable.py
+      - name: Preserve V1.3 pre-promotion boundary
+        run: python scripts/validate_glaze_v1_3_phase0.py
+      - name: Revalidate V1.3 token architecture dependency
+        run: python scripts/validate_glaze_v1_3_token_architecture.py
+      - name: Validate V1.3 Human Reachability contract
+        run: python scripts/validate_glaze_v1_3_reachability.py
+      - name: Check reachability runtime syntax
+        run: node --check js/glaze-v1.3-reachability.candidate.mjs
+      - name: Test reachability runtime
+        run: node --test tests/glaze-v1.3-reachability.test.mjs
+      - name: Parse reachability JSON
+        run: |
+          python -m json.tool contracts/v1.3/reachability.candidate.json >/dev/null
+          python -m json.tool contracts/v1.3/adaptive-resonance.plan.json >/dev/null
