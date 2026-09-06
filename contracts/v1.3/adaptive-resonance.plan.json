@@ -9,7 +9,7 @@
   "releaseContract": "GLAZE_UI_V1_3.md",
   "deferredQualification": "contracts/v1.3/deferred-qualification.plan.json",
   "deferredQualificationAcceptance": "acceptance/v1.3-deferred-qualification.md",
-  "phase": "phase-10-contextual-intelligence",
+  "phase": "phase-11-motion-and-continuity",
   "phaseEffect": "implementation-workstream-active-no-lifecycle-promotion",
   "workstreams": [
     {
@@ -154,14 +154,18 @@
     },
     {
       "id": "motion-and-continuity",
-      "status": "planned",
+      "status": "implementation-complete-validation-pending",
       "dependsOn": [
         "living-material-2",
         "adaptive-navigation"
       ],
       "expectedArtifacts": [
         "contracts/v1.3/motion-semantics.candidate.json",
-        "tokens/glaze-v1.3-motion.candidate.json"
+        "tokens/glaze-v1.3-motion.candidate.json",
+        "js/glaze-v1.3-motion.candidate.mjs",
+        "tests/glaze-v1.3-motion.test.mjs",
+        "scripts/validate_glaze_v1_3_motion.py",
+        ".github/workflows/glaze-v1.3-motion.yml"
       ]
     },
     {
