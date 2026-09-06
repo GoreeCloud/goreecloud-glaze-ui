@@ -23,6 +23,7 @@ ALLOWED_PHASES = {
     "phase-10-contextual-intelligence",
     "phase-11-motion-and-continuity",
     "phase-12-accessibility-and-resilience",
+    "phase-13-personalization",
 }
 ALLOWED_WORKSTREAM_STATUSES = {
     "planned",
