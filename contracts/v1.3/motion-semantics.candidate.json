@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.motion-semantics.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "extends": [
+    "contracts/v1.2/motion.candidate.json",
+    "contracts/v1.2/context-continuity.candidate.json",
+    "contracts/v1.3/living-material-2.candidate.json",
+    "contracts/v1.3/adaptive-navigation.candidate.json"
+  ],
+  "purpose": "Evolve motion into a semantic continuity layer that explains connected state and layout changes while keeping state, focus, input tracking, accessibility, and task completion independent of animation completion.",
+  "principles": {
+    "respondImmediately": true,
+    "moveWithPurpose": true,
+    "preserveContinuity": true,
+    "settleQuietly": true,
+    "userControlFirst": true,
+    "stateIndependentOfAnimationCompletion": true,
+    "focusMustNotWaitForMotion": true,
+    "connectedIdentityRequiresClearRelationship": true,
+    "directManipulationTracksInputImmediately": true,
+    "userDrivenMotionInterruptible": true,
+    "reducedMotionPreservesSemanticState": true,
+    "decorativeContinuousMotionAllowed": false,
+    "routineWobblePulseOrBounceAllowed": false,
+    "automaticSpringPhysicsRequired": false
+  },
+  "semanticRoles": {
+    "direct": {"purpose": "direct manipulation or immediate response", "durationFamily": "direct", "easingFamily": "direct"},
+    "micro": {"purpose": "small local state or feedback response", "durationFamily": "fast", "easingFamily": "responsive"},
+    "standard": {"purpose": "ordinary state or local-navigation transition", "durationFamily": "standard", "easingFamily": "glide"},
+    "connected": {"purpose": "clear same-object or source-to-destination continuity", "durationFamily": "deliberate", "easingFamily": "glide"},
+    "expressive": {"purpose": "bounded high-value relationship-preserving transition", "durationFamily": "deliberate", "easingFamily": "glide"},
+    "spatial": {"purpose": "rare justified large spatial relationship", "durationFamily": "spatial", "easingFamily": "glide", "explicitJustificationRequired": true},
+    "reduced": {"purpose": "Reduced Motion semantic equivalent", "profile": "reduced"},
+    "minimal": {"purpose": "nonessential travel removed", "profile": "minimal"}
+  },
+  "connectedTransformations": {
+    "search-capsule-to-search-panel": {"relationship": "same-search-task", "identityMustPersist": true},
+    "navigation-item-to-destination-header": {"relationship": "destination-continuity", "identityMustPersist": true},
+    "quick-control-to-expanded-control": {"relationship": "same-control", "identityMustPersist": true},
+    "mini-player-to-player": {"relationship": "same-media-session", "identityMustPersist": true},
+    "notification-to-detail": {"relationship": "same-event", "identityMustPersist": true},
+    "floating-toolbar-to-contextual-sheet": {"relationship": "same-tool-context", "identityMustPersist": true},
+    "thumbnail-to-detail": {"relationship": "same-content-object", "identityMustPersist": true}
+  },
+  "relationshipRules": {
+    "unclearRelationshipFallsBackToStandardTransition": true,
+    "connectedTransformMayInventIdentity": false,
+    "connectedTransformMayChangeSemanticMeaning": false,
+    "connectedTransformMayResetCurrentTask": false,
+    "connectedTransformMayDiscardUnsavedWork": false,
+    "reverseOnCloseWherePractical": true,
+    "sharedShellMayRemainStable": true
+  },
+  "directManipulation": {
+    "trackingDurationMs": 0,
+    "tracksInputImmediately": true,
+    "userMayInterrupt": true,
+    "optionalSettleOnlyAfterRelease": true,
+    "settleMayBlockStateChange": false,
+    "reducedMotionStillTracksInput": true
+  },
+  "expression": {
+    "profiles": ["calm", "balanced", "expressive"],
+    "profileMayChooseAmongGovernedSemanticRoles": true,
+    "profileMayInventRawDurationOrCurve": false,
+    "profileMayIntroduceContinuousMotion": false,
+    "calmPrefers": ["micro", "standard"],
+    "balancedPrefers": ["standard", "connected"],
+    "expressiveMayUse": ["connected", "expressive", "spatial-when-explicitly-justified"],
+    "accessibilityOverridesExpression": true
+  },
+  "continuity": {
+    "preserve": [
+      "current-task",
+      "current-destination",
+      "selection",
+      "filter-state",
+      "draft-state",
+      "typed-input",
+      "unsaved-work",
+      "media-state",
+      "focus-restoration-where-practical",
+      "scroll-context-where-practical"
+    ],
+    "motionRequiredForCorrectness": false,
+    "animationCompletionRequiredForStateCommit": false,
+    "animationCompletionRequiredForFocus": false,
+    "recompositionMayReloadPage": false
+  },
+  "accessibility": {
+    "reducedMotion": {
+      "removeNonessentialTranslation": true,
+      "removeNonessentialScale": true,
+      "nonessentialMotionMayBecomeImmediate": true,
+      "preserveDirectManipulationTracking": true,
+      "preserveSemanticState": true,
+      "preserveFocus": true,
+      "mustNotDelayTaskCompletion": true
+    },
+    "forcedColorsMayNotDelayStateOrFocus": true,
+    "largeTextMustNotOverflowCriticalContent": true,
+    "minimumInteractiveTargetPx": 48,
+    "motionMayBeOnlyStateSignal": false,
+    "rtlLogicalMotionDirectionRequired": true
+  },
+  "performance": {
+    "preferCompositorProperties": ["opacity", "transform"],
+    "persistentWillChangeAllowed": false,
+    "autonomousUiLoopsAllowed": false,
+    "spatialDurationRequiresJustification": true,
+    "performanceDegradationMayRemoveNonessentialMotion": true,
+    "performanceDegradationMayDelaySemanticState": false,
+    "performanceDegradationMayDelayFocus": false
+  },
+  "springBoundary": {
+    "newSpringRuntimeIntroduced": false,
+    "newSpringCalibrationIntroduced": false,
+    "settleSemanticsUseExistingGovernedEasing": true,
+    "experimentalGlazeMotionPromoted": false
+  },
+  "implementation": {
+    "tokens": "tokens/glaze-v1.3-motion.candidate.json",
+    "runtime": "js/glaze-v1.3-motion.candidate.mjs",
+    "tests": "tests/glaze-v1.3-motion.test.mjs",
+    "validator": "scripts/validate_glaze_v1_3_motion.py",
+    "workflow": ".github/workflows/glaze-v1.3-motion.yml"
+  },
+  "evidenceBoundary": {
+    "implementedByWorkstream": [
+      "semantic-motion-role-contract",
+      "connected-transformation-relationship-matrix",
+      "state-and-focus-independent-of-animation",
+      "interruptible-direct-manipulation-policy",
+      "expression-profile-semantic-role-policy",
+      "reduced-motion-continuity-policy",
+      "no-new-spring-runtime-boundary",
+      "automated-runtime-and-contract-tests"
+    ],
+    "notEstablished": [
+      "v1.3-spring-calibration",
+      "native-motion-parity",
+      "physical-device-motion-acceptance",
+      "assistive-technology-human-motion-acceptance",
+      "representative-frame-pacing-acceptance",
+      "production-compositor-window-motion-integration",
+      "motion-studio-or-spatial-promotion",
+      "human-motion-optical-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}
