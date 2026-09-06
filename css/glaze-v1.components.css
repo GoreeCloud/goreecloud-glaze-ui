@@ -1,10 +1,8 @@
 /*
- * GLAZE UI V1.0 Foundation Components — Candidate implementation source
- * Lifecycle: Planned until exact-head rendered/component acceptance passes.
- * Current Stable consumer target remains GLAZE UI V1.0.
+ * GLAZE UI V1 Foundation Components — inherited Stable component layer.
+ * Foundation tokens and structural surfaces are loaded explicitly by the
+ * official V1 web entrypoint before this file.
  */
-@import url("./glaze-v1.candidate.css");
-
 :root {
   --glz1-control-hit: 48px;
   --glz1-control-hit-assisted: 56px;
