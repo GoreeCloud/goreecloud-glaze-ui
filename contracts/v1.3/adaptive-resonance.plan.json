@@ -107,7 +107,7 @@
     },
     {
       "id": "multi-pane-foldable-desktop",
-      "status": "implementation-complete-validation-pending",
+      "status": "implemented-and-validated",
       "dependsOn": [
         "human-reachability",
         "adaptive-navigation"
@@ -123,7 +123,7 @@
     },
     {
       "id": "system-shell-and-control-center",
-      "status": "implementation-complete-validation-pending",
+      "status": "implemented-and-validated",
       "dependsOn": [
         "adaptive-navigation",
         "living-material-2"
@@ -139,7 +139,7 @@
     },
     {
       "id": "contextual-intelligence",
-      "status": "implementation-complete-validation-pending",
+      "status": "implemented-and-validated",
       "dependsOn": [
         "adaptive-dynamic-color",
         "adaptive-navigation"
@@ -154,7 +154,7 @@
     },
     {
       "id": "motion-and-continuity",
-      "status": "implementation-complete-validation-pending",
+      "status": "implemented-and-validated",
       "dependsOn": [
         "living-material-2",
         "adaptive-navigation"
