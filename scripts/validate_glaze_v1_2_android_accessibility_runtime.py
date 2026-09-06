@@ -212,6 +212,16 @@ def retreat_scroll(serial: str) -> None:
     time.sleep(0.12)
 
 
+def offset_scroll(serial: str) -> None:
+    """Shift the scroll lattice slightly so clipped controls can be observed whole."""
+    width, height = display_size(serial)
+    x = width // 2
+    start_y = max(1, round(height * 0.68))
+    end_y = max(1, round(height * 0.63))
+    adb(serial, "shell", "input", "swipe", str(x), str(start_y), str(x), str(end_y), "160")
+    time.sleep(0.12)
+
+
 def launch(serial: str, *, appearance: str = "light", reduced: bool = False, touch: bool = False) -> None:
     adb(serial, "shell", "wm", "size", "reset", check=False)
     adb(serial, "shell", "am", "force-stop", PACKAGE)
@@ -227,7 +237,7 @@ def launch(serial: str, *, appearance: str = "light", reduced: bool = False, tou
     reset_scroll(serial)
 
 
-def scan_hierarchy(serial: str, dpi: int, *, swipes: int = 14) -> dict[str, object]:
+def scan_hierarchy(serial: str, dpi: int, *, floor_dp: float, swipes: int = 14) -> dict[str, object]:
     controls: dict[str, dict[str, object]] = {}
     unnamed_clickables: dict[tuple[str, str], dict[str, str]] = {}
     display = display_size(serial)
@@ -236,6 +246,7 @@ def scan_hierarchy(serial: str, dpi: int, *, swipes: int = 14) -> dict[str, obje
     visible_clickable_instances = 0
     missing_visibility_metadata = 0
     reverse_recovery_swipes = 0
+    offset_recovery_sweeps = 0
 
     def collect(root: ET.Element) -> None:
         nonlocal app_instances, clickable_instances, visible_clickable_instances, missing_visibility_metadata
@@ -274,24 +285,61 @@ def scan_hierarchy(serial: str, dpi: int, *, swipes: int = 14) -> dict[str, obje
         names = tuple(controls)
         return all(any(name.startswith(prefix) for name in names) for prefix in EXPECTED_CONTROLS.values())
 
+    def geometry_complete() -> bool:
+        if not expected_complete():
+            return False
+        for prefix in EXPECTED_CONTROLS.values():
+            measurements = [
+                float(info["maxHeightDp"])
+                for name, info in controls.items()
+                if name.startswith(prefix)
+            ]
+            if not measurements or max(measurements) < floor_dp - 1.0:
+                return False
+        return True
+
     for index in range(swipes + 1):
         collect(dump_ui(serial))
-        if expected_complete():
+        if geometry_complete():
             break
         if index < swipes:
             advance_scroll(serial)
 
-    # Android 36 may expose a viewport whose first Quick Settings row is just
-    # above the initial dump after scroll normalization. If the forward sweep
-    # is incomplete, recover by traversing back toward the start while still
-    # applying the same name, role, state-description, visibility, and geometry
-    # requirements. This is reachability recovery, not a relaxed assertion.
-    if not expected_complete():
+    # Android 36 UIAutomator clips a partially visible node's reported bounds
+    # to the viewport. A clipped fragment is not evidence that the underlying
+    # control violates its target floor. Traverse back toward the start and
+    # require at least one full-enough geometry observation for every expected
+    # control before the scan can satisfy the target-size gate.
+    if not geometry_complete():
         for _ in range(swipes):
             retreat_scroll(serial)
             reverse_recovery_swipes += 1
             collect(dump_ui(serial))
-            if expected_complete():
+            if geometry_complete():
+                break
+
+    # Large scroll steps can create a repeatable sampling lattice where the
+    # same control is clipped at an edge in both directions. If geometry is
+    # still incomplete, restart from the top with a small offset and repeat.
+    # This changes only where the hierarchy is sampled; it does not relax the
+    # required target floor, semantics, role, visibility, or enabled state.
+    if not geometry_complete():
+        reset_scroll(serial)
+        offset_scroll(serial)
+        offset_recovery_sweeps += 1
+        for index in range(swipes + 1):
+            collect(dump_ui(serial))
+            if geometry_complete():
+                break
+            if index < swipes:
+                advance_scroll(serial)
+
+    if not geometry_complete():
+        for _ in range(swipes):
+            retreat_scroll(serial)
+            reverse_recovery_swipes += 1
+            collect(dump_ui(serial))
+            if geometry_complete():
                 break
 
     if unnamed_clickables:
@@ -305,6 +353,7 @@ def scan_hierarchy(serial: str, dpi: int, *, swipes: int = 14) -> dict[str, obje
         "visibleClickableInstances": visible_clickable_instances,
         "clickablesMissingVisibilityMetadata": missing_visibility_metadata,
         "reverseRecoverySwipes": reverse_recovery_swipes,
+        "offsetRecoverySweeps": offset_recovery_sweeps,
         "namedControls": controls,
     }
 
@@ -364,7 +413,7 @@ def font_scale(serial: str) -> str:
 
 def default_target_audit(serial: str, dpi: int) -> dict[str, object]:
     launch(serial, appearance="light")
-    hierarchy = scan_hierarchy(serial, dpi)
+    hierarchy = scan_hierarchy(serial, dpi, floor_dp=48.0)
     controls = resolve_expected(hierarchy["namedControls"], floor_dp=48.0)
     return {"targetFloorDp": 48, "hierarchy": hierarchy, "controls": controls}
 
@@ -373,7 +422,7 @@ def touch_assistance_audit(serial: str, dpi: int) -> dict[str, object]:
     launch(serial, appearance="deep-dark", touch=True)
     if not contains(serial, "Touch Assistance: 56 dp minimum target"):
         raise SystemExit("Touch Assistance semantic state not reachable")
-    hierarchy = scan_hierarchy(serial, dpi)
+    hierarchy = scan_hierarchy(serial, dpi, floor_dp=56.0)
     controls = resolve_expected(hierarchy["namedControls"], floor_dp=56.0)
     return {
         "targetFloorDp": 56,
@@ -396,7 +445,7 @@ def large_text_audit(serial: str, dpi: int) -> dict[str, object]:
     for marker in required:
         if not contains(serial, marker):
             raise SystemExit(f"200% text-scale content not reachable: {marker}")
-    hierarchy = scan_hierarchy(serial, dpi)
+    hierarchy = scan_hierarchy(serial, dpi, floor_dp=56.0)
     controls = resolve_expected(hierarchy["namedControls"], floor_dp=56.0)
     return {
         "fontScale": 2.0,
