@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import base64
+import hashlib
 import json
 import shutil
 import subprocess
@@ -25,6 +26,7 @@ CONTRACT = ROOT / "contracts/v1.2/artwork-imagery.candidate.json"
 CSS = ROOT / "css/glaze-v1.2-artwork-imagery.candidate.css"
 ENTRYPOINT = ROOT / "css/glaze-v1.2.0-candidate.css"
 WORKFLOW = ROOT / ".github/workflows/glaze-v1.2-artwork-imagery.yml"
+IDENTITY_ASSET = ROOT / "assets/identity/official/facet/glaze-ui-mark.svg"
 
 
 class AcceptanceError(RuntimeError):
@@ -43,8 +45,13 @@ def load(path: Path) -> dict[str, Any]:
     return value
 
 
+def git_blob_sha1(payload: bytes) -> str:
+    header = f"blob {len(payload)}\0".encode("ascii")
+    return hashlib.sha1(header + payload).hexdigest()
+
+
 def validate_source() -> None:
-    for path in (CONTRACT, CSS, ENTRYPOINT, WORKFLOW, ROOT / REFERENCE):
+    for path in (CONTRACT, CSS, ENTRYPOINT, WORKFLOW, IDENTITY_ASSET, ROOT / REFERENCE):
         require(path.is_file(), f"missing {path.relative_to(ROOT)}")
 
     contract = load(CONTRACT)
@@ -74,6 +81,19 @@ def validate_source() -> None:
         require(provenance.get(key) is True, f"source/provenance guard drifted: {key}")
     require(provenance.get("remoteStockArtRequiredForGlazeIdentity") is False, "remote stock art became required")
     require(provenance.get("conceptualMediaMayClaimImplementedReality") is False, "conceptual media may claim implementation")
+
+    identity = provenance.get("glazeUiIdentity", {})
+    require(identity.get("authoritativeRepository") == "GoreeCloud/goreecloud-branding-assets", "Glaze identity authority repository drifted")
+    require(identity.get("canonicalPath") == "systems/glaze-ui/glaze-ui-mark.svg", "Glaze identity canonical path drifted")
+    require(identity.get("canonicalGitBlob") == "7756ca8f04a588286e05e37e9a141dbea7f1965d", "Glaze identity canonical blob drifted")
+    require(identity.get("canonicalStatus") == "approved", "Glaze identity canonical approval status drifted")
+    require(identity.get("consumerRepository") == "GoreeCloud/goreecloud-glaze-ui", "Glaze identity consumer repository drifted")
+    require(identity.get("packagedDerivativePath") == "assets/identity/official/facet/glaze-ui-mark.svg", "Glaze identity packaged derivative path drifted")
+    require(identity.get("packagedDerivativeMustMatchCanonicalBlob") is True, "Glaze identity derivative may drift from canonical source")
+    require(identity.get("scope") == "glaze-ui-product-identity-only", "Glaze identity provenance scope broadened")
+    require(identity.get("establishesSharedArtworkLibrary") is False, "Glaze identity provenance overclaimed a shared artwork library")
+    local_identity_blob = git_blob_sha1(IDENTITY_ASSET.read_bytes())
+    require(local_identity_blob == identity.get("canonicalGitBlob"), f"packaged Glaze identity drifted from approved canonical blob: {local_identity_blob}")
 
     truth = contract.get("truthBoundaries", {})
     for key in (
@@ -114,7 +134,10 @@ def validate_source() -> None:
     ):
         require(prohibited.get(key) is True, f"fail-closed artwork prohibition drifted: {key}")
 
-    not_established = set(contract.get("evidenceBoundary", {}).get("notEstablished", []))
+    evidence = contract.get("evidenceBoundary", {})
+    implemented = set(evidence.get("implemented", []))
+    require("approved-glaze-ui-identity-provenance" in implemented, "approved Glaze identity provenance is not recorded as implemented")
+    not_established = set(evidence.get("notEstablished", []))
     require({
         "canonical-v1.2-product-artwork-library", "shared-illustration-asset-library",
         "wallpaper-library", "photography-library", "human-artwork-review",
@@ -159,6 +182,7 @@ def validate_source() -> None:
     workflow = WORKFLOW.read_text(encoding="utf-8")
     require("validate_glaze_v1_2_artwork_imagery_rendered.py" in workflow, "workflow does not run artwork rendered validator")
     require("github.event.pull_request.head.sha || github.sha" in workflow, "artwork workflow is not exact-head pinned")
+    require("assets/identity/official/facet/glaze-ui-mark.svg" in workflow, "artwork workflow does not watch the packaged canonical identity derivative")
 
 
 def request(method: str, path: str, payload: dict[str, Any] | None = None, timeout: int = 30) -> Any:
