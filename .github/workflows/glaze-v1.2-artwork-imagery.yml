@@ -7,6 +7,7 @@ on:
       - "css/glaze-v1.2-artwork-imagery.candidate.css"
       - "css/glaze-v1.2.0-candidate.css"
       - "reference/v1.2/artwork-imagery.html"
+      - "assets/identity/official/facet/glaze-ui-mark.svg"
       - "scripts/validate_glaze_v1_2_artwork_imagery_rendered.py"
       - ".github/workflows/glaze-v1.2-artwork-imagery.yml"
       - "contracts/v1.2/accessibility-adaptation.candidate.json"
