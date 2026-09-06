@@ -37,6 +37,14 @@ EXPECTED_CONTROLS = {
     "Primary action": "Primary action",
     "Secondary action": "Secondary action",
 }
+QUICK_SETTINGS = {
+    "Wi-Fi",
+    "Bluetooth",
+    "Night Light",
+    "Performance",
+    "Airplane Mode",
+    "Focus",
+}
 
 
 def run(*args: str, text: bool = True, check: bool = True) -> subprocess.CompletedProcess:
@@ -137,17 +145,18 @@ def source_contract() -> dict[str, object]:
 
 
 def dump_ui(serial: str) -> ET.Element:
-    path = "/sdcard/glaze-v12-accessibility.xml"
-    adb(serial, "shell", "uiautomator", "dump", path)
-    raw = adb(serial, "exec-out", "cat", path).stdout
+    remote = "/sdcard/glaze-v12-accessibility.xml"
+    adb(serial, "shell", "uiautomator", "dump", remote)
+    raw = adb(serial, "exec-out", "cat", remote).stdout
+    diagnostic = OUT / "android-accessibility-last-hierarchy.xml"
+    diagnostic.write_text(raw, encoding="utf-8")
     return ET.fromstring(raw)
 
 
 def node_name(node: ET.Element) -> tuple[str, str]:
     content_description = node.attrib.get("content-desc", "").strip()
     text = node.attrib.get("text", "").strip()
-    raw = content_description or text
-    return normalize_name(raw), content_description
+    return normalize_name(content_description or text), content_description
 
 
 def bounds(node: ET.Element) -> tuple[int, int, int, int]:
@@ -166,6 +175,21 @@ def app_nodes(root: ET.Element):
     for node in root.iter("node"):
         if node.attrib.get("package") == PACKAGE:
             yield node
+
+
+def node_is_visible(node: ET.Element, display: tuple[int, int]) -> bool:
+    """Treat missing UIAutomator visibility metadata as unknown, not invisible."""
+    visibility = node.attrib.get("visible-to-user")
+    if visibility == "false":
+        return False
+    try:
+        x1, y1, x2, y2 = bounds(node)
+    except SystemExit:
+        return False
+    if x2 <= x1 or y2 <= y1:
+        return False
+    width, height = display
+    return x2 > 0 and y2 > 0 and x1 < width and y1 < height
 
 
 def reset_scroll(serial: str) -> None:
@@ -205,20 +229,31 @@ def launch(serial: str, *, appearance: str = "light", reduced: bool = False, tou
 def scan_hierarchy(serial: str, dpi: int, *, swipes: int = 14) -> dict[str, object]:
     controls: dict[str, dict[str, object]] = {}
     unnamed_clickables: list[dict[str, str]] = []
-    observed_clickables = 0
+    display = display_size(serial)
+    app_instances = 0
+    clickable_instances = 0
+    visible_clickable_instances = 0
+    missing_visibility_metadata = 0
 
     for index in range(swipes + 1):
         root = dump_ui(serial)
         for node in app_nodes(root):
-            if node.attrib.get("clickable") != "true" or node.attrib.get("visible-to-user") != "true":
+            app_instances += 1
+            if node.attrib.get("clickable") != "true":
                 continue
-            observed_clickables += 1
+            clickable_instances += 1
+            if "visible-to-user" not in node.attrib:
+                missing_visibility_metadata += 1
+            if not node_is_visible(node, display):
+                continue
+            visible_clickable_instances += 1
             name, content_description = node_name(node)
             if not name:
                 unnamed_clickables.append(
                     {
                         "class": node.attrib.get("class", ""),
                         "bounds": node.attrib.get("bounds", ""),
+                        "visibilityMetadata": node.attrib.get("visible-to-user", "absent"),
                     }
                 )
                 continue
@@ -232,6 +267,7 @@ def scan_hierarchy(serial: str, dpi: int, *, swipes: int = 14) -> dict[str, obje
                     "enabled": node.attrib.get("enabled") == "true",
                     "focusable": node.attrib.get("focusable") == "true",
                     "contentDescriptionPresent": bool(content_description),
+                    "visibilityMetadata": node.attrib.get("visible-to-user", "absent"),
                 }
         if index < swipes:
             advance_scroll(serial)
@@ -240,7 +276,10 @@ def scan_hierarchy(serial: str, dpi: int, *, swipes: int = 14) -> dict[str, obje
         raise SystemExit(f"visible app clickables without accessible names: {unnamed_clickables}")
 
     return {
-        "observedClickableInstances": observed_clickables,
+        "appNodeInstances": app_instances,
+        "clickableAppNodeInstances": clickable_instances,
+        "visibleClickableInstances": visible_clickable_instances,
+        "clickablesMissingVisibilityMetadata": missing_visibility_metadata,
         "namedControls": controls,
     }
 
@@ -252,15 +291,14 @@ def resolve_expected(
     for control_id, prefix in EXPECTED_CONTROLS.items():
         matches = [(name, info) for name, info in controls.items() if name.startswith(prefix)]
         if not matches:
-            observed = sorted(controls)
             raise SystemExit(
                 f"expected named Android control not observed: {control_id} ({prefix}); "
-                f"observed={observed}"
+                f"observed={sorted(controls)}"
             )
         name, info = max(matches, key=lambda item: float(item[1]["maxHeightDp"]))
         if info["role"] != "android.widget.Button":
             raise SystemExit(f"{control_id} exposed unexpected native role {info['role']!r}")
-        if control_id in {"Wi-Fi", "Bluetooth", "Night Light", "Performance", "Airplane Mode", "Focus"} and not info["contentDescriptionPresent"]:
+        if control_id in QUICK_SETTINGS and not info["contentDescriptionPresent"]:
             raise SystemExit(f"{control_id} did not expose its state-bearing content description")
         measured = float(info["maxHeightDp"])
         if measured < floor_dp - 1.0:
@@ -295,11 +333,7 @@ def default_target_audit(serial: str, dpi: int) -> dict[str, object]:
     launch(serial, appearance="light")
     hierarchy = scan_hierarchy(serial, dpi)
     controls = resolve_expected(hierarchy["namedControls"], floor_dp=48.0)
-    return {
-        "targetFloorDp": 48,
-        "hierarchy": hierarchy,
-        "controls": controls,
-    }
+    return {"targetFloorDp": 48, "hierarchy": hierarchy, "controls": controls}
 
 
 def touch_assistance_audit(serial: str, dpi: int) -> dict[str, object]:
