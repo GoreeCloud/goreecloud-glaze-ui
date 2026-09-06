@@ -6,9 +6,11 @@ on:
       - feat/glaze-v1.2-migration-control-plane
   pull_request:
     paths:
+      - 'contracts/v1.2/responsive-adaptation-reference.candidate.json'
       - 'reference/v1.2/native/linux-gtk/**'
       - 'scripts/validate_glaze_v1_2_linux_runtime.py'
       - 'scripts/validate_glaze_v1_2_linux_personalization_runtime.py'
+      - 'scripts/validate_glaze_v1_2_linux_window_adaptation_runtime.py'
       - 'acceptance/v1.2-linux-native-candidate.md'
       - '.github/workflows/glaze-v1.2-linux-native.yml'
   workflow_dispatch:
@@ -31,8 +33,10 @@ jobs:
         run: |
           python3 -m py_compile reference/v1.2/native/linux-gtk/app.py
           python3 -m py_compile reference/v1.2/native/linux-gtk/personalization.py
+          python3 -m py_compile reference/v1.2/native/linux-gtk/window_adaptation.py
           python3 -m py_compile scripts/validate_glaze_v1_2_linux_runtime.py
           python3 -m py_compile scripts/validate_glaze_v1_2_linux_personalization_runtime.py
+          python3 -m py_compile scripts/validate_glaze_v1_2_linux_window_adaptation_runtime.py
           python3 -m json.tool reference/v1.2/native/linux-gtk/material-contract.json >/dev/null
 
       - name: Preserve current Stable and V1.2 Candidate source contracts
@@ -75,6 +79,18 @@ jobs:
           dbus-run-session -- xvfb-run -a --server-args='-screen 0 1280x900x24 -nolisten tcp' \
             python3 scripts/validate_glaze_v1_2_linux_runtime.py
 
+      - name: Run V1.2 Linux GTK4 bounded window adaptation evidence
+        shell: bash
+        env:
+          GLAZE_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+          NO_AT_BRIDGE: '1'
+          GTK_A11Y: 'none'
+          GDK_BACKEND: x11
+        run: |
+          set -euo pipefail
+          dbus-run-session -- xvfb-run -a --server-args='-screen 0 1280x900x24 -nolisten tcp' \
+            python3 scripts/validate_glaze_v1_2_linux_window_adaptation_runtime.py
+
       - name: Run V1.2 Linux GTK4 Personalization adapter evidence
         shell: bash
         env:
@@ -95,6 +111,7 @@ jobs:
           path: |
             .artifacts/glaze-v1.2-linux-native/*.png
             .artifacts/glaze-v1.2-linux-native/linux-native-evidence.json
+            .artifacts/glaze-v1.2-linux-native/linux-window-adaptation-evidence.json
             .artifacts/glaze-v1.2-linux-native/linux-personalization-evidence.json
             .artifacts/glaze-v1.2-linux-native/*/runtime.json
           if-no-files-found: error
