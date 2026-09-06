@@ -9,7 +9,7 @@
   "releaseContract": "GLAZE_UI_V1_3.md",
   "deferredQualification": "contracts/v1.3/deferred-qualification.plan.json",
   "deferredQualificationAcceptance": "acceptance/v1.3-deferred-qualification.md",
-  "phase": "phase-8-multi-pane-foldable-desktop",
+  "phase": "phase-9-system-shell-and-control-center",
   "phaseEffect": "implementation-workstream-active-no-lifecycle-promotion",
   "workstreams": [
     {
@@ -123,14 +123,18 @@
     },
     {
       "id": "system-shell-and-control-center",
-      "status": "planned",
+      "status": "implementation-complete-validation-pending",
       "dependsOn": [
         "adaptive-navigation",
         "living-material-2"
       ],
       "expectedArtifacts": [
         "contracts/v1.3/system-shell.candidate.json",
-        "contracts/v1.3/control-center.candidate.json"
+        "contracts/v1.3/control-center.candidate.json",
+        "js/glaze-v1.3-system-shell.candidate.mjs",
+        "tests/glaze-v1.3-system-shell.test.mjs",
+        "scripts/validate_glaze_v1_3_system_shell.py",
+        ".github/workflows/glaze-v1.3-system-shell.yml"
       ]
     },
     {
