@@ -127,7 +127,8 @@
   "implementation": {
     "validator": "scripts/validate_glaze_v1_2_device_performance_qualification.py",
     "workflow": ".github/workflows/glaze-v1.2-external-qualification-protocol.yml",
-    "humanProcedure": "acceptance/v1.2-device-performance-qualification-candidate.md"
+    "humanProcedure": "acceptance/v1.2-device-performance-qualification-candidate.md",
+    "recordTemplate": "acceptance/v1.2-device-performance-qualification.template.json"
   },
   "notEstablished": [
     "accepted-numeric-runtime-budget",
