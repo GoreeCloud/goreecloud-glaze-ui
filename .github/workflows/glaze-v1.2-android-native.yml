@@ -9,6 +9,7 @@ on:
       - 'reference/v1.2/native/android/**'
       - 'scripts/validate_glaze_v1_2_android_runtime.py'
       - 'scripts/validate_glaze_v1_2_android_personalization_runtime.py'
+      - 'scripts/validate_glaze_v1_2_android_platform_adapter_runtime.py'
       - 'acceptance/v1.2-android-native-candidate.md'
       - '.github/workflows/glaze-v1.2-android-native.yml'
   workflow_dispatch:
@@ -31,6 +32,7 @@ jobs:
         run: |
           python3 -m py_compile scripts/validate_glaze_v1_2_android_runtime.py
           python3 -m py_compile scripts/validate_glaze_v1_2_android_personalization_runtime.py
+          python3 -m py_compile scripts/validate_glaze_v1_2_android_platform_adapter_runtime.py
 
       - name: Preserve current Stable and Candidate source contracts
         run: |
@@ -171,6 +173,11 @@ jobs:
           GLAZE_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
         run: python3 scripts/validate_glaze_v1_2_android_personalization_runtime.py
 
+      - name: Run V1.2 Android consumer/platform adapter emulator evidence
+        env:
+          GLAZE_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python3 scripts/validate_glaze_v1_2_android_platform_adapter_runtime.py
+
       - name: Upload V1.2 Android native Candidate evidence
         if: success()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -181,6 +188,7 @@ jobs:
             .artifacts/glaze-v1.2-android-native/*.png
             .artifacts/glaze-v1.2-android-native/android-native-evidence.json
             .artifacts/glaze-v1.2-android-native/android-personalization-evidence.json
+            .artifacts/glaze-v1.2-android-native/android-platform-adapter-evidence.json
           if-no-files-found: error
           retention-days: 30
 
