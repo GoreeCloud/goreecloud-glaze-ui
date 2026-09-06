@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.material.tokens.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "namespace": "material",
+  "semanticTokens": {
+    "material.canvas": {"implementation": "stableCanvas", "meaning": "calm base content canvas"},
+    "material.surface": {"implementation": "stableSurface", "meaning": "stable local content surface"},
+    "material.raised": {"implementation": "stableRaised", "meaning": "raised solid/local surface"},
+    "material.softGlaze": {"implementation": "stableGlazeFamily", "meaning": "thin, light, subtly diffused interactive material"},
+    "material.glaze": {"implementation": "stableGlazeFamily", "meaning": "standard interactive Glaze material"},
+    "material.deepGlaze": {"implementation": "stableGlazeFamily", "meaning": "optically thicker interactive parent material"},
+    "material.liveGlaze": {"implementation": "liveGlaze2", "meaning": "bounded environmentally and interaction-responsive signature material"}
+  },
+  "implementationValues": {
+    "stableCanvas": {"source": "tokens/glaze-v1.2-frosted-neutral.candidate.json", "pointer": "/materials", "mode": "inherited-role-resolution"},
+    "stableSurface": {"source": "tokens/glaze-v1.2-frosted-neutral.candidate.json", "pointer": "/materials", "mode": "inherited-role-resolution"},
+    "stableRaised": {"source": "tokens/glaze-v1.2-frosted-neutral.candidate.json", "pointer": "/materials", "mode": "inherited-role-resolution"},
+    "stableGlazeFamily": {"source": "tokens/glaze-v1.2-frosted-neutral.candidate.json", "pointer": "/materials", "mode": "inherited-role-resolution"},
+    "stableBlur": {"source": "tokens/glaze-v1.2-frosted-neutral.candidate.json", "pointer": "/effects/blur", "mode": "inherited-alias"},
+    "stableFrost": {"source": "tokens/glaze-v1.2-optical-foundation.candidate.json", "pointer": "/frostLevels", "mode": "inherited-alias"},
+    "liveGlaze2": {"status": "architecture-established-runtime-unestablished", "ownerWorkstream": "living-material-2"}
+  },
+  "rules": {
+    "neutralGlassRemainsFoundation": true,
+    "readingAndCriticalDecisionSurfacesPreferSolid": true,
+    "transientInteractiveChromeMayUseGlaze": true,
+    "nestedBackdropBlurDefaultAllowed": false,
+    "accessibilityMayForceSolidFallback": true,
+    "materialEffectsDegradeBeforeContentCorrectness": true,
+    "largerConsequentialContainersRequireOpticalStability": true,
+    "semanticTokensMayContainRawBlurOrOpacityValues": false
+  },
+  "notEstablished": [
+    "living-material-2-environmental-response",
+    "interaction-velocity-response",
+    "dynamic-thickness-calibration",
+    "specular-motion-runtime",
+    "v1.3-material-performance-budgets"
+  ]
+}
