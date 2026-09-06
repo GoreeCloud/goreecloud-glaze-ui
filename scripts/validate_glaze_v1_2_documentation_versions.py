@@ -36,6 +36,17 @@ HISTORICAL_DOCS = (
     "acceptance/v1.1-specification-candidate.md",
 )
 
+# These retained non-Markdown sources contain exact historical lifecycle literals
+# that are intentionally preserved for provenance or reproducibility. Their
+# presence does not make the superseded text current authority.
+HISTORICAL_SOURCE_PATHS = {
+    "acceptance/v1.1-rendered-web-evidence.json",
+    "scripts/promote_glaze_v1_1_stable.py",
+    "scripts/validate_evidence_presentation.py",
+    "scripts/validate_glaze_motion.py",
+    "scripts/validate_glaze_v1_0_reset.py",
+}
+
 KNOWN_STALE_FORMS = (
     re.compile(r"GLAZE UI V1\.0 is the sole current Glaze UI product version", re.I),
     re.compile(r"GLAZE UI V1\.0 is the sole current Glaze UI product baseline", re.I),
@@ -123,7 +134,7 @@ def release_for(lifecycle: dict[str, Any], version: str) -> dict[str, Any]:
 
 
 def is_explicit_historical_record(relative: str, text: str) -> bool:
-    if relative in HISTORICAL_DOCS:
+    if relative in HISTORICAL_DOCS or relative in HISTORICAL_SOURCE_PATHS:
         return True
     preamble = text[:1600].lower()
     return "historical record" in preamble or "historical status" in preamble or "superseded" in preamble
@@ -203,14 +214,18 @@ def main() -> int:
         if isinstance(marker, str) and marker
     ]
 
+    validator_relative = "scripts/validate_glaze_v1_2_documentation_versions.py"
     for relative, text in text_sources.items():
         historical_record = is_explicit_historical_record(relative, text)
-        for pattern in KNOWN_STALE_FORMS:
-            match = pattern.search(text)
-            if match:
-                stale_findings.append(
-                    {"path": relative, "kind": "known-stale-form", "text": match.group(0)}
-                )
+        # This validator necessarily embeds the prohibited phrases as regex test
+        # definitions. Do not interpret those definitions as product claims.
+        if relative != validator_relative:
+            for pattern in KNOWN_STALE_FORMS:
+                match = pattern.search(text)
+                if match:
+                    stale_findings.append(
+                        {"path": relative, "kind": "known-stale-form", "text": match.group(0)}
+                    )
 
         for line_number, line in enumerate(text.splitlines(), start=1):
             lowered = line.lower()
@@ -247,6 +262,7 @@ def main() -> int:
         "auditedTrackedUtf8TextFiles": len(text_sources),
         "currentAuthorityDocuments": sorted(CURRENT_AUTHORITY_DOCS),
         "historicalDocumentsExplicitlyQualified": list(HISTORICAL_DOCS),
+        "historicalTextSourcesExplicitlyClassified": sorted(HISTORICAL_SOURCE_PATHS),
         "obsoleteLifecycleAuthorityFindings": 0,
         "historicalIntegrityRule": "Historical records remain preserved but may not present superseded lifecycle state as current authority unless the record or statement is explicitly historical.",
         "subsystemVersionRule": "Subsystem contract revisions remain distinct from Glaze UI product lifecycle versions and do not alter currentStable/currentOfficial.",
