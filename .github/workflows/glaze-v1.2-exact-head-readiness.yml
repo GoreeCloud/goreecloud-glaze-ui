@@ -1,14 +1,22 @@
-name: Glaze V1.2 Exact-Head Readiness Candidate
+name: Glaze V1.2 Exact-Head Stable Readiness
 
 on:
   push:
     branches:
-      - feat/glaze-v1.2-migration-control-plane
+      - main
+      - fix/v1.2-stable-validation-boundary
   pull_request:
     paths:
       - "VERSION"
       - "registry/lifecycle.json"
+      - "GLAZE_UI_V1_2.md"
+      - "GLAZE_UI_V1_2_CANDIDATE.md"
+      - "CONFORMANCE.md"
+      - "ACCEPTANCE.md"
+      - "ADOPTION.md"
+      - "ENFORCEMENT.md"
       - "contracts/v1.2/**"
+      - "contracts/v1.3/deferred-qualification.plan.json"
       - "tokens/glaze-v1.2-**"
       - "css/glaze-v1.2-**"
       - "js/glaze-v1.2-**"
@@ -16,8 +24,16 @@ on:
       - "contracts/performance/glaze-v1-performance-budget.json"
       - "contracts/glaze.conformance-evidence.schema.json"
       - "acceptance/v1.2-**"
-      - "scripts/validate_glaze_v1_2_**"
-      - ".github/workflows/glaze-v1.2-**"
+      - "acceptance/v1.3-deferred-qualification.md"
+      - "scripts/validate_glaze_v1.py"
+      - "scripts/validate_glaze_v1_2_candidate.py"
+      - "scripts/validate_glaze_v1_2_candidate_legacy.py"
+      - "scripts/validate_glaze_v1_2_stable.py"
+      - "scripts/validate_glaze_v1_2_living_glaze.py"
+      - "scripts/validate_glaze_v1_2_living_glaze_legacy.py"
+      - "scripts/validate_glaze_v1_2_documentation_versions.py"
+      - "scripts/glaze_v1_2_promoted_source_runner.py"
+      - ".github/workflows/glaze-v1.2-exact-head-readiness.yml"
   workflow_dispatch:
 
 permissions:
@@ -27,7 +43,7 @@ jobs:
   exact-head-readiness:
     runs-on: ubuntu-24.04
     steps:
-      - name: Check out exact Candidate revision
+      - name: Check out exact Stable revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -39,70 +55,80 @@ jobs:
           python-version: "3.12"
           check-latest: false
 
-      - name: Preserve Stable and Candidate authorities
+      - name: Validate exact V1.2 Stable authority
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
-          test "$(cat VERSION)" = "1.1.0"
+          test "$(cat VERSION)" = "1.2.0"
+          python scripts/validate_glaze_v1_2_stable.py
           python scripts/validate_glaze_v1.py
+
+      - name: Validate promoted V1.2 source layer
+        run: |
           python scripts/validate_glaze_v1_2_candidate.py
+          python scripts/validate_glaze_v1_2_living_glaze.py
 
-      - name: Compile exact-head bounded readiness validators
+      - name: Audit current lifecycle and documentation authority
         run: |
-          python -m py_compile \
-            scripts/validate_glaze_v1_2_exact_head_readiness.py \
-            scripts/validate_glaze_v1_2_human_optical_review_packet.py \
-            scripts/validate_glaze_v1_2_human_optical_review_record.py \
-            scripts/validate_glaze_v1_2_living_glaze.py \
-            scripts/validate_glaze_v1_2_living_glaze_rendered.py \
-            scripts/validate_glaze_v1_2_personalization_readiness.py \
-            scripts/validate_glaze_v1_2_native_personalization_source.py \
-            scripts/validate_glaze_v1_2_personalization_appearance_rendered.py \
-            scripts/validate_glaze_v1_2_linux_window_adaptation_source.py \
-            scripts/validate_glaze_v1_2_android_accessibility_source.py
+          python scripts/validate_glaze_v1_2_documentation_versions.py \
+            --output artifacts/glaze-v1.2-lifecycle-version-integrity.json
 
-      - name: Validate Living Frosted source authority
-        run: python scripts/validate_glaze_v1_2_living_glaze.py
-
-      - name: Generate fail-closed Personalization readiness evidence
-        run: python scripts/validate_glaze_v1_2_personalization_readiness.py
-
-      - name: Generate fail-closed native Personalization source readiness evidence
-        run: python scripts/validate_glaze_v1_2_native_personalization_source.py
-
-      - name: Generate fail-closed Linux window adaptation source readiness evidence
+      - name: Verify V1.3 deferral boundary without manufacturing V1.2 evidence
         env:
           GLAZE_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: python scripts/validate_glaze_v1_2_linux_window_adaptation_source.py
-
-      - name: Generate fail-closed Android accessibility source readiness evidence
-        env:
-          GLAZE_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: python scripts/validate_glaze_v1_2_android_accessibility_source.py
-
-      - name: Generate fail-closed exact-head readiness evidence
-        run: python scripts/validate_glaze_v1_2_exact_head_readiness.py
-
-      - name: Validate human optical review record protocol
         run: |
-          python scripts/validate_glaze_v1_2_human_optical_review_record.py
-          python scripts/validate_glaze_v1_2_human_optical_review_record.py --self-test
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
 
-      - name: Generate fail-closed human optical review manifest
-        run: python scripts/validate_glaze_v1_2_human_optical_review_packet.py
+          root = Path('.')
+          lifecycle = json.loads((root / 'registry/lifecycle.json').read_text(encoding='utf-8'))
+          deferred = json.loads((root / 'contracts/v1.3/deferred-qualification.plan.json').read_text(encoding='utf-8'))
+          acceptance = (root / 'acceptance/v1.2-stable.md').read_text(encoding='utf-8')
 
-      - name: Upload bounded exact-head readiness evidence
+          assert lifecycle.get('currentStable') == '1.2.0'
+          assert lifecycle.get('currentOfficial') == '1.2.0'
+          assert lifecycle.get('activeCandidate') is None
+          assert lifecycle.get('plannedNext') == '1.3.0-candidate'
+          assert deferred.get('lifecycle') == 'planned'
+          assert deferred.get('rules', {}).get('v1.2StableImpliesThesePassed') is False
+          assert 'V1.3' in acceptance
+
+          report = {
+              'schemaVersion': 1,
+              'status': 'pass',
+              'repository': 'GoreeCloud/goreecloud-glaze-ui',
+              'revision': os.environ['GLAZE_SOURCE_REVISION'],
+              'currentStable': '1.2.0',
+              'currentOfficial': '1.2.0',
+              'activeCandidate': None,
+              'plannedNext': '1.3.0-candidate',
+              'deferredQualification': {
+                  'track': 'V1.3',
+                  'representedAsPassedV1.2Evidence': False,
+                  'humanManualOpticalQualification': 'deferred',
+                  'physicalDeviceOemCompositorQualification': 'deferred',
+                  'nativePersonalizationAndPlatformAcceptance': 'deferred',
+                  'broaderAssistiveTechnologyAndProductionQualification': 'deferred',
+              },
+              'downstreamConsumerAcceptanceImplied': False,
+          }
+          out = root / 'artifacts/glaze-v1.2-stable-boundary.json'
+          out.parent.mkdir(parents=True, exist_ok=True)
+          out.write_text(json.dumps(report, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          print('GLAZE UI V1.2 exact-head Stable boundary: PASS')
+          print('Deferred V1.3 qualifications remain explicitly unclaimed by V1.2.')
+          PY
+
+      - name: Upload exact-head Stable boundary evidence
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: glaze-v1.2-exact-head-readiness-${{ github.event.pull_request.head.sha || github.sha }}
+          name: glaze-v1.2-stable-boundary-${{ github.event.pull_request.head.sha || github.sha }}
           path: |
-            artifacts/glaze-v1.2-exact-head-readiness.json
-            artifacts/glaze-v1.2-human-optical-review-manifest.json
-            artifacts/glaze-v1.2-personalization-readiness.json
-            artifacts/glaze-v1.2-native-personalization-source-readiness.json
-            artifacts/glaze-v1.2-linux-window-adaptation-source-readiness.json
-            artifacts/glaze-v1.2-android-accessibility-source-readiness.json
+            artifacts/glaze-v1.2-stable-boundary.json
+            artifacts/glaze-v1.2-lifecycle-version-integrity.json
           if-no-files-found: error
           retention-days: 14
           compression-level: 6

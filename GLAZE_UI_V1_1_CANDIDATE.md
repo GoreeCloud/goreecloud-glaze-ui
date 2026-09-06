@@ -1,11 +1,12 @@
 # GLAZE UI V1.1 — Specification-Stable Candidate — Historical Record
 
-Historical status: **Superseded Candidate record; V1.1 was later promoted to Stable**  
+Historical status: **Superseded Candidate record; V1.1 was later promoted to Stable and then superseded as current authority by V1.2**  
 Candidate version: **1.1.0-candidate.1**  
 Official target at Candidate publication: **GLAZE UI V1.0 / 1.0.0**  
-Current Stable authority: **GLAZE UI V1.1 / 1.1.0**
+Current Stable authority: **GLAZE UI V1.2 / 1.2.0**  
+Prior Stable rollback baseline: **GLAZE UI V1.1 / 1.1.0**
 
-This document preserves the repository-side implementation contract for the V1.1 optical-refinement Candidate before its governed Stable promotion. It is historical evidence and does not describe the repository's current lifecycle boundary. Current authority is defined by `registry/lifecycle.json`, `VERSION`, and the Stable contract `GLAZE_UI_V1_1.md`.
+This document preserves the repository-side implementation contract for the V1.1 optical-refinement Candidate before its governed Stable promotion. It is historical evidence and does not describe the repository's current lifecycle boundary. Current authority is defined by `registry/lifecycle.json`, `VERSION`, and the current Stable contract `GLAZE_UI_V1_2.md`; `GLAZE_UI_V1_1.md` remains the prior Stable rollback/audit contract.
 
 At Candidate publication, this record did not promote V1.1 to the current product identity, Stable release, Production Stable implementation, or downstream conformance target. V1.1 was subsequently promoted through a separate governed release process; that later Stable state does not retroactively change the Candidate-stage evidence recorded here.
 
@@ -63,4 +64,4 @@ Atmospheric tint and Aura were presentation contributions layered over the mater
 
 “Specification-Stable Candidate” meant the design decisions were sufficiently bounded and machine-readable for consistent implementation and validation. It did **not** mean Production Stable.
 
-At that stage, V1.1 could become the official current target only after exact-revision validation, canonical reference scenes, accessibility and performance acceptance, human optical review, platform-native evidence where claimed, synchronized documentation, and a separate governed release/lifecycle promotion. That governed promotion later established V1.1 / `1.1.0` as the current Stable authority; downstream consumer conformance remains independently acceptance-gated.
+At that stage, V1.1 could become the official current target only after exact-revision validation, canonical reference scenes, accessibility and performance acceptance, human optical review, platform-native evidence where claimed, synchronized documentation, and a separate governed release/lifecycle promotion. That governed promotion later established V1.1 / `1.1.0` as Stable; V1.2 / `1.2.0` has since superseded it as current Stable authority. Downstream consumer conformance remains independently acceptance-gated.

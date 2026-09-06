@@ -14,6 +14,9 @@ IDENTITY = ROOT / "assets" / "identity" / "official" / "facet"
 # af8b70387bdaedb8d8388a1660b2d2ca29548fe2. The visual geometry is unchanged;
 # this checksum reflects the corrected approved accessible title metadata.
 CANONICAL_SHA256 = "82d3bdc331a96593873ca4d327e3b46d561d1ca96e653cef71e0c5e42fa1a31c"
+LIVE_PRODUCT = "GLAZE UI V1.2"
+LIVE_VERSION = "1.2.0"
+TRANSITIONAL_ASSET_VERSION = "1.1.0"
 
 for name in ("index.html", "404.html", "site.css", "identity.css", "site.js", "_headers", "build.py"):
     if not (SITE / name).is_file():
@@ -32,6 +35,9 @@ mark = IDENTITY / "glaze-ui-mark.svg"
 if not mark.is_file() or hashlib.sha256(mark.read_bytes()).hexdigest() != CANONICAL_SHA256:
     raise SystemExit("synchronized Facet source missing or changed")
 
+# The repository website subtree is retained as transitional deployment/history
+# material. Its build remains reproducible from the retained V1.1-era asset chain,
+# while lifecycle/product copy must point to the live V1.2 Stable authority.
 subprocess.run([sys.executable, str(SITE / "build.py")], cwd=ROOT, check=True)
 
 required = (
@@ -74,9 +80,7 @@ for name in required:
 if (DIST / "assets" / "glaze-ui-mark.svg").read_bytes() != mark.read_bytes():
     raise SystemExit("public identity asset drifted from Facet source")
 
-# The public artifact may contain generic shared foundations and V1 assets only.
-# Former product-release/candidate namespaces are not valid current publication
-# inputs, even when Git history retains them for audit and rollback purposes.
+# Former non-V1 product namespaces remain prohibited from the retained publication.
 legacy_filename_markers = (
     "glaze-2.",
     "glaze-2-",
@@ -100,25 +104,28 @@ entrypoint = (DIST / "assets" / "glaze-v1.1.0.css").read_text(encoding="utf-8")
 base_entrypoint = (DIST / "assets" / "glaze-v1.0.0.css").read_text(encoding="utf-8")
 
 for text in (
-    "GLAZE UI V1.1",
-    "Machine version <strong>1.1.0</strong>",
+    LIVE_PRODUCT,
+    f"<strong>{LIVE_VERSION}</strong>",
+    "Current Stable authority",
+    "transitional deployment/history material",
+    "V1.1-era presentation assets",
+    "GoreeCloud/goreecloud-static-websites",
     "Solid where you read. Glazed where you interact.",
     "Workspace → Application → System Overlay → System Panel → Critical System",
     "one dominant Glaze panel plus one to three small floating Glaze controls",
     "32 bounded contracts across five tiers.",
     "Universal Search",
     "Control Center",
-    "current Stable",
     "exact source revision",
     "GoreeCloud/goreecloud-glaze-ui",
     "Skip to content",
 ):
     if text not in html:
-        raise SystemExit(f"required V1 Design Center content missing: {text}")
+        raise SystemExit(f"required transitional Design Center content missing: {text}")
 
 # Fail closed if a former numbered Glaze product identity leaks into the current
-# public HTML. Constructing the check generically also keeps this validator from
-# embedding a former product label as active source text itself.
+# publication copy. V1.1 references are allowed only where the page explicitly
+# describes the retained transitional asset chain or rollback history.
 former_product_re = re.compile(r"\bglaze ui\s+v?(?:[2-9]\d*)(?:\.\d+){1,2}\b", re.IGNORECASE)
 for surface_name, surface in (("index", html), ("404", not_found)):
     if former_product_re.search(surface):
@@ -131,20 +138,25 @@ for surface_name, surface in (("index", html), ("404", not_found)):
         raise SystemExit(f"pre-reset V1-alias asset leaked into current {surface_name} surface")
 
 for text in (
-    "GLAZE UI V1.1",
-    "404 · GLAZE UI V1.1",
+    LIVE_PRODUCT,
+    LIVE_VERSION,
+    "Current Stable authority",
+    "transitional deployment/history material",
+    "GoreeCloud/goreecloud-static-websites",
     "/assets/glaze-v1.1.0.css",
 ):
     if text not in not_found:
-        raise SystemExit(f"V1 404 surface missing: {text}")
+        raise SystemExit(f"transitional V1 404 surface missing: {text}")
 
+# The retained site intentionally publishes its prior Stable presentation chain;
+# that is allowed only because the visible site copy declares the boundary above.
 for marker in (
     '@import url("./glaze-v1.0.0.css")',
     '@import url("./glaze-v1.1.css")',
     '@import url("./glaze-v1.1-appearance.css")',
 ):
     if marker not in entrypoint:
-        raise SystemExit(f"V1.1 Stable entrypoint missing required source layer: {marker}")
+        raise SystemExit(f"transitional V1.1 asset entrypoint missing required source layer: {marker}")
 
 for marker in (
     '@import url("./glaze-v1.foundation.css")',
@@ -186,7 +198,7 @@ if "localStorage" not in js or "data-theme-choice" not in html:
     raise SystemExit("local appearance preference contract missing")
 
 print(
-    "GLAZE UI V1.1 Design Center validation passed: isolated Stable V1.1 publication, "
-    "synchronized Facet identity, required security headers, and exact-reset "
-    "production-revalidation disclosure"
+    f"GLAZE UI Design Center transitional validation passed: live authority {LIVE_PRODUCT} / {LIVE_VERSION}; "
+    f"retained V{TRANSITIONAL_ASSET_VERSION} presentation asset chain is explicitly disclosed as transitional, "
+    "Facet identity is synchronized, and required security headers are present."
 )

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed source validator for GLAZE UI V1.1 Stable authority."""
+"""Validate preserved GLAZE UI V1.1 Stable rollback/source integrity under V1.2."""
 from __future__ import annotations
 
 import json
@@ -8,8 +8,10 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "1.1.0"
-PRODUCT = "GLAZE UI V1.1"
+V11_VERSION = "1.1.0"
+V11_PRODUCT = "GLAZE UI V1.1"
+LIVE_VERSION = "1.2.0"
+LIVE_PRODUCT = "GLAZE UI V1.2"
 STABLE_ACTIVATION = 'html[data-glaze-version="1.1"]'
 CANDIDATE_ACTIVATION = 'html[data-glaze-version-candidate="1.1"]'
 
@@ -44,18 +46,30 @@ def stable_appearance(candidate: str) -> str:
 
 def main() -> int:
     errors: list[str] = []
+
     def require(condition: bool, message: str) -> None:
         if not condition:
             errors.append(message)
 
-    require((ROOT / "VERSION").read_text(encoding="utf-8").strip() == VERSION, "VERSION must be 1.1.0")
+    # Live product authority is V1.2; this validator protects the prior Stable
+    # rollback/source package and must never move current lifecycle state backward.
+    require((ROOT / "VERSION").read_text(encoding="utf-8").strip() == LIVE_VERSION,
+            "live VERSION must remain V1.2 / 1.2.0")
     lifecycle = load("registry/lifecycle.json")
-    require(lifecycle.get("officialProductLabel") == PRODUCT, "lifecycle official product must be GLAZE UI V1.1")
-    require(lifecycle.get("currentOfficial") == VERSION, "lifecycle currentOfficial must be 1.1.0")
-    require(lifecycle.get("currentStable") == VERSION, "lifecycle currentStable must be 1.1.0")
-    release = next((item for item in lifecycle.get("releases", []) if item.get("version") == VERSION), None)
-    require(bool(release) and release.get("status") == "stable", "lifecycle must contain Stable 1.1.0 release")
-    require(bool(release) and release.get("consumerEligible") is True, "Stable design-system release must be consumer-adoptable")
+    require(lifecycle.get("officialProductLabel") == LIVE_PRODUCT,
+            "live lifecycle official product must remain GLAZE UI V1.2")
+    require(lifecycle.get("currentOfficial") == LIVE_VERSION,
+            "live lifecycle currentOfficial must remain 1.2.0")
+    require(lifecycle.get("currentStable") == LIVE_VERSION,
+            "live lifecycle currentStable must remain 1.2.0")
+    release = next((item for item in lifecycle.get("releases", []) if item.get("version") == V11_VERSION), None)
+    require(bool(release) and release.get("status") == "stable",
+            "lifecycle must retain the prior Stable 1.1.0 release")
+    require(bool(release) and release.get("consumerEligible") is True,
+            "V1.1 rollback release record must retain its historical consumer eligibility")
+    live_release = next((item for item in lifecycle.get("releases", []) if item.get("version") == LIVE_VERSION), None)
+    require(bool(live_release) and live_release.get("status") == "stable" and live_release.get("consumerEligible") is True,
+            "live V1.2 Stable release record drifted")
 
     for path in (
         "GLAZE_UI_V1_1.md",
@@ -68,84 +82,118 @@ def main() -> int:
         "acceptance/v1.1-stable.md",
         "contracts/v1.1/release.json",
     ):
-        require((ROOT / path).is_file(), f"missing Stable V1.1 authority artifact: {path}")
+        require((ROOT / path).is_file(), f"missing preserved Stable V1.1 rollback artifact: {path}")
 
     stable_contract = load("contracts/v1.1/optical-refinement.json")
-    require(stable_contract.get("product") == PRODUCT and stable_contract.get("version") == VERSION, "Stable optical contract identity mismatch")
-    require(stable_contract.get("lifecycle") == "stable", "Stable optical contract lifecycle mismatch")
+    require(stable_contract.get("product") == V11_PRODUCT and stable_contract.get("version") == V11_VERSION,
+            "V1.1 Stable optical contract identity mismatch")
+    require(stable_contract.get("lifecycle") == "stable", "V1.1 Stable optical contract lifecycle mismatch")
     boundary = stable_contract.get("releaseBoundary", {})
-    require(boundary.get("currentTarget") is True, "Stable optical contract must be current target")
-    require(boundary.get("downstreamConsumerConformanceAutomatic") is False, "Stable release must not auto-conform consumers")
+    require(boundary.get("currentTarget") is True,
+            "historical V1.1 Stable optical contract must preserve its promotion-time currentTarget record")
+    require(boundary.get("downstreamConsumerConformanceAutomatic") is False,
+            "V1.1 Stable source must not auto-conform consumers")
 
     atmosphere = load("tokens/glaze-v1.1-atmosphere.json")
-    require(atmosphere.get("product") == PRODUCT and atmosphere.get("version") == VERSION, "Stable atmosphere identity mismatch")
-    require(atmosphere.get("lifecycle") == "stable" and atmosphere.get("currentV1Token") is True, "Stable atmosphere lifecycle mismatch")
+    require(atmosphere.get("product") == V11_PRODUCT and atmosphere.get("version") == V11_VERSION,
+            "V1.1 Stable atmosphere identity mismatch")
+    require(atmosphere.get("lifecycle") == "stable" and atmosphere.get("currentV1Token") is True,
+            "V1.1 promoted atmosphere source lifecycle mismatch")
     require(atmosphere.get("primitives", {}).get("deepTeal") == "#0F6B6F", "Deep Teal primitive drift")
     require(atmosphere.get("primitives", {}).get("softAmber") == "#D9A35F", "Soft Amber primitive drift")
-    require(atmosphere.get("semanticPrecedence", {}).get("atmosphereIsLowestPriority") is True, "atmosphere must remain lowest priority")
+    require(atmosphere.get("semanticPrecedence", {}).get("atmosphereIsLowestPriority") is True,
+            "V1.1 atmosphere must remain lowest priority")
 
     stable_css = (ROOT / "css/glaze-v1.1.css").read_text(encoding="utf-8")
     stable_appearance_css = (ROOT / "css/glaze-v1.1-appearance.css").read_text(encoding="utf-8")
     candidate_css = (ROOT / "css/glaze-v1.1-candidate.css").read_text(encoding="utf-8")
     candidate_appearance = (ROOT / "css/glaze-v1.1-appearance.candidate.css").read_text(encoding="utf-8")
-    require(stable_css.rstrip() == stable_optical(candidate_css).rstrip(), "Stable optical CSS must be deterministic promotion of human-approved candidate CSS")
-    require(stable_appearance_css.rstrip() == stable_appearance(candidate_appearance).rstrip(), "Stable appearance CSS must be deterministic promotion of approved candidate adapter")
-    require(CANDIDATE_ACTIVATION not in stable_css and STABLE_ACTIVATION in stable_css, "Stable optical CSS activation namespace mismatch")
-    require(CANDIDATE_ACTIVATION not in stable_appearance_css and STABLE_ACTIVATION in stable_appearance_css, "Stable appearance activation namespace mismatch")
-    require("backdrop-filter" not in stable_css.lower(), "Stable V1.1 optical layer must not add nested backdrop filtering")
-    require("@keyframes" not in stable_css.lower(), "Stable V1.1 optical layer must not add decorative keyframes")
-    require("http://" not in stable_css.lower() and "https://" not in stable_css.lower(), "Stable V1.1 optical layer must not depend on remote assets")
+    require(stable_css.rstrip() == stable_optical(candidate_css).rstrip(),
+            "V1.1 Stable optical CSS must remain deterministic promotion of approved Candidate CSS")
+    require(stable_appearance_css.rstrip() == stable_appearance(candidate_appearance).rstrip(),
+            "V1.1 Stable appearance CSS must remain deterministic promotion of approved Candidate adapter")
+    require(CANDIDATE_ACTIVATION not in stable_css and STABLE_ACTIVATION in stable_css,
+            "V1.1 Stable optical CSS activation namespace mismatch")
+    require(CANDIDATE_ACTIVATION not in stable_appearance_css and STABLE_ACTIVATION in stable_appearance_css,
+            "V1.1 Stable appearance activation namespace mismatch")
+    require("backdrop-filter" not in stable_css.lower(), "V1.1 Stable optical layer must not add nested backdrop filtering")
+    require("@keyframes" not in stable_css.lower(), "V1.1 Stable optical layer must not add decorative keyframes")
+    require("http://" not in stable_css.lower() and "https://" not in stable_css.lower(),
+            "V1.1 Stable optical layer must not depend on remote assets")
 
     entry = (ROOT / "css/glaze-v1.1.0.css").read_text(encoding="utf-8")
     for marker in ('@import url("./glaze-v1.0.0.css")', '@import url("./glaze-v1.1.css")', '@import url("./glaze-v1.1-appearance.css")'):
-        require(marker in entry, f"Stable web entrypoint missing {marker}")
+        require(marker in entry, f"V1.1 Stable web entrypoint missing {marker}")
     runtime = (ROOT / "js/glaze-v1.1.0.mjs").read_text(encoding="utf-8")
-    require('export * from "./glaze-v1.runtime.mjs"' in runtime, "Stable runtime must preserve V1 runtime export")
-    require('export * from "./glaze-v1.system-interactions.mjs"' in runtime, "Stable runtime must preserve V1 system interaction export")
+    require('export * from "./glaze-v1.runtime.mjs"' in runtime,
+            "V1.1 Stable runtime must preserve V1 runtime export")
+    require('export * from "./glaze-v1.system-interactions.mjs"' in runtime,
+            "V1.1 Stable runtime must preserve V1 system interaction export")
 
     baseline = load("contracts/regression/visual-baselines-v1.json")
-    require(baseline.get("product") == PRODUCT and baseline.get("version") == VERSION, "current visual baseline identity mismatch")
-    require(baseline.get("status") == "stable-human-approved-source-pinned", "current visual baseline must be human-approved and source-pinned")
-    require(len(baseline.get("cases", {})) == 5, "Stable V1.1 visual baseline must retain five approved cases")
+    require(baseline.get("product") == V11_PRODUCT and baseline.get("version") == V11_VERSION,
+            "preserved V1.1 visual baseline identity mismatch")
+    require(baseline.get("status") == "stable-human-approved-source-pinned",
+            "V1.1 visual baseline must remain human-approved and source-pinned")
+    require(len(baseline.get("cases", {})) == 5,
+            "V1.1 visual baseline must retain five approved cases")
 
+    # Current consumer and evidence authorities must point forward to V1.2, while
+    # V1.1 remains available only as rollback/audit source.
     consumers = load("consumers/registry.json")
-    require(consumers.get("officialBaseline") == VERSION and consumers.get("requiredConsumerVersion") == VERSION, "consumer registry must require 1.1.0")
-    require(consumers.get("officialProductLabel") == PRODUCT, "consumer registry product label mismatch")
-    require(all(item.get("requiredTargetVersion") == VERSION for item in consumers.get("consumers", [])), "every listed consumer must require 1.1.0")
-    require(not any(item.get("productionEligible") is True for item in consumers.get("consumers", [])), "Stable design-system promotion must not auto-mark consumers production eligible")
+    require(consumers.get("officialBaseline") == LIVE_VERSION and consumers.get("requiredConsumerVersion") == LIVE_VERSION,
+            "current consumer registry must require 1.2.0")
+    require(consumers.get("officialProductLabel") == LIVE_PRODUCT,
+            "current consumer registry product label must be GLAZE UI V1.2")
+    require(all(item.get("requiredTargetVersion") == LIVE_VERSION for item in consumers.get("consumers", [])),
+            "every listed current consumer must require 1.2.0")
+    require(not any(item.get("productionEligible") is True for item in consumers.get("consumers", [])),
+            "design-system Stable promotion must not auto-mark consumers production eligible")
 
     evidence_schema = load("contracts/glaze.conformance-evidence.schema.json")
     target = evidence_schema.get("properties", {}).get("target", {}).get("properties", {})
-    require(target.get("glaze_version", {}).get("const") == VERSION, "conformance evidence schema must target 1.1.0")
+    require(target.get("glaze_version", {}).get("const") == LIVE_VERSION,
+            "current conformance evidence schema must target 1.2.0")
 
     token_manifest = load("tokens/glaze-v1.json")
-    require(token_manifest.get("product") == PRODUCT and token_manifest.get("version") == VERSION and token_manifest.get("status") == "stable", "current token manifest mismatch")
+    require(token_manifest.get("product") == LIVE_PRODUCT and token_manifest.get("version") == LIVE_VERSION
+            and token_manifest.get("status") == "stable",
+            "current token manifest must remain V1.2 Stable")
 
-    docs = {
-        "README.md": (PRODUCT, VERSION, "current Stable"),
-        "SPECIFICATIONS.md": (PRODUCT, VERSION, "Stable"),
-        "BRANDING.md": (PRODUCT, VERSION, "Stable"),
-        "ACCEPTANCE.md": (PRODUCT, VERSION, "Stable"),
-        "GLAZE_UI_V1_1.md": (PRODUCT, VERSION, "Stable"),
-        "website/index.html": (PRODUCT, "1.1.0", "Current Stable"),
-        "website/404.html": (PRODUCT,),
+    current_docs = {
+        "README.md": (LIVE_PRODUCT, LIVE_VERSION, "current Stable"),
+        "SPECIFICATIONS.md": (LIVE_PRODUCT, LIVE_VERSION, "Stable"),
+        "BRANDING.md": (LIVE_PRODUCT, LIVE_VERSION, "Stable"),
+        "ACCEPTANCE.md": (LIVE_PRODUCT, LIVE_VERSION, "Stable"),
+        "website/index.html": (LIVE_PRODUCT, LIVE_VERSION, "Current Stable authority"),
+        "website/404.html": (LIVE_PRODUCT, LIVE_VERSION),
     }
-    for path, markers in docs.items():
+    for path, markers in current_docs.items():
         text = (ROOT / path).read_text(encoding="utf-8")
         for marker in markers:
-            require(marker in text, f"{path} missing current Stable marker {marker!r}")
+            require(marker in text, f"{path} missing current V1.2 authority marker {marker!r}")
+
+    historical_v11 = (ROOT / "GLAZE_UI_V1_1.md").read_text(encoding="utf-8")
+    require(V11_PRODUCT in historical_v11 and V11_VERSION in historical_v11,
+            "historical V1.1 Stable contract identity missing")
+    require("historical" in historical_v11[:1400].lower() or "superseded" in historical_v11[:1400].lower(),
+            "V1.1 Stable contract must identify its historical/rollback status near the preamble")
+    require(LIVE_PRODUCT in historical_v11[:2200] or LIVE_VERSION in historical_v11[:2200],
+            "V1.1 Stable contract must point to V1.2 current authority")
 
     require((ROOT / "GLAZE_UI_V1_0.md").is_file(), "historical V1.0 contract must remain available for audit")
-    require((ROOT / "contracts/v1.1/optical-refinement.candidate.json").is_file(), "candidate machine contract must remain as audit evidence")
-    require((ROOT / "contracts/v1.1/release-candidate.rc.json").is_file(), "release-candidate record must remain as audit evidence")
+    require((ROOT / "contracts/v1.1/optical-refinement.candidate.json").is_file(),
+            "V1.1 Candidate machine contract must remain as audit evidence")
+    require((ROOT / "contracts/v1.1/release-candidate.rc.json").is_file(),
+            "V1.1 release-candidate record must remain as audit evidence")
 
     if errors:
-        print("GLAZE UI V1.1 Stable source validation FAILED:")
+        print("GLAZE UI V1.1 rollback source validation FAILED:")
         for error in errors:
             print(f"- {error}")
         return 1
-    print("GLAZE UI V1.1 Stable source authority: PASS")
-    print("Boundary: exact-head PR validation, governed merge, post-merge validation, v1.1.0 tag/GitHub Release, and canonical GoreeCloud documentation sync remain release-finalization gates.")
+    print("GLAZE UI V1.1 rollback Stable source integrity: PASS")
+    print("Authority: live lifecycle remains GLAZE UI V1.2 / 1.2.0; V1.1 is preserved for rollback and audit only.")
     return 0
 
 

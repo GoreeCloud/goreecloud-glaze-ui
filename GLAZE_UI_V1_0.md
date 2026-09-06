@@ -2,10 +2,11 @@
 
 **Official product identity at reset:** GLAZE UI V1.0  
 **Machine version:** 1.0.0  
-**Status:** Historical reset baseline; superseded as current authority by GLAZE UI V1.1 / 1.1.0  
+**Status:** Historical reset baseline; superseded as current authority by later governed releases  
+**Current Stable successor:** GLAZE UI V1.2 / `1.2.0`  
 **Repository:** `GoreeCloud/goreecloud-glaze-ui`
 
-At the time of the V1.0 reset, GLAZE UI V1.0 became the sole current Glaze UI product version and the only version that could be named as the current GoreeCloud design-system target. This document preserves that reset-era contract as historical evidence; it does **not** define the current Stable or consumer-conformance target. Current authority is determined by `registry/lifecycle.json` and `VERSION`, which currently identify GLAZE UI V1.1 / `1.1.0` as Stable.
+At the time of the V1.0 reset, GLAZE UI V1.0 became the sole current Glaze UI product version and the only version that could be named as the current GoreeCloud design-system target. This document preserves that reset-era contract as historical evidence; it does **not** define the current Stable or consumer-conformance target. Current authority is determined by `registry/lifecycle.json` and `VERSION`, which currently identify GLAZE UI V1.2 / `1.2.0` as Stable. V1.1 / `1.1.0` remains the prior Stable rollback and audit baseline.
 
 ## Design identity
 

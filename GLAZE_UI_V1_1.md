@@ -1,11 +1,12 @@
-# GLAZE UI V1.1 — Official Stable Contract
+# GLAZE UI V1.1 — Historical Stable Contract
 
-**Official product identity:** GLAZE UI V1.1  
+**Official product identity at release:** GLAZE UI V1.1  
 **Machine version:** 1.1.0  
-**Lifecycle:** Stable  
+**Lifecycle:** Historical Stable / retained rollback baseline  
+**Current Stable successor:** GLAZE UI V1.2 / 1.2.0  
 **Repository:** `GoreeCloud/goreecloud-glaze-ui`
 
-GLAZE UI V1.1 is GoreeCloud's current Stable shared visual and interaction design-system release. It preserves the structural, semantic, accessibility, component, System Shell, and performance contracts established by V1.0 while adding the human-approved Optical Refinement and Extended Atmospheric Color System.
+GLAZE UI V1.1 was GoreeCloud's current Stable shared visual and interaction design-system release before V1.2 was promoted on 2026-09-06. It remains the previous known-good Stable rollback baseline and preserves the structural, semantic, accessibility, component, System Shell, and performance contracts established by V1.0 while adding the human-approved Optical Refinement and Extended Atmospheric Color System. It does not override the current V1.2 Stable authority.
 
 ## Stable design identity
 
@@ -29,7 +30,7 @@ V1.1 does not add protected semantic colors, enable nested backdrop blur, promot
 
 The inherited material budget remains one dominant Glaze panel plus at most three small floating Glaze controls, with no default nested backdrop-blur stack and effects removable before semantics.
 
-## Current entrypoints
+## Retained V1.1 entrypoints
 
 - Web: `css/glaze-v1.1.0.css`
 - Runtime: `js/glaze-v1.1.0.mjs`
@@ -37,7 +38,7 @@ The inherited material budget remains one dominant Glaze panel plus at most thre
 - Atmospheric tokens: `tokens/glaze-v1.1-atmosphere.json`
 - Visual baseline authority: `contracts/regression/visual-baselines-v1.json`
 - Acceptance: `acceptance/v1.1-stable.md`
-- Current validator: `scripts/validate_glaze_v1.py`
+- Historical/source compatibility validation remains covered by the current repository validator set.
 
 ## Release evidence
 
@@ -47,6 +48,6 @@ The Android evidence is bounded design-system reference evidence, not OEM-wide, 
 
 ## Consumer boundary
 
-No downstream GoreeCloud application becomes V1.1-conformant by this release alone. Each consumer must explicitly migrate to 1.1.0 and produce application-specific exact-revision evidence for its supported platforms and production boundary.
+No downstream GoreeCloud application became V1.1-conformant by the V1.1 release alone. Each consumer required application-specific exact-revision evidence for its supported platforms and production boundary. Current consumer adoption targets V1.2 / 1.2.0 under the same independent, fail-closed conformance rule.
 
 Glaze Motion remains separately Experimental unless a later governed contract explicitly changes that lifecycle.

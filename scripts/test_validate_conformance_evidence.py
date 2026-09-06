@@ -31,7 +31,7 @@ def valid_record() -> dict[str, object]:
         "producer": {"system": "goreecloud-acceptance", "authoritative": True},
         "target": {
             "application": "example-app",
-            "glaze_version": "1.1.0",
+            "glaze_version": "1.2.0",
             "source_revision": REVISION,
             "form_factors": ["mobile", "desktop"],
         },
@@ -61,7 +61,7 @@ class EvidenceValidityTests(unittest.TestCase):
     def test_rejects_wrong_glaze_product_version(self) -> None:
         record = valid_record()
         record["target"]["glaze_version"] = "1.0.1"  # type: ignore[index]
-        with self.assertRaisesRegex(EvidenceError, "current GLAZE UI V1.1 product version"):
+        with self.assertRaisesRegex(EvidenceError, "current GLAZE UI V1.2 product version"):
             validate_record(record, now=NOW)
 
     def test_rejects_expired_evidence(self) -> None:

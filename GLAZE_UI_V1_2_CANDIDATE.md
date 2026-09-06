@@ -1,9 +1,12 @@
-# GLAZE UI V1.2 — Frosted Neutral Material Candidate
+# GLAZE UI V1.2 — Frosted Neutral Material Candidate — Historical Promoted-Source Contract
 
-**Lifecycle:** Planned Candidate / next-upgrade track  
-**Stable baseline:** GLAZE UI V1.1 / 1.1.0  
-**Promotion status:** Not Stable; not a consumer migration target  
+**Lifecycle:** Historical Candidate source contract; superseded as current lifecycle authority  
+**Stable baseline during Candidate development:** GLAZE UI V1.1 / 1.1.0  
+**Promotion status:** Promoted into GLAZE UI V1.2 Stable / 1.2.0 on 2026-09-06; Candidate-suffixed source paths are retained as frozen promoted-source lineage  
+**Current Stable contract:** `GLAZE_UI_V1_2.md`  
 **Primary intent:** Move the default Glaze material from teal/amber atmospheric tinting toward frosty, white, blurred, translucent neutral glass.
+
+This document preserves the V1.2 Candidate-era material contract as a historical source record. It describes the source layer that was promoted into GLAZE UI V1.2 Stable and does not override the current V1.2 Stable lifecycle, acceptance boundary, or V1.3 deferred-qualification record.
 
 GLAZE UI V1.2 preserves the V1.1 structural, semantic, accessibility, hierarchy, component, System Shell, and performance contracts while changing the default optical character of glazed surfaces.
 
@@ -76,7 +79,7 @@ No glossy effect may obscure text, state, target boundaries, or focus.
 
 The V1.1 Deep Teal + Soft Amber atmosphere becomes **optional accent atmosphere**, not the default material substrate.
 
-For V1.2 Candidate:
+For the V1.2 Candidate source layer:
 
 - neutral material contribution is the dominant optical source;
 - default material tint from teal, aqua, green, or amber is `0`;
@@ -92,7 +95,7 @@ Environmental sampling remains local-only and optional. It must not infer protec
 
 ## 32-component material expansion
 
-The Candidate includes a machine-readable **component-material contract** for the complete inherited 32-component V1 catalog. The purpose is not to make every component translucent. It is to decide, component by component, where Frosted Neutral belongs and where Solid/Raised presentation remains authoritative.
+The Candidate source layer includes a machine-readable **component-material contract** for the complete inherited 32-component V1 catalog. The purpose is not to make every component translucent. It is to decide, component by component, where Frosted Neutral belongs and where Solid/Raised presentation remains authoritative.
 
 The mapping is governed by these rules:
 
@@ -105,11 +108,11 @@ The mapping is governed by these rules:
 - **Nested backdrop blur remains off by default.** Frosted controls nested inside an already glazed parent fall back to a neutral translucent fill without an additional backdrop-filter pass.
 - **Accent color remains state-local.** Selection, current navigation, switch/choice state, progress, focus, and semantics may use color without recoloring the surrounding glass.
 
-The Candidate component mapping is defined by `contracts/v1.2/component-materials.candidate.json`, implemented by `css/glaze-v1.2-components.candidate.css`, and exercised by `reference/v1.2/component-gallery.html`. The validator compares that mapping against `contracts/components/v1/catalog.json` and fails closed unless all 32 inherited components are represented exactly once.
+The Candidate-era component mapping is defined by `contracts/v1.2/component-materials.candidate.json`, implemented by `css/glaze-v1.2-components.candidate.css`, and exercised by `reference/v1.2/component-gallery.html`. The validator compares that mapping against `contracts/components/v1/catalog.json` and fails closed unless all 32 inherited components are represented exactly once.
 
 ## System Shell material expansion
 
-V1.2 now specializes the inherited five-region System Shell contract without replacing it. The exact inherited regions remain **workspace, navigation, universal-search, control-center, and critical-system**.
+V1.2 specializes the inherited five-region System Shell contract without replacing it. The exact inherited regions remain **workspace, navigation, universal-search, control-center, and critical-system**.
 
 The shell mapping is governed as follows:
 
@@ -123,7 +126,7 @@ The inherited shell budget is unchanged: one dominant Glaze panel plus up to thr
 
 Control Center active states use accent color mixed into a neutral Raised tile. Inactive tiles remain neutral. Semantic status colors remain authoritative to the system that owns the underlying truth and may replace the ordinary accent treatment only when backed by producer-authoritative state.
 
-The System Shell Candidate is defined by `contracts/v1.2/system-shell-materials.candidate.json`, implemented by `css/glaze-v1.2-system-shell.candidate.css`, and exercised by `reference/v1.2/system-shell.html`. Its region keys and material budgets are validated against `contracts/system-shell/glaze-system-shell-v1.json` so the Candidate cannot silently add or drop inherited shell regions.
+The System Shell Candidate-era source is defined by `contracts/v1.2/system-shell-materials.candidate.json`, implemented by `css/glaze-v1.2-system-shell.candidate.css`, and exercised by `reference/v1.2/system-shell.html`. Its region keys and material budgets are validated against `contracts/system-shell/glaze-system-shell-v1.json` so the promoted source cannot silently add or drop inherited shell regions.
 
 ## Accessibility and resilience
 
@@ -147,18 +150,20 @@ When performance degrades, reduce environmental effects and blur before degradin
 
 The component material layer disables a second backdrop-filter pass for Frosted Neutral children inside a glazed System Panel, System Overlay, Sheet, Popover, Menu, or Universal Search result panel. The System Shell layer applies the same rule to Control Center children and can fall back from heavy blur to standard blur, then to solid neutral shell surfaces.
 
-## Candidate implementation
+## Historical Candidate implementation / promoted-source lineage
 
-- Candidate tokens: `tokens/glaze-v1.2-frosted-neutral.candidate.json`
-- Candidate component-material contract: `contracts/v1.2/component-materials.candidate.json`
-- Candidate System Shell contract: `contracts/v1.2/system-shell-materials.candidate.json`
-- Candidate base web layer: `css/glaze-v1.2-frosted-neutral.candidate.css`
-- Candidate component layer: `css/glaze-v1.2-components.candidate.css`
-- Candidate System Shell layer: `css/glaze-v1.2-system-shell.candidate.css`
-- Candidate preview entrypoint: `css/glaze-v1.2.0-candidate.css`
+- Candidate-era tokens retained as promoted source: `tokens/glaze-v1.2-frosted-neutral.candidate.json`
+- Candidate-era component-material contract retained as promoted source: `contracts/v1.2/component-materials.candidate.json`
+- Candidate-era System Shell contract retained as promoted source: `contracts/v1.2/system-shell-materials.candidate.json`
+- Candidate-era base web layer retained as promoted source: `css/glaze-v1.2-frosted-neutral.candidate.css`
+- Candidate-era component layer retained as promoted source: `css/glaze-v1.2-components.candidate.css`
+- Candidate-era System Shell layer retained as promoted source: `css/glaze-v1.2-system-shell.candidate.css`
+- Historical Candidate preview entrypoint: `css/glaze-v1.2.0-candidate.css`
+- Current Stable web entrypoint: `css/glaze-v1.2.0.css`
 - Material reference: `reference/v1.2/frosted-neutral.html`
 - 32-component gallery: `reference/v1.2/component-gallery.html`
 - System Shell reference: `reference/v1.2/system-shell.html`
-- Candidate validator: `scripts/validate_glaze_v1_2_candidate.py`
+- Stable authority validator: `scripts/validate_glaze_v1.py`
+- Promoted-source compatibility validator: `scripts/validate_glaze_v1_2_candidate.py`
 
-Until V1.2 is formally promoted, the preview layer is activated on the V1.1 Stable baseline with `data-glaze-upgrade="v1.2-frosted-neutral"`. This does not change `VERSION`, `currentStable`, or downstream consumer eligibility.
+During Candidate development, the preview layer was activated on the V1.1 Stable baseline with `data-glaze-upgrade="v1.2-frosted-neutral"` and did not change `VERSION`, `currentStable`, or downstream consumer eligibility. On 2026-09-06, the project owner promoted V1.2 to Stable and deferred the remaining external/manual/physical qualification work to V1.3. That deferral is not represented as passed V1.2 evidence, and downstream consumer conformance remains independent and fail-closed.
