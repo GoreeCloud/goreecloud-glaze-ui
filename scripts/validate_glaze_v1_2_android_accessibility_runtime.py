@@ -91,7 +91,7 @@ def source_contract() -> dict[str, object]:
         "button.setContentDescription(name + \": \" + state",
         "Reduced Transparency: enabled",
         "not OEM-wide blur fidelity",
-        "not physical-device",
+        "physical-device",
         "TalkBack",
     )
     for marker in required:
