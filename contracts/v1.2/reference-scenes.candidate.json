@@ -7,13 +7,14 @@
   "stableBaseline": "1.1.0",
   "consumerEligible": false,
   "phase": "Phase 5 — Reference Scenes",
-  "purpose": "Fail-closed accounting of the canonical V1.2 Candidate reference scenes using existing governed reference evidence where it already exists, without mutating Stable V1.1 baselines or importing unrelated future regression authority.",
-  "requiredSceneCount": 16,
-  "boundedEstablishedCount": 15,
+  "purpose": "Fail-closed accounting of the canonical V1.2 Candidate reference scenes using governed exact-source evidence without mutating Stable V1.1 baselines or converting bounded scene generation into human acceptance.",
+  "requiredSceneCount": 17,
+  "boundedEstablishedCount": 17,
+  "phase5BoundedReferenceScenesComplete": true,
   "phase5ReferenceScenesComplete": false,
-  "openSceneIds": [
-    "application-icon-ecosystem-wall"
-  ],
+  "openSceneIds": [],
+  "humanReviewPending": true,
+  "humanReviewPendingSceneIds": ["living-glaze-material-lab", "application-icon-ecosystem-wall"],
   "excludedRegressionAuthorities": [
     {
       "path": "contracts/regression/visual-baselines-v1.json",
@@ -161,28 +162,38 @@
       "validatorMarkers": ["reference/v1.2/responsive-adaptation.html", "rtl"]
     },
     {
+      "id": "living-glaze-material-lab",
+      "taskLabel": "Living Glaze Material Lab",
+      "status": "bounded-reference-established",
+      "sourcePath": "reference/v1.2/living-glaze.html",
+      "sourceMarkers": ["Living Glaze Material Lab", "data-glaze-clarity=\"balanced\"", "data-glaze-navigation-capsule"],
+      "validatorPath": "scripts/validate_glaze_v1_2_living_glaze_rendered.py",
+      "validatorMarkers": ["glaze-v1.2-living-glaze-wide.png", "glaze-v1.2-living-glaze-compact.png", "Reduced Transparency"]
+    },
+    {
       "id": "application-icon-ecosystem-wall",
       "taskLabel": "Application icon Ecosystem Wall",
-      "status": "planned-open",
-      "ownerPath": "tokens/icon-identity.json",
-      "requiredOwnerState": {
-        "ecosystemWall.status": "planned",
-        "collisionDetection.status": "planned",
-        "collisionDetection.humanReviewFinalAuthority": true
-      }
+      "status": "bounded-reference-established",
+      "sourcePath": "reference/v1.2/application-icon-ecosystem-wall.html",
+      "sourceMarkers": ["data-ecosystem-wall=\"application-icons\"", "Application Icon Ecosystem Wall"],
+      "validatorPath": "scripts/validate_glaze_v1_2_application_icon_ecosystem_wall.py",
+      "validatorMarkers": ["EXPECTED_PRODUCT_COUNT = 38", "human collision/optical review remains pending"]
     }
   ],
   "evidenceBoundary": {
     "established": [
       "bounded-v1.2-reference-scene-accounting",
-      "source-marker-binding-to-existing-governed-v1.2-reference-evidence",
-      "explicit-accounting-of-the-open-application-icon-ecosystem-wall"
+      "all-17-bounded-reference-scene-sources-established",
+      "living-glaze-material-lab-source-and-rendered-validator-binding",
+      "application-icon-ecosystem-wall-review-artifact-source-binding",
+      "source-marker-binding-to-governed-v1.2-reference-evidence"
     ],
     "notEstablished": [
-      "phase5-reference-scenes-complete",
-      "application-icon-ecosystem-wall",
+      "phase5-reference-scenes-human-accepted",
+      "application-icon-ecosystem-wall-human-collision-review",
+      "living-frosted-human-optical-acceptance",
       "v1.2-human-approved-visual-baseline",
-      "full-visual-regression",
+      "full-visual-regression-human-acceptance",
       "human-optical-acceptance",
       "assistive-technology-acceptance",
       "production-performance-acceptance",
