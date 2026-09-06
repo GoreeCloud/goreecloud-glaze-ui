@@ -28,6 +28,8 @@ jobs:
           python scripts/validate_glaze_v1_2_living_glaze.py 2>&1 | tee artifacts/glaze-v1.2-living-glaze-source.log
       - name: Validate rendered Living Frosted behavior
         run: python scripts/validate_glaze_v1_2_living_glaze_rendered.py
+      - name: Validate accessibility navigation reflow collisions
+        run: python scripts/validate_glaze_v1_2_living_glaze_accessibility_reflow.py
       - name: Upload Living Frosted evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
