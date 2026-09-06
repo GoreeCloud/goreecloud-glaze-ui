@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en" data-glaze-v1-3-reference="proposed" data-glz-appearance="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GLAZE UI V1.3 — Signature Components and Reference Suite</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0.css">
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;padding:24px;font:16px/1.5 system-ui,sans-serif;overflow-x:hidden}
+    main{max-inline-size:1120px;margin:auto;display:grid;gap:28px}
+    .reference-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px}
+    .reference-card,.reference-scene{padding:18px;border:1px solid currentColor;border-radius:20px;min-inline-size:0}
+    .reference-scene{display:grid;gap:10px}
+    code,output{overflow-wrap:anywhere}
+    button{min-block-size:48px;min-inline-size:48px;font:inherit}
+    @media(max-width:560px){body{padding:12px}.reference-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p>Development reference only · V1.2 / 1.2.0 remains Stable.</p>
+    <h1>GLAZE UI V1.3 — Signature Components + Composition Reference Suite</h1>
+    <p>This page demonstrates governed V1.3 composition. It does not define new token, material, semantic, lifecycle, native-platform, or consumer authority.</p>
+  </header>
+
+  <section aria-labelledby="components-title">
+    <h2 id="components-title">Canonical Signature components</h2>
+    <div class="reference-grid">
+      <article class="reference-card" data-signature-component="GlzCapsule"><h3>GlzCapsule</h3><button type="button" aria-expanded="false">Sync details</button><output></output></article>
+      <article class="reference-card" data-signature-component="GlzMorphCard"><h3>GlzMorphCard</h3><button type="button" aria-expanded="false">Project brief</button><output></output></article>
+      <article class="reference-card" data-signature-component="GlzSmartRail"><h3>GlzSmartRail</h3><nav aria-label="Reference destinations"><button aria-current="page">Home</button><button>Files</button></nav><output></output></article>
+      <article class="reference-card" data-signature-component="GlzAuroraSurface"><h3>GlzAuroraSurface</h3><p>Atmosphere is decorative; meaning survives when optical effects are removed.</p><output></output></article>
+      <article class="reference-card" data-signature-component="GlzUniversalSearch"><h3>GlzUniversalSearch</h3><label>Search scope <input type="search" value="All GoreeCloud"></label><output></output></article>
+    </div>
+  </section>
+
+  <section aria-labelledby="scenes-title">
+    <h2 id="scenes-title">Canonical composition scenes</h2>
+    <div class="reference-grid">
+      <article class="reference-scene" data-reference-scene="home-dashboard"><h3>Home dashboard</h3><p>Primary state and critical exceptions first.</p><output></output></article>
+      <article class="reference-scene" data-reference-scene="data-heavy-administration"><h3>Data-heavy administration</h3><p>Durable data plane with task-valued supporting regions.</p><output></output></article>
+      <article class="reference-scene" data-reference-scene="settings"><h3>Settings</h3><p>Scanable structure and separated high-risk controls.</p><output></output></article>
+      <article class="reference-scene" data-reference-scene="file-browser"><h3>File browser</h3><p>Primary list with subordinate inspector when task-valued.</p><output></output></article>
+      <article class="reference-scene" data-reference-scene="search"><h3>Search</h3><p>Search scope visible; results remain durable.</p><output></output></article>
+      <article class="reference-scene" data-reference-scene="form"><h3>Form</h3><p>Readable rhythm and explicit save-state clarity.</p><output></output></article>
+      <article class="reference-scene" data-reference-scene="detail-inspector"><h3>Detail inspector</h3><p>Inspector remains subordinate and may collapse.</p><output></output></article>
+      <article class="reference-scene" data-reference-scene="media"><h3>Media</h3><p>Content dominates while controls remain reachable.</p><output></output></article>
+    </div>
+  </section>
+  <p id="reference-status" role="status" aria-live="polite"></p>
+</main>
+<script type="module">
+  import {resolveSignatureComponent,resolveReferenceScene} from "../../js/glaze-v1.3-component-experience.candidate.mjs";
+  const environment = "expanded";
+  for (const host of document.querySelectorAll("[data-signature-component]")) {
+    const result = resolveSignatureComponent(host.dataset.signatureComponent,{environment,destinationCount:3});
+    host.dataset.resolvedEnvironment = result.environment;
+    host.querySelector("output").textContent = `${result.presentation.presentation} · ${result.minimumInteractiveTargetPx}px minimum target`;
+  }
+  for (const host of document.querySelectorAll("[data-reference-scene]")) {
+    const result = resolveReferenceScene(host.dataset.referenceScene,{environment});
+    host.dataset.resolvedComposition = result.pane.composition;
+    host.querySelector("output").textContent = `${result.pane.composition} · ${result.primaryTask}`;
+  }
+  document.querySelector("#reference-status").textContent = "V1.3 reference resolver initialized without lifecycle promotion.";
+</script>
+</body>
+</html>
