@@ -58,7 +58,8 @@ jobs:
             scripts/validate_glaze_v1_2_personalization_readiness.py \
             scripts/validate_glaze_v1_2_native_personalization_source.py \
             scripts/validate_glaze_v1_2_personalization_appearance_rendered.py \
-            scripts/validate_glaze_v1_2_linux_window_adaptation_source.py
+            scripts/validate_glaze_v1_2_linux_window_adaptation_source.py \
+            scripts/validate_glaze_v1_2_android_accessibility_source.py
 
       - name: Validate Living Frosted source authority
         run: python scripts/validate_glaze_v1_2_living_glaze.py
@@ -73,6 +74,11 @@ jobs:
         env:
           GLAZE_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
         run: python scripts/validate_glaze_v1_2_linux_window_adaptation_source.py
+
+      - name: Generate fail-closed Android accessibility source readiness evidence
+        env:
+          GLAZE_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python scripts/validate_glaze_v1_2_android_accessibility_source.py
 
       - name: Generate fail-closed exact-head readiness evidence
         run: python scripts/validate_glaze_v1_2_exact_head_readiness.py
@@ -90,6 +96,7 @@ jobs:
             artifacts/glaze-v1.2-personalization-readiness.json
             artifacts/glaze-v1.2-native-personalization-source-readiness.json
             artifacts/glaze-v1.2-linux-window-adaptation-source-readiness.json
+            artifacts/glaze-v1.2-android-accessibility-source-readiness.json
           if-no-files-found: error
           retention-days: 14
           compression-level: 6
