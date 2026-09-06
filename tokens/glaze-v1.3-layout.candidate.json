@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.layout.tokens.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "namespace": "layout",
+  "semanticTokens": {
+    "layout.space.scale": {"implementation": "spaceScale", "meaning": "shared spacing authority"},
+    "layout.density": {"implementation": "densityProfiles", "meaning": "information-density authority"},
+    "layout.environment.compact": {"implementation": "compactEnvironment", "meaning": "compact single-pane environment"},
+    "layout.environment.medium": {"implementation": "mediumEnvironment", "meaning": "medium-width adaptive environment"},
+    "layout.environment.expanded": {"implementation": "expandedEnvironment", "meaning": "expanded multi-region environment"},
+    "layout.environment.workspace": {"implementation": "workspaceEnvironment", "meaning": "persistent multi-pane productivity environment"},
+    "layout.safeArea": {"implementation": "safeArea", "meaning": "platform safe-area and obstruction-aware composition"},
+    "layout.inputModality": {"implementation": "inputModality", "meaning": "composition response to touch, pointer, keyboard, directional, or other supported input"},
+    "layout.taskContinuity": {"implementation": "taskContinuity", "meaning": "preservation of task and selection across layout transformation"}
+  },
+  "implementationValues": {
+    "spaceScale": {"source": "tokens/glaze-v1.2-spatial-foundation.candidate.json", "pointer": "/spacePx", "mode": "inherited-baseline"},
+    "densityProfiles": {"source": "tokens/glaze-v1.2-spatial-foundation.candidate.json", "pointer": "/density", "mode": "inherited-baseline"},
+    "compactEnvironment": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/compositionStates", "mode": "inherited-baseline"},
+    "mediumEnvironment": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/compositionStates", "mode": "inherited-baseline"},
+    "expandedEnvironment": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/compositionStates", "mode": "inherited-baseline"},
+    "workspaceEnvironment": {"status": "architecture-established-runtime-unestablished", "ownerWorkstream": "multi-pane-foldable-desktop"},
+    "safeArea": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/safeArea", "mode": "inherited-baseline"},
+    "inputModality": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/inputModality", "mode": "inherited-baseline"},
+    "taskContinuity": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/taskContinuity", "mode": "inherited-baseline"}
+  },
+  "rules": {
+    "reachableNotMerelyResponsive": true,
+    "layoutMayStretchMobileCompositionOntoDesktop": false,
+    "layoutMayCompressDesktopCompositionIntoPhone": false,
+    "additionalSpaceShouldImproveTaskCompletion": true,
+    "taskAndSelectionContinuityRequiredAcrossTransformation": true,
+    "safeAreasAndPostureMustBeRespected": true,
+    "accessibilityReflowMayOverrideDensityAndPresentation": true,
+    "semanticTokensMayContainRawSpacingOrBreakpointValues": false
+  },
+  "notEstablished": [
+    "v1.3-reachability-zone-values",
+    "v1.3-adaptive-navigation-breakpoints",
+    "workspace-pane-contract",
+    "foldable-posture-contract",
+    "far-view-contract",
+    "wearable-production-support"
+  ]
+}
