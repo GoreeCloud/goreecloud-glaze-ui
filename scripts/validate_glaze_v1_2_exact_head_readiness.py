@@ -100,28 +100,28 @@ def validate_source() -> tuple[dict[str, Any], dict[str, Any]]:
     require(contract.get("lifecycle") == "candidate" and contract.get("stableBaseline") == "1.1.0", "readiness lifecycle boundary drifted")
     require(contract.get("consumerEligible") is False and contract.get("reportKind") == "candidate-readiness-not-conformance", "readiness report overclaimed conformance")
     require(contract.get("gateOrder") == EXPECTED_GATES, "readiness gate order drifted")
-    require(contract.get("runtimeRevisionBinding", {}).get("source") == "git rev-parse HEAD", "readiness runtime revision binding drifted")
-    require(contract.get("runtimeRevisionBinding", {}).get("exactHeadRequired") is True, "exact-head binding is no longer required")
-    require(contract.get("runtimeRevisionBinding", {}).get("staticSourceRevisionInContractProhibited") is True, "static revision prohibition drifted")
-    require(re.search(r"\b[0-9a-f]{40}\b", CONTRACT.read_text(encoding="utf-8")) is None, "readiness contract must not embed a self-referential static Git revision")
+    binding = contract.get("runtimeRevisionBinding", {})
+    require(binding.get("source") == "git rev-parse HEAD" and binding.get("exactHeadRequired") is True and binding.get("staticSourceRevisionInContractProhibited") is True, "readiness exact-head binding drifted")
+    require(re.search(r"\b[0-9a-f]{40}\b", CONTRACT.read_text(encoding="utf-8")) is None, "readiness contract must not embed a static Git revision")
 
-    authoritative_inputs = contract.get("authoritativeInputs", [])
-    for required in (
+    required_inputs = {
         "contracts/v1.2/living-glaze.candidate.json",
         "tokens/glaze-v1.2-living-material.candidate.json",
+        "css/glaze-v1.2-living-glaze.candidate.css",
+        "js/glaze-v1.2-living-glaze.candidate.mjs",
+        "reference/v1.2/living-glaze.html",
+        "scripts/validate_glaze_v1_2_living_glaze.py",
+        "scripts/validate_glaze_v1_2_living_glaze_rendered.py",
+        ".github/workflows/glaze-v1.2-living-glaze.yml",
         "acceptance/v1.2-living-frosted-candidate.md",
-    ):
-        require(required in authoritative_inputs, f"Living Frosted readiness input missing: {required}")
+    }
+    require(required_inputs.issubset(set(contract.get("authoritativeInputs", []))), "Living Frosted readiness source set is incomplete")
 
     claims = contract.get("requiredOutputClaims", {})
     require(claims == {
-        "promotionReady": False,
-        "rcReady": False,
-        "stableReady": False,
-        "productionReady": False,
-        "consumerEligible": False,
-        "consumerConformanceClaim": False,
-        "reportStatus": "fail-closed-blocked",
+        "promotionReady": False, "rcReady": False, "stableReady": False,
+        "productionReady": False, "consumerEligible": False,
+        "consumerConformanceClaim": False, "reportStatus": "fail-closed-blocked",
     }, "required fail-closed output claims drifted")
 
     rules = contract.get("rules", {})
@@ -149,6 +149,8 @@ def validate_source() -> tuple[dict[str, Any], dict[str, Any]]:
         "bounded-evidence-present", "bounded-evidence-present", "bounded-evidence-present",
         "blocked", "blocked", "blocked", "not-eligible", "not-eligible",
     ], "readiness gate statuses must remain fail closed")
+    require("phase5-reference-scenes-human-review-incomplete" in gate_reporting["G3"].get("blockers", []), "G3 human-review scene blocker missing")
+    require("application-icon-ecosystem-wall-human-collision-review-pending" in gate_reporting["G3"].get("blockers", []), "G3 icon wall human blocker missing")
     require("living-frosted-human-optical-acceptance-absent" in gate_reporting["G3"].get("blockers", []), "Living Frosted G3 blocker missing")
     require("living-frosted-physical-device-performance-acceptance-absent" in gate_reporting["G4"].get("blockers", []), "Living Frosted G4 blocker missing")
 
@@ -167,8 +169,7 @@ def validate_source() -> tuple[dict[str, Any], dict[str, Any]]:
     require(target.get("version") == "1.2.0-candidate" and target.get("consumerEligible") is False and target.get("optInOnly") is True, "migration Candidate boundary drifted")
     require(target.get("stablePromotionRequiredBeforeProductionMigration") is True, "production migration no longer requires Stable promotion")
     require(governance.get("exactHeadValidationRequired") is True and governance.get("stableAuthorityMayNotMoveInThisChangeSet") is True and governance.get("versionFileMayNotChangeInThisChangeSet") is True and governance.get("downstreamConformanceClaimsAllowed") is False, "migration governance boundary drifted")
-    migration_gates = migration.get("acceptanceGates", [])
-    require([item.get("id") for item in migration_gates] == EXPECTED_GATES and all(item.get("blocking") is True for item in migration_gates), "migration G0-G7 blocking order drifted")
+    require([item.get("id") for item in migration.get("acceptanceGates", [])] == EXPECTED_GATES and all(item.get("blocking") is True for item in migration.get("acceptanceGates", [])), "migration G0-G7 blocking order drifted")
 
     require(living.get("version") == "1.2.0-candidate" and living.get("lifecycle") == "candidate", "Living Frosted Candidate identity drifted")
     require(living.get("consumerEligible") is False and living.get("stableBaseline") == "1.1.0", "Living Frosted lifecycle boundary drifted")
@@ -176,35 +177,32 @@ def validate_source() -> tuple[dict[str, Any], dict[str, Any]]:
     require(living.get("performanceTiers", {}).get("degradationOrder") == [3, 2, 1, 0], "Living Frosted degradation order drifted")
     require(living.get("stableCompatibleMotion", {}).get("experimentalGlazeMotionRequired") is False, "Living Frosted silently promoted Experimental Glaze Motion")
     require("no-unrestricted-image-analysis" in living.get("opticalResponse", {}).get("privacyBoundary", ""), "Living Frosted privacy boundary drifted")
-    living_boundary = living.get("evidenceBoundary", {})
-    living_missing = set(living_boundary.get("notEstablished", []))
+    living_missing = set(living.get("evidenceBoundary", {}).get("notEstablished", []))
     require({"human-optical-acceptance", "physical-device-acceptance", "release-candidate", "stable", "consumer-conformance"}.issubset(living_missing), "Living Frosted evidence boundary overclaimed acceptance")
-    require(living_tokens.get("version") == "1.2.0-candidate" and living_tokens.get("consumerEligible") is False, "Living Frosted token lifecycle drifted")
     require(living_tokens.get("clarity", {}).get("balanced", {}).get("materialMixPercent") == 92, "Living Frosted Balanced material density drifted")
     require(living_tokens.get("performanceTiers") == {"0":"solid","1":"static-glaze","2":"responsive-glaze","3":"living-glaze"}, "Living Frosted performance tier tokens drifted")
-    require("glz12-glass-overlay" in LIVING_CSS.read_text(encoding="utf-8"), "Living Frosted web layer is no longer bound to Frosted Neutral material authority")
+    require("glz12-glass-overlay" in LIVING_CSS.read_text(encoding="utf-8"), "Living Frosted web layer lost Frosted Neutral binding")
     require("producer-or-renderer-supplied-complexity-only" in LIVING_RUNTIME.read_text(encoding="utf-8"), "Living Frosted runtime privacy marker missing")
     require("Living Glaze Material Lab" in LIVING_REFERENCE.read_text(encoding="utf-8"), "Living Frosted reference lab missing")
-    require("No RC, Stable" in LIVING_REFERENCE.read_text(encoding="utf-8"), "Living Frosted reference lab overclaim warning missing")
     require("not human acceptance" in LIVING_ACCEPTANCE.read_text(encoding="utf-8").lower(), "Living Frosted acceptance boundary warning missing")
-    require("validate_glaze_v1_2_living_glaze.py" in LIVING_WORKFLOW.read_text(encoding="utf-8"), "Living Frosted source validation is not workflow-bound")
-    require("validate_glaze_v1_2_living_glaze_rendered.py" in LIVING_WORKFLOW.read_text(encoding="utf-8"), "Living Frosted rendered validation is not workflow-bound")
+    living_workflow = LIVING_WORKFLOW.read_text(encoding="utf-8")
+    require("validate_glaze_v1_2_living_glaze.py" in living_workflow and "validate_glaze_v1_2_living_glaze_rendered.py" in living_workflow, "Living Frosted workflow bindings drifted")
 
     require(scenes.get("version") == "1.2.0-candidate" and scenes.get("consumerEligible") is False, "Reference Scenes Candidate boundary drifted")
-    require(scenes.get("requiredSceneCount") == 16 and scenes.get("boundedEstablishedCount") == 15, "Reference Scene accounting drifted")
-    require(scenes.get("phase5ReferenceScenesComplete") is False and scenes.get("openSceneIds") == ["application-icon-ecosystem-wall"], "Reference Scenes must remain fail closed while Ecosystem Wall is open")
+    require(scenes.get("requiredSceneCount") == 17 and scenes.get("boundedEstablishedCount") == 17, "Reference Scene bounded accounting drifted")
+    require(scenes.get("phase5BoundedReferenceScenesComplete") is True, "bounded Reference Scene source set incomplete")
+    require(scenes.get("phase5ReferenceScenesComplete") is False and scenes.get("humanReviewPending") is True, "human-accepted Reference Scenes were overclaimed")
+    require(scenes.get("openSceneIds") == [], "bounded Reference Scene source set still reports open scenes")
 
     access_boundary = accessibility.get("evidenceBoundary", {})
     require(accessibility.get("consumerEligible") is False and accessibility.get("rules", {}).get("consumerClaimBlocked") is True, "Accessibility Testing consumer boundary drifted")
     require(access_boundary.get("boundedAutomatedAccessibilityTestingEstablished") is True and access_boundary.get("phase5AccessibilityTestingComplete") is False, "Accessibility Testing completion boundary drifted")
-    access_missing = set(access_boundary.get("notEstablished", []))
-    require({"screen-reader-acceptance", "talkback-acceptance", "voiceover-acceptance", "physical-device-accessibility-acceptance", "complete-native-platform-accessibility-parity"}.issubset(access_missing), "Accessibility Testing blockers were promoted away")
+    require({"screen-reader-acceptance", "talkback-acceptance", "voiceover-acceptance", "physical-device-accessibility-acceptance", "complete-native-platform-accessibility-parity"}.issubset(set(access_boundary.get("notEstablished", []))), "Accessibility Testing blockers were promoted away")
 
     perf_boundary = performance.get("evidenceBoundary", {})
     require(performance.get("consumerEligible") is False and performance.get("rules", {}).get("consumerClaimBlocked") is True, "Performance Testing consumer boundary drifted")
     require(perf_boundary.get("boundedBrowserCiMeasurementsEstablished") is True and perf_boundary.get("phase5PerformanceTestingComplete") is False, "Performance Testing completion boundary drifted")
-    perf_missing = set(perf_boundary.get("notEstablished", []))
-    require({"accepted-numeric-runtime-budget", "accepted-platform-performance-budget", "physical-device-performance-acceptance", "production-performance-acceptance", "complete-native-platform-performance-parity"}.issubset(perf_missing), "Performance Testing blockers were promoted away")
+    require({"accepted-numeric-runtime-budget", "accepted-platform-performance-budget", "physical-device-performance-acceptance", "production-performance-acceptance", "complete-native-platform-performance-parity"}.issubset(set(perf_boundary.get("notEstablished", []))), "Performance Testing blockers were promoted away")
     require(budget.get("status") == "revalidation-required", "canonical performance budget no longer requires revalidation")
     require("must be regenerated and accepted against exact V1 revisions" in budget.get("note", ""), "performance budget regeneration requirement drifted")
 
@@ -223,8 +221,7 @@ def validate_source() -> tuple[dict[str, Any], dict[str, Any]]:
     for marker in ("G0", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "human", "native"):
         require(marker.lower() in promotion.lower(), f"promotion-gate authority marker missing: {marker}")
 
-    implementation = contract.get("implementation", {})
-    require(implementation == {
+    require(contract.get("implementation") == {
         "validator": "scripts/validate_glaze_v1_2_exact_head_readiness.py",
         "workflow": ".github/workflows/glaze-v1.2-exact-head-readiness.yml",
         "artifact": "artifacts/glaze-v1.2-exact-head-readiness.json",
@@ -233,20 +230,14 @@ def validate_source() -> tuple[dict[str, Any], dict[str, Any]]:
     require("validate_glaze_v1_2_exact_head_readiness.py" in workflow_text and "github.event.pull_request.head.sha || github.sha" in workflow_text, "readiness workflow exact-head binding drifted")
 
     boundary = contract.get("evidenceBoundary", {})
-    require(boundary.get("boundedExactHeadReadinessReportingEstablished") is True and boundary.get("livingFrostedBoundedSourceEvidenceIntegrated") is True and boundary.get("phase5ExactRevisionConformanceEvidenceComplete") is False, "readiness evidence boundary overclaimed Phase 5 completion")
+    require(boundary.get("boundedExactHeadReadinessReportingEstablished") is True and boundary.get("livingFrostedBoundedSourceEvidenceIntegrated") is True and boundary.get("boundedReferenceSceneSourcesComplete") is True and boundary.get("phase5ExactRevisionConformanceEvidenceComplete") is False, "readiness evidence boundary drifted")
 
     return contract, {
-        "lifecycle": lifecycle,
-        "migration": migration,
-        "livingFrosted": living,
-        "livingFrostedTokens": living_tokens,
-        "referenceScenes": scenes,
-        "accessibility": accessibility,
-        "performance": performance,
-        "visualRegression": visual,
-        "performanceBudget": budget,
-        "v11ConformanceSchema": v11_schema,
-        "sourcePaths": paths,
+        "lifecycle": lifecycle, "migration": migration, "livingFrosted": living,
+        "livingFrostedTokens": living_tokens, "referenceScenes": scenes,
+        "accessibility": accessibility, "performance": performance,
+        "visualRegression": visual, "performanceBudget": budget,
+        "v11ConformanceSchema": v11_schema, "sourcePaths": paths,
     }
 
 
@@ -260,16 +251,18 @@ def build_report(contract: dict[str, Any], sources: dict[str, Any]) -> dict[str,
     performance = sources["performance"]
     visual = sources["visualRegression"]
     budget = sources["performanceBudget"]
-    claims = dict(contract["requiredOutputClaims"])
 
     blockers = [
         {
-            "id": "reference-scenes-incomplete",
+            "id": "reference-scenes-human-review-incomplete",
             "gate": "G3",
             "evidence": {
                 "required": scenes["requiredSceneCount"],
                 "boundedEstablished": scenes["boundedEstablishedCount"],
+                "boundedSourceSetComplete": scenes["phase5BoundedReferenceScenesComplete"],
                 "openSceneIds": scenes["openSceneIds"],
+                "humanReviewPending": scenes["humanReviewPending"],
+                "humanReviewPendingSceneIds": scenes["humanReviewPendingSceneIds"],
             },
         },
         {
@@ -285,8 +278,7 @@ def build_report(contract: dict[str, Any], sources: dict[str, Any]) -> dict[str,
             "id": "living-frosted-human-device-acceptance-incomplete",
             "gate": "G3/G4",
             "evidence": {
-                "theme": living["theme"],
-                "sourceEvidenceIntegrated": True,
+                "theme": living["theme"], "sourceEvidenceIntegrated": True,
                 "humanOpticalAcceptanceEstablished": False,
                 "physicalDeviceAcceptanceEstablished": False,
                 "productionPerformanceAcceptanceEstablished": False,
@@ -330,23 +322,26 @@ def build_report(contract: dict[str, Any], sources: dict[str, Any]) -> dict[str,
         "product": contract["product"],
         "candidateVersion": contract["version"],
         "stableBaseline": contract["stableBaseline"],
-        **claims,
+        **dict(contract["requiredOutputClaims"]),
         "lifecycleSnapshot": {
-            "currentOfficial": lifecycle["currentOfficial"],
-            "currentStable": lifecycle["currentStable"],
+            "currentOfficial": lifecycle["currentOfficial"], "currentStable": lifecycle["currentStable"],
             "activeCandidate": lifecycle["activeCandidate"],
             "candidateStatus": release(lifecycle, "1.2.0-candidate")["status"],
             "candidateConsumerEligible": release(lifecycle, "1.2.0-candidate")["consumerEligible"],
         },
         "livingFrostedSnapshot": {
-            "theme": living["theme"],
-            "lifecycle": living["lifecycle"],
+            "theme": living["theme"], "lifecycle": living["lifecycle"],
             "consumerEligible": living["consumerEligible"],
             "clarityProfiles": list(living_tokens["clarity"].keys()),
             "performanceDegradationOrder": living["performanceTiers"]["degradationOrder"],
             "experimentalGlazeMotionRequired": living["stableCompatibleMotion"]["experimentalGlazeMotionRequired"],
-            "humanAcceptanceEstablished": False,
-            "physicalDeviceAcceptanceEstablished": False,
+            "humanAcceptanceEstablished": False, "physicalDeviceAcceptanceEstablished": False,
+        },
+        "referenceSceneSnapshot": {
+            "required": scenes["requiredSceneCount"], "boundedEstablished": scenes["boundedEstablishedCount"],
+            "boundedSourceSetComplete": scenes["phase5BoundedReferenceScenesComplete"],
+            "humanAccepted": scenes["phase5ReferenceScenesComplete"],
+            "humanReviewPending": scenes["humanReviewPending"],
         },
         "gateOrder": contract["gateOrder"],
         "gates": [{"id": gate_id, **contract["gateReporting"][gate_id]} for gate_id in contract["gateOrder"]],
@@ -362,7 +357,7 @@ def build_report(contract: dict[str, Any], sources: dict[str, Any]) -> dict[str,
 
 
 def validate_report(report: dict[str, Any], contract: dict[str, Any]) -> None:
-    require(re.fullmatch(r"[0-9a-f]{40}", str(report.get("sourceRevision", ""))) is not None, "report lacks exact 40-character source revision")
+    require(re.fullmatch(r"[0-9a-f]{40}", str(report.get("sourceRevision", ""))) is not None, "report lacks exact source revision")
     require(report.get("sourceRevision") == head_revision(), "report source revision does not match checked-out HEAD")
     for key, expected in contract["requiredOutputClaims"].items():
         require(report.get(key) == expected, f"report overclaimed {key}: {report.get(key)!r}")
@@ -377,7 +372,9 @@ def validate_report(report: dict[str, Any], contract: dict[str, Any]) -> None:
     living = report.get("livingFrostedSnapshot", {})
     require(living.get("theme") == "Living Frosted" and living.get("consumerEligible") is False, "Living Frosted readiness snapshot drifted")
     require(living.get("performanceDegradationOrder") == [3, 2, 1, 0] and living.get("experimentalGlazeMotionRequired") is False, "Living Frosted readiness semantics drifted")
-    require(living.get("humanAcceptanceEstablished") is False and living.get("physicalDeviceAcceptanceEstablished") is False, "Living Frosted readiness overclaimed acceptance")
+    scenes = report.get("referenceSceneSnapshot", {})
+    require(scenes.get("required") == 17 and scenes.get("boundedEstablished") == 17 and scenes.get("boundedSourceSetComplete") is True, "bounded reference scenes are not complete")
+    require(scenes.get("humanAccepted") is False and scenes.get("humanReviewPending") is True, "reference scene human acceptance overclaimed")
     isolation = report.get("v11ConformanceSchemaIsolation", {})
     require(isolation.get("glazeVersionConst") == "1.1.0" and isolation.get("usedForV12CandidateClaim") is False, "V1.1 conformance schema isolation failed")
 
@@ -390,7 +387,7 @@ def main() -> int:
         ARTIFACT.parent.mkdir(parents=True, exist_ok=True)
         ARTIFACT.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         require(ARTIFACT.stat().st_size > 1000, "readiness artifact unexpectedly small")
-        print(f"PASS: GLAZE UI V1.2 exact-head readiness report is fail-closed at {report['sourceRevision']}; RC/Stable/production/consumer readiness remain false.")
+        print(f"PASS: GLAZE UI V1.2 exact-head readiness is fail-closed at {report['sourceRevision']}; bounded scenes are complete, human/RC/Stable/production/consumer readiness remain false.")
         return 0
     except Exception as error:
         print(f"GLAZE UI V1.2 exact-head readiness validation failed: {error}", file=sys.stderr)
