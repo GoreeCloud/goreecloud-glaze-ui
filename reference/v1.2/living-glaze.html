@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" data-glaze-upgrade="v1.2-frosted-neutral" data-glaze-clarity="balanced" data-glaze-tier="3">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GLAZE UI V1.2 — Living Glaze Lab</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0-candidate.css">
+  <style>
+    body{margin:0;font-family:system-ui,sans-serif;background:linear-gradient(135deg,#eef1f4,#cfd7df);color:#16181b;min-height:100vh} main{max-width:1100px;margin:auto;padding:24px 18px 120px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}.lab{padding:20px;border-radius:28px;border:1px solid rgba(255,255,255,.6);background:rgba(255,255,255,.58);backdrop-filter:blur(28px)} button{font:inherit}.controls{display:flex;flex-wrap:wrap;gap:8px}.controls button{min-height:48px;padding:0 16px;border-radius:999px;border:1px solid rgba(0,0,0,.14);background:rgba(255,255,255,.72)}
+  </style>
+</head>
+<body>
+<main>
+  <h1>Living Glaze Material Lab</h1>
+  <p>Candidate-only reference. No RC, Stable, native parity, or human acceptance is implied.</p>
+  <div class="controls" aria-label="Clarity profiles">
+    <button data-clarity="clear">Clear</button><button data-clarity="balanced">Balanced</button><button data-clarity="dense">Dense</button>
+  </div>
+  <section class="grid" aria-label="Living Glaze states">
+    <article class="lab" data-glaze-living data-backdrop-complexity="simple" data-material-state="rest"><h2>Simple backdrop</h2><p>May become clearer while retaining contrast.</p></article>
+    <article class="lab" data-glaze-living data-backdrop-complexity="complex" data-material-state="hover"><h2>Complex backdrop</h2><p>Uses bounded denser presentation without image sampling.</p></article>
+    <article class="lab" data-glaze-living data-backdrop-complexity="unknown" data-material-state="focus" tabindex="0"><h2>Fail closed</h2><p>Unknown complexity resolves to deterministic Balanced behavior.</p></article>
+    <article class="lab" data-glaze-living data-material-state="pressed"><h2>Pressed</h2><p>Subtle depth response; action correctness never depends on completion.</p></article>
+    <article class="lab" data-glaze-living data-material-state="dragged"><h2>Dragged</h2><p>Direct manipulation separates from its source plane.</p></article>
+    <article class="lab" data-glaze-living data-material-state="disabled" aria-disabled="true"><h2>Disabled</h2><p>Readable content remains intact while affordance decreases.</p></article>
+  </section>
+  <nav class="lab" data-glaze-living data-glaze-navigation-capsule data-glaze-zone="primary-interaction" aria-label="Adaptive Navigation Capsule">
+    <button aria-current="page">Home</button><button>Search</button><button>Control</button><button>Profile</button>
+  </nav>
+</main>
+<script type="module">
+  import {setGlazeClarity,setLivingGlazeState} from '../../js/glaze-v1.2-living-glaze.candidate.mjs';
+  document.querySelectorAll('[data-clarity]').forEach(button=>button.addEventListener('click',()=>setGlazeClarity(document,button.dataset.clarity)));
+  document.querySelectorAll('[data-glaze-living]').forEach(card=>{
+    card.addEventListener('pointerdown',()=>setLivingGlazeState(card,'pressed'));
+    card.addEventListener('pointerup',()=>setLivingGlazeState(card,'rest'));
+    card.addEventListener('focus',()=>setLivingGlazeState(card,'focus'));
+  });
+</script>
+</body>
+</html>

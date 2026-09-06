@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "version": "1.2.0-candidate",
+  "lifecycle": "candidate",
+  "consumerEligible": false,
+  "stableBaseline": "1.1.0",
+  "compactZones": {
+    "information": {"role": "passive-context-and-content", "preferredOrder": 1},
+    "transition": {"role": "secondary-and-in-content-actions", "preferredOrder": 2},
+    "primaryInteraction": {"role": "frequent-primary-actions", "preferredOrder": 3}
+  },
+  "targets": {"touchMinimumPx": 48, "touchAssistanceMinimumPx": 56, "labelCollapseMayReduceTarget": false},
+  "navigation": {
+    "compact": "capsule",
+    "standard": "bottom-plus-context-toolbar",
+    "expanded": "rail-or-sidebar",
+    "workspace": "persistent-sidebar-or-rail",
+    "farView": "directional-focus"
+  },
+  "safeAreaAware": true,
+  "hingeAware": true,
+  "viewportWidthAloneDeterminesIntent": false
+}

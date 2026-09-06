@@ -1,0 +1,24 @@
+name: Glaze V1.2 Living Glaze Candidate
+on:
+  push:
+  pull_request:
+jobs:
+  living-glaze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact Candidate revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Preserve Stable baseline
+        run: |
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          python scripts/validate_glaze_v1.py
+          python scripts/validate_glaze_v1_2_candidate.py
+          python scripts/validate_glaze_v1_2_contract_namespace.py
+      - name: Validate Living Frosted Candidate tranche
+        run: python scripts/validate_glaze_v1_2_living_glaze.py
