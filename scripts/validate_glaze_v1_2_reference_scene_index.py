@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the bounded GLAZE UI V1.2 Phase 5 reference-scene index."""
+"""Validate bounded GLAZE UI V1.2 Phase 5 reference-scene source accounting."""
 from __future__ import annotations
 
 import json
@@ -8,6 +8,8 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "contracts/v1.2/reference-scenes.candidate.json"
+ICON_WALL = ROOT / "contracts/v1.2/application-icon-ecosystem-wall.candidate.json"
+LIVING = ROOT / "contracts/v1.2/living-glaze.candidate.json"
 WORKFLOW = ROOT / ".github/workflows/glaze-v1.2-reference-scenes.yml"
 EXPECTED_IDS = [
     "canonical-light",
@@ -25,10 +27,10 @@ EXPECTED_IDS = [
     "increased-contrast",
     "large-text",
     "rtl",
+    "living-glaze-material-lab",
     "application-icon-ecosystem-wall",
 ]
 ESTABLISHED_STATUS = "bounded-reference-established"
-OPEN_STATUS = "planned-open"
 
 
 class ValidationError(RuntimeError):
@@ -47,14 +49,6 @@ def load_json(path: Path) -> dict[str, Any]:
     return value
 
 
-def nested_get(value: dict[str, Any], dotted: str) -> Any:
-    current: Any = value
-    for part in dotted.split("."):
-        require(isinstance(current, dict) and part in current, f"missing owner state {dotted}")
-        current = current[part]
-    return current
-
-
 def validate_manifest() -> tuple[dict[str, Any], list[dict[str, Any]]]:
     manifest = load_json(MANIFEST)
     require(manifest.get("schemaVersion") == 1, "reference-scene schema drifted")
@@ -65,27 +59,34 @@ def validate_manifest() -> tuple[dict[str, Any], list[dict[str, Any]]]:
     require(manifest.get("stableBaseline") == "1.1.0", "Stable baseline drifted")
     require(manifest.get("consumerEligible") is False, "V1.2 reference scenes became consumer eligible")
     require(manifest.get("phase") == "Phase 5 — Reference Scenes", "Phase 5 label drifted")
-    require(manifest.get("requiredSceneCount") == 16, "required scene count drifted")
-    require(manifest.get("boundedEstablishedCount") == 15, "bounded established count drifted")
-    require(manifest.get("phase5ReferenceScenesComplete") is False, "Phase 5 must fail closed while Ecosystem Wall is open")
-    require(manifest.get("openSceneIds") == ["application-icon-ecosystem-wall"], "open scene set drifted")
+    require(manifest.get("requiredSceneCount") == 17, "required scene count drifted")
+    require(manifest.get("boundedEstablishedCount") == 17, "bounded established count drifted")
+    require(manifest.get("phase5BoundedReferenceScenesComplete") is True, "bounded Phase 5 source scene set is incomplete")
+    require(manifest.get("phase5ReferenceScenesComplete") is False, "human-accepted Phase 5 scenes must remain fail closed")
+    require(manifest.get("openSceneIds") == [], "bounded reference scene source set unexpectedly open")
+    require(manifest.get("humanReviewPending") is True, "human review must remain pending")
+    require(manifest.get("humanReviewPendingSceneIds") == ["living-glaze-material-lab", "application-icon-ecosystem-wall"], "explicit human-review scene set drifted")
 
     scenes = manifest.get("scenes")
     require(isinstance(scenes, list), "scenes must be an array")
     require([scene.get("id") for scene in scenes if isinstance(scene, dict)] == EXPECTED_IDS, "reference scene set/order drifted")
     established = [scene for scene in scenes if isinstance(scene, dict) and scene.get("status") == ESTABLISHED_STATUS]
-    opened = [scene for scene in scenes if isinstance(scene, dict) and scene.get("status") == OPEN_STATUS]
-    require(len(established) == 15, f"expected 15 bounded established scenes, found {len(established)}")
-    require(len(opened) == 1 and opened[0].get("id") == "application-icon-ecosystem-wall", "planned-open scene drifted")
-    require(len(established) + len(opened) == 16, "unexpected reference-scene status introduced")
+    require(len(established) == 17, f"expected 17 bounded established scenes, found {len(established)}")
+    require(len(established) == len(scenes), "unexpected reference-scene status introduced")
 
     boundary = manifest.get("evidenceBoundary", {})
-    require("bounded-v1.2-reference-scene-accounting" in boundary.get("established", []), "bounded accounting evidence missing")
+    for marker in (
+        "bounded-v1.2-reference-scene-accounting",
+        "all-17-bounded-reference-scene-sources-established",
+        "living-glaze-material-lab-source-and-rendered-validator-binding",
+        "application-icon-ecosystem-wall-review-artifact-source-binding",
+    ):
+        require(marker in boundary.get("established", []), f"established evidence missing: {marker}")
     for item in (
-        "phase5-reference-scenes-complete",
-        "application-icon-ecosystem-wall",
+        "phase5-reference-scenes-human-accepted",
+        "application-icon-ecosystem-wall-human-collision-review",
+        "living-frosted-human-optical-acceptance",
         "v1.2-human-approved-visual-baseline",
-        "full-visual-regression",
         "human-optical-acceptance",
         "assistive-technology-acceptance",
         "production-performance-acceptance",
@@ -100,9 +101,8 @@ def validate_manifest() -> tuple[dict[str, Any], list[dict[str, Any]]]:
 
 def validate_established_scenes(scenes: list[dict[str, Any]]) -> None:
     for scene in scenes:
-        if scene.get("status") != ESTABLISHED_STATUS:
-            continue
         scene_id = str(scene.get("id"))
+        require(scene.get("status") == ESTABLISHED_STATUS, f"{scene_id}: scene is not bounded established")
         source_path = scene.get("sourcePath")
         validator_path = scene.get("validatorPath")
         source_markers = scene.get("sourceMarkers")
@@ -125,17 +125,16 @@ def validate_established_scenes(scenes: list[dict[str, Any]]) -> None:
             require(isinstance(marker, str) and marker in validator_text, f"{scene_id}: validator marker missing: {marker}")
 
 
-def validate_open_scene(scenes: list[dict[str, Any]]) -> None:
-    scene = next(scene for scene in scenes if scene.get("id") == "application-icon-ecosystem-wall")
-    require(scene.get("status") == OPEN_STATUS, "Ecosystem Wall must remain planned-open until owner evidence changes")
-    owner_path = scene.get("ownerPath")
-    require(owner_path == "tokens/icon-identity.json", "Ecosystem Wall owner path drifted")
-    owner = load_json(ROOT / owner_path)
-    required = scene.get("requiredOwnerState")
-    require(isinstance(required, dict) and required, "Ecosystem Wall owner-state requirements missing")
-    for dotted, expected in required.items():
-        require(nested_get(owner, dotted) == expected, f"Ecosystem Wall owner state drifted: {dotted}")
-    require(owner.get("meta", {}).get("status") == "stable", "icon identity owner is not Stable")
+def validate_signature_scene_boundaries() -> None:
+    wall = load_json(ICON_WALL)
+    require(wall.get("status") == "review-artifact-generated-human-review-pending", "Ecosystem Wall bounded artifact state drifted")
+    require(wall.get("humanReview", {}).get("status") == "pending" and wall.get("humanReview", {}).get("finalAuthority") is True, "Ecosystem Wall human-review authority drifted")
+    require(wall.get("rules", {}).get("automatedCollisionAcceptance") is False, "Ecosystem Wall automation became collision authority")
+    require("human-collision-review" in wall.get("evidenceBoundary", {}).get("notEstablished", []), "Ecosystem Wall human collision blocker missing")
+
+    living = load_json(LIVING)
+    require(living.get("theme") == "Living Frosted" and living.get("consumerEligible") is False, "Living Frosted scene authority drifted")
+    require("human-optical-acceptance" in living.get("evidenceBoundary", {}).get("notEstablished", []), "Living Frosted human optical blocker missing")
 
 
 def validate_regression_boundaries(manifest: dict[str, Any]) -> None:
@@ -176,13 +175,13 @@ def main() -> int:
     try:
         manifest, scenes = validate_manifest()
         validate_established_scenes(scenes)
-        validate_open_scene(scenes)
+        validate_signature_scene_boundaries()
         validate_regression_boundaries(manifest)
         validate_workflow()
     except (ValidationError, json.JSONDecodeError, OSError) as error:
         print(f"FAIL: {error}")
         return 1
-    print("PASS: V1.2 Phase 5 reference-scene index is bounded, source-bound, and fail-closed at 15/16; Ecosystem Wall remains planned-open.")
+    print("PASS: V1.2 Phase 5 bounded reference-scene source set is complete at 17/17; human optical/collision review remains pending and authoritative.")
     return 0
 
 
