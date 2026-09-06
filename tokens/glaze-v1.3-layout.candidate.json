@@ -24,13 +24,13 @@
   "implementationValues": {
     "spaceScale": {"source": "tokens/glaze-v1.2-spatial-foundation.candidate.json", "pointer": "/spacePx", "mode": "inherited-baseline"},
     "densityProfiles": {"source": "tokens/glaze-v1.2-spatial-foundation.candidate.json", "pointer": "/density", "mode": "inherited-baseline"},
-    "compactEnvironment": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/compositionStates", "mode": "inherited-baseline"},
-    "mediumEnvironment": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/compositionStates", "mode": "inherited-baseline"},
-    "expandedEnvironment": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/compositionStates", "mode": "inherited-baseline"},
+    "compactEnvironment": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/compositionStates/compact", "mode": "inherited-baseline"},
+    "mediumEnvironment": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/compositionStates/medium", "mode": "inherited-baseline"},
+    "expandedEnvironment": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/compositionStates/expanded", "mode": "inherited-baseline"},
     "workspaceEnvironment": {"status": "architecture-established-runtime-unestablished", "ownerWorkstream": "multi-pane-foldable-desktop"},
-    "safeArea": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/safeArea", "mode": "inherited-baseline"},
-    "inputModality": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/inputModality", "mode": "inherited-baseline"},
-    "taskContinuity": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/taskContinuity", "mode": "inherited-baseline"}
+    "safeArea": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/safeAreaPolicy", "mode": "inherited-baseline"},
+    "inputModality": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/inputModalities", "mode": "inherited-baseline"},
+    "taskContinuity": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/adaptationRules", "mode": "inherited-baseline"}
   },
   "rules": {
     "reachableNotMerelyResponsive": true,
