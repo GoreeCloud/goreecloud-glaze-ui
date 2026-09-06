@@ -47,6 +47,14 @@
       "required": true
     },
     {
+      "id": "personalization-appearance",
+      "workflow": "Glaze V1.2 Personalization and Appearance Candidate",
+      "workflowPath": ".github/workflows/glaze-v1.2-personalization-appearance.yml",
+      "artifactNamePrefix": "glaze-v1.2-personalization-appearance-",
+      "kind": "appearance-personalization-wallpaper-atmosphere-and-adapter-screenshots",
+      "required": true
+    },
+    {
       "id": "exact-head-readiness",
       "workflow": "Glaze V1.2 Exact-Head Readiness Candidate",
       "workflowPath": ".github/workflows/glaze-v1.2-exact-head-readiness.yml",
@@ -65,6 +73,8 @@
     "living-frosted-clear-balanced-dense-differentiation-and-legibility",
     "living-glaze-interaction-restraint-focus-and-material-continuity",
     "navigation-capsule-reachability-hierarchy-and-context-continuity",
+    "personalization-appearance-accent-atmosphere-density-and-clarity-quality",
+    "bounded-wallpaper-atmosphere-subtlety-accessibility-and-semantic-isolation",
     "application-icon-family-consistency",
     "application-icon-identity-collision-review",
     "application-icon-compact-size-legibility"
@@ -82,6 +92,7 @@
     "artifactAssemblyMayNotSetHumanReviewComplete": true,
     "machineEvidenceMayNotSubstituteHumanOpticalAcceptance": true,
     "livingFrostedRenderedEvidenceMayNotSubstituteHumanAcceptance": true,
+    "personalizationRenderedEvidenceMayNotSubstituteHumanAcceptance": true,
     "humanReviewMayNotPromoteLifecycleByItself": true,
     "stableV11AuthorityMayNotMove": true,
     "consumerClaimBlocked": true
@@ -107,6 +118,7 @@
       "same-revision-human-review-handoff-contract",
       "machine-verifiable-artifact-source-bindings",
       "living-frosted-rendered-evidence-handoff",
+      "personalization-rendered-evidence-handoff",
       "bounded-review-dimensions",
       "pending-human-review-state"
     ],
@@ -114,6 +126,7 @@
       "human-collision-review",
       "human-optical-acceptance",
       "living-frosted-human-optical-acceptance",
+      "personalization-human-visual-acceptance",
       "human-approved-v1.2-canonical-screenshot-baseline",
       "phase5-reference-scenes-complete",
       "release-candidate",
