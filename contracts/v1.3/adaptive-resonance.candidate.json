@@ -41,17 +41,17 @@
     "platform"
   ],
   "tokenOwners": {
-    "color": "tokens/glaze-v1.3-color.candidate.json",
-    "material": "tokens/glaze-v1.3-material.candidate.json",
-    "shape": "tokens/glaze-v1.3-shape.candidate.json",
-    "typography": "tokens/glaze-v1.3-type.candidate.json",
-    "motion": "tokens/glaze-v1.3-motion.candidate.json",
-    "layout": "tokens/glaze-v1.3-layout.candidate.json",
-    "navigation": "tokens/glaze-v1.3-layout.candidate.json",
-    "state": "tokens/glaze-v1.2-states.candidate.json",
-    "accessibility": "tokens/glaze-v1.3-layout.candidate.json",
-    "personalization": "contracts/v1.3/personalization.candidate.json",
-    "platform": "tokens/glaze-v1.2-form-factor.candidate.json"
+    "color": {"status": "v1.3-architecture-established", "owner": "tokens/glaze-v1.3-color.candidate.json"},
+    "material": {"status": "v1.3-architecture-established", "owner": "tokens/glaze-v1.3-material.candidate.json"},
+    "shape": {"status": "v1.3-architecture-established", "owner": "tokens/glaze-v1.3-shape.candidate.json"},
+    "typography": {"status": "v1.3-architecture-established", "owner": "tokens/glaze-v1.3-type.candidate.json"},
+    "motion": {"status": "v1.3-architecture-established", "owner": "tokens/glaze-v1.3-motion.candidate.json"},
+    "layout": {"status": "v1.3-architecture-established", "owner": "tokens/glaze-v1.3-layout.candidate.json"},
+    "navigation": {"status": "deferred-to-workstream", "plannedOwner": "contracts/v1.3/adaptive-navigation.candidate.json", "ownerWorkstream": "adaptive-navigation"},
+    "state": {"status": "inherited-until-v1.3-component-experience", "owner": "tokens/glaze-v1.2-states.candidate.json", "ownerWorkstream": "signature-components-and-reference-suite"},
+    "accessibility": {"status": "cross-cutting-inherited-and-deferred", "ownerWorkstream": "accessibility-and-resilience", "rule": "accessibility precedence applies immediately even before a dedicated V1.3 contract exists"},
+    "personalization": {"status": "deferred-to-workstream", "plannedOwner": "contracts/v1.3/personalization.candidate.json", "ownerWorkstream": "personalization"},
+    "platform": {"status": "inherited-until-form-factor-workstream", "owner": "tokens/glaze-v1.2-form-factor.candidate.json", "ownerWorkstream": "multi-pane-foldable-desktop"}
   },
   "layerContract": {
     "semanticTokens": {
