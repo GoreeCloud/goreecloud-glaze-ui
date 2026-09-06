@@ -5,6 +5,7 @@ on:
     paths:
       - 'reference/v1.2/native/android/**'
       - 'scripts/validate_glaze_v1_2_android_runtime.py'
+      - 'scripts/validate_glaze_v1_2_android_personalization_runtime.py'
       - 'acceptance/v1.2-android-native-candidate.md'
       - '.github/workflows/glaze-v1.2-android-native.yml'
   workflow_dispatch:
@@ -23,8 +24,10 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
 
-      - name: Compile V1.2 Android native validator
-        run: python3 -m py_compile scripts/validate_glaze_v1_2_android_runtime.py
+      - name: Compile V1.2 Android native validators
+        run: |
+          python3 -m py_compile scripts/validate_glaze_v1_2_android_runtime.py
+          python3 -m py_compile scripts/validate_glaze_v1_2_android_personalization_runtime.py
 
       - name: Preserve current Stable and Candidate source contracts
         run: |
@@ -66,7 +69,7 @@ jobs:
           unzip -q /tmp/gradle-9.5.0-bin.zip -d /tmp
           echo "/tmp/gradle-9.5.0/bin" >> "$GITHUB_PATH"
 
-      - name: Build GLAZE UI V1.2 Android Frosted Neutral Candidate APK
+      - name: Build GLAZE UI V1.2 Android Native Candidate APK
         working-directory: reference/v1.2/native/android
         shell: bash
         env:
@@ -95,7 +98,7 @@ jobs:
           AvdId=$AVD_NAME
           PlayStore.enabled=false
           abi.type=x86_64
-          avd.ini.displayname=GLAZE UI V1.2 Frosted Neutral Candidate
+          avd.ini.displayname=GLAZE UI V1.2 Native Candidate
           avd.ini.encoding=UTF-8
           disk.dataPartition.size=4G
           fastboot.forceColdBoot=yes
@@ -160,6 +163,11 @@ jobs:
           GLAZE_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
         run: python3 scripts/validate_glaze_v1_2_android_runtime.py
 
+      - name: Run V1.2 Android Personalization adapter emulator evidence
+        env:
+          GLAZE_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python3 scripts/validate_glaze_v1_2_android_personalization_runtime.py
+
       - name: Upload V1.2 Android native Candidate evidence
         if: success()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -169,6 +177,7 @@ jobs:
             reference/v1.2/native/android/app/build/outputs/apk/debug/app-debug.apk
             .artifacts/glaze-v1.2-android-native/*.png
             .artifacts/glaze-v1.2-android-native/android-native-evidence.json
+            .artifacts/glaze-v1.2-android-native/android-personalization-evidence.json
           if-no-files-found: error
           retention-days: 30
 
