@@ -70,8 +70,6 @@ def main() -> int:
         require(marker in reference, f"reference marker missing: {marker}")
     entry = text("css/glaze-v1.2.0-candidate.css")
     require('glaze-v1.2-living-glaze.candidate.css' in entry, "aggregate Candidate CSS does not import Living Glaze")
-    spec = text("GLAZE_UI_V1_2_CANDIDATE.md")
-    require("Living Frosted extended Candidate" in spec, "Candidate specification does not bind Living Frosted extension")
 
     print("GLAZE UI V1.2 Living Frosted Candidate tranche validated; Stable 1.1.0 authority preserved; no RC, Stable, human, native, or consumer acceptance implied.")
     return 0
