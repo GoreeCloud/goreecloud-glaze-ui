@@ -6,6 +6,6 @@ The `website/` subtree in this Glaze UI repository is retained only as transitio
 
 Glaze UI design-system contracts, tokens, components, lifecycle authority, release evidence, and non-site reference material remain authoritative in `GoreeCloud/goreecloud-glaze-ui`; only the public static website source is centralized.
 
-The current Stable Glaze UI product identity remains **GLAZE UI V1.1** (`1.1.0`). Current production-readiness and consumer-conformance statements must be backed by exact-revision evidence and the lifecycle authority in `registry/lifecycle.json`.
+The current Stable Glaze UI product identity is **GLAZE UI V1.2** (`1.2.0`). Current production-readiness and consumer-conformance statements must be backed by exact-revision evidence and the lifecycle authority in `registry/lifecycle.json`.
 
-GLAZE UI V1.2 / `1.2.0-candidate` may be presented only as the active non-consumer-eligible Candidate until a separate governed lifecycle promotion occurs. Historical V1.0 and candidate/RC records remain audit evidence, not current consumer targets.
+GLAZE UI V1.1 / `1.1.0` is the retained previous Stable rollback baseline. The former V1.2 Candidate source lineage remains historical/promoted-source evidence only. Remaining external/manual/physical qualification work is tracked for V1.3 and is not represented as passed V1.2 evidence.
