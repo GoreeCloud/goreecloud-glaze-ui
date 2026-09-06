@@ -1,0 +1,42 @@
+name: Glaze V1.1 Post-Merge Release Evidence
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: glaze-v1.1-post-merge-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  stable-line-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact main revision
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Preserve current V1 Stable authority and import closure
+        run: python3 scripts/validate_glaze_v1.py
+
+      - name: Validate V1.1 specification and implementation contracts
+        run: |
+          python3 scripts/validate_glaze_v1_1_candidate.py
+          python3 scripts/validate_glaze_v1_1_implementation.py
+
+      - name: Validate current material, semantic-color, and layout contracts
+        run: |
+          python3 scripts/validate_materials.py
+          python3 scripts/validate_semantic_colors.py
+          python3 scripts/validate_layout.py
+
+  release-evidence:
+    needs: stable-line-validation
+    uses: ./.github/workflows/glaze-v1.1-release-evidence.yml
