@@ -1,0 +1,36 @@
+name: GLAZE UI V1.3 Phase 0
+
+on:
+  push:
+    branches:
+      - feat/glaze-ui-v1.3-adaptive-resonance
+  pull_request:
+    paths:
+      - 'GLAZE_UI_V1_3.md'
+      - 'contracts/v1.3/**'
+      - 'acceptance/v1.3-**'
+      - 'scripts/validate_glaze_v1_3_phase0.py'
+      - 'registry/lifecycle.json'
+      - 'VERSION'
+      - '.github/workflows/glaze-v1.3-phase0.yml'
+
+jobs:
+  validate-v1-3-phase0:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - name: Compile V1.3 Phase 0 validator
+        run: python -m py_compile scripts/validate_glaze_v1_3_phase0.py
+      - name: Validate V1.2 Stable source authority
+        run: python scripts/validate_glaze_v1_2_stable.py
+      - name: Validate V1.3 Adaptive Resonance Phase 0 boundary
+        run: python scripts/validate_glaze_v1_3_phase0.py
+      - name: Parse V1.3 planning contracts
+        run: |
+          python -m json.tool contracts/v1.3/adaptive-resonance.plan.json >/dev/null
+          python -m json.tool contracts/v1.3/deferred-qualification.plan.json >/dev/null
