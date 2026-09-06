@@ -68,6 +68,49 @@ def validate_source() -> None:
     }
     require(set(contract.get("categories", [])) == expected_categories, "artwork category model drifted")
 
+    treatment = contract.get("treatmentRules", {})
+    require(treatment.get("functionalPriority") == ["task", "content", "state", "interaction", "information-hierarchy", "artwork"], "artwork functional priority drifted")
+    character = treatment.get("artworkCharacter", {})
+    require(set(character.get("required", [])) == {"refined", "calm", "precise", "atmospheric", "recognizably-goreecloud", "contemporary", "purposeful"}, "V1.2 artwork character drifted")
+    require(set(character.get("materialIdentity", [])) == {"light", "frost", "refraction", "geometry", "layering", "depth", "edge-illumination", "negative-space"}, "V1.2 artwork material identity drifted")
+    require(character.get("literalGlassEverywhere") is False and character.get("routineHighSaturationGradientBranding") is False, "artwork restraint weakened")
+    illustration = treatment.get("illustrationStyle", {})
+    require(set(illustration.get("preferred", [])) == {"strong-silhouettes", "clean-geometric-construction", "controlled-depth", "soft-atmospheric-lighting", "restrained-detail", "deliberate-negative-space"}, "illustration style drifted")
+    require(illustration.get("flatPresentationAllowedWhenItImprovesRecognitionAccessibilityOrCost") is True and illustration.get("restrainedDimensionalPresentationAllowed") is True, "illustration modality options drifted")
+    require(illustration.get("chaoticVisualComplexity") is False and illustration.get("exaggeratedPlastic3d") is False, "illustration restraint weakened")
+    hero = treatment.get("heroImagery", {})
+    require(hero.get("routineProductivityDefault") is False, "hero artwork became a routine productivity default")
+    require(set(hero.get("allowedContexts", [])) == {"major-first-use", "product-introduction", "immersive-content", "high-value-identity-moment"}, "hero artwork contexts drifted")
+    require(hero.get("quietZonesRequiredFor") == ["title", "supporting-copy", "primary-action"] and hero.get("essentialTextMayOverlayBusiestRegion") is False, "hero quiet-zone/text protection drifted")
+    empty = treatment.get("emptyState", {})
+    require(empty.get("compact") is True and empty.get("optionalWhenUnnecessary") is True and empty.get("domainRelevantSymbolismRequired") is True, "empty-state artwork behavior drifted")
+    require(empty.get("understandingPriority") == ["what-is-empty", "why-it-is-empty", "available-action"], "empty-state information priority drifted")
+    require(empty.get("routineArtworkMayConsumeMostOfViewport") is False and empty.get("mayImplySuccessOrRecoveryBeforeAuthoritativeConfirmation") is False, "empty-state restraint/truth boundary weakened")
+    wallpaper = treatment.get("wallpaper", {})
+    require(wallpaper.get("role") == "background-non-semantic" and wallpaper.get("subordinateToApplicationContent") is True, "wallpaper hierarchy drifted")
+    require(set(wallpaper.get("materialProtection", [])) == {"opacity", "saturation-reduction", "blur-or-equivalent-fallback", "local-contrast", "frost-density"}, "wallpaper material protection drifted")
+    require(wallpaper.get("mayDetermineSemanticStatusFocusSecurityPrivacyOrCriticalMeaning") is False and wallpaper.get("requiredForGlazeIdentity") is False, "wallpaper gained semantic/identity authority")
+    require(wallpaper.get("reducedMotionRequiresStillOrSimplifiedNonessentialMotion") is True and wallpaper.get("lowPerformanceMayUseStaticOrSimplifiedPresentation") is True, "wallpaper adaptation guards drifted")
+    thumbnail = treatment.get("mediaThumbnail", {})
+    require(thumbnail.get("contentRecognitionMustBePreserved") is True and thumbnail.get("minimalOverlaysOnly") is True, "thumbnail recognition/overlay policy drifted")
+    require(set(thumbnail.get("allowedOverlays", [])) == {"duration", "media-type", "selection", "play-affordance"}, "thumbnail overlay model drifted")
+    require(thumbnail.get("meaningfulSubjectCropPreferred") is True and thumbnail.get("loadingPlaceholderPreservesFinalAspectRatio") is True, "thumbnail crop/loading behavior drifted")
+    screenshots = treatment.get("screenshots", {})
+    require(screenshots.get("mustBeActualOrClearlyConceptual") is True and screenshots.get("mustRemainVersionAligned") is True, "screenshot truth/version policy drifted")
+    require(set(screenshots.get("allowedFraming", [])) == {"subtle-device-frame", "frosted-surrounding-card", "clean-crop", "restrained-shadow"}, "screenshot framing drifted")
+    require(screenshots.get("interfaceMustRemainReadable") is True and screenshots.get("speculativeMockupMayClaimImplementedBehavior") is False, "screenshot readability/truth boundary weakened")
+    image = treatment.get("imageIntegration", {})
+    require(image.get("cornerRadiusToken") == "--glz12-radius-surface" and image.get("cornerGeometryMustFollowSharedGlazeGeometry") is True, "image corner geometry drifted")
+    overlay = image.get("frostOverlay", {})
+    require(overlay.get("defaultRequired") is False and overlay.get("allowedWhen") == "text-overlaps-variable-imagery", "imagery frost-overlay policy drifted")
+    require(overlay.get("mustPreserveContentRecognition") is True and overlay.get("reducedTransparencyFallbackRequired") is True, "imagery frost-overlay safeguards drifted")
+    text_protection = image.get("textProtection", {})
+    require(text_protection.get("liveInterfaceTypographyPreferred") is True and text_protection.get("essentialTextMustNotDependOnBusyImageRegion") is True, "image text-protection hierarchy drifted")
+    require(text_protection.get("localContrastProtectionRequiredWhenTextOverlapsImagery") is True and text_protection.get("embeddedEssentialUntranslatedTextWithoutAlternativeAllowed") is False, "image text-protection accessibility drifted")
+    tint = image.get("environmentalTint", {})
+    require(tint.get("rawWallpaperOrImageSamplingOwnedByGlaze") is False and tint.get("producerSuppliedLocalRgbSummaryOnly") is True, "environmental tint authority drifted")
+    require(tint.get("remoteSampling") is False and tint.get("semanticStateDerivation") is False and tint.get("reducedTransparencyMaySuppressDecorativeTint") is True, "environmental tint privacy/semantic guards drifted")
+
     provenance = contract.get("sourceAndProvenance", {})
     for key in (
         "sharedArtworkRequiresCanonicalSource",
@@ -136,7 +179,15 @@ def validate_source() -> None:
 
     evidence = contract.get("evidenceBoundary", {})
     implemented = set(evidence.get("implemented", []))
-    require("approved-glaze-ui-identity-provenance" in implemented, "approved Glaze identity provenance is not recorded as implemented")
+    required_implemented = {
+        "artwork-style-contract", "illustration-style-contract", "hero-imagery-treatment-contract",
+        "empty-state-artwork-contract", "wallpaper-material-interaction-contract",
+        "media-thumbnail-treatment-contract", "screenshot-treatment-contract",
+        "image-corner-geometry-contract", "conditional-frost-overlay-contract",
+        "image-text-protection-contract", "bounded-environmental-tint-contract",
+        "functional-content-priority-contract", "approved-glaze-ui-identity-provenance",
+    }
+    require(required_implemented.issubset(implemented), "artwork treatment/provenance implementation evidence drifted")
     not_established = set(evidence.get("notEstablished", []))
     require({
         "canonical-v1.2-product-artwork-library", "shared-illustration-asset-library",
