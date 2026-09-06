@@ -11,6 +11,9 @@
   "sourceStable": "1.2.0",
   "namespace": "shape",
   "semanticTokens": {
+    "shape.quiet": {"implementation": "quietRadius", "meaning": "calm high-density geometry"},
+    "shape.soft": {"implementation": "softRadius", "meaning": "standard structural surface geometry"},
+    "shape.rounded": {"implementation": "roundedRadius", "meaning": "visually distinct interactive geometry"},
     "shape.container": {"implementation": "containerRadius", "meaning": "general semantic container geometry"},
     "shape.containerInner": {"implementation": "containerInnerRadius", "meaning": "concentric child geometry within a container"},
     "shape.control": {"implementation": "controlRadius", "meaning": "standard interactive control geometry"},
@@ -23,6 +26,9 @@
     "shape.morphable": {"implementation": "morphableRules", "meaning": "compatible semantic transitions between shape roles"}
   },
   "implementationValues": {
+    "quietRadius": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/compact", "mode": "inherited-alias"},
+    "softRadius": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/surface", "mode": "inherited-alias"},
+    "roundedRadius": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/panel", "mode": "inherited-alias"},
     "containerRadius": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/surface", "mode": "inherited-alias"},
     "containerInnerRadius": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/control", "mode": "initial-inherited-alias", "requiresOpticalCalibration": true},
     "controlRadius": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/control", "mode": "inherited-alias"},
@@ -30,27 +36,30 @@
     "overlayRadius": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/sheet", "mode": "inherited-alias"},
     "overlayInnerRadius": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/panel", "mode": "initial-inherited-alias", "requiresOpticalCalibration": true},
     "pillRadius": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/pill", "mode": "inherited-alias"},
-    "expressiveLibrary": {"status": "architecture-established-runtime-unestablished", "ownerWorkstream": "expressive-shape"},
-    "heroLibrary": {"status": "architecture-established-runtime-unestablished", "ownerWorkstream": "expressive-shape"},
-    "morphableRules": {"status": "architecture-established-runtime-unestablished", "ownerWorkstream": "expressive-shape"}
+    "expressiveLibrary": {"source": "contracts/v1.3/expressive-shape.candidate.json", "pointer": "/expressiveLibrary", "mode": "v1.3-governed-profile-library"},
+    "heroLibrary": {"source": "contracts/v1.3/expressive-shape.candidate.json", "pointer": "/heroLibrary", "mode": "v1.3-governed-profile-library"},
+    "morphableRules": {"source": "contracts/v1.3/expressive-shape.candidate.json", "pointer": "/morphCompatibility", "mode": "v1.3-governed-morph-contract"}
   },
   "concentricity": {
     "required": true,
     "inputs": ["parent-radius", "child-inset", "optical-correction", "platform-rendering"],
+    "referenceFormula": "max(0, parentRadius - childInset + opticalCorrection)",
     "applicationsShouldHandSelectUnrelatedRadii": false
   },
+  "runtimeAuthority": "js/glaze-v1.3-shape.candidate.mjs",
   "rules": {
     "shapeReinforcesHierarchyOrIdentity": true,
     "expressiveShapeIsDefaultForAllControls": false,
     "heroShapeMustRemainRare": true,
     "morphingMustPreserveSemanticMeaning": true,
+    "continuousDecorativeMorphingAllowed": false,
     "shapeMayBeOnlyStateSignal": false,
     "semanticTokensMayContainRawRadiusValues": false
   },
   "notEstablished": [
-    "expressive-shape-library-values",
-    "hero-shape-library-values",
-    "shape-morph-compatibility-matrix",
-    "platform-optical-correction-values"
+    "human-optical-shape-acceptance",
+    "platform-optical-correction-values",
+    "physical-device-shape-rendering-acceptance",
+    "product-specific-shape-extension-acceptance"
   ]
 }
