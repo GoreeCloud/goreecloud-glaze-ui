@@ -14,9 +14,14 @@
     "layout.space.scale": {"implementation": "spaceScale", "meaning": "shared spacing authority"},
     "layout.density": {"implementation": "densityProfiles", "meaning": "information-density authority"},
     "layout.environment.compact": {"implementation": "compactEnvironment", "meaning": "compact single-pane environment"},
-    "layout.environment.medium": {"implementation": "mediumEnvironment", "meaning": "medium-width adaptive environment"},
+    "layout.environment.medium": {"implementation": "mediumEnvironment", "meaning": "medium adaptive environment"},
     "layout.environment.expanded": {"implementation": "expandedEnvironment", "meaning": "expanded multi-region environment"},
     "layout.environment.workspace": {"implementation": "workspaceEnvironment", "meaning": "persistent multi-pane productivity environment"},
+    "layout.pane.primary": {"implementation": "paneRoles.primary", "meaning": "current task or main content region"},
+    "layout.pane.secondary": {"implementation": "paneRoles.secondary", "meaning": "supporting list, detail, queue, or adjacent context"},
+    "layout.pane.inspector": {"implementation": "paneRoles.inspector", "meaning": "properties, metadata, tools, or contextual inspection"},
+    "layout.posture": {"implementation": "posturePolicy", "meaning": "platform-declared fold/posture composition authority"},
+    "layout.unsafeRegion": {"implementation": "unsafeRegionPolicy", "meaning": "platform-declared hinge, cutout, and obstruction avoidance"},
     "layout.safeArea": {"implementation": "safeArea", "meaning": "platform safe-area and obstruction-aware composition"},
     "layout.inputModality": {"implementation": "inputModality", "meaning": "composition response to touch, pointer, keyboard, directional, or other supported input"},
     "layout.taskContinuity": {"implementation": "taskContinuity", "meaning": "preservation of task and selection across layout transformation"}
@@ -27,7 +32,48 @@
     "compactEnvironment": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/compositionStates/compact", "mode": "inherited-baseline"},
     "mediumEnvironment": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/compositionStates/medium", "mode": "inherited-baseline"},
     "expandedEnvironment": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/compositionStates/expanded", "mode": "inherited-baseline"},
-    "workspaceEnvironment": {"status": "architecture-established-runtime-unestablished", "ownerWorkstream": "multi-pane-foldable-desktop"},
+    "workspaceEnvironment": {
+      "status": "implemented-candidate-runtime",
+      "ownerWorkstream": "multi-pane-foldable-desktop",
+      "defaultComposition": "triplePane",
+      "fallbackComposition": "dualPane",
+      "persistentProductivityRegionsAllowed": true,
+      "requiresTaskValueForAdditionalPanes": true
+    },
+    "paneRoles": {
+      "status": "implemented-candidate-runtime",
+      "ownerWorkstream": "multi-pane-foldable-desktop",
+      "primary": "current-task-or-main-content",
+      "secondary": "supporting-list-detail-queue-or-context",
+      "inspector": "properties-metadata-tools-or-inspection",
+      "navigation": "environment-governed-navigation-region",
+      "utility": "supplementary-task-controls-or-status"
+    },
+    "compositionStates": {
+      "status": "implemented-candidate-runtime",
+      "ownerWorkstream": "multi-pane-foldable-desktop",
+      "singlePane": {"maximumContentPanes": 1},
+      "dualPane": {"maximumContentPanes": 2},
+      "triplePane": {"maximumContentPanes": 3},
+      "dualRegionHinge": {"maximumContentPanes": 2, "hingeActsAsStructuralDivider": true}
+    },
+    "posturePolicy": {
+      "status": "implemented-candidate-runtime",
+      "ownerWorkstream": "multi-pane-foldable-desktop",
+      "folded": "single-pane-first",
+      "unfolded": "may-add-task-valued-panes",
+      "halfOpen": "may-use-platform-declared-dual-region-hinge",
+      "flat": "declared-environment-and-capabilities",
+      "unknown": "environment-policy-without-posture-specialization"
+    },
+    "unsafeRegionPolicy": {
+      "status": "implemented-candidate-policy",
+      "ownerWorkstream": "multi-pane-foldable-desktop",
+      "platformProvidedRegionsRequired": true,
+      "hardCodedDeviceHingeGeometryAllowed": false,
+      "criticalTargetsAvoidUnsafeRegions": true,
+      "textMayCrossUnsafeRegions": false
+    },
     "safeArea": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/safeAreaPolicy", "mode": "inherited-baseline"},
     "inputModality": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/inputModalities", "mode": "inherited-baseline"},
     "taskContinuity": {"source": "tokens/glaze-v1.2-form-factor.candidate.json", "pointer": "/adaptationRules", "mode": "inherited-baseline"}
@@ -37,17 +83,25 @@
     "layoutMayStretchMobileCompositionOntoDesktop": false,
     "layoutMayCompressDesktopCompositionIntoPhone": false,
     "additionalSpaceShouldImproveTaskCompletion": true,
+    "additionalPaneRequiresTaskValue": true,
     "taskAndSelectionContinuityRequiredAcrossTransformation": true,
+    "unsavedWorkMustSurviveRecomposition": true,
     "safeAreasAndPostureMustBeRespected": true,
+    "hardCodedDeviceHingeGeometryAllowed": false,
+    "rawViewportWidthIsCompositionAuthority": false,
+    "deviceBrandBreakpointsCanonical": false,
     "accessibilityReflowMayOverrideDensityAndPresentation": true,
+    "accessibilityMayCollapsePaneCount": true,
+    "targetSizeMayShrinkToPreservePaneCount": false,
     "semanticTokensMayContainRawSpacingOrBreakpointValues": false
   },
   "notEstablished": [
-    "v1.3-reachability-zone-values",
-    "v1.3-adaptive-navigation-breakpoints",
-    "workspace-pane-contract",
-    "foldable-posture-contract",
-    "far-view-contract",
-    "wearable-production-support"
+    "oem-hinge-matrix",
+    "physical-foldable-acceptance",
+    "production-window-manager-integration",
+    "platform-environment-threshold-calibration",
+    "far-view-physical-acceptance",
+    "wearable-production-support",
+    "native-form-factor-parity"
   ]
 }
