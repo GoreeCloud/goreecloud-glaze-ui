@@ -1,230 +1,57 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://goreecloud.com/schemas/glaze.conformance-evidence.schema.json",
-  "title": "GLAZE UI V1.1 Conformance Evidence Record",
+  "title": "GLAZE UI V1.2 Conformance Evidence Record",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "schema_version",
-    "producer",
-    "target",
-    "observed_at",
-    "valid_until",
-    "claim",
-    "acceptance",
-    "integral_platform_integrations",
-    "evidence_references"
-  ],
+  "required": ["schema_version","producer","target","observed_at","valid_until","claim","acceptance","integral_platform_integrations","evidence_references"],
   "properties": {
-    "schema_version": {
-      "const": 2
-    },
+    "schema_version": {"const": 2},
     "producer": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "system",
-        "authoritative"
-      ],
+      "required": ["system","authoritative"],
       "properties": {
-        "system": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 160
-        },
-        "authoritative": {
-          "const": true
-        }
+        "system": {"type":"string","minLength":1,"maxLength":160},
+        "authoritative": {"const":true}
       }
     },
     "target": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "application",
-        "glaze_version",
-        "source_revision",
-        "form_factors"
-      ],
+      "required": ["application","glaze_version","source_revision","form_factors"],
       "properties": {
-        "application": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 160
-        },
-        "glaze_version": {
-          "const": "1.1.0"
-        },
-        "source_revision": {
-          "type": "string",
-          "pattern": "^[0-9a-f]{40}$"
-        },
-        "form_factors": {
-          "type": "array",
-          "minItems": 1,
-          "uniqueItems": true,
-          "items": {
-            "enum": [
-              "mobile",
-              "tablet",
-              "desktop",
-              "tv",
-              "foldable",
-              "wearable",
-              "spatial"
-            ]
-          }
-        }
+        "application": {"type":"string","minLength":1,"maxLength":160},
+        "glaze_version": {"const":"1.2.0"},
+        "source_revision": {"type":"string","pattern":"^[0-9a-f]{40}$"},
+        "form_factors": {"type":"array","minItems":1,"uniqueItems":true,"items":{"enum":["mobile","tablet","desktop","tv","foldable","wearable","spatial"]}}
       }
     },
-    "observed_at": {
-      "type": "string",
-      "format": "date-time"
-    },
-    "valid_until": {
-      "type": "string",
-      "format": "date-time"
-    },
+    "observed_at": {"type":"string","format":"date-time"},
+    "valid_until": {"type":"string","format":"date-time"},
     "claim": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "kind",
-        "accepted"
-      ],
-      "properties": {
-        "kind": {
-          "enum": [
-            "conformance",
-            "production_ui_acceptance"
-          ]
-        },
-        "accepted": {
-          "type": "boolean"
-        }
-      }
+      "type":"object","additionalProperties":false,"required":["kind","accepted"],
+      "properties":{"kind":{"enum":["conformance","production_ui_acceptance"]},"accepted":{"type":"boolean"}}
     },
     "acceptance": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "current_stable_required",
-        "application_specific_acceptance_complete"
-      ],
-      "properties": {
-        "current_stable_required": {
-          "const": true
-        },
-        "application_specific_acceptance_complete": {
-          "type": "boolean"
-        }
-      }
+      "type":"object","additionalProperties":false,"required":["current_stable_required","application_specific_acceptance_complete"],
+      "properties":{"current_stable_required":{"const":true},"application_specific_acceptance_complete":{"type":"boolean"}}
     },
     "integral_platform_integrations": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "identity",
-        "privacy_shield",
-        "wardveil_security",
-        "everkeep",
-        "goreecloud_mesh"
-      ],
-      "properties": {
-        "identity": {
-          "$ref": "#/$defs/integrationEvidence"
-        },
-        "privacy_shield": {
-          "$ref": "#/$defs/integrationEvidence"
-        },
-        "wardveil_security": {
-          "$ref": "#/$defs/integrationEvidence"
-        },
-        "everkeep": {
-          "$ref": "#/$defs/integrationEvidence"
-        },
-        "goreecloud_mesh": {
-          "$ref": "#/$defs/integrationEvidence"
-        }
-      }
+      "type":"object","additionalProperties":false,
+      "required":["identity","privacy_shield","wardveil_security","everkeep","goreecloud_mesh"],
+      "properties":{"identity":{"$ref":"#/$defs/integrationEvidence"},"privacy_shield":{"$ref":"#/$defs/integrationEvidence"},"wardveil_security":{"$ref":"#/$defs/integrationEvidence"},"everkeep":{"$ref":"#/$defs/integrationEvidence"},"goreecloud_mesh":{"$ref":"#/$defs/integrationEvidence"}}
     },
-    "evidence_references": {
-      "type": "array",
-      "minItems": 1,
-      "maxItems": 50,
-      "uniqueItems": true,
-      "items": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 500
-      }
-    }
+    "evidence_references": {"type":"array","minItems":1,"maxItems":50,"uniqueItems":true,"items":{"type":"string","minLength":1,"maxLength":500}}
   },
   "$defs": {
     "integrationEvidence": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "applicability",
-        "current_evidence_valid",
-        "evidence_references"
-      ],
-      "properties": {
-        "applicability": {
-          "enum": [
-            "applicable",
-            "not_applicable"
-          ]
-        },
-        "current_evidence_valid": {
-          "type": "boolean"
-        },
-        "evidence_references": {
-          "type": "array",
-          "maxItems": 20,
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 500
-          }
-        }
-      }
+      "type":"object","additionalProperties":false,"required":["applicability","current_evidence_valid","evidence_references"],
+      "properties":{"applicability":{"enum":["applicable","not_applicable"]},"current_evidence_valid":{"type":"boolean"},"evidence_references":{"type":"array","maxItems":20,"uniqueItems":true,"items":{"type":"string","minLength":1,"maxLength":500}}}
     }
   },
-  "allOf": [
-    {
-      "if": {
-        "properties": {
-          "claim": {
-            "properties": {
-              "accepted": {
-                "const": true
-              }
-            },
-            "required": [
-              "accepted"
-            ]
-          }
-        },
-        "required": [
-          "claim"
-        ]
-      },
-      "then": {
-        "properties": {
-          "acceptance": {
-            "properties": {
-              "application_specific_acceptance_complete": {
-                "const": true
-              }
-            },
-            "required": [
-              "application_specific_acceptance_complete"
-            ]
-          }
-        }
-      }
-    }
-  ]
+  "allOf": [{
+    "if":{"properties":{"claim":{"properties":{"accepted":{"const":true}},"required":["accepted"]}},"required":["claim"]},
+    "then":{"properties":{"acceptance":{"properties":{"application_specific_acceptance_complete":{"const":true}},"required":["application_specific_acceptance_complete"]}}}
+  }]
 }
