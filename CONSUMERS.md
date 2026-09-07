@@ -1,6 +1,6 @@
 # GLAZE UI V1.2 Consumers
 
-The machine-readable authority for current consumer state is `consumers/registry.json`.
+The machine-readable consumer registry authority for current consumer state is `consumers/registry.json`.
 
 The required target for every applicable GoreeCloud user-facing consumer is **GLAZE UI V1.2** (`1.2.0`). Fresh repository-local V1.2 adoption and acceptance evidence is required for each consumer; prior V1.1, V1.0, Candidate, or pre-reset evidence does not automatically establish current conformance.
 
