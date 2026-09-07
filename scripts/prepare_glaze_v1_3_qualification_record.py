@@ -32,6 +32,18 @@ WORKSTREAMS = {
     "stable-activation": "stable-activation-and-source-namespace-cleanup",
 }
 
+# These defaults mirror the evaluator's accepted review-authority boundary. They
+# describe how a future real session must be reviewed; they do not imply that the
+# session has happened or that any draft is acceptable evidence.
+DEFAULT_REVIEW_MODES = {
+    "human-optical": "human",
+    "assistive-technology": "human",
+    "physical-device": "combined",
+    "physical-performance": "combined",
+    "personalization-adapter": "combined",
+    "stable-activation": "combined",
+}
+
 WORKSTREAM_NOTES = {
     "human-optical": (
         "Real human optical review is incomplete. Before a pass is possible, review all "
@@ -124,7 +136,7 @@ def build_record(
         "status": "in_progress",
         "observed_at": observed_at or observed_at_now(),
         "review_authority": {
-            "mode": "human",
+            "mode": DEFAULT_REVIEW_MODES[kind],
             "authority": operator,
         },
         "environment": environment,
@@ -207,6 +219,7 @@ def main() -> None:
 
     print(f"Created fail-closed V1.3 qualification draft: {output.relative_to(ROOT)}")
     print(f"Workstream: {record['workstream_id']}")
+    print(f"Review authority mode: {record['review_authority']['mode']}")
     print(f"Exact source revision: {record['target']['source_revision']}")
     print("Status: in_progress; accepted_for_lifecycle_gate: false")
     print("This file is a preparation aid only. It is not accepted qualification evidence and grants no lifecycle promotion.")
