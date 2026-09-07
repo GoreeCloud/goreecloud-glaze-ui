@@ -18,6 +18,12 @@ The frozen V1.3 candidate inherits the bounded V1.2 Stable motion layer. Relevan
 
 The reference page was exercised live in Firefox. The reviewer performed click-and-hold/release interaction on the Project brief MorphCard and the Capsule Open action in normal motion mode, then repeated the same interactions after enabling `data-mode="reduced-motion"`.
 
+On 2026-09-07 the reviewer explicitly reconfirmed the live result as **Motion PASS** while viewing the frozen V1.3 Signature Components + Composition Reference Suite. A full-page capture supplied with that attestation has SHA-256 fingerprint:
+
+`d18e9a2c8c8240618d6907279b9a04a15a37f63be55d274a144a38ca1235260b`
+
+The capture is supporting provenance for the observed page/revision context; motion acceptance itself is based on the reviewer's live interaction rather than a static image.
+
 ## Human disposition
 
 **PASS**
