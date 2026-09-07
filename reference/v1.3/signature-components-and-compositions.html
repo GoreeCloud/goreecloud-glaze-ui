@@ -7,14 +7,21 @@
   <link rel="stylesheet" href="../../css/glaze-v1.2.0.css">
   <style>
     *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;padding:24px;font:16px/1.5 system-ui,sans-serif;overflow-x:hidden}
-    main{max-inline-size:1120px;margin:auto;display:grid;gap:28px}
+    body{margin:0;min-height:100vh;padding:clamp(16px,3vw,32px);font:16px/1.5 system-ui,sans-serif;overflow-x:hidden}
+    main{max-inline-size:1120px;margin:auto;display:grid;gap:36px}
+    header,section{display:grid;gap:16px}
+    header>* ,section>h2{margin:0}
+    h1,h2,h3{line-height:1.2}
     .reference-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px}
-    .reference-card,.reference-scene{padding:18px;border:1px solid currentColor;border-radius:20px;min-inline-size:0}
-    .reference-scene{display:grid;gap:10px}
-    code,output{overflow-wrap:anywhere}
-    button{min-block-size:48px;min-inline-size:48px;font:inherit}
-    @media(max-width:560px){body{padding:12px}.reference-grid{grid-template-columns:1fr}}
+    .reference-card,.reference-scene{padding:20px;border:1px solid currentColor;border-radius:20px;min-inline-size:0;display:grid;align-content:start;gap:12px}
+    .reference-card>*,.reference-scene>*{margin:0;min-inline-size:0}
+    .reference-card nav{display:flex;flex-wrap:wrap;gap:8px}
+    .reference-card label{display:grid;gap:6px}
+    .reference-card input{inline-size:100%;min-inline-size:0;padding:8px 10px;font:inherit}
+    output{display:block;line-height:1.45;overflow-wrap:normal;word-break:normal;hyphens:none}
+    code{overflow-wrap:anywhere}
+    button{min-block-size:48px;min-inline-size:48px;max-inline-size:100%;padding-inline:12px;font:inherit}
+    @media(max-width:560px){body{padding:12px}.reference-grid{grid-template-columns:1fr}.reference-card,.reference-scene{padding:18px}}
   </style>
 </head>
 <body>
