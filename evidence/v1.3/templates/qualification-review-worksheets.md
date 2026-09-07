@@ -4,10 +4,11 @@ These worksheets are preparation aids for the six blocking qualification tracks.
 
 They never confer `passed`, lifecycle acceptance, Candidate status, consumer eligibility, or conformance. Only create a top-level `evidence/v1.3/*.json` record after the corresponding exact-revision review is complete and explicitly dispositioned under `contracts/v1.3/qualification-evidence.schema.json`.
 
-## Human optical + icon/artwork collision
+## Human optical + visual finish + icon/artwork collision
 
 **Workstream:** `human-optical-and-icon-collision-qualification`  
-**Accepted authority:** human or combined
+**Accepted authority:** human or combined  
+**Mandatory quality authority:** `contracts/v1.3/quality-rules.candidate.json`
 
 - Promotion-candidate SHA:
 - Reviewer / authority:
@@ -15,14 +16,26 @@ They never confer `passed`, lifecycle acceptance, Candidate status, consumer eli
 - Build or preview reference:
 
 Checklist:
+- [ ] All 55 rule IDs `quality-01` through `quality-55` reviewed against the exact source revision.
+- [ ] Visual Finish Gate accepted: composition, spacing, optical alignment, hierarchy, typography, geometry, color, material, icons, motion, interaction/accessibility states, responsiveness, Light, Dark, and Deep Dark are visually complete.
+- [ ] Blandness Rejection Gate accepted: no reviewed major experience is reasonably described as bland, boring, dry, generic, sterile, unfinished, dated, lifeless, or visually weak.
+- [ ] Beauty Without Usability Loss accepted: no aesthetic treatment reduces readability, obscures state, shrinks targets, slows task completion, weakens focus/navigation/contrast, or creates motion dependency.
+- [ ] Accessibility Is Part of Beauty reviewed under Reduced Transparency, Reduced Motion, Increased Contrast, Forced Colors, large text/reflow, and other applicable modes.
+- [ ] Responsive Beauty reviewed across the claimed compact, medium, expanded, workspace, foldable/posture, and far-view environments.
+- [ ] Final Quality Test accepted for clarity, deliberate composition, personality, current visual language, tactility, hierarchy, spacing, material conviction, icon/type optical balance, polished states, accessibility presentation, and personalization identity.
 - [ ] Light appearance reviewed.
 - [ ] Dark appearance reviewed.
 - [ ] Deep Dark appearance reviewed.
-- [ ] Clarity profiles reviewed.
+- [ ] Clarity and Expression profiles reviewed.
 - [ ] Representative reference scenes reviewed.
-- [ ] Compact-size icons/artwork checked for collision, clipping, washout, and illegibility.
-- [ ] Reduced Transparency / Forced Colors behavior visually checked where applicable.
-- [ ] Issues have inspectable references and dispositions.
+- [ ] Signature surfaces and distinctive moments reviewed, including applicable Navigation Capsule, Universal Search, Control Center, primary actions, media controls, and contextual surfaces.
+- [ ] Microstates reviewed: rest, hover, focus, pressed, selected, disabled, loading, error, success, empty, dragging, editing, reduced transparency, reduced motion, and increased contrast where applicable.
+- [ ] Compact-size icons/artwork checked for collision, clipping, washout, illegibility, apparent-weight mismatch, and optical misalignment.
+- [ ] Material thickness, diffusion, lighting, specular behavior, depth hierarchy, and Solid/Glaze restraint reviewed.
+- [ ] Scroll, overlay, focus, selection, cardification, capsule saturation, effect saturation, and visual-monoculture risks reviewed.
+- [ ] Issues have inspectable references and dispositions; unresolved material visual defects block a pass.
+
+A passed evidence record must use `schema_version: 2` and populate `quality_review` with the quality contract path, all 55 rule IDs, and every required acceptance flag set to `true`. Automation cannot supply the human acceptance judgment.
 
 ## Manual assistive technology
 
