@@ -1,10 +1,10 @@
 # GLAZE UI V1.3 — Final Visual Sweep Supporting Evidence
 
-**Status:** supporting review complete; final human attestation pending  
+**Status:** supporting review complete; final human attestation accepted  
 **Observed source revision:** `72ad63bf32d80420b25dc98bfd2def47bcc2a427`  
 **Observed lifecycle:** `1.3.0-candidate`  
 **Evidence date:** 2026-09-07  
-**Workstream relationship:** supports `human-optical-and-icon-collision-qualification`; this file is not itself lifecycle acceptance.
+**Workstream relationship:** supports `human-optical-and-icon-collision-qualification`; lifecycle acceptance is represented separately by the schema-v2 qualification record.
 
 ## Frozen reference surfaces reviewed
 
@@ -14,7 +14,7 @@ The human reviewer exercised the inherited Stable visual surfaces at the same fr
 - `reference/v1.2/states-feedback-recovery.html`
 - `reference/v1.2/overlay-components.html`
 
-These surfaces cover the remaining interaction, state/feedback/recovery, and overlay-quality observations needed before the consolidated V1.3 human-optical disposition.
+These surfaces cover interaction, state/feedback/recovery, and overlay-quality observations used by the consolidated V1.3 human-optical disposition.
 
 ## Screenshot set observed in the qualification session
 
@@ -31,6 +31,8 @@ The following uploaded captures were reviewed. SHA-256 fingerprints preserve exa
 | Inspector sheet open | `f1f4516f443b63c3ab8ff0c9ac577876c76e8949928b13dd5c719f071f289e68` |
 | Saved toast | `f33b4b06a731b8ecc801e2fa517413c4e7247901a0036a6cf394225b3e35f60c` |
 | Saved + critical toast stack | `167cae91abfa552e638ad64fa8a091620c098264dc61d9e492306115b6f4e777` |
+
+Additional exact-revision supporting reviews were completed for 200% text/reflow, focus/selection, accessibility visual fallbacks, motion restraint, icon collision, and scroll polish. Their supporting records are retained under `evidence/v1.3/supporting/`.
 
 ## Independent supporting review
 
@@ -49,8 +51,24 @@ Observed strengths include:
 - Routine and critical toast feedback remain bounded, readable, and do not replace the persistent critical message requirement.
 - No observed clipping, icon/text collision, overlay collision, destructive-action ambiguity, or material layout instability was identified in the submitted sweep.
 
+## Consolidated human attestation
+
+The reviewer was explicitly asked to confirm that, for frozen source revision `72ad63bf32d80420b25dc98bfd2def47bcc2a427`:
+
+- `quality-01` through `quality-55` had been reviewed;
+- the Visual Finish gate was accepted;
+- the Blandness Rejection gate was accepted;
+- Accessibility-as-Beauty had been reviewed and accepted;
+- Responsive Beauty had been reviewed and accepted;
+- the Critical Final Quality Questions were accepted; and
+- no unresolved material visual defects or icon/text collisions remained.
+
+The human reviewer replied **PASS**.
+
+A subsequent dedicated Crystal Icon System and Scroll Polish sweep was also completed and dispositioned **PASS**, closing the explicit icon-collision and scroll-polish follow-up checks. See `evidence/v1.3/supporting/icon-collision-scroll-polish-72ad63bf-2026-09-07.md`.
+
 ## Disposition
 
-`awaiting_user_final_attestation`
+`accepted_supporting_human_attestation`
 
-This supporting review must not be interpreted as a passed lifecycle record. The governed human-optical record remains fail-closed until the human reviewer explicitly accepts the consolidated quality-rule review and all five final visual gates.
+This file is supporting evidence, not the lifecycle record itself. The corresponding schema-v2 `human-optical-and-icon-collision-qualification` record may be marked `passed` only for this exact frozen source revision and must not be interpreted as Candidate or Stable promotion. The other pre-Candidate workstreams remain independently fail-closed until their real required sessions are completed.
