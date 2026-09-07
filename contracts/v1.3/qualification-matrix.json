@@ -1,25 +1,32 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "product": "GLAZE UI V1.3",
   "targetVersion": "1.3.0-candidate",
   "lifecycle": "qualification-active",
   "sourceStable": "1.2.0",
   "authority": "acceptance/v1.3-deferred-qualification.md",
   "evidenceSchema": "contracts/v1.3/qualification-evidence.schema.json",
+  "qualityContract": "contracts/v1.3/quality-rules.candidate.json",
   "workstreams": [
     {
       "id": "human-optical-and-icon-collision-qualification",
-      "title": "Human optical and icon-collision qualification",
+      "title": "Human optical, visual-finish, and icon-collision qualification",
       "status": "planned",
       "mode": "human",
       "blockingForLifecyclePromotion": true,
       "requiredEvidence": [
-        "authorized-review record",
+        "authorized human or combined review record",
+        "complete review of all 55 rules in contracts/v1.3/quality-rules.candidate.json",
+        "visual finish acceptance",
+        "blandness rejection acceptance",
+        "accessibility-as-beauty review",
+        "responsive-beauty review",
+        "critical final quality test acceptance",
         "light appearance review",
         "dark appearance review",
         "deep-dark appearance review",
-        "clarity-profile review",
+        "clarity and expression profile review",
         "representative reference-scene review",
         "icon and artwork collision review at compact sizes"
       ]
@@ -104,6 +111,8 @@
     "allBlockingWorkstreamsMustPassSameExactRevision": true,
     "passedEvidenceAllowedWhileQualificationActive": true,
     "qualificationReadinessDoesNotPromoteLifecycle": true,
+    "humanOpticalPassRequiresFullQualityRuleCoverage": true,
+    "automatedValidationDoesNotReplaceHumanReview": true,
     "consumerEligibilityIsSeparate": true,
     "downstreamProductionAcceptanceIsSeparate": true,
     "plannedStatusIsNotEvidence": true
