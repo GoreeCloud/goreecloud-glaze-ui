@@ -16,6 +16,7 @@ on:
       - "scripts/evaluate_glaze_v1_3_qualification.mjs"
       - "scripts/audit_glaze_v1_3_namespace.py"
       - "scripts/validate_glaze_v1_2_stable.py"
+      - "scripts/validate_glaze_v1_2_documentation_versions.py"
       - "scripts/validate_glaze_v1_3_phase0.py"
       - "scripts/validate_glaze_v1_3_migration.py"
       - "scripts/validate_glaze_v1_3_planned.py"
@@ -40,6 +41,7 @@ on:
       - "scripts/evaluate_glaze_v1_3_qualification.mjs"
       - "scripts/audit_glaze_v1_3_namespace.py"
       - "scripts/validate_glaze_v1_2_stable.py"
+      - "scripts/validate_glaze_v1_2_documentation_versions.py"
       - "scripts/validate_glaze_v1_3_phase0.py"
       - "scripts/validate_glaze_v1_3_migration.py"
       - "scripts/validate_glaze_v1_3_planned.py"
@@ -67,37 +69,62 @@ jobs:
     steps:
       - name: Check out exact revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify exact source revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected='${{ github.event.pull_request.head.sha || github.sha }}'
+          actual="$(git rev-parse HEAD)"
+          printf 'Expected source revision: %s\nActual source revision:   %s\n' "$expected" "$actual"
+          test "$actual" = "$expected"
+
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
+
       - name: Compile V1.3 qualification validators
         run: |
           python -m py_compile scripts/validate_glaze_v1_3_phase0.py
           python -m py_compile scripts/validate_glaze_v1_3_migration.py
           python -m py_compile scripts/validate_glaze_v1_3_planned.py
           python -m py_compile scripts/validate_glaze_v1_3_qualification.py
+          python -m py_compile scripts/validate_glaze_v1_2_documentation_versions.py
           python -m py_compile scripts/audit_glaze_v1_3_namespace.py
+
       - name: Preserve V1.2 Stable authority
         run: python scripts/validate_glaze_v1_2_stable.py
+
+      - name: Validate current lifecycle documentation integrity
+        run: python scripts/validate_glaze_v1_2_documentation_versions.py
+
       - name: Preserve V1.3 pre-promotion boundary
         run: python scripts/validate_glaze_v1_3_phase0.py
+
       - name: Revalidate Migration and Consumer Boundary dependency
         run: python scripts/validate_glaze_v1_3_migration.py
-      - name: Validate active qualification control plane
+
+      - name: Validate active qualification control plane and 55-rule visual-quality authority
         run: python scripts/validate_glaze_v1_3_planned.py
+
       - name: Validate V1.3 fresh qualification mechanism
         run: python scripts/validate_glaze_v1_3_qualification.py
+
       - name: Check qualification runtime and evidence CLI syntax
         run: |
           node --check js/glaze-v1.3-qualification.candidate.mjs
           node --check scripts/evaluate_glaze_v1_3_qualification.mjs
+
       - name: Test qualification readiness evaluator and evidence CLI
         run: node --test tests/glaze-v1.3-qualification.test.mjs tests/glaze-v1.3-qualification-cli.test.mjs
+
       - name: Audit real qualification evidence against selected source revision
         env:
           REQUESTED_SOURCE_REVISION: ${{ inputs.source_revision }}
-          CHECKED_OUT_SOURCE_REVISION: ${{ github.sha }}
+          CHECKED_OUT_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           SOURCE_REVISION="${REQUESTED_SOURCE_REVISION:-$CHECKED_OUT_SOURCE_REVISION}"
           node scripts/evaluate_glaze_v1_3_qualification.mjs \
@@ -110,8 +137,11 @@ jobs:
           assert result['state'] in {'blocked', 'ready-for-governed-candidate-promotion-review'}
           assert result['lifecyclePromotionGranted'] is False
           assert result['candidateActivated'] is False
+          assert result['consumerEligibilityGranted'] is False
+          assert result['consumerConformanceGranted'] is False
           print(f"Evidence readiness: {result['state']} ({result['acceptedWorkstreamCount']}/{result['requiredWorkstreamCount']})")
           PY
+
       - name: Audit pre-promotion V1.3 source namespace
         run: |
           python scripts/audit_glaze_v1_3_namespace.py --output /tmp/glaze-v1.3-namespace.json
@@ -124,6 +154,7 @@ jobs:
           assert audit['officialCandidateEntrypoints']['runtime']['exists'] is False
           print(f"Candidate-named source paths inventoried: {audit['counts']['candidateNamedPaths']}")
           PY
+
       - name: Parse qualification JSON authorities
         run: |
           python - <<'PY'
@@ -134,12 +165,18 @@ jobs:
               'contracts/v1.3/qualification-matrix.json',
               'contracts/v1.3/qualification-evidence.schema.json',
               'contracts/v1.3/qualification-readiness.candidate.json',
+              'contracts/v1.3/quality-rules.candidate.json',
           ]
           for path in paths:
               with open(path, encoding='utf-8') as handle:
                   json.load(handle)
-          print('Qualification JSON authorities parse successfully.')
+          quality = json.load(open('contracts/v1.3/quality-rules.candidate.json', encoding='utf-8'))
+          assert len(quality['rules']) == 55
+          assert quality['humanReviewRequired'] is True
+          assert quality['automatedValidationSufficient'] is False
+          print('Qualification JSON authorities parse successfully; 55-rule visual-quality authority is present.')
           PY
+
       - name: Assert Candidate remains inactive
         run: |
           python - <<'PY'
