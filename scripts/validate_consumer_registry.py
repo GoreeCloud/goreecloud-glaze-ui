@@ -1,27 +1,24 @@
 #!/usr/bin/env python3
-"""Validate mandatory GLAZE UI V1.0 Stable consumer migration state and guidance."""
+"""Validate the current GLAZE UI Stable consumer registry and guidance.
+
+The registry is intentionally fail closed. A consumer can be recorded as accepted
+for the current Glaze contract only with an exact source revision and evidence
+reference. Even then, this registry never makes the overall product production
+eligible; product/release authority remains with the consumer's own acceptance
+and lifecycle records.
+"""
 from __future__ import annotations
 
+from datetime import date
 import json
-import re
 from pathlib import Path
+import re
 
 ROOT = Path(__file__).resolve().parents[1]
 SEMVER = re.compile(r"^\d+\.\d+\.\d+$")
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
-CONSUMER_LINE = re.compile(r"^- \*\*(?P<name>[^*]+)\*\* — (?P<body>.+)$")
-EXPECTED = {
-    "GoreeCloud/goreecloud-manager",
-    "GoreeCloud/goreecloud-website",
-    "GoreeCloud/goreecloud-tasks",
-    "GoreeCloud/goreecloud-launcher",
-    "GoreeCloud/goreecloud-keyboard",
-    "GoreeCloud/goreecloud-notes",
-    "GoreeCloud/goreecloud-monitor",
-    "GoreeCloud/goreecloud-browser",
-    "GoreeCloud/goreecloud-wardveil-security",
-    "GoreeCloud/goreecloud-privacy-shield",
-}
+REPOSITORY = re.compile(r"^GoreeCloud/.+$")
+STATUSES = {"adoption-required", "unverified", "accepted-v1"}
 
 
 def req(condition: bool, message: str) -> None:
@@ -29,101 +26,142 @@ def req(condition: bool, message: str) -> None:
         raise SystemExit(f"Glaze UI consumer registry validation failed: {message}")
 
 
-def version_tuple(version: str) -> tuple[int, ...]:
-    return tuple(map(int, version.split(".")))
+def load_json(path: str) -> dict[str, object]:
+    value = json.loads((ROOT / path).read_text(encoding="utf-8"))
+    req(isinstance(value, dict), f"{path} root must be an object")
+    return value
 
 
-def validate_guidance(data: dict[str, object], stable: str) -> None:
+def validate_guidance(stable: str, label: str) -> None:
     guidance = (ROOT / "CONSUMERS.md").read_text(encoding="utf-8")
-    req(f"Glaze UI **{stable}** is the current Stable baseline" in guidance, "CONSUMERS.md must identify the current Stable baseline")
-    req("only Glaze UI version that may satisfy current GoreeCloud application conformance" in guidance, "CONSUMERS.md must state the current-Stable production rule")
-    req("No production exception" in guidance and "grandfathering rule" in guidance, "CONSUMERS.md must preserve the no-exception rule")
-    req("2.1.0** is the current Stable" not in guidance, "CONSUMERS.md must not describe 2.1.0 as current Stable")
+    req(label in guidance, "CONSUMERS.md must identify the official product label")
+    req(stable in guidance, "CONSUMERS.md must identify the current Stable version")
+    req("Fresh repository-local V1.2 adoption and acceptance evidence is required" in guidance, "CONSUMERS.md must preserve the fresh-evidence boundary")
+    req("No consumer is production-eligible merely because" in guidance, "CONSUMERS.md must preserve independent product acceptance")
+    req("consumer registry" in guidance.lower(), "CONSUMERS.md must identify the registry authority")
 
-    assessment = data.get("candidateAssessment", {})
-    req(isinstance(assessment, dict), "candidate assessment type")
-    candidate = assessment.get("version")
-    req(isinstance(candidate, str) and candidate in guidance, "CONSUMERS.md must preserve Candidate promotion provenance")
-    req("historical readiness evidence only" in guidance, "CONSUMERS.md must keep Candidate evidence historical")
 
-    documented: dict[str, str] = {}
-    for line in guidance.splitlines():
-        match = CONSUMER_LINE.match(line.strip())
-        if match:
-            name = match.group("name")
-            req(name not in documented, f"duplicate CONSUMERS.md entry for {name}")
-            documented[name] = match.group("body")
-
-    consumers = data.get("consumers", [])
-    req(isinstance(consumers, list), "consumers list type")
-    expected_names = {str(consumer.get("name")) for consumer in consumers if isinstance(consumer, dict)}
-    req(set(documented) == expected_names, "CONSUMERS.md audited consumer set drift")
-
-    for consumer in consumers:
-        req(isinstance(consumer, dict), "consumer entry type")
-        name = str(consumer.get("name"))
-        status = str(consumer.get("status"))
-        body = documented[name]
-        req(f"`{status}`" in body, f"{name} documented status")
-        if status == "migration-required":
-            target = str(consumer.get("targetVersion"))
-            req(f"recorded {target}" in body, f"{name} documented historical target")
-            req(f"required {stable}" in body, f"{name} documented Stable target")
-        elif status == "unverified":
-            req("fresh repository-local 2.2" in body, f"{name} unverified evidence boundary")
-        else:
-            req(False, f"unsupported documented consumer status for {name}")
+def validate_schema_contract() -> None:
+    schema = load_json("schemas/consumer-registry.schema.json")
+    properties = schema.get("properties")
+    req(isinstance(properties, dict), "consumer registry schema properties")
+    schema_version = properties.get("schemaVersion")
+    req(isinstance(schema_version, dict) and schema_version.get("const") == 6, "schema must describe registry schemaVersion 6")
+    consumers = properties.get("consumers")
+    req(isinstance(consumers, dict), "schema consumers declaration")
+    serialized = json.dumps(schema, sort_keys=True)
+    for status in sorted(STATUSES):
+        req(status in serialized, f"schema must recognize status {status}")
+    req("officialBaseline" in properties and "officialProductLabel" in properties, "schema must describe current official baseline fields")
+    req("candidateAssessment" not in properties, "current registry schema must not require retired Candidate assessment state")
 
 
 def main() -> None:
     stable = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-    req(stable == "2.2.0", "Stable must be 2.2.0")
+    req(SEMVER.fullmatch(stable) is not None, "VERSION must contain a semantic Stable version")
 
-    data = json.loads((ROOT / "consumers/registry.json").read_text(encoding="utf-8"))
-    lifecycle = json.loads((ROOT / "registry/lifecycle.json").read_text(encoding="utf-8"))
+    data = load_json("consumers/registry.json")
+    lifecycle = load_json("registry/lifecycle.json")
 
-    req(data.get("schemaVersion") == 4, "schemaVersion")
-    req(data.get("stableBaseline") == stable and data.get("requiredConsumerVersion") == stable, "Stable target")
+    req(data.get("schemaVersion") == 6, "registry schemaVersion must be 6")
+    req(data.get("officialBaseline") == stable, "officialBaseline must match VERSION")
+    req(data.get("requiredConsumerVersion") == stable, "requiredConsumerVersion must match VERSION")
 
-    historical = data.get("historicalStableVersions", [])
-    req(isinstance(historical, list) and "2.1.0" in historical and "2.0.0" in historical and all(isinstance(version, str) and SEMVER.fullmatch(version) for version in historical), "historical Stable list")
-    req(all(version_tuple(version) < version_tuple(stable) for version in historical), "historical versions must precede Stable")
+    label = data.get("officialProductLabel")
+    req(isinstance(label, str) and label.strip(), "officialProductLabel")
+    req(lifecycle.get("currentStable") == stable, "lifecycle currentStable must match VERSION")
+    req(lifecycle.get("currentOfficial") == stable, "lifecycle currentOfficial must match VERSION")
+    req(lifecycle.get("officialProductLabel") == label, "registry/lifecycle product label mismatch")
+    req(lifecycle.get("activeCandidate") is None, "Stable registry must not retain an active Candidate")
 
-    req(lifecycle.get("currentStable") == stable, "lifecycle current Stable state")
-    req(lifecycle.get("activeCandidate") is None, "Stable promotion must not retain an active Candidate")
+    releases = lifecycle.get("releases")
+    req(isinstance(releases, list), "lifecycle releases list")
+    stable_releases = [
+        release
+        for release in releases
+        if isinstance(release, dict) and release.get("version") == stable
+    ]
+    req(len(stable_releases) == 1, "exactly one lifecycle record must match current Stable")
+    stable_release = stable_releases[0]
+    req(stable_release.get("status") == "stable", "current Stable lifecycle status")
+    req(stable_release.get("consumerEligible") is True, "current Stable must be consumer-eligible")
+    anchor = stable_release.get("sourceQualificationAnchor")
+    req(isinstance(anchor, str) and SHA40.fullmatch(anchor) is not None, "current Stable source qualification anchor")
 
-    stable_release = [release for release in lifecycle.get("releases", []) if isinstance(release, dict) and release.get("version") == stable]
-    req(len(stable_release) == 1 and stable_release[0].get("status") == "stable" and stable_release[0].get("consumerEligible") is True, "Stable release record")
-    promoted = stable_release[0].get("promotedFromCandidate")
-    req(promoted == "1.0.0", "promotion source")
+    vocabulary = data.get("statusVocabulary")
+    req(isinstance(vocabulary, list) and set(vocabulary) == STATUSES and len(vocabulary) == len(STATUSES), "statusVocabulary must exactly match the schema 6 vocabulary")
 
-    assessment = data.get("candidateAssessment", {})
-    req(assessment.get("version") == promoted and assessment.get("lifecycle") == "historical" and assessment.get("promotedTo") == stable, "preserved Candidate assessment")
-    req(assessment.get("consumerEligible") is False and assessment.get("productionEligible") is False, "Candidate assessment boundary")
+    enforcement = data.get("enforcement")
+    req(isinstance(enforcement, dict), "enforcement object")
+    req(enforcement.get("officialCurrentRequired") is True, "officialCurrentRequired must be true")
+    req(enforcement.get("productionExceptionsAllowed") is False, "productionExceptionsAllowed must be false")
+    platform_scope = enforcement.get("platformScope")
+    req(isinstance(platform_scope, list) and platform_scope and len(platform_scope) == len(set(platform_scope)), "platformScope must be a non-empty unique list")
+    rule = enforcement.get("unsupportedPlatformRule")
+    req(isinstance(rule, str) and rule.strip(), "unsupportedPlatformRule")
 
-    consumers = data.get("consumers", [])
-    seen: set[str] = set()
-    for consumer in consumers:
+    audited_at = data.get("auditedAt")
+    req(isinstance(audited_at, str), "auditedAt")
+    try:
+        date.fromisoformat(audited_at)
+    except ValueError as exc:
+        raise SystemExit(f"Glaze UI consumer registry validation failed: auditedAt must be YYYY-MM-DD: {exc}") from exc
+
+    consumers = data.get("consumers")
+    req(isinstance(consumers, list) and consumers, "consumers must be a non-empty list")
+    seen_repositories: set[str] = set()
+    seen_names: set[str] = set()
+    accepted = 0
+
+    for index, consumer in enumerate(consumers):
+        req(isinstance(consumer, dict), f"consumers[{index}] must be an object")
+        required_keys = {
+            "name",
+            "repository",
+            "status",
+            "targetVersion",
+            "requiredTargetVersion",
+            "referenceRevision",
+            "evidence",
+            "productionEligible",
+            "notes",
+        }
+        req(set(consumer) == required_keys, f"consumers[{index}] field drift")
+
+        name = consumer.get("name")
         repo = consumer.get("repository")
-        req(repo in EXPECTED and repo not in seen, f"invalid/duplicate {repo}")
-        seen.add(repo)
-        req(consumer.get("requiredTargetVersion") == stable, f"{repo} required target")
-        req(consumer.get("productionEligible") is False, f"{repo} must not auto-promote")
-
         status = consumer.get("status")
-        target = consumer.get("targetVersion")
-        if status == "migration-required":
-            req(isinstance(target, str) and target in historical, f"{repo} migration source")
-            req(SHA40.fullmatch(str(consumer.get("referenceRevision", ""))) is not None, f"{repo} revision")
-            req(consumer.get("automatedContract") is True and consumer.get("evidence"), f"{repo} evidence")
-        elif status == "unverified":
-            req(target is None and consumer.get("referenceRevision") is None and consumer.get("evidence") is None and consumer.get("automatedContract") is False, f"{repo} unverified boundary")
-        else:
-            req(False, f"{repo} must remain migration-required or unverified immediately after Stable promotion")
+        req(isinstance(name, str) and name.strip(), f"consumers[{index}].name")
+        req(isinstance(repo, str) and REPOSITORY.fullmatch(repo) is not None, f"consumers[{index}].repository")
+        req(repo not in seen_repositories, f"duplicate consumer repository {repo}")
+        req(name not in seen_names, f"duplicate consumer name {name}")
+        seen_repositories.add(repo)
+        seen_names.add(name)
 
-    req(seen == EXPECTED, "audit scope drift")
-    validate_guidance(data, stable)
-    print(f"Glaze UI consumer registry and guidance validated: {len(consumers)} consumers require Stable {stable}; none auto-promoted")
+        req(status in STATUSES, f"{repo} status")
+        req(consumer.get("requiredTargetVersion") == stable, f"{repo} required target must be current Stable")
+        req(consumer.get("productionEligible") is False, f"{repo} must not become production-eligible from Glaze registry state alone")
+        notes = consumer.get("notes")
+        req(isinstance(notes, str) and notes.strip(), f"{repo} notes")
+
+        target = consumer.get("targetVersion")
+        revision = consumer.get("referenceRevision")
+        evidence = consumer.get("evidence")
+        if status in {"adoption-required", "unverified"}:
+            req(target is None and revision is None and evidence is None, f"{repo} unresolved status must not carry accepted target/revision/evidence")
+        else:
+            accepted += 1
+            req(target == stable, f"{repo} accepted target must equal current Stable")
+            req(isinstance(revision, str) and SHA40.fullmatch(revision) is not None, f"{repo} accepted revision")
+            req(isinstance(evidence, str) and evidence.strip(), f"{repo} accepted evidence")
+
+    validate_schema_contract()
+    validate_guidance(stable, label)
+    print(
+        "Glaze UI consumer registry validated: "
+        f"{len(consumers)} consumers, {accepted} accepted for {label} / {stable}; "
+        "product production eligibility remains independently gated"
+    )
 
 
 if __name__ == "__main__":
