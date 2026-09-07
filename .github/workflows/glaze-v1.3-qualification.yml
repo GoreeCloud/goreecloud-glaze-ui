@@ -12,6 +12,9 @@ on:
       - "evidence/v1.3/**"
       - "js/glaze-v1.3-qualification.candidate.mjs"
       - "tests/glaze-v1.3-qualification.test.mjs"
+      - "tests/glaze-v1.3-qualification-cli.test.mjs"
+      - "scripts/evaluate_glaze_v1_3_qualification.mjs"
+      - "scripts/audit_glaze_v1_3_namespace.py"
       - "scripts/validate_glaze_v1_2_stable.py"
       - "scripts/validate_glaze_v1_3_phase0.py"
       - "scripts/validate_glaze_v1_3_migration.py"
@@ -33,6 +36,9 @@ on:
       - "evidence/v1.3/**"
       - "js/glaze-v1.3-qualification.candidate.mjs"
       - "tests/glaze-v1.3-qualification.test.mjs"
+      - "tests/glaze-v1.3-qualification-cli.test.mjs"
+      - "scripts/evaluate_glaze_v1_3_qualification.mjs"
+      - "scripts/audit_glaze_v1_3_namespace.py"
       - "scripts/validate_glaze_v1_2_stable.py"
       - "scripts/validate_glaze_v1_3_phase0.py"
       - "scripts/validate_glaze_v1_3_migration.py"
@@ -41,6 +47,11 @@ on:
       - ".github/workflows/glaze-v1.3-qualification.yml"
       - ".github/workflows/glaze-v1.3-planned-qualification.yml"
   workflow_dispatch:
+    inputs:
+      source_revision:
+        description: "Frozen promotion-candidate SHA to evaluate; defaults to the checked-out SHA"
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -66,6 +77,7 @@ jobs:
           python -m py_compile scripts/validate_glaze_v1_3_migration.py
           python -m py_compile scripts/validate_glaze_v1_3_planned.py
           python -m py_compile scripts/validate_glaze_v1_3_qualification.py
+          python -m py_compile scripts/audit_glaze_v1_3_namespace.py
       - name: Preserve V1.2 Stable authority
         run: python scripts/validate_glaze_v1_2_stable.py
       - name: Preserve V1.3 pre-promotion boundary
@@ -76,10 +88,42 @@ jobs:
         run: python scripts/validate_glaze_v1_3_planned.py
       - name: Validate V1.3 fresh qualification mechanism
         run: python scripts/validate_glaze_v1_3_qualification.py
-      - name: Check qualification readiness runtime syntax
-        run: node --check js/glaze-v1.3-qualification.candidate.mjs
-      - name: Test qualification readiness evaluator
-        run: node --test tests/glaze-v1.3-qualification.test.mjs
+      - name: Check qualification runtime and evidence CLI syntax
+        run: |
+          node --check js/glaze-v1.3-qualification.candidate.mjs
+          node --check scripts/evaluate_glaze_v1_3_qualification.mjs
+      - name: Test qualification readiness evaluator and evidence CLI
+        run: node --test tests/glaze-v1.3-qualification.test.mjs tests/glaze-v1.3-qualification-cli.test.mjs
+      - name: Audit real qualification evidence against selected source revision
+        env:
+          REQUESTED_SOURCE_REVISION: ${{ inputs.source_revision }}
+          CHECKED_OUT_SOURCE_REVISION: ${{ github.sha }}
+        run: |
+          SOURCE_REVISION="${REQUESTED_SOURCE_REVISION:-$CHECKED_OUT_SOURCE_REVISION}"
+          node scripts/evaluate_glaze_v1_3_qualification.mjs \
+            --source-revision "$SOURCE_REVISION" \
+            --evidence-dir evidence/v1.3 \
+            > /tmp/glaze-v1.3-qualification-readiness.json
+          python - <<'PY'
+          import json
+          result = json.load(open('/tmp/glaze-v1.3-qualification-readiness.json', encoding='utf-8'))['result']
+          assert result['state'] in {'blocked', 'ready-for-governed-candidate-promotion-review'}
+          assert result['lifecyclePromotionGranted'] is False
+          assert result['candidateActivated'] is False
+          print(f"Evidence readiness: {result['state']} ({result['acceptedWorkstreamCount']}/{result['requiredWorkstreamCount']})")
+          PY
+      - name: Audit pre-promotion V1.3 source namespace
+        run: |
+          python scripts/audit_glaze_v1_3_namespace.py --output /tmp/glaze-v1.3-namespace.json
+          python - <<'PY'
+          import json
+          audit = json.load(open('/tmp/glaze-v1.3-namespace.json', encoding='utf-8'))
+          assert audit['lifecycleAuthority'] is False
+          assert audit['qualificationEffect'] == 'inventory-only-no-pass'
+          assert audit['officialCandidateEntrypoints']['css']['exists'] is False
+          assert audit['officialCandidateEntrypoints']['runtime']['exists'] is False
+          print(f"Candidate-named source paths inventoried: {audit['counts']['candidateNamedPaths']}")
+          PY
       - name: Parse qualification JSON authorities
         run: |
           python - <<'PY'
