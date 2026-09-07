@@ -1,0 +1,88 @@
+name: GLAZE UI V1.3 Exact-Source Assistive Structural Evidence
+
+on:
+  push:
+    branches:
+      - evidence/v1.3-assistive-72ad63b
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  SOURCE_SHA: 72ad63bf32d80420b25dc98bfd2def47bcc2a427
+  SOURCE_TREE_SHA: cc1519dd859437969a143a0170996b6ba5e02b76
+  REFERENCE_HTML: reference/v1.3/signature-components-and-compositions.html
+  REFERENCE_HTML_BLOB_SHA: c5132902a9dfcc33154c4c45aff0d01b1df2903e
+  REFERENCE_MANIFEST_BLOB_SHA: 5d927f8519ef53b113560e037f86638c42925131
+  EVIDENCE_SCHEMA_BLOB_SHA: 7a379f72527517a9cf57112b12dcccc9f94d8ed7
+  WORKSHEET_BLOB_SHA: f3f263256faad091f586aaea11971ff1450cdd02
+
+jobs:
+  assistive-structural-evidence:
+    name: exact-source-assistive-structural-support
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out evidence harness
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: harness
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Check out frozen exact source only
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          path: exact-source
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify immutable source and governing evidence contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd exact-source
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test "$(git rev-parse HEAD^{tree})" = "$SOURCE_TREE_SHA"
+          test -z "$(git status --porcelain)"
+          test "$(git rev-parse HEAD:"$REFERENCE_HTML")" = "$REFERENCE_HTML_BLOB_SHA"
+          test "$(git rev-parse HEAD:reference/v1.3/signature-components-and-compositions.json)" = "$REFERENCE_MANIFEST_BLOB_SHA"
+          test "$(git rev-parse HEAD:contracts/v1.3/qualification-evidence.schema.json)" = "$EVIDENCE_SCHEMA_BLOB_SHA"
+          test "$(git rev-parse HEAD:evidence/v1.3/templates/qualification-review-worksheets.md)" = "$WORKSHEET_BLOB_SHA"
+
+      - name: Locate installed Chromium-family browser
+        shell: bash
+        run: |
+          set -euo pipefail
+          for browser in google-chrome-stable google-chrome chromium chromium-browser; do
+            if command -v "$browser" >/dev/null 2>&1; then
+              echo "CHROME=$(command -v "$browser")" >> "$GITHUB_ENV"
+              "$browser" --version
+              exit 0
+            fi
+          done
+          echo 'No Chromium-family browser found on hosted runner.' >&2
+          exit 1
+
+      - name: Collect exact-source accessibility structure and keyboard evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check harness/evidence/v1.3/tools/collect-assistive-structural.mjs
+          node harness/evidence/v1.3/tools/collect-assistive-structural.mjs
+          test -s assistive-output/assistive-structural-report.json
+          test -s assistive-output/accessibility-tree-relevant.json
+          test -s assistive-output/keyboard-navigation.json
+          test -s assistive-output/large-text-reflow.json
+          (cd assistive-output && sha256sum -c SHA256SUMS.txt)
+          cat assistive-output/README.md
+
+      - name: Upload immutable assistive review-support packet
+        uses: actions/upload-artifact@v4
+        with:
+          name: glaze-v1.3-assistive-structural-72ad63b
+          path: assistive-output/
+          if-no-files-found: error
+          retention-days: 90
