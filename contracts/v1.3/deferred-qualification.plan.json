@@ -1,12 +1,22 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "schemaVersion": 1,
+  "schemaVersion": 3,
   "product": "GLAZE UI V1.3",
   "targetVersion": "1.3.0-candidate",
   "lifecycle": "qualification-active",
   "created": "2026-09-06",
   "sourceStable": "1.2.0",
   "authority": "acceptance/v1.3-deferred-qualification.md",
+  "qualificationMatrix": "contracts/v1.3/qualification-matrix.json",
+  "evidenceSchema": "contracts/v1.3/qualification-evidence.schema.json",
+  "evidenceDirectory": "evidence/v1.3",
+  "qualityContract": "contracts/v1.3/quality-rules.candidate.json",
+  "validator": "scripts/validate_glaze_v1_3_planned.py",
+  "readinessEvaluator": "js/glaze-v1.3-qualification.candidate.mjs",
+  "controlPlane": {
+    "status": "qualification-active",
+    "meaning": "Implementation may collect fresh exact-revision evidence. This does not activate Candidate, promote lifecycle, grant consumer eligibility, or establish downstream conformance."
+  },
   "items": [
     "human-optical-and-icon-collision-qualification",
     "manual-assistive-technology-qualification",
@@ -21,6 +31,9 @@
     "allBlockingWorkstreamsMustPassSameExactRevision": true,
     "passedEvidenceAllowedDuringQualificationActive": true,
     "qualificationReadinessDoesNotPromoteLifecycle": true,
+    "humanOpticalEvidenceMustCoverQualityContract": true,
+    "automatedValidationMayReplaceHumanOpticalReview": false,
+    "automatedValidationMayReplacePhysicalDeviceReview": false,
     "consumerConformanceAutomatic": false,
     "v1.3LifecyclePromotionAutomatic": false
   }
