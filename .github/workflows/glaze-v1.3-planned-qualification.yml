@@ -15,7 +15,9 @@ on:
       - "scripts/validate_glaze_v1_3_qualification.py"
       - ".github/workflows/glaze-v1.3-planned-qualification.yml"
   push:
-    branches: [main]
+    branches:
+      - main
+      - feat/glaze-ui-v1.3-adaptive-resonance
     paths:
       - "VERSION"
       - "registry/lifecycle.json"
