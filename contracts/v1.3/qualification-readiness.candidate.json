@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "product": "GLAZE UI V1.3 — Adaptive Resonance",
   "targetProduct": "GLAZE UI V1.3",
   "targetVersion": "1.3.0-candidate",
@@ -9,52 +9,34 @@
   "qualificationLifecycle": "qualification-active",
   "lifecycleAuthority": false,
   "consumerEligible": false,
-  "principle": "Fresh qualification may satisfy a lifecycle gate; it may not perform lifecycle promotion.",
+  "principle": "Fresh Candidate qualification may satisfy the Candidate gate; it may not perform lifecycle promotion. Stable activation/source cleanup is a later Stable gate.",
   "authorities": {
     "deferredPlan": "contracts/v1.3/deferred-qualification.plan.json",
     "deferredAcceptance": "acceptance/v1.3-deferred-qualification.md",
     "matrix": "contracts/v1.3/qualification-matrix.json",
     "evidenceSchema": "contracts/v1.3/qualification-evidence.schema.json",
     "evidenceDirectory": "evidence/v1.3",
+    "stableReadiness": "contracts/v1.3/stable-readiness.plan.json",
     "adaptivePlan": "contracts/v1.3/adaptive-resonance.plan.json"
   },
   "requiredWorkstreams": [
-    {
-      "id": "human-optical-and-icon-collision-qualification",
-      "acceptedReviewModes": ["human", "combined"],
-      "freshHumanEvidenceRequired": true
-    },
-    {
-      "id": "manual-assistive-technology-qualification",
-      "acceptedReviewModes": ["human", "combined"],
-      "freshHumanEvidenceRequired": true
-    },
-    {
-      "id": "physical-device-native-platform-qualification",
-      "acceptedReviewModes": ["combined"],
-      "freshPhysicalEvidenceRequired": true
-    },
-    {
-      "id": "physical-device-production-performance-qualification",
-      "acceptedReviewModes": ["combined"],
-      "freshPhysicalEvidenceRequired": true
-    },
-    {
-      "id": "native-personalization-adapter-qualification",
-      "acceptedReviewModes": ["human", "combined"],
-      "freshNativeEvidenceRequiredWhereClaimed": true
-    },
-    {
-      "id": "stable-activation-and-source-namespace-cleanup",
-      "acceptedReviewModes": ["combined"],
-      "freshEquivalenceEvidenceRequired": true
-    }
+    {"id": "human-optical-and-icon-collision-qualification", "acceptedReviewModes": ["human", "combined"], "freshHumanEvidenceRequired": true},
+    {"id": "manual-assistive-technology-qualification", "acceptedReviewModes": ["human", "combined"], "freshHumanEvidenceRequired": true},
+    {"id": "physical-device-native-platform-qualification", "acceptedReviewModes": ["combined"], "freshPhysicalEvidenceRequired": true},
+    {"id": "physical-device-production-performance-qualification", "acceptedReviewModes": ["combined"], "freshPhysicalEvidenceRequired": true},
+    {"id": "native-personalization-adapter-qualification", "acceptedReviewModes": ["human", "combined"], "freshNativeEvidenceRequiredWhereClaimed": true}
   ],
+  "deferredUntilPostCandidate": {
+    "workstreamId": "stable-activation-and-source-namespace-cleanup",
+    "blockingForCandidatePromotion": false,
+    "blockingForStablePromotion": true,
+    "authority": "contracts/v1.3/stable-readiness.plan.json"
+  },
   "recordAcceptance": {
     "requiredStatus": "passed",
     "acceptedForLifecycleGateMustBe": true,
     "exactSourceRevisionRequired": true,
-    "singleSharedExactRevisionRequired": true,
+    "singleSharedExactRevisionRequiredForCandidateStage": true,
     "targetProductMustBe": "GLAZE UI V1.3",
     "targetVersionMustBe": "1.3.0-candidate",
     "expiredEvidenceAllowed": false,
@@ -63,8 +45,8 @@
     "v1_2EvidenceMayBeRelabeled": false
   },
   "outcomes": {
-    "blocked": "One or more blocking qualification workstreams lacks current accepted exact-revision evidence.",
-    "readyForGovernedCandidatePromotionReview": "All six blocking workstreams have accepted current evidence for one exact revision; formal lifecycle promotion is still required."
+    "blocked": "One or more pre-Candidate qualification workstreams lacks current accepted exact-revision evidence.",
+    "readyForGovernedCandidatePromotionReview": "All five pre-Candidate workstreams have accepted current evidence for one exact revision; formal Candidate promotion is still required. Stable qualification remains incomplete until the post-Candidate Stable cleanup gate passes."
   },
   "permissions": {
     "mayActivateCandidate": false,
@@ -73,13 +55,5 @@
     "mayCreateConsumerEligibility": false,
     "mayGrantConsumerConformance": false,
     "mayTreatAutomatedCIAsHumanOrPhysicalEvidence": false
-  },
-  "currentAutomatedBoundary": {
-    "repositoryAutomationMayValidateMechanism": true,
-    "repositoryAutomationMayValidateEvidenceShape": true,
-    "repositoryAutomationMayAggregateReadiness": true,
-    "repositoryAutomationMayManufactureHumanEvidence": false,
-    "repositoryAutomationMayManufacturePhysicalDeviceEvidence": false,
-    "repositoryAutomationMayPromoteLifecycle": false
   }
 }

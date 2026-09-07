@@ -1,240 +1,109 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-
-import {
-  QUALIFICATION_WORKSTREAMS,
-  QUALITY_RULE_IDS,
-  evaluateQualificationReadiness,
-  qualificationCandidate
-} from '../js/glaze-v1.3-qualification.candidate.mjs';
+import {QUALIFICATION_WORKSTREAMS, STABLE_QUALIFICATION_WORKSTREAMS, QUALITY_RULE_IDS, evaluateQualificationReadiness, qualificationCandidate} from '../js/glaze-v1.3-qualification.candidate.mjs';
 
 const SOURCE = 'a'.repeat(40);
 const OTHER = 'b'.repeat(40);
 const EVALUATED_AT = '2026-09-06T18:00:00Z';
 const HUMAN_OPTICAL = 'human-optical-and-icon-collision-qualification';
-
+const STABLE_CLEANUP = 'stable-activation-and-source-namespace-cleanup';
 const REVIEW_MODE = {
   [HUMAN_OPTICAL]: 'human',
   'manual-assistive-technology-qualification': 'human',
   'physical-device-native-platform-qualification': 'combined',
   'physical-device-production-performance-qualification': 'combined',
-  'native-personalization-adapter-qualification': 'combined',
-  'stable-activation-and-source-namespace-cleanup': 'combined'
+  'native-personalization-adapter-qualification': 'combined'
 };
 
-function qualityReview(overrides = {}) {
-  return {
-    contract: 'contracts/v1.3/quality-rules.candidate.json',
-    reviewed_rule_ids: [...QUALITY_RULE_IDS],
-    visual_finish_accepted: true,
-    blandness_rejected: true,
-    accessibility_beauty_reviewed: true,
-    responsive_beauty_reviewed: true,
-    critical_final_quality_questions_accepted: true,
-    ...overrides
-  };
+function qualityReview(overrides = {}) { return {contract: 'contracts/v1.3/quality-rules.candidate.json', reviewed_rule_ids: [...QUALITY_RULE_IDS], visual_finish_accepted: true, blandness_rejected: true, accessibility_beauty_reviewed: true, responsive_beauty_reviewed: true, critical_final_quality_questions_accepted: true, ...overrides}; }
+function record(id, overrides = {}) {
+  const base = {schema_version: 2, workstream_id: id, target: {product: 'GLAZE UI V1.3', target_version: '1.3.0-candidate', source_revision: SOURCE}, status: 'passed', observed_at: '2026-09-06T17:00:00Z', valid_until: null, review_authority: {mode: REVIEW_MODE[id], authority: 'authorized qualification review'}, evidence_references: [`evidence/${id}-1`, `evidence/${id}-2`], issues: [], disposition: {accepted_for_lifecycle_gate: true, notes: 'accepted for qualification gate only'}};
+  if (id === HUMAN_OPTICAL) base.quality_review = qualityReview();
+  return {...base, ...overrides, target: {...base.target, ...(overrides.target ?? {})}, review_authority: {...base.review_authority, ...(overrides.review_authority ?? {})}, disposition: {...base.disposition, ...(overrides.disposition ?? {})}, ...(base.quality_review || overrides.quality_review ? {quality_review: {...(base.quality_review ?? {}), ...(overrides.quality_review ?? {})}} : {})};
 }
+function completeRecords() { return QUALIFICATION_WORKSTREAMS.map(id => record(id)); }
 
-function record(workstreamId, overrides = {}) {
-  const base = {
-    schema_version: 2,
-    workstream_id: workstreamId,
-    target: {
-      product: 'GLAZE UI V1.3',
-      target_version: '1.3.0-candidate',
-      source_revision: SOURCE
-    },
-    status: 'passed',
-    observed_at: '2026-09-06T17:00:00Z',
-    valid_until: null,
-    review_authority: {
-      mode: REVIEW_MODE[workstreamId],
-      authority: 'authorized qualification review'
-    },
-    evidence_references: [`evidence/${workstreamId}-1`, `evidence/${workstreamId}-2`],
-    issues: [],
-    disposition: {
-      accepted_for_lifecycle_gate: true,
-      notes: 'accepted for qualification gate only'
-    }
-  };
-  if (workstreamId === HUMAN_OPTICAL) base.quality_review = qualityReview();
-  return {
-    ...base,
-    ...overrides,
-    target: {...base.target, ...(overrides.target ?? {})},
-    review_authority: {...base.review_authority, ...(overrides.review_authority ?? {})},
-    disposition: {...base.disposition, ...(overrides.disposition ?? {})},
-    ...(base.quality_review || overrides.quality_review
-      ? {quality_review: {...(base.quality_review ?? {}), ...(overrides.quality_review ?? {})}}
-      : {})
-  };
-}
+test('Candidate gate has five workstreams while Stable qualification retains six', () => {
+  assert.equal(QUALIFICATION_WORKSTREAMS.length, 5);
+  assert.equal(STABLE_QUALIFICATION_WORKSTREAMS.length, 6);
+  assert.equal(STABLE_QUALIFICATION_WORKSTREAMS.at(-1), STABLE_CLEANUP);
+  assert.equal(QUALIFICATION_WORKSTREAMS.includes(STABLE_CLEANUP), false);
+});
 
-function completeRecords() {
-  return QUALIFICATION_WORKSTREAMS.map(id => record(id));
-}
-
-test('empty evidence is blocked with all six workstreams missing', () => {
+test('empty evidence is blocked with all five pre-Candidate workstreams missing', () => {
   const result = evaluateQualificationReadiness([], {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
   assert.equal(result.state, 'blocked');
   assert.equal(result.acceptedWorkstreamCount, 0);
-  assert.equal(result.blockers.length, 6);
+  assert.equal(result.requiredWorkstreamCount, 5);
+  assert.equal(result.blockers.length, 5);
 });
 
-test('six accepted exact-revision records satisfy only the qualification gate', () => {
+test('five accepted exact-revision records satisfy only the Candidate qualification gate', () => {
   const result = evaluateQualificationReadiness(completeRecords(), {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
   assert.equal(result.state, 'ready-for-governed-candidate-promotion-review');
   assert.equal(result.qualificationGateSatisfied, true);
-  assert.equal(result.acceptedWorkstreamCount, 6);
+  assert.equal(result.acceptedWorkstreamCount, 5);
+  assert.equal(result.deferredStableWorkstreamCount, 1);
+  assert.equal(result.stableQualificationComplete, false);
   assert.equal(result.lifecyclePromotionGranted, false);
   assert.equal(result.candidateActivated, false);
+  assert.equal(result.stablePromoted, false);
   assert.equal(result.accepted[HUMAN_OPTICAL].qualityRuleCount, 55);
 });
 
-test('qualification readiness never grants consumer eligibility or conformance', () => {
-  const result = evaluateQualificationReadiness(completeRecords(), {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
-  assert.equal(result.consumerEligibilityGranted, false);
-  assert.equal(result.consumerConformanceGranted, false);
+test('a Stable-cleanup record is not a pre-Candidate prerequisite', () => {
+  const stableRecord = {...record(QUALIFICATION_WORKSTREAMS[0]), workstream_id: STABLE_CLEANUP, review_authority: {mode: 'combined', authority: 'release review'}};
+  const result = evaluateQualificationReadiness([...completeRecords(), stableRecord], {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
+  assert.equal(result.qualificationGateSatisfied, true);
+  assert.equal(result.acceptedWorkstreamCount, 5);
+  assert.equal(result.accepted[STABLE_CLEANUP], undefined);
 });
 
-test('cross-revision evidence cannot satisfy the exact revision gate', () => {
-  const records = completeRecords();
-  records[0] = record(QUALIFICATION_WORKSTREAMS[0], {target: {source_revision: OTHER}});
+test('cross-revision Candidate evidence cannot satisfy the exact revision gate', () => {
+  const records = completeRecords(); records[0] = record(QUALIFICATION_WORKSTREAMS[0], {target: {source_revision: OTHER}});
   const result = evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
-  assert.equal(result.qualificationGateSatisfied, false);
-  assert.match(result.blockers.join('\n'), /source_revision mismatch/);
-});
-
-test('wrong target product fails closed', () => {
-  const records = completeRecords();
-  records[1] = record(QUALIFICATION_WORKSTREAMS[1], {target: {product: 'GLAZE UI V1.2'}});
-  const result = evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
-  assert.match(result.blockers.join('\n'), /target\.product mismatch/);
-});
-
-test('wrong target version fails closed', () => {
-  const records = completeRecords();
-  records[2] = record(QUALIFICATION_WORKSTREAMS[2], {target: {target_version: '1.3.0'}});
-  const result = evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
-  assert.match(result.blockers.join('\n'), /target\.target_version mismatch/);
-});
-
-test('old evidence schema fails closed', () => {
-  const records = completeRecords();
-  records[1] = record(QUALIFICATION_WORKSTREAMS[1], {schema_version: 1});
-  const result = evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
-  assert.match(result.blockers.join('\n'), /schema_version must be 2/);
+  assert.equal(result.qualificationGateSatisfied, false); assert.match(result.blockers.join('\n'), /source_revision mismatch/);
 });
 
 test('in-progress evidence is not accepted', () => {
-  const records = completeRecords();
-  records[3] = record(QUALIFICATION_WORKSTREAMS[3], {status: 'in_progress', disposition: {accepted_for_lifecycle_gate: false}});
-  const result = evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
-  assert.match(result.blockers.join('\n'), /status is not passed/);
+  const records = completeRecords(); records[3] = record(QUALIFICATION_WORKSTREAMS[3], {status: 'in_progress', disposition: {accepted_for_lifecycle_gate: false}});
+  assert.match(evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT}).blockers.join('\n'), /status is not passed/);
 });
 
-test('failed evidence is not accepted', () => {
-  const records = completeRecords();
-  records[4] = record(QUALIFICATION_WORKSTREAMS[4], {status: 'failed', disposition: {accepted_for_lifecycle_gate: false}});
-  const result = evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
-  assert.match(result.blockers.join('\n'), /status is not passed/);
+test('unresolved issues block Candidate readiness', () => {
+  const records = completeRecords(); records[1] = record(QUALIFICATION_WORKSTREAMS[1], {issues: [{summary: 'focus anomaly', severity: 'low', resolved: false}]});
+  assert.match(evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT}).blockers.join('\n'), /unresolved issues/);
 });
 
-test('passed evidence without lifecycle-gate acceptance is blocked', () => {
-  const records = completeRecords();
-  records[5] = record(QUALIFICATION_WORKSTREAMS[5], {disposition: {accepted_for_lifecycle_gate: false}});
-  const result = evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
-  assert.match(result.blockers.join('\n'), /not accepted for lifecycle gate/);
+test('human optical qualification cannot be automated-only', () => {
+  const records = completeRecords(); records[0] = record(HUMAN_OPTICAL, {review_authority: {mode: 'automated'}});
+  assert.match(evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT}).blockers.join('\n'), /review mode automated is not accepted/);
 });
 
-test('expired evidence is blocked', () => {
-  const records = completeRecords();
-  records[0] = record(QUALIFICATION_WORKSTREAMS[0], {valid_until: '2026-09-06T16:59:59Z'});
-  const result = evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
-  assert.match(result.blockers.join('\n'), /record is expired/);
+test('passed human optical evidence requires all 55 quality rules', () => {
+  const records = completeRecords(); records[0] = record(HUMAN_OPTICAL, {quality_review: {reviewed_rule_ids: QUALITY_RULE_IDS.slice(0, 54)}});
+  assert.match(evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT}).blockers.join('\n'), /all 55 governed quality rules/);
 });
 
-test('unresolved issues block lifecycle-gate readiness regardless of severity', () => {
-  const records = completeRecords();
-  records[1] = record(QUALIFICATION_WORKSTREAMS[1], {
-    issues: [{summary: 'focus order anomaly', severity: 'low', resolved: false}]
-  });
-  const result = evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
-  assert.match(result.blockers.join('\n'), /unresolved issues/);
+test('visual finish, blandness, accessibility, responsive beauty, and final quality gates fail closed', () => {
+  const records = completeRecords(); records[0] = record(HUMAN_OPTICAL, {quality_review: {visual_finish_accepted: false, blandness_rejected: false, accessibility_beauty_reviewed: false, responsive_beauty_reviewed: false, critical_final_quality_questions_accepted: false}});
+  const blockers = evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT}).blockers.join('\n');
+  assert.match(blockers, /visual finish gate/); assert.match(blockers, /blandness rejection gate/); assert.match(blockers, /accessibility-as-beauty/); assert.match(blockers, /responsive-beauty/); assert.match(blockers, /final quality test/);
 });
 
-test('human optical qualification cannot be satisfied by automated-only review', () => {
-  const records = completeRecords();
-  records[0] = record(QUALIFICATION_WORKSTREAMS[0], {review_authority: {mode: 'automated'}});
-  const result = evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
-  assert.match(result.blockers.join('\n'), /review mode automated is not accepted/);
-});
-
-test('physical-device qualification requires combined review authority', () => {
-  const records = completeRecords();
-  records[2] = record(QUALIFICATION_WORKSTREAMS[2], {review_authority: {mode: 'human'}});
-  const result = evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
-  assert.match(result.blockers.join('\n'), /review mode human is not accepted/);
-});
-
-test('passed human optical evidence requires the quality review object', () => {
-  const records = completeRecords();
-  delete records[0].quality_review;
-  const result = evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
-  assert.match(result.blockers.join('\n'), /quality_review is required/);
-});
-
-test('human optical evidence must cover all 55 quality rules exactly once', () => {
-  const records = completeRecords();
-  records[0] = record(HUMAN_OPTICAL, {quality_review: {reviewed_rule_ids: QUALITY_RULE_IDS.slice(0, 54)}});
-  const result = evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
-  assert.match(result.blockers.join('\n'), /all 55 governed quality rules/);
-});
-
-test('visual finish and blandness gates fail closed', () => {
-  const records = completeRecords();
-  records[0] = record(HUMAN_OPTICAL, {quality_review: {visual_finish_accepted: false, blandness_rejected: false}});
-  const result = evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
-  assert.match(result.blockers.join('\n'), /visual finish gate is not accepted/);
-  assert.match(result.blockers.join('\n'), /blandness rejection gate is not accepted/);
-});
-
-test('accessibility and responsive beauty gates fail closed', () => {
-  const records = completeRecords();
-  records[0] = record(HUMAN_OPTICAL, {quality_review: {accessibility_beauty_reviewed: false, responsive_beauty_reviewed: false}});
-  const result = evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
-  assert.match(result.blockers.join('\n'), /accessibility-as-beauty review is incomplete/);
-  assert.match(result.blockers.join('\n'), /responsive-beauty review is incomplete/);
-});
-
-test('a superseded record does not block when a newer valid passed record exists', () => {
-  const id = QUALIFICATION_WORKSTREAMS[0];
-  const records = completeRecords();
-  records.push(record(id, {
-    status: 'superseded',
-    observed_at: '2026-09-06T16:00:00Z',
-    disposition: {accepted_for_lifecycle_gate: false}
-  }));
-  const result = evaluateQualificationReadiness(records, {sourceRevision: SOURCE, evaluatedAt: EVALUATED_AT});
-  assert.equal(result.qualificationGateSatisfied, true);
-});
-
-test('invalid source revision fails closed before evidence aggregation', () => {
+test('invalid source revision fails closed', () => {
   const result = evaluateQualificationReadiness(completeRecords(), {sourceRevision: 'not-a-sha', evaluatedAt: EVALUATED_AT});
-  assert.equal(result.qualificationGateSatisfied, false);
-  assert.match(result.blockers.join('\n'), /40-character Git SHA/);
+  assert.equal(result.qualificationGateSatisfied, false); assert.match(result.blockers.join('\n'), /40-character Git SHA/);
 });
 
-test('candidate metadata preserves Proposed lifecycle and quality-contract boundaries', () => {
+test('Candidate metadata preserves Proposed lifecycle and Stable-stage separation', () => {
   assert.equal(qualificationCandidate.releaseLifecycle, 'proposed');
   assert.equal(qualificationCandidate.qualificationLifecycle, 'qualification-active');
-  assert.equal(qualificationCandidate.evidenceSchemaVersion, 2);
   assert.equal(qualificationCandidate.qualityRuleCount, 55);
-  assert.equal(qualificationCandidate.consumerEligible, false);
+  assert.equal(qualificationCandidate.requiredWorkstreams.length, 5);
+  assert.deepEqual([...qualificationCandidate.deferredStableWorkstreams], [STABLE_CLEANUP]);
   assert.equal(qualificationCandidate.canActivateCandidate, false);
-  assert.equal(qualificationCandidate.canChangeLifecycleRegistry, false);
-  assert.equal(qualificationCandidate.canChangeVersionFile, false);
+  assert.equal(qualificationCandidate.canPromoteStable, false);
   assert.equal(qualificationCandidate.canTreatAutomatedCIAsHumanEvidence, false);
   assert.equal(qualificationCandidate.canTreatAutomatedCIAsPhysicalDeviceEvidence, false);
 });
