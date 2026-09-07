@@ -10,6 +10,8 @@ on:
       - "evidence/v1.3/**"
       - "scripts/validate_glaze_v1.py"
       - "scripts/validate_glaze_v1_3_planned.py"
+      - "scripts/report_glaze_v1_3_qualification_readiness.py"
+      - "scripts/test_report_glaze_v1_3_qualification_readiness.py"
       - ".github/workflows/glaze-v1.3-planned-qualification.yml"
   push:
     branches: [main]
@@ -21,23 +23,60 @@ on:
       - "evidence/v1.3/**"
       - "scripts/validate_glaze_v1.py"
       - "scripts/validate_glaze_v1_3_planned.py"
+      - "scripts/report_glaze_v1_3_qualification_readiness.py"
+      - "scripts/test_report_glaze_v1_3_qualification_readiness.py"
       - ".github/workflows/glaze-v1.3-planned-qualification.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
 
+env:
+  CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
 jobs:
   planned-control-plane:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check out exact candidate revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          ref: ${{ env.CANDIDATE_SHA }}
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
-      - run: python scripts/validate_glaze_v1_3_planned.py
-      - run: |
+      - name: Verify exact checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          test -z "$(git status --porcelain)"
+      - name: Validate planned-only V1.3 control plane
+        run: python scripts/validate_glaze_v1_3_planned.py
+      - name: Test qualification readiness reporter
+        run: python scripts/test_report_glaze_v1_3_qualification_readiness.py
+      - name: Report exact-revision qualification readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/report_glaze_v1_3_qualification_readiness.py \
+            --source-revision "$CANDIDATE_SHA" \
+            --fail-on-invalid \
+            --json \
+            --output "${RUNNER_TEMP}/glaze-v1.3-readiness.json"
+          {
+            echo '## GLAZE UI V1.3 qualification readiness'
+            echo
+            echo '```text'
+            python scripts/report_glaze_v1_3_qualification_readiness.py \
+              --source-revision "$CANDIDATE_SHA"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve planned Stable boundary
+        run: |
           test "$(cat VERSION)" = "1.2.0"
           python - <<'PY'
           import json
