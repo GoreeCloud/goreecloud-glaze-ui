@@ -104,6 +104,35 @@ jobs:
       - name: Test fail-closed qualification draft preparation
         run: python scripts/test_prepare_glaze_v1_3_qualification_record.py
 
+      - name: Prove prepared drafts cannot satisfy qualification
+        env:
+          CHECKED_OUT_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          python scripts/prepare_glaze_v1_3_qualification_record.py physical-device \
+            --operator "CI Draft Sentinel" \
+            --source-revision "$CHECKED_OUT_SOURCE_REVISION" \
+            --output artifacts/v1.3/qualification-drafts/ci-physical-device.json
+          mkdir -p /tmp/glaze-v1.3-draft-evidence
+          cp artifacts/v1.3/qualification-drafts/ci-physical-device.json /tmp/glaze-v1.3-draft-evidence/
+          node scripts/evaluate_glaze_v1_3_qualification.mjs \
+            --source-revision "$CHECKED_OUT_SOURCE_REVISION" \
+            --evidence-dir /tmp/glaze-v1.3-draft-evidence \
+            > /tmp/glaze-v1.3-draft-readiness.json
+          python - <<'PY'
+          import json
+          result = json.load(open('/tmp/glaze-v1.3-draft-readiness.json', encoding='utf-8'))['result']
+          assert result['state'] == 'blocked'
+          assert result['qualificationGateSatisfied'] is False
+          assert result['acceptedWorkstreamCount'] == 0
+          assert result['lifecyclePromotionGranted'] is False
+          assert result['candidateActivated'] is False
+          assert result['consumerEligibilityGranted'] is False
+          assert result['consumerConformanceGranted'] is False
+          assert any('physical-device-native-platform-qualification' in blocker and 'status is not passed' in blocker for blocker in result['blockers'])
+          print('Prepared draft remains fail-closed and contributes 0 accepted qualification workstreams.')
+          PY
+
       - name: Preserve V1.2 Stable authority
         run: python scripts/validate_glaze_v1_2_stable.py
 
