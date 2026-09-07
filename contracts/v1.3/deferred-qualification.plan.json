@@ -3,7 +3,7 @@
   "schemaVersion": 1,
   "product": "GLAZE UI V1.3",
   "targetVersion": "1.3.0-candidate",
-  "lifecycle": "planned",
+  "lifecycle": "qualification-active",
   "created": "2026-09-06",
   "sourceStable": "1.2.0",
   "authority": "acceptance/v1.3-deferred-qualification.md",
@@ -18,6 +18,9 @@
   "rules": {
     "v1.2StableImpliesThesePassed": false,
     "freshExactRevisionEvidenceRequired": true,
+    "allBlockingWorkstreamsMustPassSameExactRevision": true,
+    "passedEvidenceAllowedDuringQualificationActive": true,
+    "qualificationReadinessDoesNotPromoteLifecycle": true,
     "consumerConformanceAutomatic": false,
     "v1.3LifecyclePromotionAutomatic": false
   }
