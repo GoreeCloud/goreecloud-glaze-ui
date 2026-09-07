@@ -1,0 +1,42 @@
+{
+  "schema_version": 2,
+  "workstream_id": "physical-device-native-platform-qualification",
+  "target": {
+    "product": "GLAZE UI V1.3",
+    "target_version": "1.3.0-candidate",
+    "source_revision": "72ad63bf32d80420b25dc98bfd2def47bcc2a427"
+  },
+  "status": "in_progress",
+  "observed_at": "2026-09-07T19:37:07Z",
+  "review_authority": {
+    "mode": "combined",
+    "authority": "GoreeCloud owner / physical-device reviewer plus repository validation"
+  },
+  "environment": {
+    "draft": true,
+    "device_inventory_status": "must be recorded before acceptance",
+    "required_claim_validation": [
+      "Android/OEM behavior where claimed",
+      "Linux compositor/window-system behavior where claimed",
+      "foldable/posture behavior where claimed",
+      "pointer, keyboard, touch and far-view behavior where applicable"
+    ],
+    "emulation_is_sufficient": false
+  },
+  "evidence_references": [
+    "contracts/v1.3/qualification-matrix.json#physical-device-native-platform-qualification",
+    "evidence/v1.3/templates/qualification-review-worksheets.md#physical-device--native-platform"
+  ],
+  "issues": [
+    {
+      "summary": "Physical-device inventory and real native-platform observations have not yet been completed and dispositioned for this exact source revision.",
+      "severity": "info",
+      "resolved": false,
+      "reference": "evidence/v1.3/templates/qualification-review-worksheets.md#physical-device--native-platform"
+    }
+  ],
+  "disposition": {
+    "accepted_for_lifecycle_gate": false,
+    "notes": "DRAFT ONLY. Responsive emulation and resolver probes are supporting evidence only; physical-device claims require physical-device observations."
+  }
+}
