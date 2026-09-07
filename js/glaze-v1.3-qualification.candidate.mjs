@@ -7,12 +7,19 @@ export const QUALIFICATION_WORKSTREAMS = Object.freeze([
   'stable-activation-and-source-namespace-cleanup'
 ]);
 
+export const QUALITY_RULE_IDS = Object.freeze(
+  Array.from({length: 55}, (_, index) => `quality-${String(index + 1).padStart(2, '0')}`)
+);
+
 const SHA40 = /^[0-9a-f]{40}$/;
 const TARGET_PRODUCT = 'GLAZE UI V1.3';
 const TARGET_VERSION = '1.3.0-candidate';
+const EVIDENCE_SCHEMA_VERSION = 2;
+const HUMAN_OPTICAL = 'human-optical-and-icon-collision-qualification';
+const QUALITY_CONTRACT = 'contracts/v1.3/quality-rules.candidate.json';
 
 const REVIEW_MODES = Object.freeze({
-  'human-optical-and-icon-collision-qualification': new Set(['human', 'combined']),
+  [HUMAN_OPTICAL]: new Set(['human', 'combined']),
   'manual-assistive-technology-qualification': new Set(['human', 'combined']),
   'physical-device-native-platform-qualification': new Set(['combined']),
   'physical-device-production-performance-qualification': new Set(['combined']),
@@ -34,9 +41,32 @@ function validDate(value) {
   return Number.isFinite(parsed);
 }
 
+function hasExactQualityRuleCoverage(value) {
+  if (!Array.isArray(value) || value.length !== QUALITY_RULE_IDS.length) return false;
+  const actual = new Set(value);
+  return actual.size === QUALITY_RULE_IDS.length && QUALITY_RULE_IDS.every(id => actual.has(id));
+}
+
+function qualityReviewProblems(record) {
+  const problems = [];
+  if (!isObject(record.quality_review)) {
+    return ['quality_review is required for passed human optical evidence'];
+  }
+  const review = record.quality_review;
+  if (review.contract !== QUALITY_CONTRACT) problems.push('quality_review contract mismatch');
+  if (!hasExactQualityRuleCoverage(review.reviewed_rule_ids)) problems.push('quality_review must cover all 55 governed quality rules exactly once');
+  if (review.visual_finish_accepted !== true) problems.push('visual finish gate is not accepted');
+  if (review.blandness_rejected !== true) problems.push('blandness rejection gate is not accepted');
+  if (review.accessibility_beauty_reviewed !== true) problems.push('accessibility-as-beauty review is incomplete');
+  if (review.responsive_beauty_reviewed !== true) problems.push('responsive-beauty review is incomplete');
+  if (review.critical_final_quality_questions_accepted !== true) problems.push('final quality test is not accepted');
+  return problems;
+}
+
 function recordProblems(record, workstreamId, sourceRevision, evaluatedAtMs) {
   const problems = [];
   if (!isObject(record)) return ['record is not an object'];
+  if (record.schema_version !== EVIDENCE_SCHEMA_VERSION) problems.push(`schema_version must be ${EVIDENCE_SCHEMA_VERSION}`);
   if (record.workstream_id !== workstreamId) problems.push('workstream_id mismatch');
   const target = isObject(record.target) ? record.target : {};
   if (target.product !== TARGET_PRODUCT) problems.push('target.product mismatch');
@@ -64,6 +94,9 @@ function recordProblems(record, workstreamId, sourceRevision, evaluatedAtMs) {
   }
   if (Array.isArray(record.issues) && record.issues.some(issue => isObject(issue) && issue.resolved === false)) {
     problems.push('record contains unresolved issues');
+  }
+  if (workstreamId === HUMAN_OPTICAL && record.status === 'passed') {
+    problems.push(...qualityReviewProblems(record));
   }
   return problems;
 }
@@ -96,7 +129,8 @@ export function evaluateQualificationReadiness(records = [], options = {}) {
         accepted[workstreamId] = Object.freeze({
           observedAt: record.observed_at,
           reviewMode: record.review_authority.mode,
-          evidenceReferences: Object.freeze([...record.evidence_references])
+          evidenceReferences: Object.freeze([...record.evidence_references]),
+          qualityRuleCount: workstreamId === HUMAN_OPTICAL ? QUALITY_RULE_IDS.length : null
         });
       } else {
         const related = safeRecords.filter(record => isObject(record) && record.workstream_id === workstreamId);
@@ -135,6 +169,9 @@ export const qualificationCandidate = Object.freeze({
   targetVersion: TARGET_VERSION,
   releaseLifecycle: 'proposed',
   qualificationLifecycle: 'qualification-active',
+  evidenceSchemaVersion: EVIDENCE_SCHEMA_VERSION,
+  qualityContract: QUALITY_CONTRACT,
+  qualityRuleCount: QUALITY_RULE_IDS.length,
   consumerEligible: false,
   canActivateCandidate: false,
   canChangeLifecycleRegistry: false,
