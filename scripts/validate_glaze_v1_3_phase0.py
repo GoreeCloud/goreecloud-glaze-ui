@@ -26,6 +26,7 @@ ALLOWED_PHASES = {
     "phase-13-personalization",
     "phase-14-signature-components-and-reference-suite",
     "phase-15-migration-and-consumer-boundary",
+    "phase-16-fresh-v1.3-qualification",
 }
 ALLOWED_WORKSTREAM_STATUSES = {
     "planned",
@@ -101,6 +102,7 @@ def main() -> int:
     gates = plan.get("gates", {})
     req(gates.get("candidateActivationRequiresImplementationEvidence") is True, "Candidate must require implementation evidence")
     req(gates.get("candidateActivationRequiresValidation") is True, "Candidate must require validation")
+    req(gates.get("candidateActivationRequiresFreshDeferredQualificationPasses") is True, "Candidate must require fresh deferred-qualification passes")
     req(gates.get("releaseCandidateRequiresExactRevisionAcceptance") is True, "RC must require exact-revision acceptance")
     req(gates.get("stableRequiresFormalPromotion") is True, "Stable must require formal promotion")
     req(gates.get("consumerConformanceAutomatic") is False, "consumer conformance must never be automatic")
@@ -153,7 +155,9 @@ def main() -> int:
                 )
 
     deferred = load("contracts/v1.3/deferred-qualification.plan.json")
-    req(deferred.get("lifecycle") == "planned", "deferred V1.3 qualification must remain planned")
+    req(deferred.get("lifecycle") in {"planned", "qualification-active"}, "deferred V1.3 qualification must be planned or qualification-active before Candidate promotion")
+    if plan.get("phase") == "phase-16-fresh-v1.3-qualification":
+        req(deferred.get("lifecycle") == "qualification-active", "Phase 16 requires the deferred qualification control plane to be qualification-active")
     req(deferred.get("sourceStable") == STABLE_VERSION, "deferred qualification must remain anchored to V1.2 Stable")
     req(
         deferred.get("rules", {}).get("v1.3LifecyclePromotionAutomatic") is False,
