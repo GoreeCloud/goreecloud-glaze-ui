@@ -20,6 +20,7 @@ OBSERVED_AT = "2026-09-07T00:00:00Z"
 class QualificationDraftHelperTests(unittest.TestCase):
     def test_all_six_workstreams_initialize_fail_closed(self) -> None:
         self.assertEqual(len(module.WORKSTREAMS), 6)
+        self.assertEqual(set(module.WORKSTREAMS), set(module.DEFAULT_REVIEW_MODES))
         for alias, workstream_id in module.WORKSTREAMS.items():
             with self.subTest(alias=alias):
                 record = module.build_record(
@@ -36,11 +37,20 @@ class QualificationDraftHelperTests(unittest.TestCase):
                 self.assertEqual(record["target"]["target_version"], "1.3.0-candidate")
                 self.assertEqual(record["target"]["source_revision"], REVISION)
                 self.assertEqual(record["status"], "in_progress")
+                self.assertEqual(record["review_authority"]["mode"], module.DEFAULT_REVIEW_MODES[alias])
                 self.assertFalse(record["disposition"]["accepted_for_lifecycle_gate"])
                 self.assertNotIn("quality_review", record)
                 self.assertTrue(record["environment"]["draft"])
                 self.assertTrue(record["evidence_references"][0].startswith("DRAFT:"))
                 self.assertTrue(any(not issue["resolved"] for issue in record["issues"]))
+
+    def test_evaluator_compatible_authority_modes_are_preselected(self) -> None:
+        self.assertEqual(module.DEFAULT_REVIEW_MODES["human-optical"], "human")
+        self.assertEqual(module.DEFAULT_REVIEW_MODES["assistive-technology"], "human")
+        self.assertEqual(module.DEFAULT_REVIEW_MODES["physical-device"], "combined")
+        self.assertEqual(module.DEFAULT_REVIEW_MODES["physical-performance"], "combined")
+        self.assertEqual(module.DEFAULT_REVIEW_MODES["personalization-adapter"], "combined")
+        self.assertEqual(module.DEFAULT_REVIEW_MODES["stable-activation"], "combined")
 
     def test_human_optical_draft_does_not_claim_55_rule_review(self) -> None:
         record = module.build_record(
@@ -57,12 +67,15 @@ class QualificationDraftHelperTests(unittest.TestCase):
     def test_physical_tracks_explicitly_reject_simulation_substitution(self) -> None:
         device = module.build_record("physical-device", "Device Reviewer", REVISION, observed_at=OBSERVED_AT)
         performance = module.build_record("physical-performance", "Performance Reviewer", REVISION, observed_at=OBSERVED_AT)
+        self.assertEqual(device["review_authority"]["mode"], "combined")
+        self.assertEqual(performance["review_authority"]["mode"], "combined")
         self.assertIn("Simulation", device["issues"][0]["summary"])
         self.assertIn("simulated", performance["issues"][0]["summary"])
 
     def test_stable_activation_draft_grants_no_promotion(self) -> None:
         record = module.build_record("stable-activation", "Release Reviewer", REVISION, observed_at=OBSERVED_AT)
         notes = record["disposition"]["notes"]
+        self.assertEqual(record["review_authority"]["mode"], "combined")
         self.assertIn("No lifecycle promotion", notes)
         self.assertIn("Stable activation", record["issues"][0]["summary"])
         self.assertFalse(record["disposition"]["accepted_for_lifecycle_gate"])
