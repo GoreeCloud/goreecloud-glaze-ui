@@ -1,0 +1,56 @@
+name: GLAZE UI Consumer Registry
+
+on:
+  pull_request:
+    paths:
+      - 'VERSION'
+      - 'CONSUMERS.md'
+      - 'consumers/registry.json'
+      - 'registry/lifecycle.json'
+      - 'schemas/consumer-registry.schema.json'
+      - 'scripts/validate_consumer_registry.py'
+      - '.github/workflows/glaze-consumer-registry.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'VERSION'
+      - 'CONSUMERS.md'
+      - 'consumers/registry.json'
+      - 'registry/lifecycle.json'
+      - 'schemas/consumer-registry.schema.json'
+      - 'scripts/validate_consumer_registry.py'
+      - '.github/workflows/glaze-consumer-registry.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-consumer-registry:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out exact source revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify exact source revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected='${{ github.event.pull_request.head.sha || github.sha }}'
+          actual="$(git rev-parse HEAD)"
+          printf 'Expected source revision: %s\nActual source revision:   %s\n' "$expected" "$actual"
+          test "$actual" = "$expected"
+
+      - name: Validate registry JSON syntax
+        run: |
+          python3 -m json.tool consumers/registry.json >/dev/null
+          python3 -m json.tool registry/lifecycle.json >/dev/null
+          python3 -m json.tool schemas/consumer-registry.schema.json >/dev/null
+
+      - name: Validate V1.2 consumer registry semantics
+        run: |
+          python3 -m py_compile scripts/validate_consumer_registry.py
+          python3 scripts/validate_consumer_registry.py
