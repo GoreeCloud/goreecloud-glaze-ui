@@ -4,16 +4,7 @@
   "title": "GLAZE UI V1.3 Qualification Evidence Record",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "schema_version",
-    "workstream_id",
-    "target",
-    "status",
-    "observed_at",
-    "review_authority",
-    "evidence_references",
-    "disposition"
-  ],
+  "required": ["schema_version", "workstream_id", "target", "status", "observed_at", "review_authority", "evidence_references", "disposition"],
   "properties": {
     "schema_version": {"const": 2},
     "workstream_id": {
@@ -59,15 +50,7 @@
     "quality_review": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "contract",
-        "reviewed_rule_ids",
-        "visual_finish_accepted",
-        "blandness_rejected",
-        "accessibility_beauty_reviewed",
-        "responsive_beauty_reviewed",
-        "critical_final_quality_questions_accepted"
-      ],
+      "required": ["contract", "reviewed_rule_ids", "visual_finish_accepted", "blandness_rejected", "accessibility_beauty_reviewed", "responsive_beauty_reviewed", "critical_final_quality_questions_accepted"],
       "properties": {
         "contract": {"const": "contracts/v1.3/quality-rules.candidate.json"},
         "reviewed_rule_ids": {
@@ -166,6 +149,43 @@
               "accessibility_beauty_reviewed": {"const": true},
               "responsive_beauty_reviewed": {"const": true},
               "critical_final_quality_questions_accepted": {"const": true}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "workstream_id": {"const": "stable-activation-and-source-namespace-cleanup"},
+          "status": {"const": "passed"}
+        },
+        "required": ["workstream_id", "status"]
+      },
+      "then": {
+        "required": ["environment"],
+        "properties": {
+          "review_authority": {
+            "properties": {"mode": {"const": "combined"}},
+            "required": ["mode"]
+          },
+          "environment": {
+            "type": "object",
+            "required": [
+              "qualified_candidate_source_revision",
+              "stable_promotion_source_revision",
+              "candidate_lifecycle_observed",
+              "equivalence_review_completed",
+              "import_closure_validated",
+              "rollback_verified"
+            ],
+            "properties": {
+              "qualified_candidate_source_revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+              "stable_promotion_source_revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+              "candidate_lifecycle_observed": {"const": "active"},
+              "equivalence_review_completed": {"const": true},
+              "import_closure_validated": {"const": true},
+              "rollback_verified": {"const": true}
             }
           }
         }
