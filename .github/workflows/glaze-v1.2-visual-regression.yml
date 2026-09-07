@@ -11,6 +11,7 @@ on:
       - "contracts/regression/visual-baselines-v1.json"
       - "contracts/regression/reference-invariants.json"
       - "scripts/glaze_v1_2_visual_regression.py"
+      - "scripts/glaze_v1_2_visual_regression_pair.py"
       - "scripts/validate_glaze_v1_2_visual_regression.py"
       - ".github/workflows/glaze-v1.2-visual-regression.yml"
   workflow_dispatch:
@@ -55,9 +56,12 @@ jobs:
 
       - name: Validate visual regression governance and harness
         run: |
-          python -m py_compile scripts/glaze_v1_2_visual_regression.py scripts/validate_glaze_v1_2_visual_regression.py
+          python -m py_compile scripts/glaze_v1_2_visual_regression.py scripts/glaze_v1_2_visual_regression_pair.py scripts/validate_glaze_v1_2_visual_regression.py
           python scripts/validate_glaze_v1_2_visual_regression.py
 
+      # Retain the legacy isolated captures as diagnostic evidence and to preserve
+      # the established harness boundary. They are replaced below before the
+      # zero-drift comparison by a stricter same-browser-session capture pair.
       - name: Capture provisional reference scenes
         run: >-
           python scripts/glaze_v1_2_visual_regression.py capture
@@ -69,6 +73,15 @@ jobs:
           python scripts/glaze_v1_2_visual_regression.py capture
           --root .
           --out artifacts/visual-regression/current
+
+      - name: Recapture pair in one stabilized browser session
+        run: >-
+          python scripts/glaze_v1_2_visual_regression_pair.py
+          --baseline-root _visual-reference
+          --current-root .
+          --baseline-out artifacts/visual-regression/reference
+          --current-out artifacts/visual-regression/current
+          --manifest artifacts/visual-regression/pair-manifest.json
 
       - name: Compare stabilized decoded pixels
         run: >-
