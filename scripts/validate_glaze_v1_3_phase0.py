@@ -25,6 +25,7 @@ ALLOWED_PHASES = {
     "phase-12-accessibility-and-resilience",
     "phase-13-personalization",
     "phase-14-signature-components-and-reference-suite",
+    "phase-15-migration-and-consumer-boundary",
 }
 ALLOWED_WORKSTREAM_STATUSES = {
     "planned",
