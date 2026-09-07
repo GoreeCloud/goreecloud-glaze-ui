@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "product": "GLAZE UI V1.3",
+  "targetVersion": "1.3.0-candidate",
+  "lifecycle": "qualification-active",
+  "sourceStable": "1.2.0",
+  "authority": "acceptance/v1.3-deferred-qualification.md",
+  "evidenceSchema": "contracts/v1.3/qualification-evidence.schema.json",
+  "workstreams": [
+    {
+      "id": "human-optical-and-icon-collision-qualification",
+      "title": "Human optical and icon-collision qualification",
+      "status": "planned",
+      "mode": "human",
+      "blockingForLifecyclePromotion": true,
+      "requiredEvidence": [
+        "authorized-review record",
+        "light appearance review",
+        "dark appearance review",
+        "deep-dark appearance review",
+        "clarity-profile review",
+        "representative reference-scene review",
+        "icon and artwork collision review at compact sizes"
+      ]
+    },
+    {
+      "id": "manual-assistive-technology-qualification",
+      "title": "Manual assistive-technology qualification",
+      "status": "planned",
+      "mode": "human-assisted",
+      "blockingForLifecyclePromotion": true,
+      "requiredEvidence": [
+        "claimed support-matrix declaration",
+        "screen-reader session evidence where claimed",
+        "voice-control session evidence where claimed",
+        "switch-control session evidence where claimed",
+        "keyboard and focus-order evidence where applicable",
+        "issues and disposition record"
+      ]
+    },
+    {
+      "id": "physical-device-native-platform-qualification",
+      "title": "Physical-device and native-platform qualification",
+      "status": "planned",
+      "mode": "mixed",
+      "blockingForLifecyclePromotion": true,
+      "requiredEvidence": [
+        "device and operating-system inventory",
+        "Android/OEM behavior evidence where claimed",
+        "Linux compositor and window-system evidence where claimed",
+        "foldable and posture evidence where claimed",
+        "native-platform variance and disposition record"
+      ]
+    },
+    {
+      "id": "physical-device-production-performance-qualification",
+      "title": "Physical-device production performance qualification",
+      "status": "planned",
+      "mode": "mixed",
+      "blockingForLifecyclePromotion": true,
+      "requiredEvidence": [
+        "accepted runtime/platform performance budget",
+        "frame-pacing measurements",
+        "interaction-latency measurements",
+        "memory measurements",
+        "GPU/compositor measurements where available",
+        "power and thermal measurements where applicable",
+        "constrained-device evidence"
+      ]
+    },
+    {
+      "id": "native-personalization-adapter-qualification",
+      "title": "Native Personalization adapter qualification",
+      "status": "planned",
+      "mode": "mixed",
+      "blockingForLifecyclePromotion": true,
+      "requiredEvidence": [
+        "persistence evidence where claimed",
+        "system-appearance adapter evidence where claimed",
+        "wallpaper-source adapter evidence where claimed",
+        "failure and fallback behavior evidence"
+      ]
+    },
+    {
+      "id": "stable-activation-and-source-namespace-cleanup",
+      "title": "Stable activation and source-namespace cleanup",
+      "status": "planned",
+      "mode": "automated-plus-review",
+      "blockingForLifecyclePromotion": true,
+      "requiredEvidence": [
+        "candidate-name inventory",
+        "migration map",
+        "byte/pixel/behavior equivalence evidence for renamed or promoted sources",
+        "import-closure validation",
+        "rollback verification"
+      ]
+    }
+  ],
+  "globalRules": {
+    "v1.2EvidenceMayNotBeReclassifiedAsV1.3Pass": true,
+    "exactSourceRevisionRequired": true,
+    "allBlockingWorkstreamsMustPassBeforeLifecyclePromotion": true,
+    "allBlockingWorkstreamsMustPassSameExactRevision": true,
+    "passedEvidenceAllowedWhileQualificationActive": true,
+    "qualificationReadinessDoesNotPromoteLifecycle": true,
+    "consumerEligibilityIsSeparate": true,
+    "downstreamProductionAcceptanceIsSeparate": true,
+    "plannedStatusIsNotEvidence": true
+  }
+}
