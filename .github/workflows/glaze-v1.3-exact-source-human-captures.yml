@@ -1,0 +1,381 @@
+name: GLAZE UI V1.3 Exact-Source Human Captures
+
+on:
+  push:
+    branches:
+      - evidence/v1.3-human-optical-72ad63b
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  SOURCE_SHA: 72ad63bf32d80420b25dc98bfd2def47bcc2a427
+  SOURCE_TREE_SHA: cc1519dd859437969a143a0170996b6ba5e02b76
+  REFERENCE_HTML: reference/v1.3/signature-components-and-compositions.html
+  REFERENCE_HTML_BLOB_SHA: c5132902a9dfcc33154c4c45aff0d01b1df2903e
+  REFERENCE_MANIFEST_BLOB_SHA: 5d927f8519ef53b113560e037f86638c42925131
+  QUALITY_RULES_BLOB_SHA: 7ef5ab71ae47e152fd92b736ff116c4d71dd8daa
+
+jobs:
+  exact-source-capture:
+    name: capture-exact-source-reference
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out frozen exact source only
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          path: exact-source
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify immutable source provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd exact-source
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test "$(git rev-parse HEAD^{tree})" = "$SOURCE_TREE_SHA"
+          test -z "$(git status --porcelain)"
+          test "$(git rev-parse HEAD:"$REFERENCE_HTML")" = "$REFERENCE_HTML_BLOB_SHA"
+          test "$(git rev-parse HEAD:reference/v1.3/signature-components-and-compositions.json)" = "$REFERENCE_MANIFEST_BLOB_SHA"
+          test "$(git rev-parse HEAD:contracts/v1.3/quality-rules.candidate.json)" = "$QUALITY_RULES_BLOB_SHA"
+          printf 'source_revision=%s\nsource_tree=%s\nreference_blob=%s\n' \
+            "$(git rev-parse HEAD)" \
+            "$(git rev-parse HEAD^{tree})" \
+            "$(git rev-parse HEAD:"$REFERENCE_HTML")"
+
+      - name: Locate installed Chromium-family browser
+        shell: bash
+        run: |
+          set -euo pipefail
+          for browser in google-chrome-stable google-chrome chromium chromium-browser; do
+            if command -v "$browser" >/dev/null 2>&1; then
+              echo "CHROME=$(command -v "$browser")" >> "$GITHUB_ENV"
+              "$browser" --version
+              exit 0
+            fi
+          done
+          echo 'No Chromium-family browser found on hosted runner.' >&2
+          exit 1
+
+      - name: Capture exact-source review matrix with provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/capture-exact-source.mjs" <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+          import { spawn } from 'node:child_process';
+
+          const sourceSha = process.env.SOURCE_SHA;
+          const sourceTreeSha = process.env.SOURCE_TREE_SHA;
+          const referenceHtml = process.env.REFERENCE_HTML;
+          const referenceBlobSha = process.env.REFERENCE_HTML_BLOB_SHA;
+          const referenceManifestBlobSha = process.env.REFERENCE_MANIFEST_BLOB_SHA;
+          const qualityRulesBlobSha = process.env.QUALITY_RULES_BLOB_SHA;
+          const chrome = process.env.CHROME;
+          const sourceDir = path.resolve('exact-source');
+          const outputDir = path.resolve('capture-output');
+          fs.mkdirSync(outputDir, { recursive: true });
+
+          const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+          async function waitFor(url, attempts = 100) {
+            for (let i = 0; i < attempts; i++) {
+              try {
+                const r = await fetch(url);
+                if (r.ok) return r;
+              } catch {}
+              await sleep(100);
+            }
+            throw new Error(`Timed out waiting for ${url}`);
+          }
+
+          const server = spawn('python3', ['-m', 'http.server', '8765', '--bind', '127.0.0.1'], {
+            cwd: sourceDir,
+            stdio: ['ignore', 'pipe', 'pipe']
+          });
+          const chromeProc = spawn(chrome, [
+            '--headless=new',
+            '--no-sandbox',
+            '--disable-gpu',
+            '--hide-scrollbars',
+            '--disable-dev-shm-usage',
+            '--remote-debugging-port=9222',
+            `--user-data-dir=${process.env.RUNNER_TEMP}/glaze-capture-chrome`,
+            'about:blank'
+          ], { stdio: ['ignore', 'pipe', 'pipe'] });
+
+          function stopChildren() {
+            try { server.kill('SIGTERM'); } catch {}
+            try { chromeProc.kill('SIGTERM'); } catch {}
+          }
+          process.on('exit', stopChildren);
+          process.on('SIGINT', () => { stopChildren(); process.exit(130); });
+          process.on('SIGTERM', () => { stopChildren(); process.exit(143); });
+
+          await waitFor('http://127.0.0.1:8765/' + referenceHtml);
+          const versionResponse = await waitFor('http://127.0.0.1:9222/json/version');
+          const browserVersionInfo = await versionResponse.json();
+
+          async function openPage() {
+            const r = await fetch('http://127.0.0.1:9222/json/new?about%3Ablank', { method: 'PUT' });
+            if (!r.ok) throw new Error(`CDP target creation failed: ${r.status}`);
+            const target = await r.json();
+            const ws = new WebSocket(target.webSocketDebuggerUrl);
+            await new Promise((resolve, reject) => {
+              ws.addEventListener('open', resolve, { once: true });
+              ws.addEventListener('error', reject, { once: true });
+            });
+            let nextId = 0;
+            const pending = new Map();
+            ws.addEventListener('message', event => {
+              const message = JSON.parse(event.data);
+              if (!message.id) return;
+              const waiter = pending.get(message.id);
+              if (!waiter) return;
+              pending.delete(message.id);
+              if (message.error) waiter.reject(new Error(JSON.stringify(message.error)));
+              else waiter.resolve(message.result);
+            });
+            const send = (method, params = {}) => new Promise((resolve, reject) => {
+              const id = ++nextId;
+              pending.set(id, { resolve, reject });
+              ws.send(JSON.stringify({ id, method, params }));
+            });
+            return { ws, send, targetId: target.id };
+          }
+
+          async function evaluate(send, expression) {
+            const result = await send('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true });
+            if (result.exceptionDetails) throw new Error(`Evaluation failed: ${JSON.stringify(result.exceptionDetails)}`);
+            return result.result?.value;
+          }
+
+          async function waitForReferenceReady(send) {
+            for (let i = 0; i < 120; i++) {
+              const ready = await evaluate(send, `(() => ({
+                ready: document.readyState,
+                status: document.querySelector('#reference-status')?.textContent || '',
+                components: document.querySelectorAll('[data-signature-component]').length,
+                scenes: document.querySelectorAll('[data-reference-scene]').length
+              }))()`);
+              if (ready.ready === 'complete' && ready.components === 5 && ready.scenes === 8 && ready.status.includes('initialized')) return ready;
+              await sleep(100);
+            }
+            throw new Error('Reference page did not reach governed initialized state.');
+          }
+
+          async function moveMouseTo(send, selector) {
+            const point = await evaluate(send, `(() => {
+              const el = document.querySelector(${JSON.stringify(selector)});
+              if (!el) return null;
+              const r = el.getBoundingClientRect();
+              return {x:r.left+r.width/2,y:r.top+r.height/2};
+            })()`);
+            if (!point) throw new Error(`Hover target not found: ${selector}`);
+            await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: point.x, y: point.y });
+          }
+
+          async function capture(spec) {
+            const { ws, send, targetId } = await openPage();
+            try {
+              await send('Page.enable');
+              await send('Runtime.enable');
+              await send('Emulation.setDeviceMetricsOverride', {
+                width: spec.width,
+                height: spec.height,
+                deviceScaleFactor: 1,
+                mobile: Boolean(spec.mobile),
+                screenWidth: spec.width,
+                screenHeight: spec.height
+              });
+              const features = [];
+              if (spec.colorScheme) features.push({ name: 'prefers-color-scheme', value: spec.colorScheme });
+              if (spec.reducedMotion) features.push({ name: 'prefers-reduced-motion', value: 'reduce' });
+              if (spec.forcedColors) features.push({ name: 'forced-colors', value: 'active' });
+              if (spec.increasedContrast) features.push({ name: 'prefers-contrast', value: 'more' });
+              if (features.length) await send('Emulation.setEmulatedMedia', { features });
+
+              const targetUrl = `http://127.0.0.1:8765/${referenceHtml}?exact-source=${sourceSha}`;
+              await send('Page.navigate', { url: targetUrl });
+              const initialized = await waitForReferenceReady(send);
+
+              const mutation = {
+                appearance: spec.appearance || 'light',
+                transparency: spec.reducedTransparency ? 'reduced' : null,
+                textScale: spec.largeText ? '200' : null
+              };
+              await evaluate(send, `(() => {
+                const root = document.documentElement;
+                root.setAttribute('data-glz-appearance', ${JSON.stringify(mutation.appearance)});
+                ${spec.reducedTransparency ? "root.setAttribute('data-glz-transparency','reduced');" : "root.removeAttribute('data-glz-transparency');"}
+                ${spec.largeText ? "root.setAttribute('data-glz-text-scale','200');" : "root.removeAttribute('data-glz-text-scale');"}
+                return true;
+              })()`);
+              await sleep(120);
+
+              if (spec.focusSelector) {
+                await evaluate(send, `document.querySelector(${JSON.stringify(spec.focusSelector)})?.focus()`);
+                await sleep(80);
+              }
+              if (spec.hoverSelector) {
+                await moveMouseTo(send, spec.hoverSelector);
+                await sleep(80);
+              }
+
+              const state = await evaluate(send, `(() => ({
+                url: location.href,
+                title: document.title,
+                status: document.querySelector('#reference-status')?.textContent || '',
+                appearance: document.documentElement.getAttribute('data-glz-appearance'),
+                transparency: document.documentElement.getAttribute('data-glz-transparency'),
+                textScale: document.documentElement.getAttribute('data-glz-text-scale'),
+                componentCount: document.querySelectorAll('[data-signature-component]').length,
+                sceneCount: document.querySelectorAll('[data-reference-scene]').length,
+                activeElement: document.activeElement?.getAttribute('aria-label') || document.activeElement?.textContent?.trim().slice(0,80) || document.activeElement?.tagName || null,
+                media: {
+                  dark: matchMedia('(prefers-color-scheme: dark)').matches,
+                  reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
+                  reducedTransparency: matchMedia('(prefers-reduced-transparency: reduce)').matches,
+                  forcedColors: matchMedia('(forced-colors: active)').matches,
+                  increasedContrast: matchMedia('(prefers-contrast: more)').matches
+                },
+                horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+                viewport: {width: innerWidth, height: innerHeight},
+                fullSize: {width: document.documentElement.scrollWidth, height: document.documentElement.scrollHeight}
+              }))()`);
+
+              if (state.componentCount !== 5 || state.sceneCount !== 8 || !state.status.includes('initialized')) {
+                throw new Error(`Governed reference state mismatch for ${spec.id}: ${JSON.stringify(state)}`);
+              }
+              if (state.horizontalOverflow) throw new Error(`Unexpected horizontal overflow in ${spec.id}`);
+
+              const metrics = await send('Page.getLayoutMetrics');
+              const width = Math.ceil(metrics.cssContentSize?.width || state.fullSize.width);
+              const height = Math.ceil(metrics.cssContentSize?.height || state.fullSize.height);
+              const shot = await send('Page.captureScreenshot', {
+                format: 'png',
+                fromSurface: true,
+                captureBeyondViewport: true,
+                clip: { x: 0, y: 0, width, height, scale: 1 }
+              });
+              const buffer = Buffer.from(shot.data, 'base64');
+              const file = `${spec.id}.png`;
+              fs.writeFileSync(path.join(outputDir, file), buffer);
+              return {
+                id: spec.id,
+                file,
+                sha256: crypto.createHash('sha256').update(buffer).digest('hex'),
+                bytes: buffer.length,
+                capturedAtUtc: new Date().toISOString(),
+                requestedState: spec,
+                runtimeMutation: mutation,
+                observedState: state,
+                initializedState: initialized
+              };
+            } finally {
+              ws.close();
+              try { await fetch(`http://127.0.0.1:9222/json/close/${targetId}`); } catch {}
+            }
+          }
+
+          const captureSpecs = [
+            { id: '01-expanded-light-rest', width: 1440, height: 1000, appearance: 'light', colorScheme: 'light' },
+            { id: '02-compact-light-rest', width: 390, height: 844, appearance: 'light', colorScheme: 'light', mobile: true },
+            { id: '03-medium-light-rest', width: 768, height: 1024, appearance: 'light', colorScheme: 'light' },
+            { id: '04-workspace-light-rest', width: 1920, height: 1080, appearance: 'light', colorScheme: 'light' },
+            { id: '05-expanded-dark-rest', width: 1440, height: 1000, appearance: 'dark', colorScheme: 'dark' },
+            { id: '06-expanded-deep-dark-rest', width: 1440, height: 1000, appearance: 'deep-dark', colorScheme: 'dark' },
+            { id: '07-compact-reduced-transparency', width: 390, height: 844, appearance: 'light', colorScheme: 'light', reducedTransparency: true, mobile: true },
+            { id: '08-compact-large-text', width: 390, height: 844, appearance: 'light', colorScheme: 'light', largeText: true, mobile: true },
+            { id: '09-expanded-search-focus', width: 1440, height: 1000, appearance: 'light', colorScheme: 'light', focusSelector: '.glz1-search-entry input' },
+            { id: '10-expanded-capsule-hover', width: 1440, height: 1000, appearance: 'light', colorScheme: 'light', hoverSelector: '.glz1-capsule .glz1-advanced-button' },
+            { id: '11-expanded-reduced-motion', width: 1440, height: 1000, appearance: 'light', colorScheme: 'light', reducedMotion: true },
+            { id: '12-expanded-forced-colors', width: 1440, height: 1000, appearance: 'light', forcedColors: true, increasedContrast: true }
+          ];
+
+          const captures = [];
+          for (const spec of captureSpecs) captures.push(await capture(spec));
+
+          const provenance = {
+            schemaVersion: 1,
+            purpose: 'Exact-source human-optical review-support capture provenance; no human acceptance is inferred.',
+            source: {
+              repository: 'GoreeCloud/goreecloud-glaze-ui',
+              revision: sourceSha,
+              treeSha: sourceTreeSha,
+              referencePath: referenceHtml,
+              referenceBlobSha,
+              referenceManifestBlobSha,
+              qualityRulesBlobSha,
+              servedFromCleanDetachedExactCheckout: true
+            },
+            evidenceHarness: {
+              branch: process.env.GITHUB_REF_NAME || null,
+              commit: process.env.GITHUB_SHA || null,
+              workflow: process.env.GITHUB_WORKFLOW || null,
+              runId: process.env.GITHUB_RUN_ID || null,
+              runAttempt: process.env.GITHUB_RUN_ATTEMPT || null
+            },
+            environment: {
+              runnerOs: process.env.RUNNER_OS || null,
+              imageOs: process.env.ImageOS || null,
+              imageVersion: process.env.ImageVersion || null,
+              browser: browserVersionInfo.Browser || null,
+              browserProtocolVersion: browserVersionInfo['Protocol-Version'] || null
+            },
+            captureBoundary: {
+              humanJudgmentSupplied: false,
+              lifecycleAcceptanceSupplied: false,
+              v13SpecificMaterialColorNativeQualityEstablishedByReferencePage: false,
+              notes: [
+                'The canonical browser reference intentionally inherits the Stable V1.2 CSS entrypoint.',
+                'Appearance and accessibility captures use documented runtime state/emulation on the immutable exact-source page; mutations are recorded per capture.',
+                'Still captures support visual review but do not establish motion quality, assistive-technology acceptance, physical-device acceptance, native rendering parity, or lifecycle promotion.'
+              ]
+            },
+            captures
+          };
+          const provenancePath = path.join(outputDir, 'capture-provenance.json');
+          fs.writeFileSync(provenancePath, JSON.stringify(provenance, null, 2) + '\n');
+
+          const summary = [
+            '# GLAZE UI V1.3 exact-source human capture packet',
+            '',
+            `- Frozen source: \`${sourceSha}\``,
+            `- Source tree: \`${sourceTreeSha}\``,
+            `- Reference: \`${referenceHtml}\``,
+            `- Reference blob: \`${referenceBlobSha}\``,
+            `- Capture count: ${captures.length}`,
+            `- Human acceptance: **not supplied by this automation**`,
+            `- Lifecycle effect: **none**`,
+            '',
+            'This packet is review-supporting evidence. See `capture-provenance.json` for viewport, appearance, accessibility-emulation, browser, workflow, timestamp, and SHA-256 details for every PNG.'
+          ].join('\n') + '\n';
+          fs.writeFileSync(path.join(outputDir, 'README.md'), summary);
+
+          const allFiles = fs.readdirSync(outputDir).filter(name => name !== 'SHA256SUMS.txt').sort();
+          const sums = allFiles.map(name => {
+            const data = fs.readFileSync(path.join(outputDir, name));
+            return `${crypto.createHash('sha256').update(data).digest('hex')}  ${name}`;
+          }).join('\n') + '\n';
+          fs.writeFileSync(path.join(outputDir, 'SHA256SUMS.txt'), sums);
+          stopChildren();
+          NODE
+          node "$RUNNER_TEMP/capture-exact-source.mjs"
+          test -s capture-output/capture-provenance.json
+          test "$(find capture-output -maxdepth 1 -name '*.png' | wc -l)" -eq 12
+          cat capture-output/README.md
+          cat capture-output/SHA256SUMS.txt
+
+      - name: Upload immutable review-support packet
+        uses: actions/upload-artifact@v4
+        with:
+          name: glaze-v1.3-human-optical-captures-72ad63b
+          path: capture-output/
+          if-no-files-found: error
+          retention-days: 90
