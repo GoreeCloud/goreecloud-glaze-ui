@@ -39,6 +39,7 @@ def main() -> int:
         "acceptance/v1.2-stable.md",
         "acceptance/v1.3-deferred-qualification.md",
         "contracts/v1.3/deferred-qualification.plan.json",
+        "contracts/v1.3/stable-readiness.plan.json",
         "tokens/glaze-v1.json",
         "GLAZE_UI_V1_1.md",
         "acceptance/v1.1-stable.md"
@@ -72,9 +73,23 @@ def main() -> int:
     req(deferred_rules.get("consumerConformanceAutomatic") is False, "V1.3 deferred qualification must not auto-accept consumers")
     req(deferred_rules.get("v1.3LifecyclePromotionAutomatic") is False, "V1.3 deferred qualification must not auto-promote lifecycle")
     if deferred_lifecycle == "qualification-active":
-        req(deferred_rules.get("allBlockingWorkstreamsMustPassSameExactRevision") is True, "qualification-active V1.3 must require all blocking workstreams on one exact revision")
+        req(deferred.get("schemaVersion") == 4, "qualification-active V1.3 must use staged deferred schema 4")
+        req(len(deferred.get("candidateStageItems", [])) == 5, "V1.3 Candidate qualification must contain five pre-Candidate workstreams")
+        req(deferred.get("stableStageItems") == ["stable-activation-and-source-namespace-cleanup"], "V1.3 Stable cleanup must be the sole post-Candidate qualification workstream")
+        req(len(deferred.get("allStablePromotionItems", [])) == 6, "all six qualification requirements must remain mandatory before V1.3 Stable")
+        req(deferred_rules.get("candidateStageMustPassSameExactRevision") is True, "the five pre-Candidate workstreams must pass on one exact revision")
+        req(deferred_rules.get("stableCleanupOccursAfterCandidateActivation") is True, "Stable cleanup must occur after Candidate activation")
+        req(deferred_rules.get("stableCleanupMayTargetLaterExactRevision") is True, "Stable cleanup must be allowed to observe the later exact Stable-promotion revision")
+        req(deferred_rules.get("stableCleanupMustReferenceQualifiedCandidateRevision") is True, "Stable cleanup must preserve qualified Candidate revision provenance")
+        req(deferred_rules.get("allSixRequiredBeforeStablePromotion") is True, "all six staged requirements must pass before Stable promotion")
         req(deferred_rules.get("passedEvidenceAllowedDuringQualificationActive") is True, "qualification-active V1.3 must explicitly govern fresh passed evidence")
         req(deferred_rules.get("qualificationReadinessDoesNotPromoteLifecycle") is True, "qualification readiness must not imply lifecycle promotion")
+
+        stable_plan = load("contracts/v1.3/stable-readiness.plan.json")
+        req(stable_plan.get("stage") == "post-candidate-pre-stable", "Stable readiness must remain post-Candidate/pre-Stable")
+        req(stable_plan.get("prerequisites", {}).get("activeCandidateRequired") is True, "Stable readiness must require an active Candidate")
+        req(stable_plan.get("stablePromotion", {}).get("allSixQualificationRequirementsMandatoryAcrossStages") is True, "Stable readiness must preserve all six staged requirements")
+        req(stable_plan.get("stablePromotion", {}).get("automatic") is False, "Stable readiness must never auto-promote lifecycle")
 
     acceptance = (ROOT / "acceptance/v1.2-stable.md").read_text(encoding="utf-8")
     req("does not" in acceptance.lower() and "V1.3" in acceptance, "Stable acceptance must preserve the deferred-evidence boundary")
@@ -85,7 +100,7 @@ def main() -> int:
             print(f"- {error}")
         return 1
     print("GLAZE UI V1.2 Stable source authority: PASS")
-    print("Boundary: V1.3 deferred qualifications and downstream consumer acceptance remain separate from V1.2 Stable authority.")
+    print("Boundary: V1.3 staged qualification and downstream consumer acceptance remain separate from V1.2 Stable authority.")
     return 0
 
 
