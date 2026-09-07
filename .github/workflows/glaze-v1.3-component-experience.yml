@@ -91,21 +91,46 @@ jobs:
           python -m json.tool contracts/v1.3/personalization.candidate.json >/dev/null
       - name: Validate V1.3 Signature Components and Reference Suite
         run: python scripts/validate_glaze_v1_3_component_experience.py
-      - name: Guard human-optical reference spacing
+      - name: Guard human-optical reference fidelity
         run: |
           python - <<'PY'
           from pathlib import Path
+
           html = Path('reference/v1.3/signature-components-and-compositions.html').read_text(encoding='utf-8')
           required = {
-              'card layout gap': '.reference-card,.reference-scene{padding:20px;border:1px solid currentColor;border-radius:20px;min-inline-size:0;display:grid;align-content:start;gap:12px}',
-              'normalized child margins': '.reference-card>*,.reference-scene>*{margin:0;min-inline-size:0}',
-              'navigation spacing': '.reference-card nav{display:flex;flex-wrap:wrap;gap:8px}',
-              'output block separation': 'output{display:block;line-height:1.45;overflow-wrap:normal;word-break:normal;hyphens:none}',
+              'Stable V1.2 CSS entrypoint': '../../css/glaze-v1.2.0.css',
+              'Stable V1.2 compatibility activation': 'data-glaze-upgrade="v1.2-frosted-neutral"',
+              'GlzCapsule signature structure': 'class="glz1-capsule"',
+              'GlzMorphCard signature structure': 'class="glz1-morph-card"',
+              'GlzSmartRail signature structure': 'class="glz1-smart-rail"',
+              'GlzAuroraSurface signature structure': 'class="glz1-aurora"',
+              'GlzUniversalSearch signature structure': 'class="glz1-universal-search"',
+              'specimen spacing': '.component-specimen{',
+              '15px specimen flow gap': 'gap:15px',
+              'resolved-output treatment': '.specimen-meta,.scene-meta{display:block',
+              'responsive component stacking': '@media(max-width:900px)',
           }
           missing = [name for name, fragment in required.items() if fragment not in html]
           if missing:
-              raise SystemExit('reference optical spacing guard failed: ' + ', '.join(missing))
-          print('reference optical spacing guard: PASS')
+              raise SystemExit('reference optical fidelity guard failed: ' + ', '.join(missing))
+
+          forbidden = {
+              'flattened generic reference cards': 'class="reference-card"',
+              'V1.3 Candidate CSS release entrypoint': 'glaze-v1.3.0-candidate.css',
+          }
+          present = [name for name, fragment in forbidden.items() if fragment in html]
+          if present:
+              raise SystemExit('reference optical fidelity guard found forbidden pattern: ' + ', '.join(present))
+
+          for component_id in ('GlzCapsule', 'GlzMorphCard', 'GlzSmartRail', 'GlzAuroraSurface', 'GlzUniversalSearch'):
+              marker = f'data-signature-component="{component_id}"'
+              start = html.index(marker)
+              end = html.find('</article>', start)
+              segment = html[start:end]
+              if '<output class="specimen-meta"></output>' not in segment:
+                  raise SystemExit(f'{component_id} is missing a separated resolved-output region')
+
+          print('reference optical fidelity guard: PASS')
           PY
       - name: Check component resolver syntax
         run: node --check js/glaze-v1.3-component-experience.candidate.mjs
