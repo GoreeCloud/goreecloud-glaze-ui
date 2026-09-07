@@ -11,21 +11,35 @@ This runbook controls collection of fresh evidence for the six blocking GLAZE UI
 
 Before human or physical-device review begins:
 
-1. finish source-affecting implementation and qualification tooling changes;
-2. require green Phase 0, V1.2 Stable, Migration, Qualification Control Plane, and Fresh Qualification CI;
+1. finish source-affecting implementation, quality-contract, qualification-tooling, and branch-reconciliation changes;
+2. require green exact-head Phase 0, V1.2 Stable, Migration, Qualification Control Plane, Fresh Qualification, lifecycle-documentation, and consumer-registry CI;
 3. select one exact lowercase 40-character Git SHA as the **promotion candidate revision**;
 4. record that SHA in the qualification tracking issue and every evidence record;
 5. do not silently retarget evidence after testing.
 
 Evidence/reporting commits may be descendants of the tested source revision. Their records must continue to identify the exact source revision actually observed. Any source change that can affect an observation invalidates affected evidence and requires a new qualification round.
 
+The previous frozen revision `2845c47b1f9a486b091aad1eda8cbd1136dc248f` is superseded by later source-affecting V1.3 quality, qualification, lifecycle-integrity, consumer-governance, and CI improvements. Its successful automated checks remain historical evidence only and must not be reused as exact-head qualification evidence for the next frozen source revision.
+
 ## 2. Evidence records
 
-Accepted records live directly in `evidence/v1.3/*.json` and must conform to `contracts/v1.3/qualification-evidence.schema.json`.
+Accepted records live directly in `evidence/v1.3/*.json` and must conform to `contracts/v1.3/qualification-evidence.schema.json` using `schema_version: 2`.
 
 Reviewer worksheets live under `evidence/v1.3/templates/`. They are preparation aids only and are deliberately not JSON qualification records.
 
 A record contributes to readiness only when it is `passed`, explicitly accepted for the lifecycle gate, independently inspectable, unexpired, free of unresolved issues, and bound to the shared promotion-candidate SHA.
+
+### Human optical visual-quality boundary
+
+The `human-optical-and-icon-collision-qualification` pass must additionally bind to `contracts/v1.3/quality-rules.candidate.json` and record all `quality-01` through `quality-55` exactly once. It must explicitly accept:
+
+- the Visual Finish Gate;
+- the Blandness Rejection Gate;
+- Accessibility Is Part of Beauty review;
+- Responsive Beauty review;
+- the Final Quality Test.
+
+Automation, screenshots, pixel diffs, or rendered previews may support this review, but they may not supply the required human visual judgment.
 
 ## 3. Review-authority requirements
 
