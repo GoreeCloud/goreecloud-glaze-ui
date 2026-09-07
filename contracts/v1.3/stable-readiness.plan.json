@@ -1,12 +1,15 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "product": "GLAZE UI V1.3",
   "stage": "post-candidate-pre-stable",
   "sourceStable": "1.2.0",
   "candidateVersion": "1.3.0-candidate",
   "stableVersion": "1.3.0",
   "lifecycleAuthority": false,
+  "readinessEvaluator": "js/glaze-v1.3-stable-readiness.candidate.mjs",
+  "readinessCli": "scripts/evaluate_glaze_v1_3_stable_readiness.mjs",
+  "validator": "scripts/validate_glaze_v1_3_stable_readiness.py",
   "principle": "Candidate qualification and Stable qualification are sequential. Candidate evidence is preserved by exact-revision provenance; Stable cleanup is reviewed on the later exact Stable-promotion source revision.",
   "prerequisites": {
     "activeCandidateRequired": true,
@@ -21,7 +24,15 @@
     "exactStablePromotionSourceRevisionRequired": true,
     "mayDifferFromQualifiedCandidateSourceRevision": true,
     "mustReferenceQualifiedCandidateSourceRevision": true,
-    "acceptedReviewModes": ["combined"]
+    "acceptedReviewModes": ["combined"],
+    "requiredEnvironmentFields": [
+      "qualified_candidate_source_revision",
+      "stable_promotion_source_revision",
+      "candidate_lifecycle_observed",
+      "equivalence_review_completed",
+      "import_closure_validated",
+      "rollback_verified"
+    ]
   },
   "stablePromotion": {
     "allSixQualificationRequirementsMandatoryAcrossStages": true,
