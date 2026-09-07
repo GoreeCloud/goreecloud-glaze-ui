@@ -1,0 +1,147 @@
+export const QUALIFICATION_WORKSTREAMS = Object.freeze([
+  'human-optical-and-icon-collision-qualification',
+  'manual-assistive-technology-qualification',
+  'physical-device-native-platform-qualification',
+  'physical-device-production-performance-qualification',
+  'native-personalization-adapter-qualification',
+  'stable-activation-and-source-namespace-cleanup'
+]);
+
+const SHA40 = /^[0-9a-f]{40}$/;
+const TARGET_PRODUCT = 'GLAZE UI V1.3';
+const TARGET_VERSION = '1.3.0-candidate';
+
+const REVIEW_MODES = Object.freeze({
+  'human-optical-and-icon-collision-qualification': new Set(['human', 'combined']),
+  'manual-assistive-technology-qualification': new Set(['human', 'combined']),
+  'physical-device-native-platform-qualification': new Set(['combined']),
+  'physical-device-production-performance-qualification': new Set(['combined']),
+  'native-personalization-adapter-qualification': new Set(['human', 'combined']),
+  'stable-activation-and-source-namespace-cleanup': new Set(['combined'])
+});
+
+function isObject(value) {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
+function validSha(value) {
+  return typeof value === 'string' && SHA40.test(value);
+}
+
+function validDate(value) {
+  if (typeof value !== 'string') return false;
+  const parsed = Date.parse(value);
+  return Number.isFinite(parsed);
+}
+
+function recordProblems(record, workstreamId, sourceRevision, evaluatedAtMs) {
+  const problems = [];
+  if (!isObject(record)) return ['record is not an object'];
+  if (record.workstream_id !== workstreamId) problems.push('workstream_id mismatch');
+  const target = isObject(record.target) ? record.target : {};
+  if (target.product !== TARGET_PRODUCT) problems.push('target.product mismatch');
+  if (target.target_version !== TARGET_VERSION) problems.push('target.target_version mismatch');
+  if (target.source_revision !== sourceRevision) problems.push('target.source_revision mismatch');
+  if (record.status !== 'passed') problems.push('status is not passed');
+  if (!isObject(record.disposition) || record.disposition.accepted_for_lifecycle_gate !== true) {
+    problems.push('record is not accepted for lifecycle gate');
+  }
+  if (!isObject(record.review_authority)) {
+    problems.push('review authority is missing');
+  } else if (!REVIEW_MODES[workstreamId]?.has(record.review_authority.mode)) {
+    problems.push(`review mode ${record.review_authority.mode ?? 'missing'} is not accepted for ${workstreamId}`);
+  }
+  if (!validDate(record.observed_at)) problems.push('observed_at is invalid');
+  if (record.valid_until !== undefined && record.valid_until !== null) {
+    if (!validDate(record.valid_until)) {
+      problems.push('valid_until is invalid');
+    } else if (Date.parse(record.valid_until) < evaluatedAtMs) {
+      problems.push('record is expired');
+    }
+  }
+  if (!Array.isArray(record.evidence_references) || record.evidence_references.length < 2) {
+    problems.push('passed record requires at least two evidence references');
+  }
+  if (Array.isArray(record.issues) && record.issues.some(issue => isObject(issue) && issue.resolved === false)) {
+    problems.push('record contains unresolved issues');
+  }
+  return problems;
+}
+
+function chooseAcceptedRecord(records, workstreamId, sourceRevision, evaluatedAtMs) {
+  const candidates = records
+    .filter(record => isObject(record) && record.workstream_id === workstreamId)
+    .map(record => ({record, problems: recordProblems(record, workstreamId, sourceRevision, evaluatedAtMs)}))
+    .filter(item => item.problems.length === 0)
+    .sort((a, b) => Date.parse(b.record.observed_at) - Date.parse(a.record.observed_at));
+  return candidates[0]?.record ?? null;
+}
+
+export function evaluateQualificationReadiness(records = [], options = {}) {
+  const sourceRevision = options.sourceRevision;
+  const evaluatedAt = options.evaluatedAt ?? new Date().toISOString();
+  const evaluatedAtMs = Date.parse(evaluatedAt);
+  const blockers = [];
+  const accepted = {};
+
+  if (!validSha(sourceRevision)) blockers.push('sourceRevision must be an exact lowercase 40-character Git SHA');
+  if (!validDate(evaluatedAt)) blockers.push('evaluatedAt must be a valid date-time');
+  if (!Array.isArray(records)) blockers.push('records must be an array');
+
+  const safeRecords = Array.isArray(records) ? records : [];
+  if (validSha(sourceRevision) && Number.isFinite(evaluatedAtMs)) {
+    for (const workstreamId of QUALIFICATION_WORKSTREAMS) {
+      const record = chooseAcceptedRecord(safeRecords, workstreamId, sourceRevision, evaluatedAtMs);
+      if (record) {
+        accepted[workstreamId] = Object.freeze({
+          observedAt: record.observed_at,
+          reviewMode: record.review_authority.mode,
+          evidenceReferences: Object.freeze([...record.evidence_references])
+        });
+      } else {
+        const related = safeRecords.filter(record => isObject(record) && record.workstream_id === workstreamId);
+        if (related.length === 0) {
+          blockers.push(`${workstreamId}: missing qualification evidence`);
+        } else {
+          const diagnostic = related
+            .map(record => recordProblems(record, workstreamId, sourceRevision, evaluatedAtMs))
+            .flat();
+          blockers.push(`${workstreamId}: ${[...new Set(diagnostic)].join('; ') || 'no acceptable record'}`);
+        }
+      }
+    }
+  }
+
+  const qualificationGateSatisfied = blockers.length === 0 && Object.keys(accepted).length === QUALIFICATION_WORKSTREAMS.length;
+  return Object.freeze({
+    state: qualificationGateSatisfied ? 'ready-for-governed-candidate-promotion-review' : 'blocked',
+    qualificationGateSatisfied,
+    acceptedWorkstreamCount: Object.keys(accepted).length,
+    requiredWorkstreamCount: QUALIFICATION_WORKSTREAMS.length,
+    sourceRevision: validSha(sourceRevision) ? sourceRevision : null,
+    evaluatedAt: validDate(evaluatedAt) ? evaluatedAt : null,
+    accepted: Object.freeze(accepted),
+    blockers: Object.freeze(blockers),
+    lifecyclePromotionGranted: false,
+    candidateActivated: false,
+    consumerEligibilityGranted: false,
+    consumerConformanceGranted: false
+  });
+}
+
+export const qualificationCandidate = Object.freeze({
+  product: 'GLAZE UI V1.3 — Adaptive Resonance',
+  targetProduct: TARGET_PRODUCT,
+  targetVersion: TARGET_VERSION,
+  releaseLifecycle: 'proposed',
+  qualificationLifecycle: 'qualification-active',
+  consumerEligible: false,
+  canActivateCandidate: false,
+  canChangeLifecycleRegistry: false,
+  canChangeVersionFile: false,
+  canGrantConsumerEligibility: false,
+  canGrantConsumerConformance: false,
+  canTreatAutomatedCIAsHumanEvidence: false,
+  canTreatAutomatedCIAsPhysicalDeviceEvidence: false,
+  requiredWorkstreams: QUALIFICATION_WORKSTREAMS
+});
