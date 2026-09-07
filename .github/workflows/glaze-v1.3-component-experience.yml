@@ -91,6 +91,22 @@ jobs:
           python -m json.tool contracts/v1.3/personalization.candidate.json >/dev/null
       - name: Validate V1.3 Signature Components and Reference Suite
         run: python scripts/validate_glaze_v1_3_component_experience.py
+      - name: Guard human-optical reference spacing
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          html = Path('reference/v1.3/signature-components-and-compositions.html').read_text(encoding='utf-8')
+          required = {
+              'card layout gap': '.reference-card,.reference-scene{padding:20px;border:1px solid currentColor;border-radius:20px;min-inline-size:0;display:grid;align-content:start;gap:12px}',
+              'normalized child margins': '.reference-card>*,.reference-scene>*{margin:0;min-inline-size:0}',
+              'navigation spacing': '.reference-card nav{display:flex;flex-wrap:wrap;gap:8px}',
+              'output block separation': 'output{display:block;line-height:1.45;overflow-wrap:normal;word-break:normal;hyphens:none}',
+          }
+          missing = [name for name, fragment in required.items() if fragment not in html]
+          if missing:
+              raise SystemExit('reference optical spacing guard failed: ' + ', '.join(missing))
+          print('reference optical spacing guard: PASS')
+          PY
       - name: Check component resolver syntax
         run: node --check js/glaze-v1.3-component-experience.candidate.mjs
       - name: Test component and reference resolver
