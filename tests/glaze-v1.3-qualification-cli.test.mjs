@@ -9,6 +9,7 @@ import {fileURLToPath} from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const CLI = path.join(ROOT, 'scripts/evaluate_glaze_v1_3_qualification.mjs');
 const SOURCE = 'a'.repeat(40);
+const QUALITY_RULE_IDS = Array.from({length: 55}, (_, index) => `quality-${String(index + 1).padStart(2, '0')}`);
 const WORKSTREAMS = [
   'human-optical-and-icon-collision-qualification',
   'manual-assistive-technology-qualification',
@@ -31,8 +32,8 @@ function run(args) {
 }
 
 function passedRecord(id) {
-  return {
-    schema_version: 1,
+  const record = {
+    schema_version: 2,
     workstream_id: id,
     target: {product: 'GLAZE UI V1.3', target_version: '1.3.0-candidate', source_revision: SOURCE},
     status: 'passed',
@@ -43,6 +44,19 @@ function passedRecord(id) {
     issues: [],
     disposition: {accepted_for_lifecycle_gate: true, notes: 'qualification gate only'}
   };
+  if (id === 'human-optical-and-icon-collision-qualification') {
+    record.quality_review = {
+      contract: 'contracts/v1.3/quality-rules.candidate.json',
+      reviewed_rule_ids: [...QUALITY_RULE_IDS],
+      visual_finish_accepted: true,
+      blandness_rejected: true,
+      accessibility_beauty_reviewed: true,
+      responsive_beauty_reviewed: true,
+      critical_final_quality_questions_accepted: true,
+      notes: 'synthetic test fixture only; not production evidence'
+    };
+  }
+  return record;
 }
 
 test('CLI reports blocked without treating expected missing evidence as an execution error', () => {
@@ -70,7 +84,7 @@ test('CLI require-ready mode fails closed with exit 2 when qualification is bloc
   }
 });
 
-test('CLI require-ready mode succeeds only with all six accepted records for the supplied revision', () => {
+test('CLI require-ready mode succeeds only with all six accepted schema-v2 records for the supplied revision', () => {
   const dir = mkdtempSync(path.join(tmpdir(), 'glaze-q-ready-'));
   try {
     for (const id of WORKSTREAMS) writeFileSync(path.join(dir, `${id}.json`), JSON.stringify(passedRecord(id)));
@@ -84,8 +98,32 @@ test('CLI require-ready mode succeeds only with all six accepted records for the
     const payload = JSON.parse(result.stdout);
     assert.equal(payload.result.state, 'ready-for-governed-candidate-promotion-review');
     assert.equal(payload.result.acceptedWorkstreamCount, 6);
+    assert.equal(payload.result.accepted['human-optical-and-icon-collision-qualification'].qualityRuleCount, 55);
     assert.equal(payload.result.lifecyclePromotionGranted, false);
     assert.equal(payload.result.candidateActivated, false);
+  } finally {
+    rmSync(dir, {recursive: true, force: true});
+  }
+});
+
+test('CLI rejects a schema-v2 human optical pass that omits the 55-rule quality review', () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'glaze-q-quality-'));
+  try {
+    for (const id of WORKSTREAMS) {
+      const record = passedRecord(id);
+      if (id === 'human-optical-and-icon-collision-qualification') delete record.quality_review;
+      writeFileSync(path.join(dir, `${id}.json`), JSON.stringify(record));
+    }
+    const result = run([
+      '--source-revision', SOURCE,
+      '--evidence-dir', dir,
+      '--evaluated-at', '2026-09-06T19:00:00Z',
+      '--require-ready'
+    ]);
+    assert.equal(result.status, 2);
+    const payload = JSON.parse(result.stdout);
+    assert.equal(payload.result.qualificationGateSatisfied, false);
+    assert.match(payload.result.blockers.join('\n'), /quality_review is required/);
   } finally {
     rmSync(dir, {recursive: true, force: true});
   }
