@@ -1,0 +1,49 @@
+{
+  "schema_version": 2,
+  "workstream_id": "physical-device-production-performance-qualification",
+  "target": {
+    "product": "GLAZE UI V1.3",
+    "target_version": "1.3.0-candidate",
+    "source_revision": "72ad63bf32d80420b25dc98bfd2def47bcc2a427"
+  },
+  "status": "in_progress",
+  "observed_at": "2026-09-07T19:37:07Z",
+  "review_authority": {
+    "mode": "combined",
+    "authority": "GoreeCloud owner / physical-performance reviewer plus repository validation"
+  },
+  "environment": {
+    "draft": true,
+    "performance_budget_status": "accepted budget reference required before acceptance",
+    "required_measurements": [
+      "frame pacing on representative physical devices",
+      "interaction latency",
+      "memory usage",
+      "GPU/compositor behavior where available",
+      "power and thermal behavior where applicable",
+      "constrained-device behavior"
+    ],
+    "measurement_metadata_required": [
+      "method",
+      "sample window",
+      "device state",
+      "raw evidence reference"
+    ]
+  },
+  "evidence_references": [
+    "contracts/v1.3/qualification-matrix.json#physical-device-production-performance-qualification",
+    "evidence/v1.3/templates/qualification-review-worksheets.md#physical-device-production-performance"
+  ],
+  "issues": [
+    {
+      "summary": "The production performance budget and physical-device measurements have not yet been accepted and retained for this exact source revision.",
+      "severity": "info",
+      "resolved": false,
+      "reference": "evidence/v1.3/templates/qualification-review-worksheets.md#physical-device-production-performance"
+    }
+  ],
+  "disposition": {
+    "accepted_for_lifecycle_gate": false,
+    "notes": "DRAFT ONLY. CI timing or synthetic browser evidence does not replace representative physical-device frame-pacing, latency, memory and applicable compositor/power/thermal measurements."
+  }
+}
