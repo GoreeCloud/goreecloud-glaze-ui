@@ -79,7 +79,7 @@ def main() -> int:
     lifecycle = load("registry/lifecycle.json")
     req(lifecycle.get("currentStable") == STABLE_VERSION, "currentStable must remain 1.2.0")
     req(lifecycle.get("currentOfficial") == STABLE_VERSION, "currentOfficial must remain 1.2.0")
-    req(lifecycle.get("activeCandidate") is None, "Phase 15 must not activate lifecycle Candidate")
+    req(lifecycle.get("activeCandidate") is None, "Migration work must not activate lifecycle Candidate")
     req(lifecycle.get("plannedNext") == "1.3.0-candidate", "plannedNext must remain 1.3.0-candidate")
 
     consumer_registry = load(REGISTRY)
@@ -88,12 +88,12 @@ def main() -> int:
     req(consumer_registry.get("enforcement", {}).get("officialCurrentRequired") is True, "consumer registry must continue to require the official current release")
     req(consumer_registry.get("enforcement", {}).get("productionExceptionsAllowed") is False, "consumer registry production exceptions must remain prohibited")
     for item in consumer_registry.get("consumers", []):
-        req(item.get("requiredTargetVersion") == STABLE_VERSION, f"consumer {item.get('name')!r} must retain required target 1.2.0 during Phase 15")
+        req(item.get("requiredTargetVersion") == STABLE_VERSION, f"consumer {item.get('name')!r} must retain required target 1.2.0 during Proposed V1.3")
 
     plan = load(PLAN)
     workstreams = {item.get("id"): item for item in plan.get("workstreams", [])}
     for dep in DEPENDENCIES:
-        req(workstreams.get(dep, {}).get("status") == "implemented-and-validated", f"Phase 15 requires validated dependency {dep}")
+        req(workstreams.get(dep, {}).get("status") == "implemented-and-validated", f"Migration requires validated dependency {dep}")
     req(
         workstreams.get("migration-and-consumer-boundary", {}).get("status") in {
             "implementation-in-progress",
@@ -102,7 +102,15 @@ def main() -> int:
         },
         "Migration and Consumer Boundary workstream must be active or validated",
     )
-    req(workstreams.get("fresh-v1.3-qualification", {}).get("status") == "planned", "fresh qualification must remain planned while Phase 15 is being validated")
+    req(
+        workstreams.get("fresh-v1.3-qualification", {}).get("status") in {
+            "planned",
+            "implementation-in-progress",
+            "implementation-complete-validation-pending",
+            "implemented-and-validated",
+        },
+        "fresh qualification status must remain within the governed V1.3 workstream vocabulary",
+    )
 
     contract = load(CONTRACT)
     req(contract.get("product") == PRODUCT, "migration product mismatch")
@@ -270,8 +278,8 @@ def main() -> int:
     ):
         req(item in not_established, f"migration evidence boundary must leave {item!r} unestablished")
 
-    req(not (ROOT / "css/glaze-v1.3.0-candidate.css").exists(), "Phase 15 must not create a V1.3 Candidate CSS release entrypoint")
-    req(not (ROOT / "js/glaze-v1.3.0-candidate.mjs").exists(), "Phase 15 must not create a V1.3 Candidate runtime release entrypoint")
+    req(not (ROOT / "css/glaze-v1.3.0-candidate.css").exists(), "Migration work must not create a V1.3 Candidate CSS release entrypoint")
+    req(not (ROOT / "js/glaze-v1.3.0-candidate.mjs").exists(), "Migration work must not create a V1.3 Candidate runtime release entrypoint")
 
     if errors:
         print("GLAZE UI V1.3 Migration and Consumer Boundary validation FAILED:")
