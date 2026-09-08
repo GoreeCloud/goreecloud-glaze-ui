@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.1.accessibility-interaction-hardening.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "hardeningTrack": "V1.3.1",
+  "status": "development-hardening-candidate-artifact",
+  "releaseLifecycle": "development-only",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "sourceImplementation": "integrated-v1.3-adaptive-resonance",
+  "purpose": "Harden the integrated V1.3 interaction presentation with explicit focus-visible, hover, pressed, disabled, reduced-motion, forced-colors, coarse-pointer, and semantic-state separation behavior without activating a release lifecycle or modifying the V1.2 Stable entrypoint.",
+  "extends": [
+    "contracts/v1.3/accessibility.candidate.json",
+    "contracts/v1.3/component-experience.candidate.json",
+    "contracts/v1.3/motion-semantics.candidate.json",
+    "contracts/v1.3/reachability.candidate.json"
+  ],
+  "interactionPresentation": {
+    "statePriority": [
+      "disabled",
+      "focus-visible",
+      "pressed",
+      "hover",
+      "current-or-selected",
+      "rest"
+    ],
+    "focusVisible": {
+      "keyboardAssistiveAndRemoteFocusGetsVisibleIndicator": true,
+      "pointerFocusMayRemainQuietUntilFocusVisible": true,
+      "focusIndicatorMustRemainDistinctFromCurrentOrSelectedState": true,
+      "focusIndicatorMayRelyOnColorOnly": false,
+      "forcedColorsUsesPlatformHighlight": true
+    },
+    "hover": {
+      "finePointerOnlyForMotionTreatment": true,
+      "requiredToDiscoverAction": false,
+      "mayReplaceFocusIndicator": false,
+      "disabledControlsRespond": false
+    },
+    "pressed": {
+      "semanticActivationMustNotWaitForAnimation": true,
+      "nonessentialScaleOrTranslationRemovedUnderReducedMotion": true,
+      "disabledControlsRespond": false
+    },
+    "disabled": {
+      "activationAllowed": false,
+      "hoverMotionAllowed": false,
+      "pressMotionAllowed": false,
+      "visualDifferenceRequired": true,
+      "semanticDisabledStateRequired": true
+    },
+    "semanticState": {
+      "currentAndSelectedRemainDistinctFromFocus": true,
+      "currentOrSelectedMayRelyOnColorOnly": false,
+      "focusMayNotMasqueradeAsCurrent": true
+    }
+  },
+  "inputAndReachability": {
+    "defaultMinimumInteractiveTargetPx": 48,
+    "coarsePointerReferenceMinimumInteractiveTargetPx": 56,
+    "touchAssistanceMinimumInteractiveTargetPx": 56,
+    "farViewMinimumInteractiveTargetPx": 56,
+    "hoverOnlyCriticalActionAllowed": false,
+    "pointerFineMayUseBoundedLift": true,
+    "coarsePointerRequiresHover": false
+  },
+  "preferenceHardening": {
+    "reducedMotion": {
+      "nonessentialTransformRemoved": true,
+      "nonessentialTransitionMayBecomeImmediate": true,
+      "directManipulationSemanticsPreserved": true,
+      "taskCompletionMayWaitForAnimation": false
+    },
+    "forcedColors": {
+      "platformColorRolesRequired": true,
+      "focusUsesPlatformHighlight": true,
+      "customMaterialEffectsRequired": false,
+      "semanticStateStillRequiresStructure": true
+    },
+    "reducedTransparency": {
+      "referenceSurfaceMayBecomeSolid": true,
+      "backdropBlurRequired": false
+    }
+  },
+  "responsiveHardening": {
+    "compactReferenceMayStackControls": true,
+    "targetFloorMayShrinkToAvoidWrap": false,
+    "horizontalPageOverflowAllowed": false,
+    "focusOrderMustRemainLogicalAfterWrap": true
+  },
+  "implementation": {
+    "runtime": "js/glaze-v1.3.1-accessibility-interaction-hardening.candidate.mjs",
+    "stylesheet": "css/glaze-v1.3.1-accessibility-interaction-hardening.candidate.css",
+    "reference": "reference/v1.3/accessibility-interaction-hardening.html",
+    "tests": "tests/glaze-v1.3.1-accessibility-interaction-hardening.test.mjs",
+    "validator": "scripts/validate_glaze_v1_3_1_accessibility_interaction_hardening.py",
+    "workflow": ".github/workflows/glaze-v1.3.1-accessibility-interaction-hardening.yml"
+  },
+  "evidenceBoundary": {
+    "establishedWhenValidated": [
+      "machine-readable-interaction-state-priority",
+      "runtime-focus-visible-modality-resolution",
+      "runtime-reduced-motion-microstate-resolution",
+      "runtime-disabled-state-precedence",
+      "runtime-current-selected-focus-separation",
+      "reference-css-focus-visible",
+      "reference-css-fine-pointer-hover-and-pressed",
+      "reference-css-reduced-motion",
+      "reference-css-forced-colors",
+      "reference-css-coarse-pointer-target-floor",
+      "dependency-free-browser-reference-structure"
+    ],
+    "notEstablished": [
+      "manual-keyboard-acceptance",
+      "manual-screen-reader-acceptance",
+      "manual-switch-or-voice-access-acceptance",
+      "human-optical-acceptance",
+      "physical-device-acceptance",
+      "native-platform-parity",
+      "production-performance-acceptance",
+      "v1.3.0-stable-promotion",
+      "v1.3.1-release-candidate",
+      "v1.3.1-stable",
+      "consumer-conformance"
+    ]
+  }
+}
