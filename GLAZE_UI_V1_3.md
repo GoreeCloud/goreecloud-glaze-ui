@@ -1,101 +1,94 @@
 # GLAZE UI V1.3 — Adaptive Resonance
 
-**Lifecycle:** Proposed  
-**Planned machine target:** `1.3.0-candidate`  
+**Lifecycle:** Stable  
+**Version:** `1.3.0`  
 **Baseline:** GLAZE UI V1.2 / `1.2.0` Stable  
 **Release theme:** Adaptive Resonance  
 **Created:** 2026-09-06  
-**Lifecycle effect:** None until implementation, validation, acceptance, and formal promotion occur.
+**Promoted:** 2026-09-07  
+**Lifecycle authority:** `VERSION`, `registry/lifecycle.json`, and `acceptance/v1.3-stable.md`
 
-GLAZE UI V1.3 — Adaptive Resonance is the proposed next evolution of GoreeCloud's shared design system. It builds from the Stable V1.2 Living Frosted baseline toward a more adaptive, expressive, ergonomic, material-responsive system while preserving accessibility, resilience, performance, and lifecycle discipline.
+GLAZE UI V1.3 — Adaptive Resonance is the current Stable evolution of GoreeCloud's shared design system. It extends the V1.2 Living Frosted baseline with adaptive expression, ergonomic composition, richer bounded material response, contextual behavior, accessibility/resilience controls, personalization, and multi-form-factor interaction.
 
-This repository contract is the implementation-facing companion to the governed GoreeCloud project plan. It does not declare V1.3 implemented, Candidate, Release Candidate, Stable, production-qualified, or consumer-eligible.
+The Stable promotion is intentionally bounded. It promotes the integrated V1.3 implementation as the current official consumer-eligible design-system release while preserving the truth of historical V1.3 qualification records. Qualification that was not completed before promotion is not represented as passed and is carried into `acceptance/v1.3.1-hardening.md`.
 
 ## Governing direction
 
-V1.3 extends the V1.2 material rule rather than replacing its safety boundary:
+V1.3 extends rather than discards the V1.2 material safety boundary:
 
 **Neutral glass remains the material foundation. Adaptive expression is contextual, bounded, and subordinate to meaning, accessibility, and task completion.**
 
-The release theme combines three major directions:
+Adaptive Resonance combines three primary directions:
 
-1. **Adaptive Expression** — controlled dynamic color, expressive shape, typography response, personalization, and environmental/contextual adaptation.
-2. **Human Ergonomics** — reachability, navigation placement, responsive composition, multi-pane behavior, foldable/posture adaptation, and human-centered interaction density.
-3. **Living Material 2.0** — richer but bounded material response, depth, optical behavior, interaction feedback, and graceful degradation across platform and capability tiers.
+1. **Adaptive Expression** — controlled dynamic color, expressive shape, responsive typography, personalization, and environmental/contextual adaptation.
+2. **Human Ergonomics** — reachability, navigation placement, responsive composition, multi-pane behavior, large-screen/foldable/posture awareness, and human-centered interaction density.
+3. **Living Material 2.0** — richer but bounded material response, depth, optical behavior, interaction feedback, motion, and graceful degradation across platform and capability tiers.
 
-## Proposed implementation workstreams
+## Stable implementation authority
 
-The V1.3 implementation line is organized around these workstreams:
+The promoted Stable source is composed from the integrated V1.3 implementation anchored at `fc7cc91d2eace8da2371371c2855c24cbcb326a1` before release-authority edits.
 
-- V1.3 contract and token architecture;
-- adaptive/dynamic color and environmental accent behavior;
-- expressive shape and component morphology;
-- variable and responsive typography;
-- Living Material 2.0 optical and interaction behavior;
-- ergonomic reachability and adaptive navigation;
-- responsive, multi-pane, large-screen, desktop, and foldable composition;
-- Control Center and System Shell evolution;
-- contextual intelligence and continuity behavior;
-- motion, transition, and reduced-motion behavior;
-- accessibility and resilience precedence;
-- personalization controls and platform adapter boundaries;
-- V1.3 signature-component/reference coverage;
-- migration and consumer-boundary controls;
-- fresh V1.3 visual, interaction, accessibility, performance, native-platform, and physical-device qualification.
+Current Stable entrypoints and manifests are:
 
-The machine-readable Phase 0 plan is `contracts/v1.3/adaptive-resonance.plan.json`.
+- `tokens/glaze-v1.3.json` — V1.3 Stable token-family manifest;
+- `js/glaze-v1.3.0.mjs` — V1.3 Stable runtime entrypoint;
+- `css/glaze-v1.2.0.css` — inherited validated web material/base layer.
+
+V1.3 was implemented as token, runtime, contract, policy, and reference extensions rather than a monolithic V1.3 CSS aggregate. The Stable promotion therefore does not invent a new CSS implementation that was never part of the integrated source. Underlying `.candidate` filenames are retained as historical source-stage names; lifecycle authority comes from the Stable manifest/entrypoint and lifecycle registry.
+
+The promoted runtime includes the V1.2 Stable runtime plus the integrated V1.3 accessibility, adaptive-navigation, component-experience, contextual-intelligence, dynamic-color, Living Material 2.0, motion, multi-pane, personalization, reachability, shape, System Shell, and typography modules. Release-policy/qualification evaluators remain separate from the consumer runtime.
 
 ## Inherited V1.2 baseline
 
-V1.3 starts from the accepted V1.2 Stable system defined by `GLAZE_UI_V1_2.md`, including its Stable web/runtime entrypoints, component catalog, System Shell, Living Glaze behavior, adaptive layouts, accessibility directives, and bounded performance model.
+V1.3 preserves the accepted V1.2 Stable system defined by `GLAZE_UI_V1_2.md`, including its material hierarchy, web base layer, component catalog, System Shell foundation, adaptive layouts, accessibility directives, and bounded performance/degradation model.
 
-V1.3 development must not rewrite V1.2 acceptance history. The Stable `1.2.0` line remains the rollback and current consumer target until a later governed promotion explicitly changes lifecycle authority.
-
-## Deferred qualification inheritance
-
-The existing `acceptance/v1.3-deferred-qualification.md` and `contracts/v1.3/deferred-qualification.plan.json` remain binding carry-forward work for V1.3. Stable V1.2 does not imply those items passed.
-
-V1.3 must generate fresh exact-revision evidence for every claimed support boundary, including where applicable:
-
-- project-owner/human optical review and icon/artwork collision review;
-- manual assistive-technology sessions;
-- physical-device, OEM, compositor, native-platform, foldable, and posture qualification;
-- representative frame-pacing, latency, memory, GPU/compositor, power, thermal, and constrained-device evidence;
-- native Personalization persistence/system/wallpaper-source adapter qualification;
-- Stable activation/source-namespace cleanup backed by equivalence evidence.
+V1.2 remains the prior known-good Stable rollback anchor. V1.3 promotion does not rewrite V1.2 acceptance history.
 
 ## Accessibility precedence
 
-Accessibility and task completion outrank expressive treatment. Reduced Transparency, Reduced Motion, Increased Contrast, Forced Colors, RTL, large text/reflow, keyboard, pointer, touch, switch, voice, and assistive-technology semantics must remain explicit acceptance dimensions.
+Accessibility and task completion outrank expressive treatment. Reduced Transparency, Reduced Motion, Increased Contrast, Forced Colors or platform equivalents, RTL, large text/reflow, keyboard, pointer, touch, switch, voice, and assistive-technology semantics remain explicit acceptance dimensions wherever applicable.
 
 Adaptive expression must never become the sole carrier of state, hierarchy, identity, progress, focus, error, success, warning, or interaction affordance.
 
-## Performance and degradation
+## Performance and graceful degradation
 
-V1.3 may increase expressiveness only within measurable budgets. Material, motion, contextual response, dynamic color, and optical effects must degrade before correctness, legibility, focus, target size, semantic meaning, or task completion.
+Material, motion, contextual response, dynamic color, and optical effects must degrade before correctness, legibility, focus, target size, semantic meaning, or task completion.
 
-The inherited Glaze capability-tier model remains the starting point until a V1.3 contract explicitly supersedes it with validated evidence.
+V1.3.0 Stable does not claim completion of the still-open physical-device/production-performance qualification matrix. Those measurements remain V1.3.1 hardening work and must be recorded against exact source and environment anchors before any broader production-performance claim is made.
+
+## Personalization and platform authority
+
+V1.3 supports the design/runtime boundaries for personalization and system/environment-driven adaptation. Native persistence, system appearance, wallpaper-source integration, permission/error behavior, and platform-specific adapter behavior remain platform-owned implementation boundaries and require exact-platform qualification where claimed.
+
+Glaze UI controls presentation and interaction contracts; it does not manufacture platform state or underlying product truth.
 
 ## Consumer boundary
 
-This Proposed contract creates no automatic downstream adoption requirement. GoreeCloud consumers remain on their currently accepted Glaze target until V1.3 reaches an eligible lifecycle state and each consumer performs repository-local migration and exact-revision acceptance.
+V1.3.0 Stable is consumer-eligible, so GoreeCloud consumers may begin independent migration from V1.2 using `MIGRATION_V1_2_TO_V1_3.md` and `contracts/v1.3/consumer-adoption-record.schema.json`.
 
-No consumer may claim V1.3 conformance merely because this branch, document, plan, tokens, reference pages, or future Candidate artifacts exist.
+No consumer is automatically V1.3 conformant because this repository is Stable. Each consumer must bind its acceptance to an exact consumer revision and exact Glaze UI revision, verify applicable rendered/native, interaction, accessibility, responsive/form-factor, platform-integration, product-workflow, performance, rollback, and production-approval requirements, and retain its own authority for underlying state.
+
+## V1.3.1 hardening handoff
+
+The pre-promotion V1.3 qualification/readiness documents remain historical evidence of the gates that existed before the owner lifecycle decision. Their blocked or pending results are not rewritten.
+
+The unresolved work is now governed as V1.3.1 maintenance in `acceptance/v1.3.1-hardening.md`, including:
+
+- fresh human optical/icon-artwork collision review where required;
+- manual assistive-technology qualification;
+- physical/native/OEM/compositor/foldable/posture qualification;
+- production performance/resource evidence;
+- native Personalization adapter qualification; and
+- Stable activation/source-namespace/equivalence cleanup.
+
+V1.3.1 hardening is not a condition that revokes V1.3.0 Stable status. A future `1.3.1` patch requires a separate governed lifecycle decision and exact-revision validation of the actual patch contents.
+
+## Historical development records
+
+`contracts/v1.3/adaptive-resonance.plan.json`, `GLAZE_UI_V1_3_CANDIDATE.md`, `acceptance/v1.3-candidate.md`, `acceptance/v1.3-deferred-qualification.md`, and the V1.3 readiness evaluators are retained to preserve development and pre-promotion provenance. Where those records say V1.3 was Proposed or blocked at the time of evaluation, that historical statement remains true for the revision/event it describes; current lifecycle authority is the Stable release record, `VERSION`, and `registry/lifecycle.json`.
 
 ## Naming boundary
 
 The full release-theme name is **GLAZE UI V1.3 — Adaptive Resonance**.
 
 Within GoreeCloud cross-product records, do not shorten the release theme to standalone **Resonance**, because that name is already used by the GoreeCloud Music capability identity.
-
-## Phase 0 acceptance boundary
-
-Phase 0 is complete only when the repository has a coherent proposed V1.3 contract/plan that:
-
-- derives from `1.2.0` Stable without changing Stable authority;
-- enumerates the implementation workstreams and dependencies;
-- preserves the deferred V1.3 qualification backlog;
-- defines lifecycle, accessibility, performance, migration, and consumer boundaries;
-- does not activate a V1.3 Candidate, update `VERSION`, or change Stable consumer entrypoints.
-
-Phase 0 completion is planning readiness only. It is not V1.3 implementation acceptance.
