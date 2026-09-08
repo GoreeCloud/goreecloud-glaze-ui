@@ -1,0 +1,50 @@
+name: GLAZE UI V1.3 Device Qualification Support
+
+on:
+  push:
+    branches:
+      - evidence/v1.3-device-qualification-72ad63b
+  pull_request:
+    branches:
+      - feat/glaze-ui-v1.3-adaptive-resonance
+    paths:
+      - evidence/v1.3/tools/collect-device-qualification.py
+      - evidence/v1.3/device-qualification-support.md
+      - .github/workflows/glaze-v1.3-device-qualification-support.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  SOURCE_SHA: 72ad63bf32d80420b25dc98bfd2def47bcc2a427
+
+jobs:
+  support-tooling:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Compile collector
+        run: python3 -m py_compile evidence/v1.3/tools/collect-device-qualification.py
+
+      - name: Run fail-closed collector self-test
+        run: python3 evidence/v1.3/tools/collect-device-qualification.py self-test
+
+      - name: Verify qualification boundary and frozen source binding
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F "$SOURCE_SHA" evidence/v1.3/tools/collect-device-qualification.py
+          grep -F '"qualification_credit": False' evidence/v1.3/tools/collect-device-qualification.py
+          grep -F '"accepted_for_lifecycle_gate": False' evidence/v1.3/tools/collect-device-qualification.py
+          grep -F 'No raw wallpaper image bytes' evidence/v1.3/device-qualification-support.md
+
+      - name: State non-promotional result
+        run: |
+          echo 'Device qualification support tooling validated.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'No physical-device, performance, personalization, Candidate, Stable, or consumer qualification is inferred from this workflow.' >> "$GITHUB_STEP_SUMMARY"
