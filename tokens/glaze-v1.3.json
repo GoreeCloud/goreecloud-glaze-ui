@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "version": "1.3.0",
+  "lifecycle": "stable",
+  "promoted": "2026-09-07",
+  "sourceQualificationAnchor": "fc7cc91d2eace8da2371371c2855c24cbcb326a1",
+  "inherits": "tokens/glaze-v1.json",
+  "families": {
+    "color": "tokens/glaze-v1.3-color.candidate.json",
+    "layout": "tokens/glaze-v1.3-layout.candidate.json",
+    "material": "tokens/glaze-v1.3-material.candidate.json",
+    "motion": "tokens/glaze-v1.3-motion.candidate.json",
+    "shape": "tokens/glaze-v1.3-shape.candidate.json",
+    "type": "tokens/glaze-v1.3-type.candidate.json"
+  },
+  "sourceNaming": "Underlying .candidate filenames are preserved as historical source-stage names; this Stable manifest is the lifecycle authority for the promoted token set.",
+  "qualificationBoundary": "V1.3.0 Stable does not convert the V1.3.1 hardening backlog into accepted evidence."
+}
