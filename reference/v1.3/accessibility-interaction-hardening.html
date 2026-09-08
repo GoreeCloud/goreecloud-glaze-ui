@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en" data-glaze-v1-3-1-hardening data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GLAZE UI V1.3.1 — Accessibility + Interaction Hardening</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0.css">
+  <link rel="stylesheet" href="../../css/glaze-v1.3.1-accessibility-interaction-hardening.candidate.css">
+  <style>
+    *{box-sizing:border-box}
+    :root{color-scheme:light dark}
+    body{margin:0;min-height:100vh;padding:clamp(18px,4vw,48px);font:16px/1.5 system-ui,sans-serif;color:var(--glz1-text-primary,#111318);background:var(--glz1-canvas,#f6f7f9)}
+    main{max-inline-size:1040px;margin:auto;display:grid;gap:28px}
+    .hero,.panel{border:1px solid var(--glz1-line,#d4d7dd);background:color-mix(in srgb,var(--glz1-raised,#fff) 88%,transparent);box-shadow:0 18px 54px color-mix(in srgb,#111318 7%,transparent)}
+    .hero{display:grid;gap:12px;padding:clamp(24px,5vw,48px);border-radius:32px}
+    .eyebrow{margin:0;color:var(--glz1-text-secondary,#5d626c);font-weight:750;letter-spacing:.03em;text-transform:uppercase;font-size:.76rem}
+    h1,h2,p{margin:0}
+    h1{max-inline-size:20ch;font-size:clamp(2rem,5vw,4rem);line-height:1;letter-spacing:-.045em;text-wrap:balance}
+    .lede{max-inline-size:70ch;color:var(--glz1-text-secondary,#5d626c);font-size:1.05rem}
+    .panel{display:grid;gap:18px;padding:22px;border-radius:24px}
+    .panel-copy{display:grid;gap:5px}
+    .panel-copy p,.note{color:var(--glz1-text-secondary,#5d626c)}
+    .state-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .state-card{display:grid;gap:10px;padding:16px;border:1px solid var(--glz1-line,#d4d7dd);border-radius:18px;background:var(--glz1-base,#fff)}
+    .state-card strong{font-size:.95rem}
+    .note{font-size:.88rem}
+    code{font:600 .83em ui-monospace,SFMono-Regular,Consolas,monospace}
+    @media(max-width:680px){.state-grid{grid-template-columns:1fr}.hero,.panel{border-radius:22px}.panel{padding:18px}}
+    @media(prefers-reduced-transparency:reduce){.hero,.panel{background:var(--glz1-raised,#fff);box-shadow:none}}
+    @media(forced-colors:active){.hero,.panel,.state-card{background:Canvas;color:CanvasText;border-color:CanvasText;box-shadow:none}}
+  </style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <p class="eyebrow">Development hardening reference · no lifecycle effect</p>
+    <h1>Interaction that stays clear under every input mode.</h1>
+    <p class="lede">This V1.3.1 hardening surface verifies keyboard focus, fine-pointer hover, pressed feedback, disabled precedence, semantic current/selected state, coarse-pointer target sizing, Reduced Motion, Reduced Transparency, and Forced Colors while V1.2 remains the Stable consumer entrypoint.</p>
+  </header>
+
+  <section class="panel" aria-labelledby="microstates-title">
+    <div class="panel-copy">
+      <h2 id="microstates-title">Microstates</h2>
+      <p>Use Tab to inspect focus-visible treatment. Hover and press feedback are bounded to capable pointer environments; disabled controls never animate or activate.</p>
+    </div>
+    <div class="glz13-hardening-row">
+      <button class="glz13-hardening-control" type="button">Default action</button>
+      <button class="glz13-hardening-control" type="button" aria-pressed="false" id="toggle">Toggle state</button>
+      <button class="glz13-hardening-control" type="button" disabled>Disabled</button>
+      <a class="glz13-hardening-control" href="#semantic-state">Jump to state</a>
+    </div>
+  </section>
+
+  <section class="panel" id="semantic-state" aria-labelledby="semantic-title">
+    <div class="panel-copy">
+      <h2 id="semantic-title">Focus is not selection</h2>
+      <p>Current and selected state use a structural inset boundary; keyboard focus remains a separate outer indicator.</p>
+    </div>
+    <nav class="glz13-hardening-row" aria-label="Hardening reference destinations">
+      <a class="glz13-hardening-control" href="#semantic-state" aria-current="page">Current</a>
+      <a class="glz13-hardening-control" href="#field-title">Library</a>
+      <a class="glz13-hardening-control" href="#preferences-title">Settings</a>
+    </nav>
+  </section>
+
+  <section class="panel" aria-labelledby="field-title">
+    <div class="panel-copy">
+      <h2 id="field-title">Focusable fields</h2>
+      <p>The same focus-visible authority applies to form controls with a 48px default target floor and conservative 56px coarse-pointer reference floor.</p>
+    </div>
+    <label for="query"><strong>Reference query</strong></label>
+    <input class="glz13-hardening-field" id="query" name="query" type="search" placeholder="Search hardening states">
+  </section>
+
+  <section class="panel" aria-labelledby="preferences-title">
+    <div class="panel-copy">
+      <h2 id="preferences-title">Preference resilience</h2>
+      <p>Change operating-system or browser accessibility preferences and reload this page to inspect the CSS media-query substitutions.</p>
+    </div>
+    <div class="state-grid">
+      <div class="state-card"><strong>Reduced Motion</strong><span class="note"><code>prefers-reduced-motion: reduce</code> removes nonessential hover/press transforms and collapses transition timing.</span></div>
+      <div class="state-card"><strong>Forced Colors</strong><span class="note"><code>forced-colors: active</code> moves focus to <code>Highlight</code> and preserves state with structural borders.</span></div>
+      <div class="state-card"><strong>Reduced Transparency</strong><span class="note"><code>prefers-reduced-transparency: reduce</code> removes reference translucency without changing hierarchy.</span></div>
+      <div class="state-card"><strong>Coarse pointer</strong><span class="note"><code>pointer: coarse</code> raises the reference block-size floor to 56px and never requires hover.</span></div>
+    </div>
+  </section>
+
+  <p class="note">Automated validation covers contract structure, runtime resolution, and CSS/reference markers only. Manual assistive-technology, human optical, physical-device, native-platform, and production acceptance remain separate gates.</p>
+</main>
+<script>
+  const toggle = document.querySelector('#toggle');
+  toggle?.addEventListener('click', () => {
+    const next = toggle.getAttribute('aria-pressed') !== 'true';
+    toggle.setAttribute('aria-pressed', String(next));
+    toggle.textContent = next ? 'State on' : 'Toggle state';
+  });
+</script>
+</body>
+</html>
