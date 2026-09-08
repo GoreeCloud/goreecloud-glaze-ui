@@ -1,16 +1,21 @@
-name: GLAZE UI V1.3 Phase 0
+name: GLAZE UI V1.3 Lifecycle Boundary
 
 on:
   push:
     branches:
-      - feat/glaze-ui-v1.3-adaptive-resonance
+      - main
+      - release/v1.3.0
   pull_request:
     paths:
       - 'GLAZE_UI_V1_3.md'
       - 'contracts/v1.3/**'
       - 'acceptance/v1.3-**'
       - 'scripts/validate_glaze_v1_3_phase0.py'
+      - 'scripts/validate_glaze_v1_3_stable.py'
       - 'registry/lifecycle.json'
+      - 'consumers/registry.json'
+      - 'tokens/glaze-v1.3.json'
+      - 'js/glaze-v1.3.0.mjs'
       - 'VERSION'
       - '.github/workflows/glaze-v1.3-phase0.yml'
 
@@ -19,7 +24,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  validate-v1-3-phase0:
+  validate-v1-3-lifecycle:
     runs-on: ubuntu-latest
     steps:
       - name: Check out exact revision
@@ -28,13 +33,22 @@ jobs:
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.12'
-      - name: Compile V1.3 Phase 0 validator
-        run: python -m py_compile scripts/validate_glaze_v1_3_phase0.py
-      - name: Validate V1.2 Stable source authority
-        run: python scripts/validate_glaze_v1_2_stable.py
-      - name: Validate V1.3 Adaptive Resonance Phase 0 boundary
-        run: python scripts/validate_glaze_v1_3_phase0.py
-      - name: Parse V1.3 planning contracts
+      - name: Compile lifecycle validators
+        run: |
+          python -m py_compile scripts/validate_glaze_v1_3_phase0.py
+          python -m py_compile scripts/validate_glaze_v1_3_stable.py
+      - name: Validate lifecycle-appropriate V1.3 boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(cat VERSION)"
+          if [ "$version" = "1.3.0" ]; then
+            python scripts/validate_glaze_v1_3_stable.py
+          else
+            python scripts/validate_glaze_v1_2_stable.py
+            python scripts/validate_glaze_v1_3_phase0.py
+          fi
+      - name: Parse retained V1.3 planning contracts
         run: |
           python -m json.tool contracts/v1.3/adaptive-resonance.plan.json >/dev/null
           python -m json.tool contracts/v1.3/deferred-qualification.plan.json >/dev/null
