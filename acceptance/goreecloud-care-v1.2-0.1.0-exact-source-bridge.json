@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "recordType": "goreecloud-care-glaze-v1.2-exact-source-bridge",
+  "consumer": "GoreeCloud Care",
+  "repository": "GoreeCloud/goreecloud-zorin-os",
+  "componentPath": "apps/goreecloud-care/",
+  "glazeTargetVersion": "1.2.0",
+  "consumerSourceRevision": "bbc4779454c2887b810aa0ddc9e8a686a4c68ebd",
+  "careTree": "ebe028347c978b6d09fb1d2af011729249f63bc3",
+  "packageSha256": "819cff6e0132bf6b09df0986682995c25b14c39e74982f725efd0b5a21b71160",
+  "representativeTarget": "Zorin OS 17.3",
+  "decision": "accepted-by-exact-source-bridge",
+  "acceptedV1Authorized": true,
+  "productionEligible": false,
+  "stableProductPromotionAllowed": false,
+  "predecessorAcceptance": {
+    "record": "acceptance/goreecloud-care-v1.2-final-human-native-review.json",
+    "sourceRevision": "334b53102c5fe0bd5d348397ba8b13cc5608ada2",
+    "careTree": "4d8c243adb456913687045e67df509fb66736c28",
+    "packageSha256": "b1bd308efd7803f6707f0b3ff2f41e56c46c6644094ba5a72d04b0b02bfe7a87",
+    "decision": "accepted",
+    "requiredHumanNativeDimensions": 7,
+    "allRequiredDimensionsPassed": true
+  },
+  "sourceDelta": {
+    "compareBase": "334b53102c5fe0bd5d348397ba8b13cc5608ada2",
+    "compareHead": "bbc4779454c2887b810aa0ddc9e8a686a4c68ebd",
+    "commits": 23,
+    "glazeImplementationFilesChanged": false,
+    "canonicalIconChanged": false,
+    "uiContractChanged": false,
+    "focusResilienceChanged": false,
+    "accessibilityIdentityChanged": false,
+    "glazeV12ContractTestsChanged": false,
+    "glazeV13PreviewContractTestsChanged": false,
+    "runtimeUiAcceptanceHarnessChanged": false,
+    "lifecycleCopyChanged": true,
+    "desktopAndAppStreamLifecycleIdentityChanged": true,
+    "explanation": "The exact Care 0.1.0 transition changed release identity, packaging, lifecycle qualification, and bounded window/header lifecycle copy. It did not change Care's Glaze V1.2/V1.3 style implementation, UI contract, focus/accessibility contract files, canonical icon, or runtime UI acceptance harness."
+  },
+  "exactCandidateAutomation": {
+    "careQualificationRunId": 34180765807,
+    "careQualificationRunNumber": 421,
+    "careTestCount": 143,
+    "platformContractRunId": 34180766156,
+    "themeValidationRunId": 34180765817,
+    "themeValidationRunNumber": 590,
+    "packageArtifactId": 10038827656,
+    "crossEnvironmentArtifactId": 10038821545,
+    "packageSha256": "819cff6e0132bf6b09df0986682995c25b14c39e74982f725efd0b5a21b71160",
+    "result": "passed"
+  },
+  "representativeExactCandidateEvidence": {
+    "physicalTargetAcceptance": "passed",
+    "physicalPackageMatchedCi": true,
+    "localTestCount": 143,
+    "packageLifecyclePassed": true,
+    "installedValidationPassed": true,
+    "realDesktopPolicyKitSuitePassed": true,
+    "continuityState": "ready",
+    "continuityStage": "everkeep-promoted",
+    "observationBasis": "The exact 0.1.0 package was exercised on the representative Zorin OS 17.3 laptop for full package lifecycle acceptance and subsequently through the six prescribed real-desktop PolicyKit GUI checks. This current-device evidence is functional/representative confirmation; the seven predecessor Glaze human/native findings are not fabricated as newly rerun observations."
+  },
+  "bridgeRationale": {
+    "priorHumanNativeReviewTransferredByGovernance": true,
+    "transferLimitedToUnchangedGlazeBehavior": true,
+    "newHumanFindingsFabricated": false,
+    "reason": "The previously accepted seven-dimensional Glaze V1.2 human/native review is retained as predecessor evidence and bridged only because the exact-source delta is non-material to the governed Glaze implementation, icon, UI contract, focus/accessibility behavior, and acceptance harness. Lifecycle copy and package identity changed and were exercised on the exact representative candidate."
+  },
+  "summary": "GLAZE UI V1.2 accepted-v1 is explicitly bridged from the accepted frozen Care RC to exact Care 0.1.0. The bridge is exact-source/package bound, does not rewrite the predecessor human/native review, does not grant generic production eligibility, and does not independently authorize Care Stable promotion."
+}
