@@ -3,7 +3,7 @@
   "officialBaseline": "1.2.0",
   "officialProductLabel": "GLAZE UI V1.2",
   "requiredConsumerVersion": "1.2.0",
-  "auditedAt": "2026-09-06",
+  "auditedAt": "2026-09-07",
   "statusVocabulary": ["adoption-required", "unverified", "accepted-v1"],
   "enforcement": {
     "officialCurrentRequired": true,
@@ -12,7 +12,7 @@
     "unsupportedPlatformRule": "A user-facing platform without applicable repository-local GLAZE UI V1.2 acceptance evidence is production-blocked until the required current Stable contract is implemented, validated, and accepted for that consumer."
   },
   "consumers": [
-    {"name":"GoreeCloud Care","repository":"GoreeCloud/goreecloud-zorin-os","status":"adoption-required","targetVersion":null,"requiredTargetVersion":"1.2.0","referenceRevision":null,"evidence":null,"productionEligible":false,"notes":"GoreeCloud Care is developed at apps/goreecloud-care/ in this repository. Registration records the required current-Stable GLAZE UI V1.2 target only; fresh exact-candidate product-specific rendered, accessibility, resilience, task-flow, and governed acceptance evidence remains required before accepted-v1 or any production claim."},
+    {"name":"GoreeCloud Care","repository":"GoreeCloud/goreecloud-zorin-os","status":"adoption-required","targetVersion":null,"requiredTargetVersion":"1.2.0","referenceRevision":null,"evidence":null,"productionEligible":false,"notes":"GoreeCloud Care is developed at apps/goreecloud-care/. Exact RC 334b53102c5fe0bd5d348397ba8b13cc5608ada2 has current-Stable V1.2 machine prequalification recorded at acceptance/goreecloud-care-v1.2-rc-prequalification.json. accepted-v1 remains blocked pending final human/native optical, Orca and applicable UX review plus explicit resolution of the frozen RC's stale Development-era GLAZE-UI-CONFORMANCE.md wording. The registry therefore intentionally retains null accepted target/revision/evidence and productionEligible=false."},
     {"name":"GoreeCloud Manager","repository":"GoreeCloud/goreecloud-manager","status":"adoption-required","targetVersion":null,"requiredTargetVersion":"1.2.0","referenceRevision":null,"evidence":null,"productionEligible":false,"notes":"Fresh repository-local GLAZE UI V1.2 adoption and acceptance evidence is required."},
     {"name":"GoreeCloud Website","repository":"GoreeCloud/goreecloud-website","status":"adoption-required","targetVersion":null,"requiredTargetVersion":"1.2.0","referenceRevision":null,"evidence":null,"productionEligible":false,"notes":"Fresh repository-local GLAZE UI V1.2 adoption and acceptance evidence is required; canonical static-site repository placement remains separately governed."},
     {"name":"GoreeCloud Tasks","repository":"GoreeCloud/goreecloud-tasks","status":"adoption-required","targetVersion":null,"requiredTargetVersion":"1.2.0","referenceRevision":null,"evidence":null,"productionEligible":false,"notes":"Fresh repository-local GLAZE UI V1.2 adoption and acceptance evidence is required."},
