@@ -1,33 +1,26 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "schemaVersion": 4,
-  "product": "GLAZE UI V1.3",
-  "targetVersion": "1.3.0-candidate",
-  "lifecycle": "qualification-active",
+  "schemaVersion": 5,
+  "product": "GLAZE UI V1.3.1 — Hardening and Qualification Follow-up",
+  "targetVersion": "1.3.1-candidate",
+  "lifecycle": "follow-up-active",
   "created": "2026-09-06",
-  "sourceStable": "1.2.0",
+  "transferred": "2026-09-08",
+  "sourceStable": "1.3.0",
+  "sourceRelease": "GLAZE UI V1.3 — Adaptive Resonance",
   "authority": "acceptance/v1.3-deferred-qualification.md",
+  "stableReleaseAuthority": "acceptance/v1.3-stable.md",
+  "hardeningAuthority": "GLAZE_UI_V1_3_1_HARDENING.md",
   "qualificationMatrix": "contracts/v1.3/qualification-matrix.json",
   "evidenceSchema": "contracts/v1.3/qualification-evidence.schema.json",
-  "evidenceDirectory": "evidence/v1.3",
+  "historicalEvidenceDirectory": "evidence/v1.3",
   "qualityContract": "contracts/v1.3/quality-rules.candidate.json",
-  "candidateReadiness": "contracts/v1.3/qualification-readiness.candidate.json",
-  "stableReadiness": "contracts/v1.3/stable-readiness.plan.json",
   "validator": "scripts/validate_glaze_v1_3_planned.py",
-  "readinessEvaluator": "js/glaze-v1.3-qualification.candidate.mjs",
   "controlPlane": {
-    "status": "qualification-active",
-    "meaning": "Fresh evidence may be collected without promoting lifecycle. Five pre-Candidate tracks qualify one exact Candidate source revision. Stable activation/source cleanup is a sixth post-Candidate gate and remains mandatory before Stable."
+    "status": "v1.3.1-follow-up-active",
+    "meaning": "The six unresolved V1.3 qualification/cleanup tracks are preserved as V1.3.1 follow-up. V1.3.0 is already Official, Stable and consumer-eligible. Missing human/manual/physical evidence is not represented as passed."
   },
-  "candidateStageItems": [
-    "human-optical-and-icon-collision-qualification",
-    "manual-assistive-technology-qualification",
-    "physical-device-native-platform-qualification",
-    "physical-device-production-performance-qualification",
-    "native-personalization-adapter-qualification"
-  ],
-  "stableStageItems": ["stable-activation-and-source-namespace-cleanup"],
-  "allStablePromotionItems": [
+  "followUpItems": [
     "human-optical-and-icon-collision-qualification",
     "manual-assistive-technology-qualification",
     "physical-device-native-platform-qualification",
@@ -35,20 +28,25 @@
     "native-personalization-adapter-qualification",
     "stable-activation-and-source-namespace-cleanup"
   ],
+  "legacyCandidateStageItems": [
+    "human-optical-and-icon-collision-qualification",
+    "manual-assistive-technology-qualification",
+    "physical-device-native-platform-qualification",
+    "physical-device-production-performance-qualification",
+    "native-personalization-adapter-qualification"
+  ],
+  "legacyStableStageItems": ["stable-activation-and-source-namespace-cleanup"],
   "rules": {
-    "v1.2StableImpliesThesePassed": false,
-    "freshExactRevisionEvidenceRequired": true,
-    "candidateStageMustPassSameExactRevision": true,
-    "stableCleanupOccursAfterCandidateActivation": true,
-    "stableCleanupMayTargetLaterExactRevision": true,
-    "stableCleanupMustReferenceQualifiedCandidateRevision": true,
-    "allSixRequiredBeforeStablePromotion": true,
-    "passedEvidenceAllowedDuringQualificationActive": true,
-    "qualificationReadinessDoesNotPromoteLifecycle": true,
+    "v1.3.0StableAuthorityActive": true,
+    "v1.3.0ConsumerEligible": true,
+    "theseItemsBlockV1.3.0StableAuthority": false,
+    "theseItemsMayBeRepresentedAsPassedWithoutEvidence": false,
+    "freshExactRevisionEvidenceRequiredForFuturePassClaims": true,
     "humanOpticalEvidenceMustCoverQualityContract": true,
     "automatedValidationMayReplaceHumanOpticalReview": false,
     "automatedValidationMayReplacePhysicalDeviceReview": false,
     "consumerConformanceAutomatic": false,
-    "v1.3LifecyclePromotionAutomatic": false
+    "v1.3.1LifecyclePromotionAutomatic": false,
+    "allSixRemainV1.3.1FollowUpObligations": true
   }
 }
