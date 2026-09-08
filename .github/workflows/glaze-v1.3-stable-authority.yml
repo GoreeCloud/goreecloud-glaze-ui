@@ -1,0 +1,101 @@
+name: GLAZE UI V1.3 Stable Authority
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - VERSION
+      - GLAZE_UI_V1_3.md
+      - GLAZE_UI_V1_3_1_HARDENING.md
+      - README.md
+      - CONSUMERS.md
+      - MIGRATION_V1_2_TO_V1_3.md
+      - registry/lifecycle.json
+      - consumers/registry.json
+      - acceptance/v1.3-stable.md
+      - acceptance/v1.3-candidate.md
+      - acceptance/v1.3-deferred-qualification.md
+      - releases/1.3.0.md
+      - css/glaze-v1.3.0.css
+      - js/glaze-v1.3.0.mjs
+      - contracts/v1.3/deferred-qualification.plan.json
+      - contracts/v1.3/qualification-matrix.json
+      - scripts/validate_glaze_v1_3_phase0.py
+      - scripts/validate_glaze_v1_3_planned.py
+      - scripts/validate_glaze_v1_3_qualification.py
+      - scripts/validate_glaze_v1_3_stable_readiness.py
+      - .github/workflows/glaze-v1.3-stable-authority.yml
+  pull_request:
+    paths:
+      - VERSION
+      - GLAZE_UI_V1_3.md
+      - GLAZE_UI_V1_3_1_HARDENING.md
+      - registry/lifecycle.json
+      - consumers/registry.json
+      - acceptance/v1.3-stable.md
+      - css/glaze-v1.3.0.css
+      - js/glaze-v1.3.0.mjs
+      - contracts/v1.3/deferred-qualification.plan.json
+      - contracts/v1.3/qualification-matrix.json
+      - scripts/validate_glaze_v1_3_phase0.py
+      - scripts/validate_glaze_v1_3_planned.py
+      - scripts/validate_glaze_v1_3_qualification.py
+      - scripts/validate_glaze_v1_3_stable_readiness.py
+      - .github/workflows/glaze-v1.3-stable-authority.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  stable-authority:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate V1.3 Stable lifecycle boundary
+        run: python scripts/validate_glaze_v1_3_phase0.py
+
+      - name: Validate V1.3 release and V1.3.1 follow-up control plane
+        run: python scripts/validate_glaze_v1_3_planned.py
+
+      - name: Validate preserved qualification evidence boundary
+        run: python scripts/validate_glaze_v1_3_qualification.py
+
+      - name: Validate Stable authority and historical readiness provenance
+        run: python scripts/validate_glaze_v1_3_stable_readiness.py
+
+      - name: Parse release authority JSON
+        run: |
+          python -m json.tool registry/lifecycle.json >/dev/null
+          python -m json.tool consumers/registry.json >/dev/null
+          python -m json.tool contracts/v1.3/deferred-qualification.plan.json >/dev/null
+          python -m json.tool contracts/v1.3/qualification-matrix.json >/dev/null
+
+      - name: Check Stable runtime syntax
+        run: node --check js/glaze-v1.3.0.mjs
+
+      - name: Resolve Stable runtime module graph
+        run: node -e "import('./js/glaze-v1.3.0.mjs').then(() => console.log('GLAZE UI V1.3 Stable runtime graph: PASS'))"
+
+      - name: Verify Stable CSS source boundary
+        run: |
+          grep -F 'official Stable web entrypoint' css/glaze-v1.3.0.css
+          grep -F '@import url("./glaze-v1.2.0.css");' css/glaze-v1.3.0.css
+
+      - name: Verify release authority markers
+        run: |
+          test "$(tr -d '\r\n' < VERSION)" = "1.3.0"
+          grep -F '**Lifecycle:** Official Stable' GLAZE_UI_V1_3.md
+          grep -F '**Status:** Official Stable release' acceptance/v1.3-stable.md
+          grep -F 'V1.3.1' acceptance/v1.3-deferred-qualification.md
+          grep -F 'consumer-eligible' releases/1.3.0.md
+
+      - name: Report owner-directed Stable boundary
+        run: |
+          echo 'GLAZE UI V1.3 / 1.3.0 is Official, Stable, and consumer-eligible on main.'
+          echo 'Unresolved human/manual/physical-device/performance/native Personalization/source cleanup work remains V1.3.1 follow-up and is not represented as passed.'
