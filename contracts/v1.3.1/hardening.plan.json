@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "product": "GLAZE UI V1.3.1",
+  "targetVersion": "1.3.1",
+  "lifecycle": "planned-hardening",
+  "created": "2026-09-07",
+  "sourceStable": "1.3.0",
+  "sourceQualificationAnchor": "72ad63bf32d80420b25dc98bfd2def47bcc2a427",
+  "authority": "acceptance/v1.3-stable.md",
+  "purpose": "Complete retained physical/native/performance/adapter evidence and namespace/equivalence hardening that the project owner explicitly moved out of the V1.3.0 Stable blocking set.",
+  "workstreams": [
+    {
+      "id": "physical-device-native-platform-qualification",
+      "status": "deferred-from-v1.3-unaccepted-evidence",
+      "blockingForV1_3_0Stable": false,
+      "requiredForV1_3_1Completion": true,
+      "requiredEvidence": ["representative physical-device inventory", "native-platform observations for every claimed platform", "variance and disposition record", "independently inspectable retained packet"]
+    },
+    {
+      "id": "physical-device-production-performance-qualification",
+      "status": "deferred-from-v1.3-unaccepted-evidence",
+      "blockingForV1_3_0Stable": false,
+      "requiredForV1_3_1Completion": true,
+      "requiredEvidence": ["accepted performance budget", "representative physical-device measurements", "frame-pacing and interaction-latency evidence", "memory/GPU/compositor/power/thermal evidence where applicable", "measurement metadata and retained raw references"]
+    },
+    {
+      "id": "native-personalization-adapter-qualification",
+      "status": "deferred-from-v1.3-unaccepted-evidence",
+      "blockingForV1_3_0Stable": false,
+      "requiredForV1_3_1Completion": true,
+      "requiredEvidence": ["claimed adapter/platform inventory", "persistence evidence", "system-appearance and wallpaper-source behavior where claimed", "failure/fallback evidence", "accessibility-precedence verification"]
+    },
+    {
+      "id": "stable-activation-and-source-namespace-cleanup",
+      "status": "deferred-to-v1.3.1-hardening",
+      "blockingForV1_3_0Stable": false,
+      "requiredForV1_3_1Completion": true,
+      "requiredEvidence": ["candidate-name/source namespace inventory", "migration map", "byte/pixel/behavior equivalence where renamed", "import/reference closure", "rollback verification"]
+    }
+  ],
+  "rules": {
+    "v1_3_0IsStable": true,
+    "deferredItemsAreNotPassedV1_3Evidence": true,
+    "ownerReportedPassDoesNotInventMissingMeasurements": true,
+    "historicalQualificationRecordsRemainImmutable": true,
+    "freshRetainedEvidenceRequiredForV1_3_1Completion": true,
+    "namespaceCleanupMustPreserveBehavior": true,
+    "consumerConformanceAutomatic": false,
+    "downstreamProductionAcceptanceSeparate": true
+  }
+}
