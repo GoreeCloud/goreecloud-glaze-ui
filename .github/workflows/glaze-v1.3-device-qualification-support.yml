@@ -9,7 +9,9 @@ on:
       - feat/glaze-ui-v1.3-adaptive-resonance
     paths:
       - evidence/v1.3/tools/collect-device-qualification.py
+      - evidence/v1.3/tools/validate-device-qualification-packet.py
       - evidence/v1.3/device-qualification-support.md
+      - artifacts/v1.3/qualification-drafts/**
       - .github/workflows/glaze-v1.3-device-qualification-support.yml
   workflow_dispatch:
 
@@ -29,22 +31,55 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Compile collector
-        run: python3 -m py_compile evidence/v1.3/tools/collect-device-qualification.py
+      - name: Compile support tooling
+        run: |
+          python3 -m py_compile evidence/v1.3/tools/collect-device-qualification.py
+          python3 -m py_compile evidence/v1.3/tools/validate-device-qualification-packet.py
 
       - name: Run fail-closed collector self-test
         run: python3 evidence/v1.3/tools/collect-device-qualification.py self-test
+
+      - name: Run fail-closed packet validator self-test
+        run: python3 evidence/v1.3/tools/validate-device-qualification-packet.py self-test
 
       - name: Verify qualification boundary and frozen source binding
         shell: bash
         run: |
           set -euo pipefail
           grep -F "$SOURCE_SHA" evidence/v1.3/tools/collect-device-qualification.py
+          grep -F "$SOURCE_SHA" evidence/v1.3/tools/validate-device-qualification-packet.py
           grep -F '"qualification_credit": False' evidence/v1.3/tools/collect-device-qualification.py
           grep -F '"accepted_for_lifecycle_gate": False' evidence/v1.3/tools/collect-device-qualification.py
+          grep -F 'report.get("accepted_for_lifecycle_gate") is False' evidence/v1.3/tools/validate-device-qualification-packet.py
           grep -F 'No raw wallpaper image bytes' evidence/v1.3/device-qualification-support.md
+
+      - name: Verify all physical/native qualification drafts remain fail closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          frozen = "72ad63bf32d80420b25dc98bfd2def47bcc2a427"
+          drafts = sorted(Path("artifacts/v1.3/qualification-drafts").glob("*.json"))
+          assert drafts, "expected qualification drafts"
+          for path in drafts:
+              record = json.loads(path.read_text())
+              if record.get("workstream_id") not in {
+                  "physical-device-native-platform-qualification",
+                  "physical-device-production-performance-qualification",
+                  "native-personalization-adapter-qualification",
+              }:
+                  continue
+              assert record.get("status") == "in_progress", path
+              assert record.get("target", {}).get("source_revision") == frozen, path
+              assert record.get("disposition", {}).get("accepted_for_lifecycle_gate") is False, path
+          print("physical/native qualification drafts remain fail closed")
+          PY
 
       - name: State non-promotional result
         run: |
-          echo 'Device qualification support tooling validated.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Device qualification support tooling and packet intake validation passed.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'A valid packet is only structurally and cryptographically ready for combined review.' >> "$GITHUB_STEP_SUMMARY"
           echo 'No physical-device, performance, personalization, Candidate, Stable, or consumer qualification is inferred from this workflow.' >> "$GITHUB_STEP_SUMMARY"
