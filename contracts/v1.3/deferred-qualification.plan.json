@@ -1,54 +1,40 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "product": "GLAZE UI V1.3",
-  "targetVersion": "1.3.0-candidate",
-  "lifecycle": "qualification-active",
+  "targetVersion": "1.3.0",
+  "lifecycle": "stable-handoff-complete",
   "created": "2026-09-06",
+  "updated": "2026-09-07",
   "sourceStable": "1.2.0",
-  "authority": "acceptance/v1.3-deferred-qualification.md",
-  "qualificationMatrix": "contracts/v1.3/qualification-matrix.json",
+  "qualifiedImplementationAnchor": "72ad63bf32d80420b25dc98bfd2def47bcc2a427",
+  "stableAcceptance": "acceptance/v1.3-stable.md",
+  "handoffAuthority": "contracts/v1.3.1/hardening.plan.json",
   "evidenceSchema": "contracts/v1.3/qualification-evidence.schema.json",
   "evidenceDirectory": "evidence/v1.3",
   "qualityContract": "contracts/v1.3/quality-rules.candidate.json",
-  "candidateReadiness": "contracts/v1.3/qualification-readiness.candidate.json",
-  "stableReadiness": "contracts/v1.3/stable-readiness.plan.json",
-  "validator": "scripts/validate_glaze_v1_3_planned.py",
-  "readinessEvaluator": "js/glaze-v1.3-qualification.candidate.mjs",
-  "controlPlane": {
-    "status": "qualification-active",
-    "meaning": "Fresh evidence may be collected without promoting lifecycle. Five pre-Candidate tracks qualify one exact Candidate source revision. Stable activation/source cleanup is a sixth post-Candidate gate and remains mandatory before Stable."
-  },
-  "candidateStageItems": [
+  "acceptedForV1_3": [
     "human-optical-and-icon-collision-qualification",
-    "manual-assistive-technology-qualification",
-    "physical-device-native-platform-qualification",
-    "physical-device-production-performance-qualification",
-    "native-personalization-adapter-qualification"
+    "manual-assistive-technology-qualification"
   ],
-  "stableStageItems": ["stable-activation-and-source-namespace-cleanup"],
-  "allStablePromotionItems": [
-    "human-optical-and-icon-collision-qualification",
-    "manual-assistive-technology-qualification",
+  "deferredToV1_3_1": [
     "physical-device-native-platform-qualification",
     "physical-device-production-performance-qualification",
     "native-personalization-adapter-qualification",
     "stable-activation-and-source-namespace-cleanup"
   ],
+  "controlPlane": {
+    "status": "superseded-for-v1.3-stable-blocking",
+    "meaning": "The former six-track V1.3 Stable-blocking model is preserved as history. Project-owner governance changed V1.3.0 release scope and transferred the remaining unaccepted hardening work to V1.3.1 without fabricating passes."
+  },
   "rules": {
     "v1.2StableImpliesThesePassed": false,
-    "freshExactRevisionEvidenceRequired": true,
-    "candidateStageMustPassSameExactRevision": true,
-    "stableCleanupOccursAfterCandidateActivation": true,
-    "stableCleanupMayTargetLaterExactRevision": true,
-    "stableCleanupMustReferenceQualifiedCandidateRevision": true,
-    "allSixRequiredBeforeStablePromotion": true,
-    "passedEvidenceAllowedDuringQualificationActive": true,
-    "qualificationReadinessDoesNotPromoteLifecycle": true,
-    "humanOpticalEvidenceMustCoverQualityContract": true,
-    "automatedValidationMayReplaceHumanOpticalReview": false,
-    "automatedValidationMayReplacePhysicalDeviceReview": false,
+    "missingEvidenceMayBeFabricated": false,
+    "acceptedV1_3EvidenceRemainsImmutable": true,
+    "ownerReportedPassDoesNotInventMissingMeasurements": true,
+    "deferredItemsBlockV1_3_0Stable": false,
+    "deferredItemsRequiredForV1_3_1Completion": true,
     "consumerConformanceAutomatic": false,
-    "v1.3LifecyclePromotionAutomatic": false
+    "downstreamProductionAcceptanceSeparate": true
   }
 }
