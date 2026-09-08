@@ -1,17 +1,30 @@
-# GLAZE UI V1.2 Consumers
+# GLAZE UI V1.3 Consumers
 
 The machine-readable consumer registry authority for current consumer state is `consumers/registry.json`.
 
-The required target for every applicable GoreeCloud user-facing consumer is **GLAZE UI V1.2** (`1.2.0`). Fresh repository-local V1.2 adoption and acceptance evidence is required for each consumer; prior V1.1, V1.0, Candidate, or pre-reset evidence does not automatically establish current conformance.
+The required target for every applicable GoreeCloud user-facing consumer is **GLAZE UI V1.3 — Adaptive Resonance** (`1.3.0`). V1.3.0 is Official, Stable, and consumer-eligible on `main`. Fresh repository-local V1.3 adoption and acceptance evidence is required for each consumer; prior V1.2, V1.1, V1.0, Candidate, or pre-reset evidence does not automatically establish current conformance.
 
-No consumer is production-eligible merely because GLAZE UI V1.2 is the current Stable platform target. Each application or service must independently satisfy its applicable rendered, interaction, accessibility, native/platform, product, performance, and release acceptance gates while preserving the authority of the system that owns the underlying state being presented.
+No consumer is production-eligible merely because GLAZE UI V1.3 is the current Stable platform target. Each application or service must independently satisfy its applicable rendered, interaction, accessibility, native/platform, product, performance, rollback, and release acceptance gates while preserving the authority of the system that owns the underlying state being presented.
+
+## Stable consumer entrypoints
+
+- Web: `css/glaze-v1.3.0.css`
+- Runtime: `js/glaze-v1.3.0.mjs`
+- Contract: `GLAZE_UI_V1_3.md`
+- Migration guide: `MIGRATION_V1_2_TO_V1_3.md`
+
+Historical `.candidate` filenames imported by the Stable runtime are preserved source-stage provenance. They do not make the current V1.3.0 release a Candidate.
 
 ## Registry status vocabulary
 
-- `adoption-required` — the consumer has not yet supplied accepted current-Stable V1.2 evidence. `targetVersion`, `referenceRevision`, and `evidence` remain null.
-- `unverified` — the current consumer state has not yet been verified against the V1.2 contract. Accepted target/revision/evidence fields remain null.
-- `accepted-v1` — the consumer has completed governed product-specific acceptance for the current Stable `1.2.0` contract at an exact 40-character source revision with an evidence reference. This state still does not make the overall product production-eligible; product lifecycle/release authority remains independent.
+- `adoption-required` — the consumer has not yet supplied accepted current-Stable V1.3 evidence. It may retain historical target/evidence fields as migration provenance, but it does not satisfy the current required target.
+- `unverified` — the current consumer state has not yet been verified against the V1.3 contract.
+- `accepted-v1` — the consumer has completed governed product-specific acceptance for the current Stable contract at an exact 40-character source revision with an evidence reference. This state still does not make the overall product production-eligible; product lifecycle/release authority remains independent.
 
-The registry never carries an unresolved consumer as if it had accepted source evidence. An accepted consumer must target exactly the current Stable version and must identify the exact accepted source revision and evidence record.
+An accepted current consumer must target exactly the current Stable version and identify the exact accepted source revision and evidence record.
 
-The V1.3 deferred qualification workstream does not weaken consumer-specific acceptance. Consumers may only claim the platforms and capabilities they independently validate.
+## V1.3.1 relationship
+
+Unresolved human optical, manual assistive-technology, physical-device/native-platform, physical-device performance, native Personalization adapter, and source-namespace cleanup work has been moved to V1.3.1 by owner directive. Those items are not represented as passed V1.3.0 evidence.
+
+The V1.3.1 carry-forward does not weaken consumer-specific acceptance. Consumers may only claim the platforms and capabilities they independently validate.
