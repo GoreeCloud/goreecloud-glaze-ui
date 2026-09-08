@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "recordType": "goreecloud-care-glaze-v1.2-final-human-native-review",
+  "consumer": "GoreeCloud Care",
+  "repository": "GoreeCloud/goreecloud-zorin-os",
+  "componentPath": "apps/goreecloud-care/",
+  "glazeTargetVersion": "1.2.0",
+  "consumerSourceRevision": "334b53102c5fe0bd5d348397ba8b13cc5608ada2",
+  "careTree": "4d8c243adb456913687045e67df509fb66736c28",
+  "packageSha256": "b1bd308efd7803f6707f0b3ff2f41e56c46c6644094ba5a72d04b0b02bfe7a87",
+  "representativeTarget": "Zorin OS 17.3",
+  "reviewedAt": null,
+  "reviewer": null,
+  "reviewerRole": null,
+  "dimensions": [
+    {
+      "id": "orca-scan-completion-announcement-quality",
+      "status": "pending",
+      "finding": null
+    },
+    {
+      "id": "orca-cancellation-failure-success-announcement-quality",
+      "status": "pending",
+      "finding": null
+    },
+    {
+      "id": "orca-maintenance-insights-status-quality",
+      "status": "pending",
+      "finding": null
+    },
+    {
+      "id": "native-window-controls-and-compositor-optical-quality",
+      "status": "pending",
+      "finding": null
+    },
+    {
+      "id": "dark-and-preview-deep-dark-physical-optical-quality",
+      "status": "pending",
+      "finding": null
+    },
+    {
+      "id": "canonical-care-icon-physical-rendering-quality",
+      "status": "pending",
+      "finding": null
+    },
+    {
+      "id": "confirmation-empty-failure-success-and-applicable-controlled-task-ux",
+      "status": "pending",
+      "finding": null
+    }
+  ],
+  "alreadyGovernedEvidence": {
+    "policyKitRepresentativeBoundary": {
+      "status": "accepted",
+      "authority": "GoreeCloud/goreecloud-wardveil-security",
+      "revision": "e16fc489dbf98849601a198358863dffe7df81d4",
+      "scope": "GoreeCloud Care local-maintenance-privilege-boundary",
+      "repeatRequiredByThisReview": false
+    },
+    "exactCandidatePackageLifecycle": {
+      "status": "accepted",
+      "packageSha256": "b1bd308efd7803f6707f0b3ff2f41e56c46c6644094ba5a72d04b0b02bfe7a87",
+      "repeatRequiredByThisReview": false
+    }
+  },
+  "sourceRecordDriftResolution": {
+    "status": "pending",
+    "path": "apps/goreecloud-care/GLAZE-UI-CONFORMANCE.md",
+    "resolution": null
+  },
+  "decision": "pending",
+  "acceptedV1Authorized": false,
+  "productionEligible": false,
+  "stableProductPromotionAllowed": false,
+  "summary": "Fail-closed downstream consumer review template. This template is not acceptance evidence. Final accepted-v1 requires a separate non-template record with every required human/native dimension passed, an authorized reviewer and timestamp, explicit resolution of the stale frozen-RC Glaze prose record, and an atomic authoritative consumer-registry transition to accepted-v1 for this exact Care source revision. Glaze consumer acceptance does not by itself authorize GoreeCloud Care Stable promotion or overall production eligibility."
+}
