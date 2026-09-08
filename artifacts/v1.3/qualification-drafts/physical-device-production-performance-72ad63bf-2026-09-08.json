@@ -1,0 +1,34 @@
+{
+  "disposition": {
+    "accepted_for_lifecycle_gate": false,
+    "notes": "DRAFT ONLY. Human-review portion has passed by project-owner attestation, but no lifecycle acceptance is granted until retained representative physical-device production-performance measurements and budget evidence are reviewed and accepted."
+  },
+  "environment": {
+    "draft": true,
+    "summary": "DRAFT ONLY — bind the real representative physical-device performance environment, workload, measurement window, and accepted budget before acceptance."
+  },
+  "evidence_references": [
+    "DRAFT: replace with concrete immutable evidence references from the real physical-device production-performance session"
+  ],
+  "issues": [
+    {
+      "reference": null,
+      "resolved": false,
+      "severity": "info",
+      "summary": "Real representative physical-device production-performance evidence is incomplete. Human verification is accepted; synthetic or simulated results cannot satisfy the remaining combined-gate measurement requirement."
+    }
+  ],
+  "observed_at": "2026-09-08T01:02:53Z",
+  "review_authority": {
+    "authority": "GoreeCloud project owner",
+    "mode": "combined"
+  },
+  "schema_version": 2,
+  "status": "in_progress",
+  "target": {
+    "product": "GLAZE UI V1.3",
+    "source_revision": "72ad63bf32d80420b25dc98bfd2def47bcc2a427",
+    "target_version": "1.3.0-candidate"
+  },
+  "workstream_id": "physical-device-production-performance-qualification"
+}
