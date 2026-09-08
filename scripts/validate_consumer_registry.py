@@ -36,7 +36,11 @@ def validate_guidance(stable: str, label: str) -> None:
     guidance = (ROOT / "CONSUMERS.md").read_text(encoding="utf-8")
     req(label in guidance, "CONSUMERS.md must identify the official product label")
     req(stable in guidance, "CONSUMERS.md must identify the current Stable version")
-    req("Fresh repository-local V1.2 adoption and acceptance evidence is required" in guidance, "CONSUMERS.md must preserve the fresh-evidence boundary")
+    major_minor = ".".join(stable.split(".")[:2])
+    req(
+        f"Fresh repository-local V{major_minor} adoption and acceptance evidence is required" in guidance,
+        "CONSUMERS.md must preserve the fresh-evidence boundary for the current Stable line",
+    )
     req("No consumer is production-eligible merely because" in guidance, "CONSUMERS.md must preserve independent product acceptance")
     req("consumer registry" in guidance.lower(), "CONSUMERS.md must identify the registry authority")
 
