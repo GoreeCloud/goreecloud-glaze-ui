@@ -3,113 +3,24 @@
   "consumer": "GoreeCloud Care",
   "repository": "GoreeCloud/goreecloud-zorin-os",
   "componentPath": "apps/goreecloud-care/",
-  "glazeTarget": {
-    "product": "GLAZE UI V1.2",
-    "version": "1.2.0",
-    "upstreamLifecycle": "stable",
-    "consumerAcceptanceState": "prequalified-human-review-pending"
-  },
-  "careCandidate": {
-    "lifecycle": "release-candidate",
-    "conformance": "nonconformant",
-    "sourceRevision": "334b53102c5fe0bd5d348397ba8b13cc5608ada2",
-    "repositoryTree": "1ca90885109b474a645dc6bc71c4d6795f516380",
-    "careTree": "4d8c243adb456913687045e67df509fb66736c28",
-    "runtimeVersion": "0.1.0-dev22",
-    "packageVersion": "0.1.0~dev22",
-    "packageSha256": "b1bd308efd7803f6707f0b3ff2f41e56c46c6644094ba5a72d04b0b02bfe7a87",
-    "representativeTarget": "Zorin OS 17.3"
-  },
+  "glazeTarget": {"product":"GLAZE UI V1.2","version":"1.2.0","upstreamLifecycle":"stable","consumerAcceptanceState":"prequalified-human-review-pending"},
+  "careCandidate": {"lifecycle":"release-candidate","conformance":"nonconformant","sourceRevision":"334b53102c5fe0bd5d348397ba8b13cc5608ada2","repositoryTree":"1ca90885109b474a645dc6bc71c4d6795f516380","careTree":"4d8c243adb456913687045e67df509fb66736c28","runtimeVersion":"0.1.0-dev22","packageVersion":"0.1.0~dev22","packageSha256":"b1bd308efd7803f6707f0b3ff2f41e56c46c6644094ba5a72d04b0b02bfe7a87","representativeTarget":"Zorin OS 17.3"},
   "automatedEvidence": {
-    "careReleaseCandidateWorkflow": {
-      "runId": 34169330536,
-      "testCount": 144,
-      "conclusion": "success"
-    },
-    "platformContractWorkflow": {
-      "runId": 34169330837,
-      "conclusion": "success"
-    },
-    "themeValidationWorkflow": {
-      "runId": 34169330531,
-      "conclusion": "success"
-    },
-    "packageArtifact": {
-      "artifactId": 10035195254,
-      "zipDigestSha256": "24a03e9aa07b607fe0705403ed86a05ac2efe07fe3dc5946a9dc3bdf9711e1c6"
-    },
-    "crossEnvironmentEvidenceArtifact": {
-      "artifactId": 10035188251,
-      "zipDigestSha256": "6bb7d575a66923b6c1480ff9f56c3265fe41e013bdbc0166bd0f6aa1ef5cac0b"
-    },
-    "checks": {
-      "sourceAndPlatformValidation": true,
-      "enlargedTextGtkRuntime": true,
-      "safeTaskFlow": true,
-      "coreAtSpiDynamicStatus": true,
-      "maintenanceInsightsAtSpi": true,
-      "darkHeaderBarContrast": true,
-      "previewDeepDarkHeaderBarContrast": true,
-      "clarityProfilesClearBalancedDense": true,
-      "reducedMotion": true,
-      "sameEnvironmentPackageReproducibility": true,
-      "crossUmaskPackageIdentity": true,
-      "ubuntu2204Ubuntu2404ByteIdentity": true,
-      "installedPackageLifecycle": true,
-      "installedPrivilegeBoundaryPrequalification": true
-    }
+    "careReleaseCandidateWorkflow": {"runId":34169330536,"testCount":144,"conclusion":"success"},
+    "platformContractWorkflow": {"runId":34169330837,"conclusion":"success"},
+    "themeValidationWorkflow": {"runId":34169330531,"conclusion":"success"},
+    "packageArtifact": {"artifactId":10035195254,"zipDigestSha256":"24a03e9aa07b607fe0705403ed86a05ac2efe07fe3dc5946a9dc3bdf9711e1c6"},
+    "crossEnvironmentEvidenceArtifact": {"artifactId":10035188251,"zipDigestSha256":"6bb7d575a66923b6c1480ff9f56c3265fe41e013bdbc0166bd0f6aa1ef5cac0b"},
+    "checks": {"sourceAndPlatformValidation":true,"enlargedTextGtkRuntime":true,"safeTaskFlow":true,"coreAtSpiDynamicStatus":true,"maintenanceInsightsAtSpi":true,"darkHeaderBarContrast":true,"previewDeepDarkHeaderBarContrast":true,"clarityProfilesClearBalancedDense":true,"reducedMotion":true,"sameEnvironmentPackageReproducibility":true,"crossUmaskPackageIdentity":true,"ubuntu2204Ubuntu2404ByteIdentity":true,"installedPackageLifecycle":true,"installedPrivilegeBoundaryPrequalification":true}
   },
-  "representativeEvidence": {
-    "exactCandidatePackageLifecyclePassed": true,
-    "physicalPackageMatchedCiSha256": true,
-    "careCleanupInvokedByAcceptanceRunner": false,
-    "representativeTargetHandoffGenerated": true,
-    "policyKitBoundaryGovernanceAccepted": true
-  },
+  "representativeEvidence": {"exactCandidatePackageLifecyclePassed":true,"physicalPackageMatchedCiSha256":true,"careCleanupInvokedByAcceptanceRunner":false,"representativeTargetHandoffGenerated":true,"policyKitBoundaryGovernanceAccepted":true},
   "platformGovernance": {
-    "everkeep": {
-      "accepted": true,
-      "revision": "d6192dc2a38d5749df561f0638860c974faae8ff",
-      "validationRunId": 34170286306,
-      "scope": "exact-current Care RC continuity integration/readiness"
-    },
-    "privacyShield": {
-      "accepted": true,
-      "revision": "d2ee2c626beb2ebc2d951d01db877fc8f46d3791",
-      "validationRunId": 34170474875,
-      "scope": "telemetry-minimization,data-minimization,privacy-status"
-    },
-    "wardveil": {
-      "accepted": true,
-      "revision": "e16fc489dbf98849601a198358863dffe7df81d4",
-      "foundationRunId": 34174066145,
-      "meshEvidenceRunId": 34174066054,
-      "scanTransportRunId": 34174065990,
-      "scope": "GoreeCloud Care local-maintenance-privilege-boundary",
-      "crossServiceExecutionAuthority": false
-    }
+    "everkeep": {"accepted":true,"revision":"d6192dc2a38d5749df561f0638860c974faae8ff","validationRunId":34170286306,"scope":"exact-current Care RC continuity integration/readiness"},
+    "privacyShield": {"accepted":true,"revision":"d2ee2c626beb2ebc2d951d01db877fc8f46d3791","validationRunId":34170474875,"scope":"telemetry-minimization,data-minimization,privacy-status"},
+    "wardveil": {"accepted":true,"revision":"e16fc489dbf98849601a198358863dffe7df81d4","foundationRunId":34174066145,"meshEvidenceRunId":34174066054,"scanTransportRunId":34174065990,"scope":"GoreeCloud Care local-maintenance-privilege-boundary","crossServiceExecutionAuthority":false}
   },
-  "sourceRecordDrift": {
-    "present": true,
-    "path": "apps/goreecloud-care/GLAZE-UI-CONFORMANCE.md",
-    "description": "The frozen RC contains stale Development-era lifecycle wording in this Glaze-specific prose record. Controlling RC lifecycle records (SPECIFICATIONS.md, RELEASE-ACCEPTANCE.md, CHANGELOG.md, Platform Contract, exact-head CI and exact-target evidence) agree on Release Candidate / nonconformant. This prequalification does not rewrite the frozen Care source because doing so would create a new source/package identity requiring requalification.",
-    "blocksMachinePrequalification": false,
-    "blocksFinalConsumerAcceptanceWithoutExplicitResolution": true
-  },
-  "pendingHumanNativeGates": {
-    "orcaSpokenAnnouncementQuality": false,
-    "nativeWindowControlsAndCompositorOpticalReview": false,
-    "darkAndPreviewDeepDarkPhysicalOpticalReview": false,
-    "canonicalCareIconPhysicalOpticalReview": false,
-    "remainingFailureDenialAndControlledTaskUxReviewWhereApplicable": false
-  },
-  "governanceDecision": {
-    "machinePrequalificationPassed": true,
-    "acceptedV1Allowed": false,
-    "registryStatusMustRemain": "adoption-required",
-    "productionEligible": false,
-    "stableProductPromotionAllowed": false,
-    "reason": "Exact-current automated, package, representative-target and applicable platform-system evidence is sufficient for Care V1.2 machine prequalification. Final product-specific Glaze consumer acceptance remains blocked by unresolved human/native review and explicit resolution of the stale Care Glaze consumer prose record."
-  },
+  "sourceRecordDrift": {"present":true,"path":"apps/goreecloud-care/GLAZE-UI-CONFORMANCE.md","description":"The frozen RC contains stale Development-era lifecycle wording in this Glaze-specific prose record. Controlling RC lifecycle records (SPECIFICATIONS.md, RELEASE-ACCEPTANCE.md, CHANGELOG.md, Platform Contract, exact-head CI and exact-target evidence) agree on Release Candidate / nonconformant. This prequalification does not rewrite the frozen Care source because doing so would create a new source/package identity requiring requalification.","blocksMachinePrequalification":false,"blocksFinalConsumerAcceptanceWithoutExplicitResolution":true},
+  "pendingHumanNativeGates": {"orcaSpokenAnnouncementQuality":false,"nativeWindowControlsAndCompositorOpticalReview":false,"darkAndPreviewDeepDarkPhysicalOpticalReview":false,"canonicalCareIconPhysicalOpticalReview":false,"remainingFailureDenialAndControlledTaskUxReviewWhereApplicable":false},
+  "governanceDecision": {"machinePrequalificationPassed":true,"acceptedV1Allowed":false,"registryStatusMustRemain":"adoption-required","productionEligible":false,"stableProductPromotionAllowed":false,"reason":"Exact-current automated, package, representative-target and applicable platform-system evidence is sufficient for Care V1.2 machine prequalification. Final product-specific Glaze consumer acceptance remains blocked by unresolved human/native review and explicit resolution of the stale Care Glaze consumer prose record."},
   "recordedAt": "2026-09-07"
 }

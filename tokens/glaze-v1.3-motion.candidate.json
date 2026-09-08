@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.motion.tokens.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "namespace": "motion",
+  "semanticTokens": {
+    "motion.direct": {"implementation": "direct", "meaning": "direct manipulation or immediate state response"},
+    "motion.micro": {"implementation": "fast", "meaning": "small local response"},
+    "motion.standard": {"implementation": "standard", "meaning": "ordinary state transition"},
+    "motion.connected": {"implementation": "connected", "meaning": "context-preserving connected transformation"},
+    "motion.expressive": {"implementation": "expressive", "meaning": "bounded high-value expressive transition"},
+    "motion.reduced": {"implementation": "reduced", "meaning": "reduced-motion semantic equivalent"},
+    "motion.minimal": {"implementation": "minimal", "meaning": "nonessential travel removed"}
+  },
+  "implementationValues": {
+    "direct": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/easing/direct", "mode": "inherited-baseline"},
+    "fast": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/durationsMs/fast", "mode": "inherited-baseline"},
+    "standard": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/durationsMs/standard", "mode": "inherited-baseline"},
+    "connected": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/durationsMs/deliberate", "mode": "v1.3-connected-semantic-binding"},
+    "spatial": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/durationsMs/spatial", "mode": "explicit-justification-only"},
+    "reduced": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/profiles/reduced", "mode": "inherited-baseline"},
+    "minimal": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/profiles/minimal", "mode": "inherited-baseline"},
+    "expressive": {"source": "tokens/glaze-v1.2-motion.candidate.json", "pointer": "/durationsMs/deliberate", "mode": "v1.3-semantic-binding-to-governed-baseline"},
+    "springSemantics": {
+      "status": "implemented-candidate-policy",
+      "ownerWorkstream": "motion-and-continuity",
+      "newSpringRuntimeIntroduced": false,
+      "newSpringCalibrationIntroduced": false,
+      "settleUsesExistingGovernedEasing": true
+    },
+    "connectedTransformations": {
+      "status": "implemented-candidate-runtime",
+      "ownerWorkstream": "motion-and-continuity",
+      "relationships": [
+        "search-capsule-to-search-panel",
+        "navigation-item-to-destination-header",
+        "quick-control-to-expanded-control",
+        "mini-player-to-player",
+        "notification-to-detail",
+        "floating-toolbar-to-contextual-sheet",
+        "thumbnail-to-detail"
+      ]
+    },
+    "expressionProfiles": {
+      "status": "implemented-candidate-policy",
+      "ownerWorkstream": "motion-and-continuity",
+      "calm": ["micro", "standard"],
+      "balanced": ["standard", "connected"],
+      "expressive": ["connected", "expressive", "spatial-when-explicitly-justified"]
+    }
+  },
+  "rules": {
+    "motionMustPreserveContext": true,
+    "animationForAnimationSakeAllowed": false,
+    "continuousRestlessAnimationAllowed": false,
+    "routineWobblePulseOrBounceAllowed": false,
+    "reducedMotionPreservesSemanticStateChange": true,
+    "reducedMotionMayCollapseTravel": true,
+    "directManipulationTrackingRemainsImmediate": true,
+    "motionMayMisrepresentActualProgress": false,
+    "stateMayWaitForAnimationCompletion": false,
+    "focusMayWaitForAnimationCompletion": false,
+    "spatialMotionRequiresExplicitRelationshipJustification": true,
+    "newSpringRuntimeIntroduced": false,
+    "semanticTokensMayContainRawDurationsOrCurves": false
+  },
+  "notEstablished": [
+    "v1.3-spring-calibration",
+    "interaction-velocity-motion-response",
+    "native-motion-parity",
+    "physical-device-motion-acceptance",
+    "representative-frame-pacing-acceptance"
+  ]
+}

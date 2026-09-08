@@ -1,0 +1,73 @@
+name: GLAZE UI V1.3 Living Material 2.0
+
+on:
+  push:
+    branches:
+      - feat/glaze-ui-v1.3-adaptive-resonance
+    paths:
+      - 'contracts/v1.3/adaptive-resonance.plan.json'
+      - 'contracts/v1.3/living-material-2.candidate.json'
+      - 'tokens/glaze-v1.3-material.candidate.json'
+      - 'js/glaze-v1.3-living-material-2.candidate.mjs'
+      - 'tests/glaze-v1.3-living-material-2.test.mjs'
+      - 'scripts/validate_glaze_v1_3_living_material_2.py'
+      - 'scripts/validate_glaze_v1_3_dynamic_color.py'
+      - 'scripts/validate_glaze_v1_3_token_architecture.py'
+      - 'scripts/validate_glaze_v1_3_phase0.py'
+      - 'registry/lifecycle.json'
+      - 'VERSION'
+      - '.github/workflows/glaze-v1.3-living-material-2.yml'
+  pull_request:
+    paths:
+      - 'contracts/v1.3/adaptive-resonance.plan.json'
+      - 'contracts/v1.3/living-material-2.candidate.json'
+      - 'tokens/glaze-v1.3-material.candidate.json'
+      - 'js/glaze-v1.3-living-material-2.candidate.mjs'
+      - 'tests/glaze-v1.3-living-material-2.test.mjs'
+      - 'scripts/validate_glaze_v1_3_living_material_2.py'
+      - 'scripts/validate_glaze_v1_3_dynamic_color.py'
+      - 'scripts/validate_glaze_v1_3_token_architecture.py'
+      - 'scripts/validate_glaze_v1_3_phase0.py'
+      - 'registry/lifecycle.json'
+      - 'VERSION'
+      - '.github/workflows/glaze-v1.3-living-material-2.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  validate-v1-3-living-material-2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - name: Compile V1.3 validators
+        run: |
+          python -m py_compile scripts/validate_glaze_v1_3_phase0.py
+          python -m py_compile scripts/validate_glaze_v1_3_token_architecture.py
+          python -m py_compile scripts/validate_glaze_v1_3_dynamic_color.py
+          python -m py_compile scripts/validate_glaze_v1_3_living_material_2.py
+      - name: Preserve V1.2 Stable authority
+        run: python scripts/validate_glaze_v1_2_stable.py
+      - name: Preserve V1.3 pre-promotion boundary
+        run: python scripts/validate_glaze_v1_3_phase0.py
+      - name: Revalidate V1.3 token architecture
+        run: python scripts/validate_glaze_v1_3_token_architecture.py
+      - name: Revalidate V1.3 dynamic color dependency
+        run: python scripts/validate_glaze_v1_3_dynamic_color.py
+      - name: Validate V1.3 Living Material 2.0 contracts
+        run: python scripts/validate_glaze_v1_3_living_material_2.py
+      - name: Check Living Material 2.0 runtime syntax
+        run: node --check js/glaze-v1.3-living-material-2.candidate.mjs
+      - name: Test Living Material 2.0 runtime
+        run: node --test tests/glaze-v1.3-living-material-2.test.mjs
+      - name: Parse Living Material 2.0 JSON
+        run: |
+          python -m json.tool contracts/v1.3/living-material-2.candidate.json >/dev/null
+          python -m json.tool tokens/glaze-v1.3-material.candidate.json >/dev/null
+          python -m json.tool contracts/v1.3/adaptive-resonance.plan.json >/dev/null

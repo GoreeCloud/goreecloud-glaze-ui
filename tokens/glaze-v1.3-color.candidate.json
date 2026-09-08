@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.color.tokens.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "namespace": "color",
+  "dynamicColorContract": "contracts/v1.3/dynamic-color.candidate.json",
+  "runtimeBinding": "js/glaze-v1.3-dynamic-color.candidate.mjs",
+  "semanticTokens": {
+    "color.material.neutral": {"implementation": "materialNeutral", "meaning": "dominant substantially neutral material color authority"},
+    "color.accent.user": {"implementation": "userAccent", "meaning": "personal interactive accent authority; not semantic status"},
+    "color.identity.product": {"implementation": "productIdentity", "meaning": "registered product identity authority retained through personalization"},
+    "color.semantic.roles": {"implementation": "semanticRoles", "meaning": "protected semantic state meanings"},
+    "color.context.temporary": {"implementation": "contextPalette", "meaning": "bounded temporary content/context relationship; not authoritative truth"},
+    "color.focus": {"implementation": "focusRole", "meaning": "accessible explicit focus treatment"},
+    "color.selection": {"implementation": "selectionRole", "meaning": "selected-state treatment with a non-color companion"}
+  },
+  "implementationValues": {
+    "materialNeutral": {"source": "tokens/glaze-v1.2-optical-foundation.candidate.json", "pointer": "/opticalPalette", "mode": "inherited-alias"},
+    "semanticRoles": {"source": "tokens/semantic-colors.json", "pointer": "/roles", "mode": "inherited-semantic-contract"},
+    "focusRole": {"source": "tokens/semantic-colors.json", "pointer": "/roles/focus", "mode": "inherited-semantic-contract"},
+    "selectionRole": {"source": "tokens/semantic-colors.json", "pointer": "/roles/selected", "mode": "inherited-semantic-contract"},
+    "userAccent": {"status": "implemented-candidate-runtime", "ownerWorkstream": "adaptive-dynamic-color", "binding": "js/glaze-v1.3-dynamic-color.candidate.mjs", "perceptualModel": "OKLCH"},
+    "productIdentity": {"status": "precedence-runtime-implemented-registry-adapter-deferred", "ownerWorkstream": "adaptive-dynamic-color", "binding": "js/glaze-v1.3-dynamic-color.candidate.mjs"},
+    "contextPalette": {"status": "implemented-candidate-local-summary-runtime", "ownerWorkstream": "adaptive-dynamic-color", "binding": "js/glaze-v1.3-dynamic-color.candidate.mjs", "maximumChroma": 0.1}
+  },
+  "authorities": [
+    "neutral-material-palette",
+    "user-accent-palette",
+    "product-identity-palette",
+    "semantic-palette",
+    "context-palette"
+  ],
+  "precedence": [
+    "accessibility",
+    "semantic",
+    "product-identity",
+    "user-accent",
+    "context-accent",
+    "default-glaze-accent"
+  ],
+  "userAccentRoles": [
+    "primary",
+    "secondary",
+    "tertiary",
+    "subtle-container",
+    "high-emphasis-container",
+    "on-accent",
+    "focus",
+    "selection"
+  ],
+  "appearanceModes": [
+    "light",
+    "dark",
+    "deep-dark"
+  ],
+  "rules": {
+    "neutralMaterialDominatesSurfaceSystem": true,
+    "strongChromaticGlassDefaultAllowed": false,
+    "personalizationMayRedefineSemanticRoles": false,
+    "personalizationMayEraseProductIdentity": false,
+    "colorOnlyStateCommunicationAllowed": false,
+    "derivedAccentMustPassContrastValidation": true,
+    "naiveRgbDerivationIsAuthority": false,
+    "semanticTokensMayContainRawPigments": false,
+    "contextMayRecolorConsequentialDialogs": false,
+    "contextMayRecolorSemanticStatus": false,
+    "networkRequiredForDerivation": false,
+    "completeDefaultThemeWithoutPersonalization": true
+  },
+  "notEstablished": [
+    "native-platform-color-adapters",
+    "cross-device-personalization-sync",
+    "product-identity-registry-binding",
+    "rendered-v1.3-visual-acceptance",
+    "consumer-adoption"
+  ]
+}

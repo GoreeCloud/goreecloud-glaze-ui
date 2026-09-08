@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.system-shell.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "extends": [
+    "contracts/v1.2/system-shell-navigation.candidate.json",
+    "contracts/v1.2/system-shell-materials.candidate.json",
+    "contracts/v1.3/adaptive-navigation.candidate.json",
+    "contracts/v1.3/living-material-2.candidate.json"
+  ],
+  "purpose": "Evolve the GoreeCloud System Shell around V1.3 Adaptive Navigation and Living Material 2.0 while preserving stable spatial memory, visible search scope, producer-authoritative critical state, and accessibility-first shell fallbacks.",
+  "shellRegions": {
+    "workspace": {"purpose": "application and task content plane", "defaultMaterial": "surface", "backdropDependent": false},
+    "navigation": {"purpose": "global/application destination framing", "presentationAuthority": "adaptive-navigation", "persistentBackdropDependent": false},
+    "universal-search": {"purpose": "transient scoped command and discovery surface", "scopeMustBeVisible": true},
+    "control-center": {"purpose": "bounded system-control collection", "contract": "contracts/v1.3/control-center.candidate.json"},
+    "critical-system": {"purpose": "security, privacy, authentication, recovery, destructive, and consequential decisions", "backdropDependent": false, "producerAuthoritative": true}
+  },
+  "hierarchy": ["environment", "shell", "application", "workspace", "content"],
+  "navigationLayers": ["global", "application", "contextual", "local"],
+  "environmentPolicy": {
+    "compact": {"navigationAuthority": "adaptive-navigation", "searchPresentation": "reachable-overlay-or-dedicated-view", "controlCenterPresentation": "in-flow-sheet-or-dedicated-panel"},
+    "medium": {"navigationAuthority": "adaptive-navigation", "searchPresentation": "overlay-panel", "controlCenterPresentation": "side-or-overlay-panel"},
+    "expanded": {"navigationAuthority": "adaptive-navigation", "searchPresentation": "overlay-panel", "controlCenterPresentation": "side-or-overlay-panel"},
+    "workspace": {"navigationAuthority": "adaptive-navigation", "searchPresentation": "command-overlay", "controlCenterPresentation": "side-panel-or-overlay"},
+    "farView": {"navigationAuthority": "adaptive-navigation", "searchPresentation": "focused-overlay", "controlCenterPresentation": "focused-panel", "directionalFocusRequired": true},
+    "wearable": {"navigationAuthority": "adaptive-navigation", "searchPresentation": "platform-supported-shallow-entry", "controlCenterPresentation": "shallow-system-controls"}
+  },
+  "rules": {
+    "shellFramesApplicationWithoutDominating": true,
+    "stableSpatialMemoryRequired": true,
+    "predictionMayReorderPrimaryNavigation": false,
+    "currentDestinationRequiresStructuralCue": true,
+    "currentDestinationMayDependOnColorAlone": false,
+    "applicationIdentityDistinctFromAccountIdentity": true,
+    "globalAndLocalActionsRemainDistinct": true,
+    "platformNativeWindowControlsPreferredWhereApplicable": true,
+    "criticalStateProducerAuthoritative": true,
+    "criticalDecisionsBackdropDependent": false,
+    "criticalDecisionsMayUseContextAccentAsAuthority": false,
+    "denseNotificationHistoryBackdropDependent": false,
+    "universalSearchScopeVisible": true,
+    "destructiveSearchActionRequiresConfirmation": true,
+    "searchGeneratedResultsDistinctFromSystemTruth": true,
+    "rawViewportWidthIsShellCompositionAuthority": false,
+    "deviceBrandBreakpointsCanonical": false,
+    "adaptiveNavigationOwnsPrimaryNavigationPresentation": true
+  },
+  "systemCommunication": {
+    "notificationRequiredFields": ["source", "event", "time", "priority", "available-action-when-applicable"],
+    "priorityChangesPersistenceBeforeDrama": true,
+    "criticalRegionRequiresAuthoritativeSource": true,
+    "criticalRegionRequiresRequiredActionWhereApplicable": true,
+    "routineStatusMayFlashOrPulseContinuously": false,
+    "criticalFailureMayBeToastOnly": false
+  },
+  "materialPolicy": {
+    "workspace": "readability-first-surface",
+    "persistentNavigation": "structural-surface",
+    "floatingNavigation": "living-material-2-bounded-glaze",
+    "universalSearchContainer": "living-material-2-deep-or-live-glaze",
+    "controlCenterContainer": "living-material-2-deep-glaze",
+    "criticalSystem": "high-opacity-raised-or-solid",
+    "nestedBackdropBlurDefaultAllowed": false,
+    "neutralMaterialFoundationRequired": true,
+    "colorReservedForAccentIdentityOrSemanticState": true
+  },
+  "accessibility": {
+    "minimumInteractiveTargetPx": 48,
+    "touchAssistanceTargetPx": 56,
+    "farViewMinimumInteractiveTargetPx": 56,
+    "largeTextMayPromoteOverlayToDedicatedView": true,
+    "reducedTransparencyUsesSolidNeutralShell": true,
+    "forcedColorsUsesPlatformMapping": true,
+    "increasedContrastStrengthensBoundariesBeforeChroma": true,
+    "reducedMotionMayUseImmediateShellTransitions": true,
+    "rtlLogicalLayoutRequired": true,
+    "keyboardCoreOperationRequired": true
+  },
+  "performance": {
+    "degradationOrder": [
+      "remove-optional-environmental-aura",
+      "reduce-control-center-heavy-blur",
+      "reduce-floating-navigation-blur",
+      "disable-backdrop-blur",
+      "solid-neutral-shell-surfaces"
+    ],
+    "protected": ["content", "actions", "focus", "semantic-state", "target-size", "critical-system-separation", "task-completion"]
+  },
+  "implementation": {
+    "runtime": "js/glaze-v1.3-system-shell.candidate.mjs",
+    "tests": "tests/glaze-v1.3-system-shell.test.mjs",
+    "validator": "scripts/validate_glaze_v1_3_system_shell.py",
+    "workflow": ".github/workflows/glaze-v1.3-system-shell.yml"
+  },
+  "evidenceBoundary": {
+    "implementedByWorkstream": [
+      "five-region-v1.3-shell-contract",
+      "adaptive-navigation-shell-integration-policy",
+      "living-material-2-shell-material-policy",
+      "critical-system-authority-boundary",
+      "environment-aware-search-and-control-center-presentation",
+      "accessibility-and-performance-fallback-policy",
+      "automated-contract-and-runtime-tests"
+    ],
+    "notEstablished": [
+      "full-notification-center-runtime",
+      "complete-navigation-history-runtime",
+      "multi-window-native-shell-runtime",
+      "native-window-control-parity",
+      "tv-wearable-native-shell-runtime",
+      "assistive-technology-human-acceptance",
+      "physical-device-shell-acceptance",
+      "production-performance-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

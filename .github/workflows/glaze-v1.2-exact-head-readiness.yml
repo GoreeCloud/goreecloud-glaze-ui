@@ -17,6 +17,7 @@ on:
       - "ENFORCEMENT.md"
       - "contracts/v1.2/**"
       - "contracts/v1.3/deferred-qualification.plan.json"
+      - "contracts/v1.3/stable-readiness.plan.json"
       - "tokens/glaze-v1.2-**"
       - "css/glaze-v1.2-**"
       - "js/glaze-v1.2-**"
@@ -74,7 +75,7 @@ jobs:
           python scripts/validate_glaze_v1_2_documentation_versions.py \
             --output artifacts/glaze-v1.2-lifecycle-version-integrity.json
 
-      - name: Verify V1.3 deferral boundary without manufacturing V1.2 evidence
+      - name: Verify staged V1.3 qualification boundary without manufacturing V1.2 evidence
         env:
           GLAZE_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
@@ -85,19 +86,44 @@ jobs:
 
           root = Path('.')
           lifecycle = json.loads((root / 'registry/lifecycle.json').read_text(encoding='utf-8'))
-          deferred = json.loads((root / 'contracts/v1.3/deferred-qualification.plan.json').read_text(encoding='utf-8'))
+          qualification = json.loads((root / 'contracts/v1.3/deferred-qualification.plan.json').read_text(encoding='utf-8'))
+          stable_plan = json.loads((root / 'contracts/v1.3/stable-readiness.plan.json').read_text(encoding='utf-8'))
           acceptance = (root / 'acceptance/v1.2-stable.md').read_text(encoding='utf-8')
 
           assert lifecycle.get('currentStable') == '1.2.0'
           assert lifecycle.get('currentOfficial') == '1.2.0'
           assert lifecycle.get('activeCandidate') is None
           assert lifecycle.get('plannedNext') == '1.3.0-candidate'
-          assert deferred.get('lifecycle') == 'planned'
-          assert deferred.get('rules', {}).get('v1.2StableImpliesThesePassed') is False
+
+          assert qualification.get('schemaVersion') == 4
+          assert qualification.get('sourceStable') == '1.2.0'
+          assert qualification.get('targetVersion') == '1.3.0-candidate'
+          assert qualification.get('lifecycle') == 'qualification-active'
+          assert qualification.get('controlPlane', {}).get('status') == 'qualification-active'
+          assert len(qualification.get('candidateStageItems', [])) == 5
+          assert qualification.get('stableStageItems') == ['stable-activation-and-source-namespace-cleanup']
+          assert len(qualification.get('allStablePromotionItems', [])) == 6
+
+          rules = qualification.get('rules', {})
+          assert rules.get('v1.2StableImpliesThesePassed') is False
+          assert rules.get('freshExactRevisionEvidenceRequired') is True
+          assert rules.get('candidateStageMustPassSameExactRevision') is True
+          assert rules.get('stableCleanupOccursAfterCandidateActivation') is True
+          assert rules.get('stableCleanupMayTargetLaterExactRevision') is True
+          assert rules.get('stableCleanupMustReferenceQualifiedCandidateRevision') is True
+          assert rules.get('allSixRequiredBeforeStablePromotion') is True
+          assert rules.get('qualificationReadinessDoesNotPromoteLifecycle') is True
+          assert rules.get('consumerConformanceAutomatic') is False
+          assert rules.get('v1.3LifecyclePromotionAutomatic') is False
+
+          assert stable_plan.get('stage') == 'post-candidate-pre-stable'
+          assert stable_plan.get('prerequisites', {}).get('activeCandidateRequired') is True
+          assert stable_plan.get('stablePromotion', {}).get('allSixQualificationRequirementsMandatoryAcrossStages') is True
+          assert stable_plan.get('stablePromotion', {}).get('automatic') is False
           assert 'V1.3' in acceptance
 
           report = {
-              'schemaVersion': 1,
+              'schemaVersion': 3,
               'status': 'pass',
               'repository': 'GoreeCloud/goreecloud-glaze-ui',
               'revision': os.environ['GLAZE_SOURCE_REVISION'],
@@ -105,13 +131,17 @@ jobs:
               'currentOfficial': '1.2.0',
               'activeCandidate': None,
               'plannedNext': '1.3.0-candidate',
-              'deferredQualification': {
-                  'track': 'V1.3',
+              'v1.3Qualification': {
+                  'lifecycle': 'qualification-active',
+                  'targetVersion': '1.3.0-candidate',
                   'representedAsPassedV1.2Evidence': False,
-                  'humanManualOpticalQualification': 'deferred',
-                  'physicalDeviceOemCompositorQualification': 'deferred',
-                  'nativePersonalizationAndPlatformAcceptance': 'deferred',
-                  'broaderAssistiveTechnologyAndProductionQualification': 'deferred',
+                  'freshExactRevisionEvidenceRequired': True,
+                  'candidateBlockingWorkstreamCount': 5,
+                  'candidateStageSameExactRevisionRequired': True,
+                  'stableBlockingWorkstreamCountAcrossStages': 6,
+                  'stableCleanupPostCandidate': True,
+                  'candidateActivationImplied': False,
+                  'stablePromotionImplied': False,
               },
               'downstreamConsumerAcceptanceImplied': False,
           }
@@ -119,7 +149,7 @@ jobs:
           out.parent.mkdir(parents=True, exist_ok=True)
           out.write_text(json.dumps(report, indent=2, sort_keys=True) + '\n', encoding='utf-8')
           print('GLAZE UI V1.2 exact-head Stable boundary: PASS')
-          print('Deferred V1.3 qualifications remain explicitly unclaimed by V1.2.')
+          print('V1.3 staged qualification remains separate from V1.2 Stable evidence and lifecycle authority.')
           PY
 
       - name: Upload exact-head Stable boundary evidence

@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.control-center.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "extends": [
+    "contracts/v1.2/control-center-customization.candidate.json",
+    "contracts/v1.2/system-shell-materials.candidate.json",
+    "contracts/v1.3/living-material-2.candidate.json"
+  ],
+  "purpose": "Evolve Control Center into an adaptive, editable, accessibility-complete system-control surface whose module semantics survive size, order, material, and environment changes without introducing persistence or cross-device-sync claims.",
+  "parentSurface": {
+    "material": "deep-glaze-or-accessibility-solid-fallback",
+    "dominantPanelCount": 1,
+    "nestedBackdropBlurDefaultAllowed": false,
+    "parentRemainsSubstantiallyNeutral": true
+  },
+  "moduleTypes": [
+    "compact-control",
+    "wide-control",
+    "tall-control",
+    "slider",
+    "media-module",
+    "device-module",
+    "connectivity-module",
+    "system-status-module"
+  ],
+  "governedSizes": ["icon", "compact", "wide", "tall", "expanded"],
+  "moduleRules": {
+    "stableModuleIdRequired": true,
+    "semanticIdentitySurvivesResize": true,
+    "semanticIdentitySurvivesReorder": true,
+    "resizeMayChangeMeaning": false,
+    "activeStateMayMixAccentIntoNeutralLocalSurface": true,
+    "activeStateMayDependOnColorAlone": false,
+    "semanticStateMayReplaceAccent": true,
+    "producerAuthoritativeStatusCannotBeOverriddenByAccent": true
+  },
+  "environmentPolicy": {
+    "compact": {"presentation": "in-flow-sheet-or-dedicated-panel", "moduleDensity": "comfortable", "minimumColumnsHint": 2},
+    "medium": {"presentation": "side-or-overlay-panel", "moduleDensity": "comfortable", "minimumColumnsHint": 2},
+    "expanded": {"presentation": "side-or-overlay-panel", "moduleDensity": "balanced", "maximumColumnsHint": 3},
+    "workspace": {"presentation": "side-panel-or-overlay", "moduleDensity": "productive", "maximumColumnsHint": 3},
+    "farView": {"presentation": "focused-panel", "moduleDensity": "low", "directionalFocusRequired": true},
+    "wearable": {"presentation": "shallow-system-controls", "moduleDensity": "glanceable", "expandedModulesDefault": false}
+  },
+  "editing": {
+    "dragHandlesWhereAppropriate": true,
+    "dragIsSoleReorderMechanism": false,
+    "accessibleReorderAlternativeRequired": true,
+    "visibleInsertionLocationsRequired": true,
+    "resetRequired": true,
+    "semanticAnnouncementsRequired": true,
+    "cancelWithoutStateCorruptionRequired": true,
+    "editingMayChangeModuleSemanticId": false,
+    "editingMayDeleteRequiredCriticalModule": false,
+    "persistentStorageEstablished": false,
+    "crossDeviceSyncEstablished": false
+  },
+  "sliders": {
+    "track": "neutral-local-control",
+    "fill": "accent-or-authoritative-semantic",
+    "thumb": "high-contrast-local-control",
+    "minimumTargetPx": 48,
+    "touchAssistanceTargetPx": 56,
+    "keyboardOperationRequired": true,
+    "valueTextOrSemanticEquivalentRequired": true
+  },
+  "accessibility": {
+    "minimumInteractiveTargetPx": 48,
+    "touchAssistanceTargetPx": 56,
+    "largeTextMustReflow": true,
+    "targetsMayShrinkForDensity": false,
+    "reducedTransparencyUsesSolidRaisedSurface": true,
+    "forcedColorsDisablesCustomGlassAndAccentSubstrates": true,
+    "increasedContrastStrengthensBoundariesBeforeChroma": true,
+    "reducedMotionEditingTransitionsMayBeImmediate": true,
+    "rtlLogicalOrderRequired": true,
+    "keyboardCompleteEditingRequired": true
+  },
+  "implementation": {
+    "runtime": "js/glaze-v1.3-system-shell.candidate.mjs",
+    "tests": "tests/glaze-v1.3-system-shell.test.mjs",
+    "validator": "scripts/validate_glaze_v1_3_system_shell.py",
+    "workflow": ".github/workflows/glaze-v1.3-system-shell.yml"
+  },
+  "evidenceBoundary": {
+    "implementedByWorkstream": [
+      "v1.3-control-center-module-contract",
+      "environment-aware-presentation-policy",
+      "semantic-identity-preserving-resize-and-reorder",
+      "accessible-reorder-reset-and-cancel-policy",
+      "living-material-2-parent-surface-policy",
+      "automated-runtime-and-contract-tests"
+    ],
+    "notEstablished": [
+      "persistent-user-layout-storage",
+      "cross-device-layout-sync",
+      "physical-device-editing-acceptance",
+      "native-control-center-parity",
+      "assistive-technology-human-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

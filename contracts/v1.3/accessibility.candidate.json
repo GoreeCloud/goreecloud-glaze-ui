@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.accessibility-resilience.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "status": "automated-accessibility-resilience-implementation-candidate",
+  "purpose": "Compose the canonical GoreeCloud accessibility resolution matrix with validated V1.3 color, typography, material, reachability, and motion foundations while preserving task continuity and keeping manual assistive-technology, physical-device, native-platform, human, production, and release acceptance as separate evidence gates.",
+  "extends": [
+    "contracts/accessibility/resolution-matrix.json",
+    "contracts/v1.2/accessibility-adaptation.candidate.json",
+    "contracts/v1.2/accessibility-testing.candidate.json",
+    "contracts/v1.2/assistive-technology-qualification.candidate.json",
+    "contracts/v1.3/dynamic-color.candidate.json",
+    "contracts/v1.3/typography.candidate.json",
+    "contracts/v1.3/living-material-2.candidate.json",
+    "contracts/v1.3/reachability.candidate.json",
+    "contracts/v1.3/motion-semantics.candidate.json"
+  ],
+  "authority": {
+    "canonicalResolutionMatrix": "contracts/accessibility/resolution-matrix.json",
+    "parallelAccessibilityAuthorityIntroduced": false,
+    "accessibilityOutranksExpression": true,
+    "accessibilityOutranksContextualAdaptation": true,
+    "protectedSemanticMeaningOutranksRenderingPreference": true,
+    "effectsDegradeBeforeCorrectness": true
+  },
+  "resolutionOrder": [
+    "protected-semantic-meaning",
+    "forced-colors",
+    "reduced-motion",
+    "reduced-transparency",
+    "increased-contrast-and-show-boundaries",
+    "large-text-and-touch-assistance",
+    "material-clarity",
+    "expression-and-accent"
+  ],
+  "interaction": {
+    "minimumInteractiveTargetPx": 48,
+    "touchAssistanceMinimumInteractiveTargetPx": 56,
+    "farViewMinimumInteractiveTargetPx": 56,
+    "visibleGeometryMayBeSmallerThanHitArea": true,
+    "adjacentHitAreasMayOverlapAmbiguously": false,
+    "targetFloorMayShrinkToPreserveLayout": false,
+    "keyboardDirectionalAndAssistiveSwitchPathsRemainReachable": true
+  },
+  "textAndLayout": {
+    "acceptanceTextScalePercent": 200,
+    "largeTextRequiresReflow": true,
+    "criticalTextClippingAllowed": false,
+    "horizontalPageOverflowAllowed": false,
+    "compactDensityMayDefeatLegibility": false,
+    "paneCountMayCollapseBeforeTargetShrinkage": true,
+    "navigationMayRecomposeBeforeTargetShrinkage": true,
+    "shellMayRecomposeBeforeCriticalTextClipping": true,
+    "importantContentMayBeHiddenOnlyToPreserveDecoration": false
+  },
+  "renderingPreferences": {
+    "forcedColors": {
+      "usesPlatformColorRoles": true,
+      "forcesSolidMaterial": true,
+      "ambientColorAllowed": false,
+      "customAccentMayOverridePlatformRoles": false,
+      "semanticMeaningMustRemain": true
+    },
+    "reducedTransparency": {
+      "forcesSolidMaterial": true,
+      "backdropBlurAllowed": false,
+      "refractionAllowed": false,
+      "distortionAllowed": false,
+      "hierarchyMustRemainThroughStructureAndContrast": true
+    },
+    "reducedMotion": {
+      "removeNonessentialTranslation": true,
+      "removeNonessentialScale": true,
+      "nonessentialMotionMayBecomeImmediate": true,
+      "directManipulationTrackingPreserved": true,
+      "semanticStatePreserved": true,
+      "focusPreserved": true,
+      "taskCompletionMayWaitForAnimation": false,
+      "mayMerelySpeedUpOriginalMotion": false
+    },
+    "increasedContrastAndBoundaries": {
+      "visibleFocusRequired": true,
+      "nonColorBoundaryRequired": true,
+      "hierarchyMustRemain": true,
+      "mayFlattenAllSemanticHierarchy": false
+    }
+  },
+  "semanticAccessibility": {
+    "accessibleNameRequiredForInteractiveControls": true,
+    "semanticRoleRequiredForInteractiveControls": true,
+    "stateValueAndRelationshipExposedWhenApplicable": true,
+    "focusOrderMustRemainLogical": true,
+    "visibleFocusRequired": true,
+    "semanticStateMayRelyOnColorOnly": false,
+    "authorityMayRelyOnColorOnly": false,
+    "motionMayBeOnlyStateSignal": false,
+    "materialEffectMayBeOnlyBoundarySignal": false,
+    "generatedContentMustRemainDistinctFromSystemTruth": true,
+    "productIdentityMustRemainDistinctFromAccountIdentity": true
+  },
+  "directionality": {
+    "rtlUsesLogicalOrder": true,
+    "rtlMayReverseSemanticHistory": false,
+    "rtlMayChangeCurrentDestinationIdentity": false,
+    "directionChangeMayResetFocus": false,
+    "directionChangeMayDiscardInput": false
+  },
+  "continuity": {
+    "preserve": [
+      "current-task",
+      "current-destination",
+      "selection",
+      "draft-state",
+      "typed-input",
+      "unsaved-work",
+      "focus",
+      "logical-focus-order",
+      "media-state"
+    ],
+    "accessibilityPreferenceChangeMayReloadPage": false,
+    "accessibilityPreferenceChangeMayResetSelection": false,
+    "accessibilityPreferenceChangeMayDiscardDraft": false,
+    "accessibilityPreferenceChangeMayResetFocus": false,
+    "recompositionMustPreserveTaskState": true
+  },
+  "automatedScope": {
+    "machineObservableSemanticChecksAllowed": true,
+    "accessibleNameRoleStateChecksAllowed": true,
+    "targetGeometryChecksAllowed": true,
+    "reflowAndOverflowChecksAllowed": true,
+    "preferencePrecedenceChecksAllowed": true,
+    "rtlLogicalOrderChecksAllowed": true,
+    "continuityChecksAllowed": true,
+    "automatedEvidenceEstablishesHumanAcceptance": false,
+    "automatedEvidenceEstablishesScreenReaderAcceptance": false,
+    "automatedEvidenceEstablishesAssistiveTechnologyAcceptance": false,
+    "automatedEvidenceEstablishesPhysicalDeviceAcceptance": false,
+    "automatedEvidenceEstablishesNativePlatformParity": false,
+    "automatedEvidenceEstablishesProductionPerformanceAcceptance": false
+  },
+  "implementation": {
+    "runtime": "js/glaze-v1.3-accessibility.candidate.mjs",
+    "tests": "tests/glaze-v1.3-accessibility.test.mjs",
+    "validator": "scripts/validate_glaze_v1_3_accessibility.py",
+    "workflow": ".github/workflows/glaze-v1.3-accessibility.yml"
+  },
+  "evidenceBoundary": {
+    "establishedByThisWorkstreamWhenValidated": [
+      "canonical-resolution-order-conformance",
+      "automated-preference-precedence",
+      "automated-target-floor-policy",
+      "automated-200-percent-reflow-policy",
+      "automated-non-color-semantic-guardrails",
+      "automated-focus-and-rtl-logical-order-guardrails",
+      "automated-accessibility-recomposition-continuity",
+      "automated-material-motion-color-accessibility-precedence"
+    ],
+    "notEstablished": [
+      "human-accessibility-acceptance",
+      "human-optical-accessibility-acceptance",
+      "manual-interaction-acceptance",
+      "screen-reader-acceptance",
+      "talkback-acceptance",
+      "voiceover-acceptance",
+      "orca-acceptance",
+      "switch-control-acceptance",
+      "voice-access-acceptance",
+      "physical-device-accessibility-acceptance",
+      "oem-accessibility-service-interoperability",
+      "complete-native-platform-accessibility-parity",
+      "production-performance-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

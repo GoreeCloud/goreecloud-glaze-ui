@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en" data-glaze-v1-3-reference="proposed" data-glaze-version="1.1" data-glaze-upgrade="v1.2-frosted-neutral" data-glz-appearance="light" data-glz-layout-class="expanded">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GLAZE UI V1.3 — Signature Components and Reference Suite</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.2.0.css">
+  <style>
+    *{box-sizing:border-box}
+    :root{color-scheme:light dark}
+    body{
+      margin:0;
+      min-height:100vh;
+      padding:clamp(20px,4vw,48px);
+      color:var(--glz1-text-primary,#111318);
+      background:
+        radial-gradient(circle at 14% -8%,color-mix(in srgb,var(--glz1-focus,#6d6afc) 11%,transparent),transparent 34rem),
+        radial-gradient(circle at 92% 8%,color-mix(in srgb,var(--glz1-text-primary,#111318) 4%,transparent),transparent 30rem),
+        var(--glz1-canvas,#f6f7f9);
+      font:16px/1.5 system-ui,sans-serif;
+      overflow-x:hidden
+    }
+    main{max-inline-size:1180px;margin:auto;display:grid;gap:clamp(44px,6vw,72px)}
+    header,section{min-inline-size:0}
+    .reference-header{display:grid;gap:18px;max-inline-size:78rem}
+    .reference-kicker{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0;color:var(--glz1-text-secondary,#5d626c);font-size:.875rem;font-weight:650;letter-spacing:.01em}
+    .reference-badge{display:inline-flex;align-items:center;min-block-size:30px;padding-inline:11px;border:1px solid var(--glz1-line,#d4d7dd);border-radius:999px;background:color-mix(in srgb,var(--glz1-raised,#fff) 82%,transparent);box-shadow:0 1px 0 color-mix(in srgb,var(--glz1-text-primary,#111318) 5%,transparent)}
+    h1,h2,h3,h4,p{margin:0}
+    h1{max-inline-size:24ch;font-size:clamp(2rem,4vw,3.65rem);line-height:1.02;letter-spacing:-.045em;text-wrap:balance}
+    h2{font-size:clamp(1.45rem,2vw,1.9rem);line-height:1.12;letter-spacing:-.025em}
+    h3{font-size:1rem;line-height:1.2}
+    .reference-lede{max-inline-size:74ch;color:var(--glz1-text-secondary,#5d626c);font-size:clamp(1rem,1.2vw,1.1rem)}
+    .reference-section{display:grid;gap:22px}
+    .section-heading{display:flex;align-items:end;justify-content:space-between;gap:18px}
+    .section-heading p{max-inline-size:54ch;color:var(--glz1-text-secondary,#5d626c);font-size:.9rem;text-align:end}
+    .component-gallery{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:18px}
+    .component-specimen{
+      grid-column:span 6;
+      min-inline-size:0;
+      display:grid;
+      align-content:start;
+      gap:15px;
+      padding:20px;
+      border:1px solid color-mix(in srgb,var(--glz1-line,#d4d7dd) 88%,transparent);
+      border-radius:28px;
+      background:color-mix(in srgb,var(--glz1-raised,#fff) 78%,transparent);
+      box-shadow:0 18px 55px color-mix(in srgb,var(--glz1-text-primary,#111318) 6%,transparent),inset 0 1px color-mix(in srgb,#fff 72%,transparent);
+      backdrop-filter:blur(18px) saturate(1.06);
+      -webkit-backdrop-filter:blur(18px) saturate(1.06)
+    }
+    .component-specimen[data-signature-component="GlzUniversalSearch"]{grid-column:span 12}
+    .specimen-head{display:flex;align-items:start;justify-content:space-between;gap:14px}
+    .specimen-copy{display:grid;gap:3px;min-inline-size:0}
+    .specimen-copy p{color:var(--glz1-text-secondary,#5d626c);font-size:.82rem}
+    .specimen-index{font:700 .74rem/1 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--glz1-text-tertiary,#767c86);letter-spacing:.04em}
+    .specimen-stage{
+      min-block-size:182px;
+      min-inline-size:0;
+      display:grid;
+      align-items:center;
+      padding:clamp(18px,3vw,30px);
+      overflow:hidden;
+      border:1px solid color-mix(in srgb,var(--glz1-line,#d4d7dd) 72%,transparent);
+      border-radius:22px;
+      background:
+        linear-gradient(145deg,color-mix(in srgb,var(--glz1-base,#fff) 94%,transparent),color-mix(in srgb,var(--glz1-raised,#fff) 72%,transparent));
+      box-shadow:inset 0 1px color-mix(in srgb,#fff 82%,transparent)
+    }
+    .specimen-stage>*{min-inline-size:0}
+    .specimen-stage--rail{place-items:center}
+    .specimen-stage--search{display:grid;align-content:center;gap:10px}
+    .specimen-meta,.scene-meta{display:block;color:var(--glz1-text-secondary,#5d626c);font:600 .78rem/1.45 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}
+    .glz1-capsule{inline-size:min(100%,31rem)}
+    .glz1-capsule .glz1-advanced-button{flex:0 0 auto}
+    .glz1-morph-card{inline-size:min(100%,33rem)}
+    .glz1-morph-copy>strong{font-size:1rem;line-height:1.25}
+    .glz1-morph-copy>span{margin-block-start:4px;font-size:.84rem;line-height:1.4}
+    .glz1-smart-rail{margin:auto}
+    .glz1-aurora{min-block-size:124px;display:grid;align-content:center}
+    .search-scope{color:var(--glz1-text-secondary,#5d626c);font-size:.78rem;font-weight:700;letter-spacing:.01em}
+    .glz1-universal-search{inline-size:100%;max-inline-size:54rem;margin:auto}
+    .glz1-search-entry input{inline-size:100%}
+    .scene-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .reference-scene{
+      min-inline-size:0;
+      display:grid;
+      grid-template-columns:minmax(0,1.25fr) minmax(180px,.75fr);
+      gap:18px;
+      align-items:stretch;
+      padding:18px;
+      border-block-start:1px solid var(--glz1-line,#d4d7dd)
+    }
+    .scene-preview{
+      min-block-size:190px;
+      min-inline-size:0;
+      display:grid;
+      gap:8px;
+      padding:10px;
+      border:1px solid color-mix(in srgb,var(--glz1-line,#d4d7dd) 86%,transparent);
+      border-radius:24px;
+      background:color-mix(in srgb,var(--glz1-base,#fff) 92%,transparent);
+      box-shadow:0 14px 38px color-mix(in srgb,var(--glz1-text-primary,#111318) 5%,transparent),inset 0 1px color-mix(in srgb,#fff 80%,transparent)
+    }
+    .preview-pane{min-inline-size:0;border-radius:14px;background:var(--glz1-raised,#fff);border:1px solid color-mix(in srgb,var(--glz1-line,#d4d7dd) 78%,transparent);position:relative;overflow:hidden}
+    .preview-pane::before{content:"";position:absolute;inset:12px auto auto 12px;inline-size:42%;block-size:7px;border-radius:999px;background:color-mix(in srgb,var(--glz1-text-primary,#111318) 16%,transparent);box-shadow:0 16px 0 color-mix(in srgb,var(--glz1-text-primary,#111318) 8%,transparent),0 32px 0 color-mix(in srgb,var(--glz1-text-primary,#111318) 8%,transparent)}
+    .scene-preview[data-layout="single"]{grid-template-columns:1fr}
+    .scene-preview[data-layout="dual"]{grid-template-columns:.34fr 1fr}
+    .scene-preview[data-layout="triple"]{grid-template-columns:.3fr 1fr .42fr}
+    .scene-preview[data-layout="inspector"]{grid-template-columns:1fr .44fr}
+    .scene-preview[data-layout="search"] .preview-pane::after{content:"";position:absolute;inset:56px 12px auto;block-size:42px;border-radius:999px;border:1px solid var(--glz1-line,#d4d7dd);background:color-mix(in srgb,var(--glz1-overlay-bg,#fff) 88%,transparent)}
+    .scene-preview[data-layout="form"] .preview-pane::after{content:"";position:absolute;inset:54px 12px auto;block-size:18px;border-radius:7px;border:1px solid var(--glz1-line,#d4d7dd);box-shadow:0 30px 0 -1px var(--glz1-base,#fff),0 30px 0 0 var(--glz1-line,#d4d7dd),0 60px 0 -1px var(--glz1-base,#fff),0 60px 0 0 var(--glz1-line,#d4d7dd)}
+    .scene-preview[data-layout="media"] .preview-pane{background:linear-gradient(145deg,color-mix(in srgb,var(--glz1-text-primary,#111318) 92%,#000),color-mix(in srgb,var(--glz1-text-primary,#111318) 72%,#000))}
+    .scene-preview[data-layout="media"] .preview-pane::before{background:color-mix(in srgb,#fff 52%,transparent);box-shadow:0 16px 0 color-mix(in srgb,#fff 18%,transparent)}
+    .scene-copy{display:grid;align-content:center;gap:9px;min-inline-size:0}
+    .scene-copy p{color:var(--glz1-text-secondary,#5d626c);font-size:.9rem}
+    .reference-status{margin:0;padding-block-start:4px;color:var(--glz1-text-secondary,#5d626c);font-size:.84rem}
+    .glyph{font-weight:800;line-height:1}
+    @media(max-width:900px){.component-specimen,.component-specimen[data-signature-component="GlzUniversalSearch"]{grid-column:span 12}.scene-gallery{grid-template-columns:1fr}.reference-scene{grid-template-columns:minmax(0,1.15fr) minmax(170px,.85fr)}}
+    @media(max-width:620px){body{padding:16px}main{gap:42px}.section-heading{align-items:start;flex-direction:column}.section-heading p{text-align:start}.component-specimen{padding:16px;border-radius:24px}.specimen-stage{min-block-size:160px;padding:16px}.reference-scene{grid-template-columns:1fr;padding-inline:0}.scene-preview{min-block-size:170px}.glz1-capsule{align-items:flex-start;flex-wrap:wrap;border-radius:24px}.glz1-capsule .glz1-advanced-button{inline-size:100%}}
+    @media(prefers-reduced-transparency:reduce){.component-specimen{background:var(--glz1-raised,#fff);backdrop-filter:none;-webkit-backdrop-filter:none}.specimen-stage{background:var(--glz1-base,#fff)}}
+    @media(forced-colors:active){body{background:Canvas;color:CanvasText}.component-specimen,.specimen-stage,.scene-preview,.preview-pane{background:Canvas;color:CanvasText;border-color:CanvasText;box-shadow:none}.preview-pane::before,.scene-preview[data-layout="search"] .preview-pane::after,.scene-preview[data-layout="form"] .preview-pane::after{forced-color-adjust:auto}}
+  </style>
+</head>
+<body>
+<main>
+  <header class="reference-header">
+    <p class="reference-kicker"><span class="reference-badge">Development reference</span><span>V1.2 / 1.2.0 remains Stable</span></p>
+    <h1>GLAZE UI V1.3 — Signature Components + Composition Reference Suite</h1>
+    <p class="reference-lede">A governed visual reference for Adaptive Resonance composition. It demonstrates inherited component identity and V1.3 composition behavior without defining new token, material, semantic, lifecycle, native-platform, or consumer authority.</p>
+  </header>
+
+  <section class="reference-section" aria-labelledby="components-title">
+    <div class="section-heading"><h2 id="components-title">Canonical Signature components</h2><p>Five inherited identities, composed as V1.3 reference specimens rather than flattened generic controls.</p></div>
+    <div class="component-gallery">
+      <article class="component-specimen" data-signature-component="GlzCapsule">
+        <div class="specimen-head"><div class="specimen-copy"><h3>GlzCapsule</h3><p>Compact expandable status or action chrome.</p></div><span class="specimen-index">01</span></div>
+        <div class="specimen-stage">
+          <div class="glz1-capsule" data-expanded="false">
+            <div class="glz1-capsule-main"><span class="glz1-capsule-symbol glyph" aria-hidden="true">↻</span><span class="glz1-capsule-copy"><strong>Sync details</strong><span>All services current</span></span></div>
+            <button class="glz1-advanced-button" type="button" aria-label="Open sync details">Open</button>
+          </div>
+        </div>
+        <output class="specimen-meta"></output>
+      </article>
+
+      <article class="component-specimen" data-signature-component="GlzMorphCard">
+        <div class="specimen-head"><div class="specimen-copy"><h3>GlzMorphCard</h3><p>Durable content with state-preserving expansion.</p></div><span class="specimen-index">02</span></div>
+        <div class="specimen-stage">
+          <button class="glz1-morph-card" type="button" aria-expanded="false">
+            <span class="glz1-morph-media" aria-hidden="true">◇</span>
+            <span class="glz1-morph-copy"><strong>Project brief</strong><span>Adaptive Resonance · review-ready draft</span></span>
+            <span class="glz1-morph-detail">Durable reading remains solid and semantically stable.</span>
+          </button>
+        </div>
+        <output class="specimen-meta"></output>
+      </article>
+
+      <article class="component-specimen" data-signature-component="GlzSmartRail">
+        <div class="specimen-head"><div class="specimen-copy"><h3>GlzSmartRail</h3><p>Primary navigation with current state distinct from focus.</p></div><span class="specimen-index">03</span></div>
+        <div class="specimen-stage specimen-stage--rail">
+          <nav class="glz1-smart-rail" aria-label="Reference destinations">
+            <div class="glz1-rail-zone">
+              <button class="glz1-rail-item" type="button" aria-current="page"><span class="glyph" aria-hidden="true">⌂</span><span class="glz1-rail-label">Home</span></button>
+              <button class="glz1-rail-item" type="button"><span class="glyph" aria-hidden="true">▣</span><span class="glz1-rail-label">Files</span></button>
+              <button class="glz1-rail-item" type="button"><span class="glyph" aria-hidden="true">⚙</span><span class="glz1-rail-label">Settings</span></button>
+            </div>
+          </nav>
+        </div>
+        <output class="specimen-meta"></output>
+      </article>
+
+      <article class="component-specimen" data-signature-component="GlzAuroraSurface">
+        <div class="specimen-head"><div class="specimen-copy"><h3>GlzAuroraSurface</h3><p>Atmosphere stays decorative and subordinate to meaning.</p></div><span class="specimen-index">04</span></div>
+        <div class="specimen-stage">
+          <div class="glz1-aurora" data-intensity="hero"><span class="glz1-generated-id">Atmospheric substrate</span><h4>Content remains primary</h4><p>Meaning survives when transparency, blur, and atmospheric effects are removed.</p></div>
+        </div>
+        <output class="specimen-meta"></output>
+      </article>
+
+      <article class="component-specimen" data-signature-component="GlzUniversalSearch">
+        <div class="specimen-head"><div class="specimen-copy"><h3>GlzUniversalSearch</h3><p>Scope-visible universal search entry with durable result semantics.</p></div><span class="specimen-index">05</span></div>
+        <div class="specimen-stage specimen-stage--search">
+          <span class="search-scope">Search scope · All GoreeCloud</span>
+          <div class="glz1-universal-search" data-open="false">
+            <div class="glz1-search-entry"><span class="glyph" aria-hidden="true">⌕</span><input type="search" aria-label="Search All GoreeCloud" placeholder="Search apps, files, settings, and people"><span class="glz1-search-shortcut">⌘ K</span></div>
+          </div>
+        </div>
+        <output class="specimen-meta"></output>
+      </article>
+    </div>
+  </section>
+
+  <section class="reference-section" aria-labelledby="scenes-title">
+    <div class="section-heading"><h2 id="scenes-title">Canonical composition scenes</h2><p>Miniature structural previews make pane hierarchy and task-value differences visible without creating new composition authority.</p></div>
+    <div class="scene-gallery">
+      <article class="reference-scene" data-reference-scene="home-dashboard"><div class="scene-preview" data-layout="dual" aria-hidden="true"><span class="preview-pane"></span><span class="preview-pane"></span></div><div class="scene-copy"><h3>Home dashboard</h3><p>Primary state and critical exceptions first.</p><output class="scene-meta"></output></div></article>
+      <article class="reference-scene" data-reference-scene="data-heavy-administration"><div class="scene-preview" data-layout="triple" aria-hidden="true"><span class="preview-pane"></span><span class="preview-pane"></span><span class="preview-pane"></span></div><div class="scene-copy"><h3>Data-heavy administration</h3><p>Durable data plane with task-valued supporting regions.</p><output class="scene-meta"></output></div></article>
+      <article class="reference-scene" data-reference-scene="settings"><div class="scene-preview" data-layout="dual" aria-hidden="true"><span class="preview-pane"></span><span class="preview-pane"></span></div><div class="scene-copy"><h3>Settings</h3><p>Scanable structure and separated high-risk controls.</p><output class="scene-meta"></output></div></article>
+      <article class="reference-scene" data-reference-scene="file-browser"><div class="scene-preview" data-layout="inspector" aria-hidden="true"><span class="preview-pane"></span><span class="preview-pane"></span></div><div class="scene-copy"><h3>File browser</h3><p>Primary list with subordinate inspector when task-valued.</p><output class="scene-meta"></output></div></article>
+      <article class="reference-scene" data-reference-scene="search"><div class="scene-preview" data-layout="search" aria-hidden="true"><span class="preview-pane"></span></div><div class="scene-copy"><h3>Search</h3><p>Search scope visible; results remain durable.</p><output class="scene-meta"></output></div></article>
+      <article class="reference-scene" data-reference-scene="form"><div class="scene-preview" data-layout="form" aria-hidden="true"><span class="preview-pane"></span></div><div class="scene-copy"><h3>Form</h3><p>Readable rhythm and explicit save-state clarity.</p><output class="scene-meta"></output></div></article>
+      <article class="reference-scene" data-reference-scene="detail-inspector"><div class="scene-preview" data-layout="inspector" aria-hidden="true"><span class="preview-pane"></span><span class="preview-pane"></span></div><div class="scene-copy"><h3>Detail inspector</h3><p>Inspector remains subordinate and may collapse.</p><output class="scene-meta"></output></div></article>
+      <article class="reference-scene" data-reference-scene="media"><div class="scene-preview" data-layout="media" aria-hidden="true"><span class="preview-pane"></span></div><div class="scene-copy"><h3>Media</h3><p>Content dominates while controls remain reachable.</p><output class="scene-meta"></output></div></article>
+    </div>
+  </section>
+  <p id="reference-status" class="reference-status" role="status" aria-live="polite"></p>
+</main>
+<script type="module">
+  import {resolveSignatureComponent,resolveReferenceScene} from "../../js/glaze-v1.3-component-experience.candidate.mjs";
+  const environment = "expanded";
+  for (const host of document.querySelectorAll("[data-signature-component]")) {
+    const result = resolveSignatureComponent(host.dataset.signatureComponent,{environment,destinationCount:3});
+    host.dataset.resolvedEnvironment = result.environment;
+    host.querySelector("output").textContent = `${result.presentation.presentation} · ${result.minimumInteractiveTargetPx}px minimum target`;
+  }
+  for (const host of document.querySelectorAll("[data-reference-scene]")) {
+    const result = resolveReferenceScene(host.dataset.referenceScene,{environment});
+    host.dataset.resolvedComposition = result.pane.composition;
+    host.querySelector("output").textContent = `${result.pane.composition} · ${result.primaryTask}`;
+  }
+  document.querySelector("#reference-status").textContent = "V1.3 reference resolver initialized without lifecycle promotion.";
+</script>
+</body>
+</html>

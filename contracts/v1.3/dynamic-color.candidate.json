@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.dynamic-color.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "created": "2026-09-06",
+  "workstream": "adaptive-dynamic-color",
+  "architecture": "contracts/v1.3/adaptive-resonance.candidate.json",
+  "tokenAuthority": "tokens/glaze-v1.3-color.candidate.json",
+  "runtime": "js/glaze-v1.3-dynamic-color.candidate.mjs",
+  "tests": "tests/glaze-v1.3-dynamic-color.test.mjs",
+  "semanticAuthority": "tokens/semantic-colors.json",
+  "neutralOpticalBaseline": "tokens/glaze-v1.2-optical-foundation.candidate.json",
+  "legacyAdaptiveColorFileIsCurrentStableAuthority": false,
+  "legacyAdaptiveColorFile": "tokens/adaptive-colors.json",
+  "authorities": [
+    "neutral-material-palette",
+    "user-accent-palette",
+    "product-identity-palette",
+    "semantic-palette",
+    "context-palette"
+  ],
+  "precedence": [
+    "accessibility",
+    "semantic",
+    "product-identity",
+    "user-accent",
+    "context-accent",
+    "default-glaze-accent"
+  ],
+  "implementationDecision": {
+    "perceptualModel": "OKLCH",
+    "reason": "The governed V1.3 proposal requires perceptually coherent hue/chroma/tone derivation and post-derivation contrast validation but does not mandate a specific color model. This implementation uses OKLCH as a deterministic dependency-free web/runtime choice.",
+    "naiveRgbTransformationIsAuthority": false,
+    "gamutStrategy": "iteratively reduce OKLCH chroma until the converted sRGB color is in gamut, then serialize as sRGB hex",
+    "fallbackSeed": "#68AEE0",
+    "fallbackSeedAuthority": "V1.2 optical clearSkyBlue reference; default presentation fallback only, not protected semantic truth"
+  },
+  "userAccentFamily": [
+    "primary",
+    "secondary",
+    "tertiary",
+    "subtle-container",
+    "high-emphasis-container",
+    "on-accent",
+    "focus",
+    "selection"
+  ],
+  "appearanceModes": [
+    "light",
+    "dark",
+    "deep-dark"
+  ],
+  "appearanceBaselines": {
+    "lightCanvas": "#F4F8FA",
+    "darkCanvas": "#151C22",
+    "deepDarkCanvas": "#070C11"
+  },
+  "contrast": {
+    "onAccentMinimumRatio": 4.5,
+    "focusAgainstCanvasMinimumRatio": 3.0,
+    "validateAfterDerivation": true,
+    "contrastFailureMayBeRepairedByToneAdjustment": true,
+    "semanticMeaningMayBeChangedToRepairContrast": false
+  },
+  "contextPalette": {
+    "localSummaryInputOnly": true,
+    "networkUploadRequired": false,
+    "telemetryAuthorized": false,
+    "maximumChroma": 0.1,
+    "allowedRoles": [
+      "accent",
+      "progress",
+      "control",
+      "live-glaze",
+      "local-highlight"
+    ],
+    "forbiddenRoles": [
+      "success",
+      "information",
+      "warning",
+      "danger",
+      "protected",
+      "restricted",
+      "online",
+      "offline",
+      "syncing",
+      "unavailable",
+      "consequential-dialog",
+      "security-status",
+      "privacy-status"
+    ]
+  },
+  "semanticProtection": {
+    "producerTruthRemainsAuthoritative": true,
+    "personalizationMayRedefineSemanticRoles": false,
+    "productIdentityMayRedefineSemanticRoles": false,
+    "contextMayRedefineSemanticRoles": false,
+    "colorOnlyStateCommunicationAllowed": false
+  },
+  "productIdentity": {
+    "preservedThroughPersonalization": true,
+    "rule": "Personalization surrounds identity; it does not replace identity.",
+    "userAccentMayEraseProductIdentity": false,
+    "contextAccentMayEraseProductIdentity": false
+  },
+  "localFirst": {
+    "sourceAcquisitionAuthority": "consumer-platform-adapter",
+    "directImageUploadRequired": false,
+    "directWallpaperPixelAcquisitionAuthority": false,
+    "invalidOrMissingInputFallsBack": true,
+    "completeDefaultThemeRequired": true,
+    "networkDependency": false
+  },
+  "runtimeExports": [
+    "DEFAULT_GLAZE_ACCENT",
+    "COLOR_AUTHORITY_PRECEDENCE",
+    "deriveAccentPalette",
+    "deriveContextAccent",
+    "resolveColorValue",
+    "contrastRatio",
+    "normalizeAccentSeed"
+  ],
+  "notEstablished": [
+    "native-platform-color-adapters",
+    "cross-device-personalization-sync",
+    "product-identity-registry-integration",
+    "consumer-adoption",
+    "rendered-visual-acceptance",
+    "v1.3-release-candidate",
+    "v1.3-stable"
+  ]
+}

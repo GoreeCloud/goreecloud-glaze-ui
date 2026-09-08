@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.shape.tokens.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "namespace": "shape",
+  "semanticTokens": {
+    "shape.quiet": {"implementation": "quietRadius", "meaning": "calm high-density geometry"},
+    "shape.soft": {"implementation": "softRadius", "meaning": "standard structural surface geometry"},
+    "shape.rounded": {"implementation": "roundedRadius", "meaning": "visually distinct interactive geometry"},
+    "shape.container": {"implementation": "containerRadius", "meaning": "general semantic container geometry"},
+    "shape.containerInner": {"implementation": "containerInnerRadius", "meaning": "concentric child geometry within a container"},
+    "shape.control": {"implementation": "controlRadius", "meaning": "standard interactive control geometry"},
+    "shape.controlInset": {"implementation": "controlInsetRadius", "meaning": "concentric inset geometry for control internals"},
+    "shape.overlay": {"implementation": "overlayRadius", "meaning": "overlay, sheet, or elevated transient geometry"},
+    "shape.overlayInner": {"implementation": "overlayInnerRadius", "meaning": "concentric child geometry within an overlay"},
+    "shape.capsule": {"implementation": "pillRadius", "meaning": "full capsule geometry for compact continuous controls"},
+    "shape.expressive": {"implementation": "expressiveLibrary", "meaning": "bounded high-value expressive geometry"},
+    "shape.hero": {"implementation": "heroLibrary", "meaning": "rare signature geometry"},
+    "shape.morphable": {"implementation": "morphableRules", "meaning": "compatible semantic transitions between shape roles"}
+  },
+  "implementationValues": {
+    "quietRadius": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/compact", "mode": "inherited-alias"},
+    "softRadius": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/surface", "mode": "inherited-alias"},
+    "roundedRadius": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/panel", "mode": "inherited-alias"},
+    "containerRadius": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/surface", "mode": "inherited-alias"},
+    "containerInnerRadius": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/control", "mode": "initial-inherited-alias", "requiresOpticalCalibration": true},
+    "controlRadius": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/control", "mode": "inherited-alias"},
+    "controlInsetRadius": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/compact", "mode": "initial-inherited-alias", "requiresOpticalCalibration": true},
+    "overlayRadius": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/sheet", "mode": "inherited-alias"},
+    "overlayInnerRadius": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/panel", "mode": "initial-inherited-alias", "requiresOpticalCalibration": true},
+    "pillRadius": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/pill", "mode": "inherited-alias"},
+    "expressiveLibrary": {"source": "contracts/v1.3/expressive-shape.candidate.json", "pointer": "/expressiveLibrary", "mode": "v1.3-governed-profile-library"},
+    "heroLibrary": {"source": "contracts/v1.3/expressive-shape.candidate.json", "pointer": "/heroLibrary", "mode": "v1.3-governed-profile-library"},
+    "morphableRules": {"source": "contracts/v1.3/expressive-shape.candidate.json", "pointer": "/morphCompatibility", "mode": "v1.3-governed-morph-contract"}
+  },
+  "concentricity": {
+    "required": true,
+    "inputs": ["parent-radius", "child-inset", "optical-correction", "platform-rendering"],
+    "referenceFormula": "max(0, parentRadius - childInset + opticalCorrection)",
+    "applicationsShouldHandSelectUnrelatedRadii": false
+  },
+  "runtimeAuthority": "js/glaze-v1.3-shape.candidate.mjs",
+  "rules": {
+    "shapeReinforcesHierarchyOrIdentity": true,
+    "expressiveShapeIsDefaultForAllControls": false,
+    "heroShapeMustRemainRare": true,
+    "morphingMustPreserveSemanticMeaning": true,
+    "continuousDecorativeMorphingAllowed": false,
+    "shapeMayBeOnlyStateSignal": false,
+    "semanticTokensMayContainRawRadiusValues": false
+  },
+  "notEstablished": [
+    "human-optical-shape-acceptance",
+    "platform-optical-correction-values",
+    "physical-device-shape-rendering-acceptance",
+    "product-specific-shape-extension-acceptance"
+  ]
+}

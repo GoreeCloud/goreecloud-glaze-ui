@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.adaptive-resonance.architecture.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "created": "2026-09-06",
+  "purpose": "Define the V1.3 semantic token architecture and ownership boundary without activating the V1.3 release lifecycle Candidate state or replacing V1.2 Stable authority.",
+  "masterStatement": "Personal to the user. Reachable by design. Alive through interaction.",
+  "materialRules": [
+    "Neutral glass is the material. Color is an accent.",
+    "Solid where users read or make explicit critical decisions. Glazed where users interact with transient navigation, command, search, control, or feedback chrome."
+  ],
+  "principles": {
+    "semanticTokensBeforeImplementationValues": true,
+    "semanticAndImplementationLayersMustRemainDistinct": true,
+    "oneOwnerPerTokenNamespace": true,
+    "accessibilityOutranksExpression": true,
+    "semanticTruthCannotBePersonalizedAway": true,
+    "productIdentityCannotBeErasedByUserPersonalization": true,
+    "effectsDegradeBeforeCorrectness": true,
+    "v1_2CompatibilityRemainsValidUntilExplicitAdoption": true,
+    "candidateFilenameDoesNotActivateReleaseCandidate": true
+  },
+  "semanticNamespaces": [
+    "color",
+    "material",
+    "shape",
+    "typography",
+    "motion",
+    "layout",
+    "navigation",
+    "state",
+    "accessibility",
+    "personalization",
+    "platform"
+  ],
+  "tokenOwners": {
+    "color": {"status": "v1.3-architecture-established", "owner": "tokens/glaze-v1.3-color.candidate.json"},
+    "material": {"status": "v1.3-architecture-established", "owner": "tokens/glaze-v1.3-material.candidate.json"},
+    "shape": {"status": "v1.3-architecture-established", "owner": "tokens/glaze-v1.3-shape.candidate.json"},
+    "typography": {"status": "v1.3-architecture-established", "owner": "tokens/glaze-v1.3-type.candidate.json"},
+    "motion": {"status": "v1.3-architecture-established", "owner": "tokens/glaze-v1.3-motion.candidate.json"},
+    "layout": {"status": "v1.3-architecture-established", "owner": "tokens/glaze-v1.3-layout.candidate.json"},
+    "navigation": {"status": "deferred-to-workstream", "plannedOwner": "contracts/v1.3/adaptive-navigation.candidate.json", "ownerWorkstream": "adaptive-navigation"},
+    "state": {"status": "inherited-until-v1.3-component-experience", "owner": "tokens/glaze-v1.2-states.candidate.json", "ownerWorkstream": "signature-components-and-reference-suite"},
+    "accessibility": {"status": "cross-cutting-inherited-and-deferred", "ownerWorkstream": "accessibility-and-resilience", "rule": "accessibility precedence applies immediately even before a dedicated V1.3 contract exists"},
+    "personalization": {"status": "deferred-to-workstream", "plannedOwner": "contracts/v1.3/personalization.candidate.json", "ownerWorkstream": "personalization"},
+    "platform": {"status": "inherited-until-form-factor-workstream", "owner": "tokens/glaze-v1.2-form-factor.candidate.json", "ownerWorkstream": "multi-pane-foldable-desktop"}
+  },
+  "layerContract": {
+    "semanticTokens": {
+      "role": "Stable semantic names consumed by components and application composition.",
+      "mayContainRawPlatformValues": false,
+      "mayRedefineSemanticTruthPerTheme": false
+    },
+    "implementationValues": {
+      "role": "Owned concrete values, inherited aliases, platform mappings, or bounded implementation primitives.",
+      "mayBePlatformAdapted": true,
+      "mustPreserveSemanticMeaning": true
+    },
+    "componentBindings": {
+      "role": "Map component states to semantic tokens; later workstreams may enrich coordinated material/color/shape/type/motion response.",
+      "mayBypassSemanticTokens": false
+    }
+  },
+  "profileAxes": {
+    "clarity": {
+      "source": "V1.2 Stable",
+      "values": ["clear", "balanced", "dense"],
+      "default": "balanced",
+      "meaning": "material transparency and optical density"
+    },
+    "expression": {
+      "source": "V1.3 Proposed",
+      "values": ["calm", "balanced", "expressive"],
+      "default": "balanced",
+      "meaning": "bounded visual expression"
+    },
+    "independent": true,
+    "accessibilityOverridesBoth": true
+  },
+  "authorityPrecedence": [
+    "accessibility",
+    "semantic-truth",
+    "product-identity",
+    "user-personalization",
+    "context",
+    "expression-profile",
+    "implementation-fallback"
+  ],
+  "compatibility": {
+    "level1": "V1.2 applications continue unchanged until they explicitly adopt V1.3 capabilities.",
+    "stableEntrypointsRemainAuthoritative": [
+      "css/glaze-v1.2.0.css",
+      "js/glaze-v1.2.0.mjs"
+    ],
+    "versionFileRemains": "1.2.0",
+    "consumerMigrationAutomatic": false
+  },
+  "architectureArtifacts": [
+    "tokens/glaze-v1.3-color.candidate.json",
+    "tokens/glaze-v1.3-material.candidate.json",
+    "tokens/glaze-v1.3-shape.candidate.json",
+    "tokens/glaze-v1.3-type.candidate.json",
+    "tokens/glaze-v1.3-motion.candidate.json",
+    "tokens/glaze-v1.3-layout.candidate.json"
+  ],
+  "notEstablishedByThisArtifact": [
+    "dynamic-color-generation-algorithm",
+    "context-palette-runtime",
+    "expressive-shape-morphology-runtime",
+    "variable-font-axis-runtime",
+    "living-material-2-runtime",
+    "reachability-runtime",
+    "adaptive-navigation-runtime",
+    "multi-pane-runtime",
+    "motion-semantics-runtime",
+    "personalization-platform-adapters",
+    "v1.3-candidate-lifecycle-activation",
+    "v1.3-rc",
+    "v1.3-stable",
+    "consumer-conformance",
+    "production-qualification"
+  ]
+}

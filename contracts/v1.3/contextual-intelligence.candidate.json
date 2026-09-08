@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.contextual-intelligence.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "extends": [
+    "contracts/v1.2/intelligence-components.candidate.json",
+    "contracts/v1.2/context-continuity.candidate.json",
+    "contracts/v1.3/dynamic-color.candidate.json",
+    "contracts/v1.3/adaptive-navigation.candidate.json"
+  ],
+  "purpose": "Define bounded context-aware intelligence presentation that may improve optional suggestion relevance and contextual emphasis while remaining explicitly subordinate to semantic truth, user intent, primary navigation stability, accessibility, provenance, and consequential-action confirmation.",
+  "contextSnapshot": {
+    "authority": "consumer-or-platform-adapter",
+    "allowedSignalFamilies": [
+      "current-task",
+      "current-destination",
+      "selected-object-kind",
+      "available-source-kind",
+      "interaction-mode",
+      "local-environment-summary",
+      "producer-declared-state"
+    ],
+    "rawPrivateActivityRequired": false,
+    "rawContentRequired": false,
+    "networkAcquisitionRequired": false,
+    "telemetryAuthorized": false,
+    "runtimePersistenceAuthorized": false,
+    "missingContextFallback": "context-neutral-presentation"
+  },
+  "presentationRoles": {
+    "suggestion": {"labelRequired": true, "ignorableWhereAppropriate": true, "dismissibleWhereAppropriate": true},
+    "answer": {"generatedContentLabelRequired": true, "sourceSeparationRequired": true, "uncertaintyWhenApplicable": true},
+    "summary": {"scanFirst": true, "sourceAccessWhereApplicable": true},
+    "action": {"effectDescriptionRequired": true, "dataUseDescriptionRequired": true, "stateChangeDescriptionRequired": true},
+    "source": {"sourceIdentityRequired": true, "availabilityRequired": true}
+  },
+  "ranking": {
+    "appliesTo": "optional-contextual-suggestions-only",
+    "producerProvidedStableSuggestionIdRequired": true,
+    "producerProvidedRelevanceMayBeConsumed": true,
+    "runtimeMayInventRelevanceFromPrivateActivity": false,
+    "stableTieBreak": "original-order",
+    "mayReorderPrimaryNavigation": false,
+    "mayReorderRequiredSafetyActions": false,
+    "mayHideRequiredSystemTruth": false,
+    "mayPromoteSuggestionToSystemTruth": false,
+    "dismissedSuggestionRemovedFromActiveFlow": true
+  },
+  "actionSafety": {
+    "automaticConsequentialExecutionAllowed": false,
+    "consequentialActionRequiresExplicitConfirmation": true,
+    "destructiveActionRequiresExplicitConfirmation": true,
+    "authenticationRecoveryPrivacySecurityActionsRemainProducerAuthoritative": true,
+    "suggestionMayBeSoleAuthorityForConsequentialDecision": false,
+    "generatedResultMayBePresentedAsVerifiedSystemTruth": false
+  },
+  "dynamicColorBoundary": {
+    "contextPaletteMayBeConsumed": true,
+    "contextColorAuthorityRank": "below-user-accent-and-product-identity-and-semantic",
+    "contextMayRedefineSemanticColor": false,
+    "contextMayEraseProductIdentity": false,
+    "contextColorMayBeOnlySuggestionSignal": false,
+    "allowedContextColorRoles": ["accent", "progress", "control", "live-glaze", "local-highlight"]
+  },
+  "navigationBoundary": {
+    "adaptiveNavigationOwnsPrimaryDestinationModel": true,
+    "contextMayReorderPrimaryDestinations": false,
+    "contextMayInventPrimaryDestination": false,
+    "contextMayChangeCurrentDestinationIdentity": false,
+    "optionalSuggestionPlacementMayAdapt": true
+  },
+  "continuity": {
+    "preserve": [
+      "current-task",
+      "current-destination",
+      "selection",
+      "filter-state",
+      "draft-state",
+      "typed-input",
+      "unsaved-work",
+      "media-state",
+      "focus-restoration-where-practical",
+      "scroll-context-where-practical"
+    ],
+    "contextRefreshMayResetTaskState": false,
+    "contextLossMayResetTaskState": false,
+    "contextChangeRequiresPageReload": false,
+    "securityOrPrivacyPolicyMayProhibitRestoration": true
+  },
+  "accessibility": {
+    "precedence": [
+      "platform-accessibility",
+      "semantic-and-producer-truth",
+      "user-intent-and-task-continuity",
+      "provenance-and-action-safety",
+      "contextual-relevance",
+      "contextual-expression"
+    ],
+    "minimumInteractiveTargetPx": 48,
+    "touchAssistanceTargetPx": 56,
+    "generatedStatusMayDependOnColorAlone": false,
+    "uncertaintyMayDependOnColorAlone": false,
+    "forcedColorsUsesPlatformMapping": true,
+    "reducedTransparencyPreservesLabelsAndProvenance": true,
+    "reducedMotionMayUseImmediateContextChanges": true,
+    "largeTextMustReflowWithoutHidingProvenance": true,
+    "rtlLogicalOrderRequired": true,
+    "keyboardCoreOperationRequired": true
+  },
+  "privacyAndRuntime": {
+    "localFirst": true,
+    "remoteInferenceRequired": false,
+    "telemetryRequired": false,
+    "runtimeNetworkRequestRequired": false,
+    "runtimePersistenceRequired": false,
+    "rawContextLoggingAllowed": false,
+    "modelOrProviderSelectionOwnedByGlaze": false
+  },
+  "implementation": {
+    "runtime": "js/glaze-v1.3-contextual-intelligence.candidate.mjs",
+    "tests": "tests/glaze-v1.3-contextual-intelligence.test.mjs",
+    "validator": "scripts/validate_glaze_v1_3_contextual_intelligence.py",
+    "workflow": ".github/workflows/glaze-v1.3-contextual-intelligence.yml"
+  },
+  "evidenceBoundary": {
+    "implementedByWorkstream": [
+      "bounded-context-snapshot-contract",
+      "optional-suggestion-ranking-policy",
+      "provenance-and-uncertainty-presentation-policy",
+      "consequential-action-confirmation-boundary",
+      "dynamic-color-context-authority-boundary",
+      "adaptive-navigation-stability-boundary",
+      "continuity-preserving-context-refresh-model",
+      "automated-contract-and-runtime-tests"
+    ],
+    "notEstablished": [
+      "model-provider-authority",
+      "remote-inference-service",
+      "telemetry-based-personalization",
+      "production-recommendation-quality",
+      "autonomous-consequential-actions",
+      "native-intelligence-parity",
+      "human-intelligence-acceptance",
+      "assistive-technology-human-acceptance",
+      "production-intelligence-performance-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

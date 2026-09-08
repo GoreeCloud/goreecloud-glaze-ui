@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.reachability.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "extends": "contracts/v1.2/ergonomic-layout.candidate.json",
+  "purpose": "Make compact-layout reachability a measurable development-review property while preserving platform, task, posture, accessibility, and physical-device evidence as higher authorities.",
+  "zones": {
+    "viewing": {
+      "semanticPurpose": ["title", "context", "visual-content", "passive-information", "status"],
+      "frequentControlsPreferred": false
+    },
+    "transition": {
+      "semanticPurpose": ["contextual-controls", "content-interaction", "filters", "inline-actions"]
+    },
+    "interaction": {
+      "semanticPurpose": ["navigation", "primary-action", "frequent-tools", "media-controls", "contextual-toolbars", "safe-confirmation", "search-initiation"],
+      "frequentControlsPreferred": true
+    }
+  },
+  "defaultCompactReviewBands": {
+    "status": "provisional-implementation-default-not-anthropometric-authority",
+    "coordinateSystem": "normalized-content-height-after-platform-safe-area-insets",
+    "viewing": {"start": 0.0, "end": 0.42},
+    "transition": {"start": 0.30, "end": 0.74},
+    "interaction": {"start": 0.62, "end": 1.0},
+    "overlapIsIntentional": true,
+    "overrideAuthority": "platform-product-or-physical-reachability-evidence"
+  },
+  "inheritedTargetFloors": {
+    "touchTargetPx": 48,
+    "touchAssistanceTargetPx": 56,
+    "source": "contracts/v1.2/ergonomic-layout.candidate.json"
+  },
+  "reviewInputs": [
+    "action-frequency",
+    "semantic-priority",
+    "normalized-vertical-position",
+    "target-width",
+    "target-height",
+    "safe-area-obstruction",
+    "edge-proximity",
+    "input-modality",
+    "orientation",
+    "posture",
+    "task"
+  ],
+  "developmentSignals": {
+    "frequentActionTooHigh": true,
+    "primaryActionOutsideInteractionZone": true,
+    "tinyEdgeTarget": true,
+    "excessiveHandTravel": true,
+    "safeAreaObstruction": true,
+    "searchInitiationOutsideReach": true,
+    "navigationOutsideReach": true
+  },
+  "scoreModel": {
+    "purpose": "prioritized-design-review-signal",
+    "autonomousProductAuthority": false,
+    "releaseGateByItself": false,
+    "physicalReachabilityEvidence": false,
+    "range": {"min": 0, "max": 100},
+    "startingScore": 100,
+    "penalties": {
+      "safeAreaObstruction": 35,
+      "undersizedTarget": 25,
+      "primaryActionOutsideInteraction": 20,
+      "frequentActionOutsideInteraction": 14,
+      "navigationOutsideInteraction": 14,
+      "searchInitiationOutsideInteraction": 12,
+      "nearPhysicalEdge": 6,
+      "verticalTravel": "bounded-continuous-review-penalty"
+    },
+    "provisionalEdgeReviewInsetPx": 8,
+    "classification": {
+      "85-100": "strong-review-signal",
+      "70-84": "review-recommended",
+      "0-69": "reachability-attention-needed"
+    }
+  },
+  "rules": {
+    "compactLayoutMustEvaluateReachability": true,
+    "frequentActionsShouldPreferInteractionZone": true,
+    "viewingZoneShouldNotAccumulateFrequentControls": true,
+    "safeAreaObstructionMustBeReported": true,
+    "targetFloorsMustNotShrinkToImproveScore": true,
+    "scoreMayNotOverridePlatformAccessibilityOrProductSemantics": true,
+    "scoreMayNotAutonomouslyMoveControls": true,
+    "scoreMayNotEstablishPhysicalDeviceAcceptance": true,
+    "rtlAndOrientationMustRemainInputs": true,
+    "platformAdapterMayOverrideProvisionalBandsWithEvidence": true
+  },
+  "implementation": {
+    "runtime": "js/glaze-v1.3-reachability.candidate.mjs",
+    "tests": "tests/glaze-v1.3-reachability.test.mjs",
+    "validator": "scripts/validate_glaze_v1_3_reachability.py",
+    "workflow": ".github/workflows/glaze-v1.3-reachability.yml"
+  },
+  "evidenceBoundary": {
+    "implementedByWorkstream": [
+      "semantic-compact-zones",
+      "provisional-normalized-review-bands",
+      "deterministic-development-review-score",
+      "safe-area-and-target-floor-signals",
+      "automated-contract-and-runtime-tests"
+    ],
+    "notEstablished": [
+      "anthropometric-device-lab-acceptance",
+      "physical-device-reachability-acceptance",
+      "one-handed-acceptance-for-all-device-sizes",
+      "platform-specific-zone-calibration",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

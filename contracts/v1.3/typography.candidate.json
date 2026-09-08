@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.typography.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "extends": "tokens/glaze-v1.2-typography.candidate.json",
+  "purpose": "Extend the V1.2 typography baseline into semantic environment-aware typography with bounded variable-axis adaptation, deterministic static-font fallbacks, and accessibility-first reflow without introducing a remote font dependency or decorative continuous type motion.",
+  "semanticRoles": {
+    "display": {"purpose": "largest expressive display hierarchy", "sourceRole": "display"},
+    "title": {"purpose": "major page or destination title", "sourceRole": "title"},
+    "heading": {"purpose": "section hierarchy", "sourceRole": "heading"},
+    "body": {"purpose": "primary readable content", "sourceRole": "body"},
+    "label": {"purpose": "compact control and metadata label", "sourceRole": "label"},
+    "caption": {"purpose": "supporting metadata and secondary annotation", "sourceRole": "caption"},
+    "numeral": {"purpose": "numeric metric and aligned numeric display", "sourceRole": "numeric"}
+  },
+  "layoutEnvironments": {
+    "compact": {
+      "intent": "handheld and constrained-width reading plus reachable interaction",
+      "roleSizeRem": {"display": 2.5, "title": 1.5, "heading": 1.25, "body": 1.0, "label": 0.875, "caption": 0.8125, "numeral": 1.75}
+    },
+    "medium": {
+      "intent": "tablet and medium-window hierarchy with balanced reading density",
+      "roleSizeRem": {"display": 3.0, "title": 1.75, "heading": 1.375, "body": 1.0, "label": 0.875, "caption": 0.8125, "numeral": 2.0}
+    },
+    "expanded": {
+      "intent": "large-window hierarchy with stronger destination and section separation",
+      "roleSizeRem": {"display": 3.5, "title": 1.875, "heading": 1.5, "body": 1.0, "label": 0.875, "caption": 0.8125, "numeral": 2.25}
+    },
+    "workspace": {
+      "intent": "dense productive desktop surfaces where hierarchy remains clear without oversized utility chrome",
+      "roleSizeRem": {"display": 3.25, "title": 1.75, "heading": 1.375, "body": 1.0, "label": 0.8125, "caption": 0.75, "numeral": 2.0}
+    },
+    "farView": {
+      "intent": "television and distance-viewing hierarchy sized for viewing distance rather than a uniform scale-up",
+      "roleSizeRem": {"display": 4.5, "title": 2.5, "heading": 2.0, "body": 1.5, "label": 1.25, "caption": 1.125, "numeral": 3.5}
+    },
+    "wearable": {
+      "intent": "small glanceable surfaces with readable body and control labels despite compact display area",
+      "roleSizeRem": {"display": 2.0, "title": 1.375, "heading": 1.125, "body": 1.0, "label": 0.875, "caption": 0.8125, "numeral": 1.75}
+    }
+  },
+  "environmentRules": {
+    "environmentSelectionAuthority": "layout-or-platform-adapter",
+    "uniformScaleOnly": false,
+    "phoneTypographyIsScaledDesktopTypographyOnly": false,
+    "farViewTypographyIsScaledPhoneTypographyOnly": false,
+    "semanticRoleIdentityMustPersistAcrossEnvironments": true,
+    "environmentChangeMayAlterHierarchyMagnitude": true,
+    "environmentChangeMayAlterSemanticMeaning": false
+  },
+  "variableAxes": {
+    "capabilityModel": "adapter-declared-local-font-axis-capabilities",
+    "axes": {
+      "weight": {"cssTag": "wght", "purpose": "restrained emphasis and state reinforcement"},
+      "width": {"cssTag": "wdth", "purpose": "bounded compact-control fit when the active local font explicitly supports width"},
+      "opticalSize": {"cssTag": "opsz", "purpose": "match optical drawing to resolved semantic size when supported"},
+      "grade": {"cssTag": "GRAD", "purpose": "reinforce selected or current state without forcing layout-width change when supported"}
+    },
+    "runtimeMayAssumeAxisExists": false,
+    "runtimeMustClampToDeclaredCapabilityRange": true,
+    "unsupportedAxisFallback": "omit-axis-and-preserve-semantic-static-style",
+    "remoteFontProbeAllowed": false,
+    "continuousAutonomousAxisAnimationAllowed": false
+  },
+  "expressionProfiles": {
+    "calm": {"stateWeightDelta": 0, "stateGradeDelta": 0, "compressedWidthPercentRequest": 98},
+    "balanced": {"stateWeightDelta": 50, "stateGradeDelta": 20, "compressedWidthPercentRequest": 96},
+    "expressive": {"stateWeightDelta": 75, "stateGradeDelta": 35, "compressedWidthPercentRequest": 94}
+  },
+  "stateUse": {
+    "states": ["default", "current", "selected", "prominent", "compressed"],
+    "currentOrSelectedMayIncreaseWeight": true,
+    "currentOrSelectedMayIncreaseGrade": true,
+    "compressedMayRequestWidthAxis": true,
+    "stateMayChangeSemanticRole": false,
+    "typeMayBeOnlyStateSignal": false,
+    "continuousWobblePulseOrMorphAllowed": false
+  },
+  "accessibility": {
+    "precedence": ["platform-accessibility", "large-text-and-reflow", "semantic-role", "layout-environment", "expression", "cosmetic-personalization"],
+    "largeTextReferencePercent": 200,
+    "largeTextDisablesWidthCompression": true,
+    "largeTextMayNotBeCounteractedByNegativeScaleOrCondensation": true,
+    "reflowMustNotDependOnVariableFontAvailability": true,
+    "rtlLogicalAlignmentRequired": true,
+    "nonColorStateCompanionRequired": true
+  },
+  "fontSourcePolicy": {
+    "default": "system-platform-native-first",
+    "locallyBundledApprovedFontAllowed": true,
+    "remoteRuntimeFontDependencyAllowed": false,
+    "thirdPartyRuntimeFontDeliveryAllowed": false,
+    "runtimeNetworkFetchAllowed": false
+  },
+  "implementation": {
+    "tokenAuthority": "tokens/glaze-v1.3-type.candidate.json",
+    "runtime": "js/glaze-v1.3-typography.candidate.mjs",
+    "tests": "tests/glaze-v1.3-typography.test.mjs",
+    "validator": "scripts/validate_glaze_v1_3_typography.py",
+    "workflow": ".github/workflows/glaze-v1.3-typography.yml"
+  },
+  "evidenceBoundary": {
+    "implementedByWorkstream": [
+      "semantic-type-role-contract",
+      "explicit-layout-environment-role-values",
+      "bounded-adapter-declared-variable-axis-resolution",
+      "deterministic-static-font-fallbacks",
+      "large-text-expression-precedence",
+      "state-driven-type-adjustment-policy",
+      "automated-runtime-and-contract-tests"
+    ],
+    "notEstablished": [
+      "specific-variable-font-family-authority",
+      "platform-font-axis-calibration",
+      "human-readability-acceptance",
+      "assistive-technology-acceptance",
+      "physical-device-rendering-acceptance",
+      "far-view-physical-distance-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

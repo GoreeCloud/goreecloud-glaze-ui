@@ -1,7 +1,11 @@
-# Contributing to GLAZE UI V1.0
+# Contributing to GLAZE UI
 
-All current Glaze UI work targets **GLAZE UI V1.0** (`1.0.0`). Changes must preserve accessibility, semantic clarity, platform-native behavior, exact-revision evidence, and GoreeCloud repository/revision-control requirements.
+GLAZE UI V1.2 (`1.2.0`) is GoreeCloud's current Stable and current official shared visual and interaction design system. GLAZE UI V1.3 — Adaptive Resonance is the active **Proposed / qualification-active** development workstream and the planned next Candidate target; it is not Candidate, Release Candidate, Stable, consumer-eligible, or production-qualified merely because implementation or CI exists.
 
-Do not introduce another current product version, legacy-version namespace, candidate release identity, or acceptance claim without an explicit governed V1.x change. New behavior should land in the V1 namespace and be accompanied by the applicable contracts, tests, rendered/native evidence, and documentation.
+Current Stable work must preserve accessibility, semantic clarity, platform-native behavior, exact-revision evidence, consumer-governance boundaries, and GoreeCloud repository/revision-control requirements. V1.3 work must additionally preserve the V1.2 Stable rollback authority while implementing and qualifying Adaptive Resonance against its governed contracts and visual-quality requirements.
 
-Git history remains the required revision audit trail; current source files must describe only the active V1 line unless a separate subsystem is explicitly governed independently.
+Do not change `VERSION`, `registry/lifecycle.json`, official Candidate/Stable entrypoints, consumer eligibility, or downstream conformance as a side effect of ordinary implementation or qualification work. Lifecycle promotion requires a separate governed decision with fresh exact-revision evidence. Human and physical-device gates may be supported by automation, but automation must not impersonate the required review authority.
+
+New V1.3 behavior should remain within the governed V1.3 Candidate/proposed namespaces until formal promotion and must be accompanied by the applicable contracts, tests, rendered/native evidence, accessibility coverage, migration/rollback considerations, and documentation. Downstream applications remain independently responsible for repository-local conformance and production acceptance.
+
+Git history remains the required revision audit trail. Historical release and Candidate records may retain their original version language when they are explicitly historical or provenance-only; current front-door guidance must always identify V1.2 / `1.2.0` as Stable until a later lifecycle promotion is formally recorded.

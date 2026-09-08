@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.3.expressive-shape.candidate",
+  "product": "GLAZE UI V1.3 — Adaptive Resonance",
+  "targetVersion": "1.3.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.2.0",
+  "extends": "tokens/glaze-v1.2-geometry.candidate.json",
+  "purpose": "Extend V1.2 radius geometry into semantic shape roles, universal concentric construction, controlled expressive libraries, and meaning-preserving morph compatibility without making expressive geometry universal.",
+  "semanticRoles": {
+    "quiet": {
+      "purpose": "high-information-density geometry that does not compete with content",
+      "examples": ["tables", "lists", "reading-containers", "dense-settings", "data-surfaces"]
+    },
+    "soft": {
+      "purpose": "standard structural surface geometry",
+      "examples": ["cards", "panels", "content-containers", "secondary-controls"]
+    },
+    "rounded": {
+      "purpose": "more visually distinct interactive geometry",
+      "examples": ["interactive-cards", "prominent-controls", "floating-regions", "selection-containers"]
+    },
+    "capsule": {
+      "purpose": "continuous compact control geometry",
+      "examples": ["navigation-capsule", "segmented-controls", "compact-search", "floating-toolbars", "media-controls", "status-controls"]
+    },
+    "expressive": {
+      "purpose": "selective high-value or product-specific interactive geometry",
+      "mustRemainStructurallyGlaze": true,
+      "defaultForAllControls": false
+    },
+    "hero": {
+      "purpose": "rare signature moments",
+      "examples": ["onboarding", "major-creation", "empty-state-cta", "media-hero", "product-signature"],
+      "rarityRequired": true
+    },
+    "morphable": {
+      "purpose": "semantic transition between compatible shape roles",
+      "meaningMustPersist": true
+    }
+  },
+  "roleBindings": {
+    "quiet": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/compact"},
+    "soft": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/surface"},
+    "rounded": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/panel"},
+    "capsule": {"source": "tokens/glaze-v1.2-geometry.candidate.json", "pointer": "/radiusPx/pill"}
+  },
+  "expressiveLibrary": {
+    "representation": "normalized-corner-weight-profile",
+    "purpose": "bounded asymmetric curvature layered over a governed base radius",
+    "profiles": {
+      "resonant": [1.0, 0.72, 1.0, 0.72],
+      "sweep": [1.0, 1.0, 0.68, 0.88],
+      "lift": [0.78, 1.0, 1.0, 0.78]
+    },
+    "weightRange": {"min": 0.6, "max": 1.0},
+    "rawPolygonOrArbitraryPathDefaultAllowed": false,
+    "productSpecificExtensionRequiresReview": true
+  },
+  "heroLibrary": {
+    "representation": "normalized-corner-weight-profile",
+    "profiles": {
+      "orbit": [1.0, 0.62, 0.82, 1.0],
+      "crest": [0.66, 1.0, 1.0, 0.82]
+    },
+    "weightRange": {"min": 0.6, "max": 1.0},
+    "routineUtilityUseAllowed": false
+  },
+  "concentricGeometry": {
+    "required": true,
+    "semanticPairs": [
+      ["shape.container", "shape.containerInner"],
+      ["shape.control", "shape.controlInset"],
+      ["shape.overlay", "shape.overlayInner"]
+    ],
+    "inputs": ["parent-radius", "child-inset", "optical-correction", "platform-rendering"],
+    "referenceFormula": "max(0, parentRadius - childInset + opticalCorrection)",
+    "opticalCorrectionAuthority": "platform-adapter-or-governed-reference-calibration",
+    "applicationsHandSelectUnrelatedRadii": false
+  },
+  "morphCompatibility": {
+    "quiet": ["soft"],
+    "soft": ["quiet", "rounded", "capsule"],
+    "rounded": ["soft", "capsule", "expressive"],
+    "capsule": ["soft", "rounded", "expressive"],
+    "expressive": ["rounded", "capsule", "hero"],
+    "hero": ["expressive"],
+    "rules": {
+      "semanticRoleMustPersist": true,
+      "unrelatedObjectMorphProhibited": true,
+      "continuousDecorativeMorphingAllowed": false,
+      "reducedMotionMayUseImmediateGeometryChange": true
+    }
+  },
+  "stateUse": {
+    "shapeMayReinforceState": true,
+    "shapeMayBeOnlyStateSignal": false,
+    "loadingMayMorphRoundedToCapsule": true,
+    "searchCapsuleMayExpandToWorkspace": true,
+    "miniPlayerMayExpandToPlayer": true,
+    "navigationIndicatorMayBecomeDestinationContainer": true
+  },
+  "implementation": {
+    "tokenAuthority": "tokens/glaze-v1.3-shape.candidate.json",
+    "runtime": "js/glaze-v1.3-shape.candidate.mjs",
+    "tests": "tests/glaze-v1.3-shape.test.mjs",
+    "validator": "scripts/validate_glaze_v1_3_shape.py",
+    "workflow": ".github/workflows/glaze-v1.3-shape.yml"
+  },
+  "evidenceBoundary": {
+    "implementedByWorkstream": [
+      "semantic-shape-role-contract",
+      "bounded-expressive-and-hero-profile-libraries",
+      "concentric-reference-resolution",
+      "shape-morph-compatibility-matrix",
+      "automated-runtime-and-contract-tests"
+    ],
+    "notEstablished": [
+      "human-optical-shape-acceptance",
+      "platform-specific-optical-correction-calibration",
+      "physical-device-rendering-acceptance",
+      "product-specific-shape-extension-acceptance",
+      "release-candidate",
+      "stable",
+      "consumer-conformance"
+    ]
+  }
+}

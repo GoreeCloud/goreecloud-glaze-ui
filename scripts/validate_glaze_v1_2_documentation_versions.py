@@ -14,6 +14,7 @@ VERSION = ROOT / "VERSION"
 
 CURRENT_AUTHORITY_DOCS = {
     "README.md": ("current Stable",),
+    "CONTRIBUTING.md": ("current Stable", "Proposed / qualification-active"),
     "GLAZE_UI_V1_2.md": ("Stable",),
     "CONFORMANCE.md": ("conformance target",),
     "ACCEPTANCE.md": ("current Stable",),
@@ -35,9 +36,6 @@ HISTORICAL_DOCS = (
     "acceptance/v1.1-specification-candidate.md",
 )
 
-# These files intentionally embed superseded lifecycle literals to preserve
-# historical release evidence or to reproduce the promoted Candidate source
-# layer. Their presence must not be mistaken for a current product claim.
 HISTORICAL_SOURCE_PATHS = {
     "acceptance/v1.1-rendered-web-evidence.json",
     "scripts/glaze_v1_2_promoted_source_runner.py",
@@ -55,11 +53,6 @@ HISTORICAL_SOURCE_PATHS = {
     "scripts/validate_glaze_v1_2_migration_legacy.py",
 }
 
-# These validators belonged to the pre-promotion V1.2 readiness/qualification
-# program. The project-owner lifecycle decision moved their unfinished external,
-# manual, physical, native, and human qualification obligations to V1.3. They
-# remain reproducibility/audit tooling and must not be interpreted as current
-# V1.2 lifecycle prose or as proof that those deferred gates passed.
 HISTORICAL_PREPROMOTION_VALIDATORS = {
     "validate_glaze_v1_2_android_accessibility_source.py",
     "validate_glaze_v1_2_assistive_technology_qualification.py",
@@ -85,6 +78,7 @@ STRONG_CURRENT_CLAIMS = (
     "sole current", "current official target", "current stable", "current product identity",
     "current product version", "current product baseline", "current application target",
     "current adoption target", "current conformance target", "current target",
+    "all current glaze ui work targets",
     "currentstable", "currentofficial", "officialproductlabel",
 )
 
@@ -130,14 +124,7 @@ def release_for(lifecycle: dict[str, Any], version: str) -> dict[str, Any]:
 
 
 def historical_record(relative: str, text: str) -> bool:
-    """Return whether a tracked source is explicitly historical/provenance-only.
-
-    Candidate/RC source files and superseded qualification tooling are retained
-    as frozen provenance after promotion, so their Candidate-era lifecycle
-    literals are expected. Current V1.2 reference and front-door documentation
-    is deliberately *not* blanket-exempt: stale authority claims there must
-    still fail the audit.
-    """
+    """Return whether a tracked source is explicitly historical/provenance-only."""
     if relative in HISTORICAL_DOCS or relative in HISTORICAL_SOURCE_PATHS:
         return True
 
@@ -231,7 +218,7 @@ def main() -> int:
         fail(f"obsolete lifecycle/version authority language found: {preview}")
 
     report = {
-        "schemaVersion": 5,
+        "schemaVersion": 6,
         "status": "pass",
         "currentOfficial": current_official,
         "currentStable": current_stable,
@@ -245,6 +232,7 @@ def main() -> int:
         "historicalPrePromotionValidators": sorted(HISTORICAL_PREPROMOTION_VALIDATORS),
         "obsoleteLifecycleAuthorityFindings": 0,
         "scopeRule": "Historical Candidate/RC/release and superseded pre-promotion qualification records are preserved as provenance, while current V1.2 authority surfaces remain fail-closed against superseded lifecycle claims.",
+        "contributingRule": "CONTRIBUTING.md is a current authority surface and must identify V1.2 / 1.2.0 as Stable while V1.3 remains Proposed / qualification-active until governed promotion.",
         "deferredQualificationRule": "V1.3 deferral does not convert unperformed V1.2 human/manual/physical qualification into passed evidence.",
     }
     rendered = json.dumps(report, indent=2, sort_keys=True) + "\n"

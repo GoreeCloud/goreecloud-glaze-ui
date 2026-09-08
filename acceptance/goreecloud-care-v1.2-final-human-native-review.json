@@ -13,61 +13,19 @@
   "reviewer": "GoreeCloud",
   "reviewerRole": "Authorized representative target reviewer",
   "dimensions": [
-    {
-      "id": "orca-scan-completion-announcement-quality",
-      "status": "pass",
-      "finding": "Authorized representative reviewer reported PASS for scan-completion spoken-announcement quality on the exact frozen Care RC running on physical Zorin OS 17.3."
-    },
-    {
-      "id": "orca-cancellation-failure-success-announcement-quality",
-      "status": "pass",
-      "finding": "Authorized representative reviewer reported PASS for distinct and truthful cancellation, failure, and success spoken-announcement quality on the exact frozen Care RC."
-    },
-    {
-      "id": "orca-maintenance-insights-status-quality",
-      "status": "pass",
-      "finding": "Authorized representative reviewer reported PASS for Maintenance Insights spoken status quality and contextual understandability on the exact frozen Care RC."
-    },
-    {
-      "id": "native-window-controls-and-compositor-optical-quality",
-      "status": "pass",
-      "finding": "Authorized representative reviewer reported PASS for native window controls, resizing, and compositor optical quality on physical Zorin OS 17.3."
-    },
-    {
-      "id": "dark-and-preview-deep-dark-physical-optical-quality",
-      "status": "pass",
-      "finding": "Authorized representative reviewer reported PASS for physical Dark and preview Deep Dark readability and optical quality on the exact frozen Care RC."
-    },
-    {
-      "id": "canonical-care-icon-physical-rendering-quality",
-      "status": "pass",
-      "finding": "Authorized representative reviewer reported PASS for canonical GoreeCloud Care icon rendering quality across the representative desktop surfaces reviewed."
-    },
-    {
-      "id": "confirmation-empty-failure-success-and-applicable-controlled-task-ux",
-      "status": "pass",
-      "finding": "Authorized representative reviewer reported PASS for confirmation, empty/no-selection, cancellation, failure, success, and applicable controlled-task UX quality on the exact frozen Care RC."
-    }
+    {"id":"orca-scan-completion-announcement-quality","status":"pass","finding":"Authorized representative reviewer reported PASS for scan-completion spoken-announcement quality on the exact frozen Care RC running on physical Zorin OS 17.3."},
+    {"id":"orca-cancellation-failure-success-announcement-quality","status":"pass","finding":"Authorized representative reviewer reported PASS for distinct and truthful cancellation, failure, and success spoken-announcement quality on the exact frozen Care RC."},
+    {"id":"orca-maintenance-insights-status-quality","status":"pass","finding":"Authorized representative reviewer reported PASS for Maintenance Insights spoken status quality and contextual understandability on the exact frozen Care RC."},
+    {"id":"native-window-controls-and-compositor-optical-quality","status":"pass","finding":"Authorized representative reviewer reported PASS for native window controls, resizing, and compositor optical quality on physical Zorin OS 17.3."},
+    {"id":"dark-and-preview-deep-dark-physical-optical-quality","status":"pass","finding":"Authorized representative reviewer reported PASS for physical Dark and preview Deep Dark readability and optical quality on the exact frozen Care RC."},
+    {"id":"canonical-care-icon-physical-rendering-quality","status":"pass","finding":"Authorized representative reviewer reported PASS for canonical GoreeCloud Care icon rendering quality across the representative desktop surfaces reviewed."},
+    {"id":"confirmation-empty-failure-success-and-applicable-controlled-task-ux","status":"pass","finding":"Authorized representative reviewer reported PASS for confirmation, empty/no-selection, cancellation, failure, success, and applicable controlled-task UX quality on the exact frozen Care RC."}
   ],
   "alreadyGovernedEvidence": {
-    "policyKitRepresentativeBoundary": {
-      "status": "accepted",
-      "authority": "GoreeCloud/goreecloud-wardveil-security",
-      "revision": "e16fc489dbf98849601a198358863dffe7df81d4",
-      "scope": "GoreeCloud Care local-maintenance-privilege-boundary",
-      "repeatRequiredByThisReview": false
-    },
-    "exactCandidatePackageLifecycle": {
-      "status": "accepted",
-      "packageSha256": "b1bd308efd7803f6707f0b3ff2f41e56c46c6644094ba5a72d04b0b02bfe7a87",
-      "repeatRequiredByThisReview": false
-    }
+    "policyKitRepresentativeBoundary": {"status":"accepted","authority":"GoreeCloud/goreecloud-wardveil-security","revision":"e16fc489dbf98849601a198358863dffe7df81d4","scope":"GoreeCloud Care local-maintenance-privilege-boundary","repeatRequiredByThisReview":false},
+    "exactCandidatePackageLifecycle": {"status":"accepted","packageSha256":"b1bd308efd7803f6707f0b3ff2f41e56c46c6644094ba5a72d04b0b02bfe7a87","repeatRequiredByThisReview":false}
   },
-  "sourceRecordDriftResolution": {
-    "status": "resolved-by-governed-supersession",
-    "path": "apps/goreecloud-care/GLAZE-UI-CONFORMANCE.md",
-    "resolution": "The frozen RC prose remains unmodified so the already-qualified source/package identity is preserved. For exact Care revision 334b53102c5fe0bd5d348397ba8b13cc5608ada2, the authoritative Glaze consumer registry, exact-RC machine prequalification, final-review protocol, and this human/native acceptance record supersede the stale Development-era lifecycle wording in that historical source file."
-  },
+  "sourceRecordDriftResolution": {"status":"resolved-by-governed-supersession","path":"apps/goreecloud-care/GLAZE-UI-CONFORMANCE.md","resolution":"The frozen RC prose remains unmodified so the already-qualified source/package identity is preserved. For exact Care revision 334b53102c5fe0bd5d348397ba8b13cc5608ada2, the authoritative Glaze consumer registry, exact-RC machine prequalification, final-review protocol, and this human/native acceptance record supersede the stale Development-era lifecycle wording in that historical source file."},
   "decision": "accepted",
   "acceptedV1Authorized": true,
   "productionEligible": false,
