@@ -1,12 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": 1,
-  "updated": "2026-09-06",
-  "officialProductLabel": "GLAZE UI V1.2",
-  "currentOfficial": "1.2.0",
-  "currentStable": "1.2.0",
+  "updated": "2026-09-07",
+  "officialProductLabel": "GLAZE UI V1.3 — Adaptive Resonance",
+  "currentOfficial": "1.3.0",
+  "currentStable": "1.3.0",
   "activeCandidate": null,
-  "plannedNext": "1.3.0-candidate",
+  "plannedNext": "1.3.1",
   "activePatchReleaseCandidate": null,
   "resetState": "stable",
   "releases": [
@@ -26,7 +26,7 @@
       "consumerEligible": true,
       "contract": "GLAZE_UI_V1_1.md",
       "acceptance": "acceptance/v1.1-stable.md",
-      "note": "Prior known-good Stable release retained for rollback and audit. It is superseded as the current consumer target by V1.2."
+      "note": "Historical Stable release retained for rollback and audit."
     },
     {
       "version": "1.1.1-rc.1",
@@ -36,7 +36,7 @@
       "stableBaseline": "1.1.0",
       "contract": "contracts/v1.1/patch-1.1.1-candidate.json",
       "acceptance": "acceptance/v1.1.1-patch-candidate.md",
-      "note": "Historical corrective RC evidence. V1.2 Stable supersedes this pending V1.1-line patch as the current design-system target."
+      "note": "Historical corrective RC evidence retained for audit."
     },
     {
       "version": "1.2.0",
@@ -53,21 +53,42 @@
       "runtimeEntrypoint": "js/glaze-v1.2.0.mjs",
       "reference": "reference/v1.2/frosted-neutral.html",
       "sourceQualificationAnchor": "b0eadf9a60f73d45caffb62ffc7e9e0334cddc97",
-      "note": "Current Stable shared design-system release. The project owner explicitly moved the remaining external/manual/physical qualification work to the V1.3 track on 2026-09-06. Those deferred qualifications are not represented as passed V1.2 evidence and do not create downstream consumer acceptance."
+      "note": "Prior known-good Stable rollback baseline. Its deferred qualification history remains preserved and is not rewritten by V1.3 promotion."
+    },
+    {
+      "version": "1.3.0",
+      "label": "GLAZE UI V1.3 — Adaptive Resonance",
+      "status": "stable",
+      "consumerEligible": true,
+      "stableBaseline": "1.2.0",
+      "contract": "GLAZE_UI_V1_3.md",
+      "tokens": "tokens/glaze-v1.3.json",
+      "migration": "MIGRATION_V1_2_TO_V1_3.md",
+      "acceptance": "acceptance/v1.3-stable.md",
+      "runtimeEntrypoint": "js/glaze-v1.3.0.mjs",
+      "inheritedWebEntrypoint": "css/glaze-v1.2.0.css",
+      "sourceQualificationAnchor": "fc7cc91d2eace8da2371371c2855c24cbcb326a1",
+      "hardening": "acceptance/v1.3.1-hardening.md",
+      "note": "Current Stable shared design-system release by explicit project-owner bounded lifecycle decision on 2026-09-07. Missing or pending V1.3 pre-promotion qualification is not represented as passed; unresolved hardening and qualification obligations move to V1.3.1. Consumer migration remains independently evidence-gated."
     }
   ],
   "capabilities": {
-    "system-shell": {"status":"stable-inherited","since":"1.0.0","implementation":"contracts/system-shell/glaze-system-shell-v1.json"},
-    "component-catalog": {"status":"stable-inherited","since":"1.0.0","implementation":"contracts/components/v1/catalog.json"},
-    "web-entrypoint": {"status":"stable","since":"1.2.0","implementation":"css/glaze-v1.2.0.css"},
-    "runtime-entrypoint": {"status":"stable","since":"1.2.0","implementation":"js/glaze-v1.2.0.mjs"},
-    "performance-budget": {"status":"stable-inherited-bounded","since":"1.0.0","implementation":"contracts/performance/glaze-v1-performance-budget.json","note":"Physical-device and production-platform requalification is deferred to V1.3 and is not claimed by V1.2 Stable."},
-    "visual-regression": {"status":"stable-bounded","since":"1.2.0","implementation":"reference/v1.2/","note":"Automated/reference evidence is retained; broader human optical qualification is a V1.3 follow-up."},
-    "native-reference": {"status":"bounded-release-evidence","since":"1.2.0","implementation":"reference/v1.2/native"},
-    "frosted-neutral-material": {"status":"stable","since":"1.2.0","implementation":"tokens/glaze-v1.2-frosted-neutral.candidate.json","webEntrypoint":"css/glaze-v1.2.0.css"},
-    "frosted-optical-foundation": {"status":"stable-promoted-source","since":"1.2.0","implementation":"tokens/glaze-v1.2-optical-foundation.candidate.json"},
-    "frosted-neutral-component-materials": {"status":"stable-promoted-source","since":"1.2.0","implementation":"contracts/v1.2/component-materials.candidate.json","webPreview":"reference/v1.2/component-gallery.html"},
-    "frosted-neutral-system-shell": {"status":"stable-promoted-source","since":"1.2.0","implementation":"contracts/v1.2/system-shell-materials.candidate.json","webPreview":"reference/v1.2/system-shell.html"},
-    "v1.2-migration-control-plane": {"status":"stable","since":"1.2.0","implementation":"contracts/v1.2/migration.candidate.json","plan":"MIGRATION_V1_1_TO_V1_2.md","acceptance":"acceptance/v1.2-stable.md","validator":"scripts/validate_glaze_v1_2_stable.py"}
+    "system-shell": {"status":"stable-inherited-and-extended","since":"1.0.0","implementation":"contracts/v1.3/system-shell.candidate.json"},
+    "component-catalog": {"status":"stable-inherited-and-extended","since":"1.0.0","implementation":"contracts/v1.3/component-experience.candidate.json"},
+    "web-entrypoint": {"status":"stable-inherited","since":"1.2.0","implementation":"css/glaze-v1.2.0.css","note":"V1.3 did not introduce a monolithic CSS aggregate; the validated V1.2 Stable web material layer remains inherited while V1.3 expression is supplied through promoted token/runtime/contracts."},
+    "runtime-entrypoint": {"status":"stable","since":"1.3.0","implementation":"js/glaze-v1.3.0.mjs"},
+    "adaptive-resonance-tokens": {"status":"stable-promoted-source","since":"1.3.0","implementation":"tokens/glaze-v1.3.json"},
+    "performance-budget": {"status":"stable-inherited-bounded","since":"1.0.0","implementation":"contracts/performance/glaze-v1-performance-budget.json","note":"Production and physical-device performance requalification remains in the V1.3.1 hardening ledger and is not claimed as completed V1.3.0 evidence."},
+    "visual-regression": {"status":"stable-bounded","since":"1.2.0","implementation":"reference/v1.2/","note":"Existing automated/reference coverage is inherited; fresh exact-revision human optical qualification remains separately evidence-gated where applicable."},
+    "native-reference": {"status":"bounded-release-evidence","since":"1.2.0","implementation":"reference/v1.2/native","note":"Native/physical platform qualification is not granted by V1.3.0 Stable promotion."},
+    "frosted-neutral-material": {"status":"stable-inherited","since":"1.2.0","implementation":"tokens/glaze-v1.2-frosted-neutral.candidate.json","webEntrypoint":"css/glaze-v1.2.0.css"},
+    "adaptive-color": {"status":"stable-promoted-source","since":"1.3.0","implementation":"tokens/glaze-v1.3-color.candidate.json"},
+    "adaptive-layout": {"status":"stable-promoted-source","since":"1.3.0","implementation":"tokens/glaze-v1.3-layout.candidate.json"},
+    "living-material-2": {"status":"stable-promoted-source","since":"1.3.0","implementation":"tokens/glaze-v1.3-material.candidate.json"},
+    "adaptive-motion": {"status":"stable-promoted-source","since":"1.3.0","implementation":"tokens/glaze-v1.3-motion.candidate.json"},
+    "expressive-shape": {"status":"stable-promoted-source","since":"1.3.0","implementation":"tokens/glaze-v1.3-shape.candidate.json"},
+    "responsive-type": {"status":"stable-promoted-source","since":"1.3.0","implementation":"tokens/glaze-v1.3-type.candidate.json"},
+    "v1.3-migration-control-plane": {"status":"stable-enabled-independent-acceptance-required","since":"1.3.0","implementation":"contracts/v1.3/migration.candidate.json","plan":"MIGRATION_V1_2_TO_V1_3.md","acceptance":"acceptance/v1.3-stable.md"},
+    "v1.3.1-hardening": {"status":"maintenance-pending","since":"1.3.0","implementation":"acceptance/v1.3.1-hardening.md"}
   }
 }
