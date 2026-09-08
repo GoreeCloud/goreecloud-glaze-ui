@@ -1,0 +1,34 @@
+{
+  "schema_version": 2,
+  "workstream_id": "physical-device-production-performance-qualification",
+  "target": {
+    "product": "GLAZE UI V1.3",
+    "target_version": "1.3.0-candidate",
+    "source_revision": "72ad63bf32d80420b25dc98bfd2def47bcc2a427"
+  },
+  "status": "in_progress",
+  "observed_at": "2026-09-08T00:33:00Z",
+  "review_authority": {
+    "mode": "combined",
+    "authority": "Pending authorized physical-device production-performance reviewer"
+  },
+  "environment": {
+    "draft": true,
+    "summary": "DRAFT ONLY — replace with the exact real physical-device production-performance environment before acceptance."
+  },
+  "evidence_references": [
+    "DRAFT: replace with concrete immutable evidence references from the real qualification session"
+  ],
+  "issues": [
+    {
+      "summary": "Real physical-device production-performance execution is incomplete. Synthetic or simulated results do not satisfy the required physical performance evidence.",
+      "severity": "info",
+      "resolved": false,
+      "reference": null
+    }
+  ],
+  "disposition": {
+    "accepted_for_lifecycle_gate": false,
+    "notes": "DRAFT ONLY. No lifecycle promotion, Candidate activation, Stable activation, source cleanup, or consumer conformance is granted by this record."
+  }
+}
