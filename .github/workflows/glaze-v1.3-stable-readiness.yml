@@ -1,25 +1,33 @@
-name: GLAZE UI V1.3 Stable Readiness Control Plane
+name: GLAZE UI V1.3 Readiness and V1.3.1 Hardening Control Plane
 
 on:
   pull_request:
     paths:
       - "contracts/v1.3/**"
+      - "acceptance/v1.3-stable.md"
+      - "acceptance/v1.3.1-hardening.md"
       - "js/glaze-v1.3-qualification.candidate.mjs"
       - "js/glaze-v1.3-stable-readiness.candidate.mjs"
+      - "js/glaze-v1.3.0.mjs"
       - "scripts/evaluate_glaze_v1_3_stable_readiness.mjs"
       - "scripts/validate_glaze_v1_3_stable_readiness.py"
+      - "scripts/validate_glaze_v1_3_stable.py"
       - "tests/glaze-v1.3-stable-readiness.test.mjs"
       - "registry/lifecycle.json"
       - "VERSION"
       - ".github/workflows/glaze-v1.3-stable-readiness.yml"
   push:
-    branches: [main, feat/glaze-ui-v1.3-adaptive-resonance]
+    branches: [main, release/v1.3.0]
     paths:
       - "contracts/v1.3/**"
+      - "acceptance/v1.3-stable.md"
+      - "acceptance/v1.3.1-hardening.md"
       - "js/glaze-v1.3-qualification.candidate.mjs"
       - "js/glaze-v1.3-stable-readiness.candidate.mjs"
+      - "js/glaze-v1.3.0.mjs"
       - "scripts/evaluate_glaze_v1_3_stable_readiness.mjs"
       - "scripts/validate_glaze_v1_3_stable_readiness.py"
+      - "scripts/validate_glaze_v1_3_stable.py"
       - "tests/glaze-v1.3-stable-readiness.test.mjs"
       - "registry/lifecycle.json"
       - "VERSION"
@@ -30,7 +38,7 @@ permissions:
   contents: read
 
 jobs:
-  stable-readiness-control-plane:
+  readiness-and-hardening-control-plane:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -43,17 +51,28 @@ jobs:
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
-      - name: Compile and validate Stable-readiness mechanism
+      - name: Compile lifecycle and historical readiness validators
         run: |
           python -m py_compile scripts/validate_glaze_v1_3_stable_readiness.py
-          python scripts/validate_glaze_v1_3_stable_readiness.py
-      - name: Check Stable evaluator and CLI syntax
+          python -m py_compile scripts/validate_glaze_v1_3_stable.py
+      - name: Validate lifecycle-appropriate authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(cat VERSION)"
+          if [ "$version" = "1.3.0" ]; then
+            python scripts/validate_glaze_v1_3_stable.py
+          else
+            python scripts/validate_glaze_v1_3_stable_readiness.py
+          fi
+      - name: Check readiness evaluator and CLI syntax
         run: |
           node --check js/glaze-v1.3-stable-readiness.candidate.mjs
           node --check scripts/evaluate_glaze_v1_3_stable_readiness.mjs
-      - name: Test staged Stable readiness
+          node --check js/glaze-v1.3.0.mjs
+      - name: Test historical staged Stable-readiness mechanism
         run: node --test tests/glaze-v1.3-stable-readiness.test.mjs
-      - name: Prove current repository cannot claim Stable readiness
+      - name: Prove missing evidence remains fail-closed for V1.3.1 hardening
         env:
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
@@ -72,10 +91,9 @@ jobs:
           import json
           result=json.load(open('/tmp/glaze-v1.3-stable-readiness.json',encoding='utf-8'))['result']
           assert result['state']=='blocked'
-          assert result['candidateActive'] is False
           assert result['stableGateSatisfied'] is False
           assert result['lifecyclePromotionGranted'] is False
           assert result['stablePromoted'] is False
           assert result['consumerConformanceGranted'] is False
-          print('Current Proposed repository remains fail-closed against Stable readiness.')
+          print('Missing historical qualification evidence remains fail-closed and is not converted into a pass by V1.3.0 promotion.')
           PY
