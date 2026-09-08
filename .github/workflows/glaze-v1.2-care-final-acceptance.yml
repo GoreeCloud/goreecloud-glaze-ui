@@ -1,0 +1,38 @@
+name: Validate GoreeCloud Care V1.2 final acceptance protocol
+
+on:
+  pull_request:
+    paths:
+      - 'acceptance/goreecloud-care-v1.2-final-human-native-review.template.json'
+      - 'acceptance/goreecloud-care-v1.2-final-human-native-review.json'
+      - 'consumers/registry.json'
+      - 'scripts/validate_goreecloud_care_v1_2_final_acceptance.py'
+      - 'scripts/validate_consumer_registry.py'
+      - '.github/workflows/glaze-v1.2-care-final-acceptance.yml'
+  push:
+    branches:
+      - main
+      - 'governance/**'
+    paths:
+      - 'acceptance/goreecloud-care-v1.2-final-human-native-review.template.json'
+      - 'acceptance/goreecloud-care-v1.2-final-human-native-review.json'
+      - 'consumers/registry.json'
+      - 'scripts/validate_goreecloud_care_v1_2_final_acceptance.py'
+      - 'scripts/validate_consumer_registry.py'
+      - '.github/workflows/glaze-v1.2-care-final-acceptance.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Validate authoritative Glaze consumer registry
+        run: python3 scripts/validate_consumer_registry.py
+
+      - name: Validate GoreeCloud Care V1.2 final acceptance protocol
+        run: python3 scripts/validate_goreecloud_care_v1_2_final_acceptance.py
