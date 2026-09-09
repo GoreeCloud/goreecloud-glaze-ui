@@ -81,15 +81,28 @@ def main() -> int:
         "current shared consumer baseline must remain 1.3.0")
 
     deferred = load("contracts/v1.3/deferred-qualification.plan.json")
+    req(deferred.get("schemaVersion") == 5,
+        "current V1.3.1 deferred follow-up must use schemaVersion 5")
+    req(deferred.get("sourceStable") == CURRENT_VERSION,
+        "V1.3.1 deferred follow-up must remain anchored to current Stable 1.3.0")
+    req(deferred.get("targetVersion") == "1.3.1-candidate",
+        "deferred follow-up target must remain V1.3.1 Candidate")
+    req(deferred.get("lifecycle") == "follow-up-active",
+        "deferred follow-up must remain active without implying lifecycle promotion")
+    req(len(deferred.get("followUpItems", [])) == 6,
+        "all six transferred qualification/cleanup obligations must remain recorded")
+
     deferred_rules = deferred.get("rules", {})
-    req(deferred_rules.get("v1.2StableImpliesThesePassed") is False,
+    req(deferred_rules.get("theseItemsMayBeRepresentedAsPassedWithoutEvidence") is False,
         "retained V1.2 Stable must not manufacture later qualification evidence")
-    req(deferred_rules.get("freshExactRevisionEvidenceRequired") is True,
+    req(deferred_rules.get("freshExactRevisionEvidenceRequiredForFuturePassClaims") is True,
         "later qualification must require fresh exact-revision evidence")
     req(deferred_rules.get("consumerConformanceAutomatic") is False,
         "later qualification must not auto-accept consumers")
-    req(deferred_rules.get("v1.3LifecyclePromotionAutomatic") is False,
+    req(deferred_rules.get("v1.3.1LifecyclePromotionAutomatic") is False,
         "later qualification must not auto-promote lifecycle")
+    req(deferred_rules.get("allSixRemainV1.3.1FollowUpObligations") is True,
+        "all six later qualification/cleanup obligations must remain V1.3.1 follow-up")
 
     acceptance = (ROOT / "acceptance/v1.2-stable.md").read_text(encoding="utf-8")
     req("does not" in acceptance.lower() and "V1.3" in acceptance,
