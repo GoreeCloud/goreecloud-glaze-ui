@@ -1,12 +1,12 @@
 # GLAZE UI V1.2 — Stable Living Frosted Design System
 
-**Lifecycle:** Stable  
+**Lifecycle:** Historical Stable / retained rollback and audit release  
 **Machine version:** `1.2.0`  
 **Release date:** 2026-09-06  
 **Prior Stable:** GLAZE UI V1.1 / `1.1.0`  
-**Current consumer target:** GLAZE UI V1.2 / `1.2.0`
+**Current consumer target:** GLAZE UI V1.3 — Adaptive Resonance / `1.3.0`
 
-GLAZE UI V1.2 is GoreeCloud's current Stable shared visual, interaction, component, accessibility, adaptive-layout, and platform-presentation system.
+GLAZE UI V1.2 is GoreeCloud's immediately preceding known-good Stable shared visual, interaction, component, accessibility, adaptive-layout, and platform-presentation release. It remains retained for rollback and audit; GLAZE UI V1.3 / `1.3.0` is the current Official Stable authority.
 
 ## Governing material rule
 
@@ -29,9 +29,9 @@ V1.2 promotes the implemented Frosted Neutral + Living Frosted system, including
 - bounded browser, Android-emulator/native-reference, and Linux/GTK reference implementation evidence already present in the V1.2 source line;
 - Personalization and Appearance interfaces whose platform-owned persistence/system/wallpaper adapters remain independently acceptance-bound.
 
-The V1.2 Stable web entrypoint is `css/glaze-v1.2.0.css`. The Stable runtime entrypoint is `js/glaze-v1.2.0.mjs`.
+The retained V1.2 Stable web entrypoint is `css/glaze-v1.2.0.css`. The retained Stable runtime entrypoint is `js/glaze-v1.2.0.mjs`.
 
-To freeze the accepted rendering behavior without a release-time selector rewrite, the Stable web wrapper intentionally imports the promoted V1.2 development layers under their existing `.candidate` filenames and compatibility activation namespace. Their filenames are provenance, not lifecycle authority. `registry/lifecycle.json`, this contract, `VERSION`, and the Stable entrypoints define current lifecycle authority.
+To freeze the accepted rendering behavior without a release-time selector rewrite, the retained Stable web wrapper intentionally imports the promoted V1.2 development layers under their existing `.candidate` filenames and compatibility activation namespace. Their filenames are provenance, not current lifecycle authority. `registry/lifecycle.json`, `VERSION`, `GLAZE_UI_V1_3.md`, and the V1.3 Stable entrypoints define current lifecycle authority.
 
 ## Accessibility and resilience
 
@@ -41,9 +41,9 @@ Accessibility directives outrank cosmetic material behavior. Reduced Transparenc
 
 V1.2 preserves bounded Glaze-region budgets and degrades optical complexity before correctness or accessibility. One dominant Glaze region plus up to three small floating Glaze controls remains the normal material budget; nested backdrop blur is not the default.
 
-## V1.3 deferred qualification track
+## Later qualification history
 
-On 2026-09-06 the GoreeCloud project owner directed that the remaining V1.2 blockers be postponed to GLAZE UI V1.3 and that V1.2 become Stable. The following work is therefore **not represented as passed V1.2 evidence** and is carried forward as V1.3 qualification work:
+On 2026-09-06 the GoreeCloud project owner directed that the remaining V1.2 blockers be postponed to GLAZE UI V1.3 and that V1.2 become Stable. On 2026-09-08 the project owner made V1.3 / `1.3.0` Official, Stable, and consumer-eligible and transferred the still-unresolved release-quality work to V1.3.1. The following work is therefore **not represented as passed V1.2 or V1.3.0 evidence**:
 
 - broader project-owner/human optical and icon-collision qualification;
 - manual assistive-technology sessions such as TalkBack, Voice Access, switch access/control, VoiceOver, and Orca where support is claimed;
@@ -52,12 +52,12 @@ On 2026-09-06 the GoreeCloud project owner directed that the remaining V1.2 bloc
 - native Personalization persistence/system/wallpaper-source adapter qualification where claimed;
 - cleanup of compatibility activation/source namespaces where doing so can be proven pixel- and behavior-preserving.
 
-These are V1.3 follow-up qualifications, not retroactive V1.2 passes.
+These remain V1.3.1 follow-up qualifications, not retroactive V1.2 or V1.3.0 passes.
 
 ## Consumer boundary
 
-V1.2 Stable makes `1.2.0` the required Glaze UI target for applicable GoreeCloud consumers. It does **not** automatically make any consumer conformant, production-eligible, deployed, or Stable. Each consumer must perform its own repository-local migration and exact-revision product acceptance for the platforms and capabilities it actually supports.
+V1.2 Stable historically made `1.2.0` the required Glaze UI target for applicable GoreeCloud consumers. It did **not** automatically make any consumer conformant, production-eligible, deployed, or Stable. The current required shared consumer target is V1.3 / `1.3.0`; each consumer must perform its own repository-local migration and exact-revision product acceptance for the platforms and capabilities it actually supports.
 
 ## Rollback
 
-GLAZE UI V1.1 / `1.1.0` remains preserved as the prior known-good Stable release and rollback anchor. Candidate, RC, qualification-template, and prior exact-revision records remain historical evidence and must not be rewritten as if deferred tests had passed.
+GLAZE UI V1.2 / `1.2.0` is the current retained previous-Stable rollback anchor. GLAZE UI V1.1 / `1.1.0` remains preserved as an older known-good Stable historical release. Candidate, RC, qualification-template, and prior exact-revision records remain historical evidence and must not be rewritten as if deferred tests had passed.
