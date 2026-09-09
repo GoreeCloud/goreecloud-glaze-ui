@@ -130,10 +130,16 @@ def main() -> None:
         stable_release.get("consumerEligible") is True,
         "current Stable must be consumer-eligible",
     )
-    anchor = stable_release.get("sourceQualificationAnchor")
+    qualification_anchor = stable_release.get("sourceQualificationAnchor")
+    integration_anchor = stable_release.get("sourceIntegrationAnchor")
+    anchors = [
+        anchor
+        for anchor in (qualification_anchor, integration_anchor)
+        if isinstance(anchor, str) and anchor.strip()
+    ]
     req(
-        isinstance(anchor, str) and SHA40.fullmatch(anchor) is not None,
-        "current Stable source qualification anchor",
+        len(anchors) == 1 and SHA40.fullmatch(anchors[0]) is not None,
+        "current Stable must identify exactly one valid source qualification/integration anchor",
     )
 
     vocabulary = data.get("statusVocabulary")
