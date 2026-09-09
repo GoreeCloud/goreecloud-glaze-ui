@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Fail-closed validation for GoreeCloud Care GLAZE UI V1.2 acceptance lineage.
+"""Fail-closed validation for historical GoreeCloud Care GLAZE UI V1.2 acceptance lineage.
 
 The frozen RC machine prequalification and seven-dimensional human/native review remain
-immutable predecessor evidence. Exact Care 0.1.0 may be accepted-v1 only through the
-explicit bridge record, which must prove a bounded non-material Glaze source delta and
-must remain exact-source/package bound. The bridge does not grant generic product
-production eligibility or Stable lifecycle authority.
+immutable predecessor evidence. Exact Care 0.1.0 remains accepted V1.2 historical
+provenance only through the explicit bridge record, which must prove a bounded
+non-material Glaze source delta and remain exact-source/package bound. GLAZE UI V1.3
+is now the required shared target, so this validator must not convert historical V1.2
+acceptance into current conformance, production eligibility, or Stable authority.
 """
 from __future__ import annotations
 
@@ -23,7 +24,8 @@ RC_PACKAGE = "b1bd308efd7803f6707f0b3ff2f41e56c46c6644094ba5a72d04b0b02bfe7a87"
 FINAL_SOURCE = "bbc4779454c2887b810aa0ddc9e8a686a4c68ebd"
 FINAL_TREE = "ebe028347c978b6d09fb1d2af011729249f63bc3"
 FINAL_PACKAGE = "819cff6e0132bf6b09df0986682995c25b14c39e74982f725efd0b5a21b71160"
-TARGET = "1.2.0"
+HISTORICAL_TARGET = "1.2.0"
+CURRENT_TARGET = "1.3.0"
 HUMAN_REVIEW = "acceptance/goreecloud-care-v1.2-final-human-native-review.json"
 BRIDGE_PATH = "acceptance/goreecloud-care-v1.2-0.1.0-exact-source-bridge.json"
 
@@ -57,7 +59,7 @@ def main() -> None:
     req(human.get("consumerSourceRevision") == RC_SOURCE, "historical human review source")
     req(human.get("careTree") == RC_TREE, "historical human review tree")
     req(human.get("packageSha256") == RC_PACKAGE, "historical human review package")
-    req(human.get("glazeTargetVersion") == TARGET, "historical human review target")
+    req(human.get("glazeTargetVersion") == HISTORICAL_TARGET, "historical human review target")
     req(human.get("decision") == "accepted", "historical human review decision")
     req(human.get("acceptedV1Authorized") is True, "historical accepted-v1 authorization")
     req(human.get("productionEligible") is False, "historical review must not grant production eligibility")
@@ -72,13 +74,13 @@ def main() -> None:
     req(bridge.get("consumer") == "GoreeCloud Care", "bridge consumer")
     req(bridge.get("repository") == "GoreeCloud/goreecloud-zorin-os", "bridge repository")
     req(bridge.get("componentPath") == "apps/goreecloud-care/", "bridge component")
-    req(bridge.get("glazeTargetVersion") == TARGET, "bridge target")
+    req(bridge.get("glazeTargetVersion") == HISTORICAL_TARGET, "bridge target")
     req(bridge.get("consumerSourceRevision") == FINAL_SOURCE and SHA40.fullmatch(FINAL_SOURCE), "bridge exact source")
     req(bridge.get("careTree") == FINAL_TREE and SHA40.fullmatch(FINAL_TREE), "bridge exact tree")
     req(bridge.get("packageSha256") == FINAL_PACKAGE and SHA256.fullmatch(FINAL_PACKAGE), "bridge exact package")
     req(bridge.get("representativeTarget") == "Zorin OS 17.3", "bridge representative target")
     req(bridge.get("decision") == "accepted-by-exact-source-bridge", "bridge decision")
-    req(bridge.get("acceptedV1Authorized") is True, "bridge accepted-v1 authorization")
+    req(bridge.get("acceptedV1Authorized") is True, "bridge historical accepted-v1 authorization")
     req(bridge.get("productionEligible") is False, "bridge must not grant generic production eligibility")
     req(bridge.get("stableProductPromotionAllowed") is False, "bridge must not independently authorize Stable")
 
@@ -144,18 +146,20 @@ def main() -> None:
     care = [item for item in consumers if isinstance(item, dict) and item.get("name") == "GoreeCloud Care"]
     req(len(care) == 1, "exactly one Care registry entry")
     care = care[0]
-    req(registry.get("officialBaseline") == TARGET, "V1.2 must remain official baseline while this bridge is active")
-    req(registry.get("requiredConsumerVersion") == TARGET, "V1.2 must remain required consumer version")
-    req(care.get("status") == "accepted-v1", "Care registry status")
-    req(care.get("targetVersion") == TARGET, "Care registry target")
-    req(care.get("requiredTargetVersion") == TARGET, "Care required target")
-    req(care.get("referenceRevision") == FINAL_SOURCE, "Care exact registry revision")
-    req(care.get("evidence") == BRIDGE_PATH, "Care exact registry evidence")
+
+    # Current registry state must preserve V1.2 as complete historical provenance
+    # while requiring a fresh V1.3 adoption/acceptance cycle.
+    req(registry.get("officialBaseline") == CURRENT_TARGET, "V1.3 must be the current official baseline")
+    req(registry.get("requiredConsumerVersion") == CURRENT_TARGET, "V1.3 must be the current required consumer version")
+    req(care.get("status") == "adoption-required", "Care must require fresh V1.3 adoption")
+    req(care.get("targetVersion") == HISTORICAL_TARGET, "Care historical V1.2 target provenance")
+    req(care.get("requiredTargetVersion") == CURRENT_TARGET, "Care current required target")
+    req(care.get("referenceRevision") == FINAL_SOURCE, "Care historical exact registry revision")
+    req(care.get("evidence") == BRIDGE_PATH, "Care historical exact registry evidence")
     req(care.get("productionEligible") is False, "Care registry must not independently grant overall product eligibility")
 
     print(
-        "GoreeCloud Care V1.2 acceptance lineage validated: frozen RC human/native acceptance is preserved, "
-        "exact Care 0.1.0 is explicitly bridged for unchanged Glaze behavior, and the registry is exact-source accepted-v1."
+        "GoreeCloud Care V1.2 acceptance lineage validated as historical migration provenance: frozen RC human/native acceptance and exact Care 0.1.0 bridge remain intact; fresh V1.3 adoption is required and no current production eligibility is granted."
     )
 
 
