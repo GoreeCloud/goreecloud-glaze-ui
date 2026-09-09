@@ -4,35 +4,28 @@ on:
   push:
     branches:
       - main
-      - fix/v1.2-stable-validation-boundary
   pull_request:
     paths:
       - "VERSION"
       - "registry/lifecycle.json"
       - "GLAZE_UI_V1_2.md"
       - "GLAZE_UI_V1_2_CANDIDATE.md"
-      - "CONFORMANCE.md"
-      - "ACCEPTANCE.md"
-      - "ADOPTION.md"
-      - "ENFORCEMENT.md"
       - "contracts/v1.2/**"
-      - "contracts/v1.3/deferred-qualification.plan.json"
-      - "contracts/v1.3/stable-readiness.plan.json"
-      - "tokens/glaze-v1.2-**"
+      - "contracts/v1.3/**"
       - "css/glaze-v1.2-**"
       - "js/glaze-v1.2-**"
       - "reference/v1.2/**"
-      - "contracts/performance/glaze-v1-performance-budget.json"
-      - "contracts/glaze.conformance-evidence.schema.json"
       - "acceptance/v1.2-**"
+      - "acceptance/v1.3-stable.md"
       - "acceptance/v1.3-deferred-qualification.md"
+      - "GLAZE_UI_V1_3_1_HARDENING.md"
+      - "consumers/**"
       - "scripts/validate_glaze_v1.py"
       - "scripts/validate_glaze_v1_2_candidate.py"
       - "scripts/validate_glaze_v1_2_candidate_legacy.py"
       - "scripts/validate_glaze_v1_2_stable.py"
       - "scripts/validate_glaze_v1_2_living_glaze.py"
       - "scripts/validate_glaze_v1_2_living_glaze_legacy.py"
-      - "scripts/validate_glaze_v1_2_documentation_versions.py"
       - "scripts/glaze_v1_2_promoted_source_runner.py"
       - ".github/workflows/glaze-v1.2-exact-head-readiness.yml"
   workflow_dispatch:
@@ -44,7 +37,7 @@ jobs:
   exact-head-readiness:
     runs-on: ubuntu-24.04
     steps:
-      - name: Check out exact Stable revision
+      - name: Check out exact current revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -56,26 +49,21 @@ jobs:
           python-version: "3.12"
           check-latest: false
 
-      - name: Validate exact V1.2 Stable authority
+      - name: Validate current Stable and retained V1.2 authority
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
-          test "$(cat VERSION)" = "1.2.0"
-          python scripts/validate_glaze_v1_2_stable.py
+          test "$(cat VERSION)" = "1.3.0"
           python scripts/validate_glaze_v1.py
+          python scripts/validate_glaze_v1_2_stable.py
 
-      - name: Validate promoted V1.2 source layer
+      - name: Validate retained promoted V1.2 source layer
         run: |
           python scripts/validate_glaze_v1_2_candidate.py
           python scripts/validate_glaze_v1_2_living_glaze.py
 
-      - name: Audit current lifecycle and documentation authority
-        run: |
-          python scripts/validate_glaze_v1_2_documentation_versions.py \
-            --output artifacts/glaze-v1.2-lifecycle-version-integrity.json
-
-      - name: Verify staged V1.3 qualification boundary without manufacturing V1.2 evidence
+      - name: Record current-versus-retained lifecycle boundary
         env:
           GLAZE_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
@@ -86,79 +74,58 @@ jobs:
 
           root = Path('.')
           lifecycle = json.loads((root / 'registry/lifecycle.json').read_text(encoding='utf-8'))
-          qualification = json.loads((root / 'contracts/v1.3/deferred-qualification.plan.json').read_text(encoding='utf-8'))
-          stable_plan = json.loads((root / 'contracts/v1.3/stable-readiness.plan.json').read_text(encoding='utf-8'))
-          acceptance = (root / 'acceptance/v1.2-stable.md').read_text(encoding='utf-8')
+          consumers = json.loads((root / 'consumers/registry.json').read_text(encoding='utf-8'))
+          deferred = (root / 'acceptance/v1.3-deferred-qualification.md').read_text(encoding='utf-8')
 
-          assert lifecycle.get('currentStable') == '1.2.0'
-          assert lifecycle.get('currentOfficial') == '1.2.0'
+          assert lifecycle.get('currentStable') == '1.3.0'
+          assert lifecycle.get('currentOfficial') == '1.3.0'
           assert lifecycle.get('activeCandidate') is None
-          assert lifecycle.get('plannedNext') == '1.3.0-candidate'
-
-          assert qualification.get('schemaVersion') == 4
-          assert qualification.get('sourceStable') == '1.2.0'
-          assert qualification.get('targetVersion') == '1.3.0-candidate'
-          assert qualification.get('lifecycle') == 'qualification-active'
-          assert qualification.get('controlPlane', {}).get('status') == 'qualification-active'
-          assert len(qualification.get('candidateStageItems', [])) == 5
-          assert qualification.get('stableStageItems') == ['stable-activation-and-source-namespace-cleanup']
-          assert len(qualification.get('allStablePromotionItems', [])) == 6
-
-          rules = qualification.get('rules', {})
-          assert rules.get('v1.2StableImpliesThesePassed') is False
-          assert rules.get('freshExactRevisionEvidenceRequired') is True
-          assert rules.get('candidateStageMustPassSameExactRevision') is True
-          assert rules.get('stableCleanupOccursAfterCandidateActivation') is True
-          assert rules.get('stableCleanupMayTargetLaterExactRevision') is True
-          assert rules.get('stableCleanupMustReferenceQualifiedCandidateRevision') is True
-          assert rules.get('allSixRequiredBeforeStablePromotion') is True
-          assert rules.get('qualificationReadinessDoesNotPromoteLifecycle') is True
-          assert rules.get('consumerConformanceAutomatic') is False
-          assert rules.get('v1.3LifecyclePromotionAutomatic') is False
-
-          assert stable_plan.get('stage') == 'post-candidate-pre-stable'
-          assert stable_plan.get('prerequisites', {}).get('activeCandidateRequired') is True
-          assert stable_plan.get('stablePromotion', {}).get('allSixQualificationRequirementsMandatoryAcrossStages') is True
-          assert stable_plan.get('stablePromotion', {}).get('automatic') is False
-          assert 'V1.3' in acceptance
+          assert lifecycle.get('plannedNext') == '1.3.1-candidate'
+          retained = next(item for item in lifecycle.get('releases', []) if item.get('version') == '1.2.0')
+          assert retained.get('status') == 'stable'
+          assert retained.get('consumerEligible') is True
+          assert retained.get('stableBaseline') == '1.1.0'
+          assert consumers.get('requiredConsumerVersion') == '1.3.0'
+          assert 'does **not** manufacture' in deferred
+          assert 'missing evidence as passed' in deferred
 
           report = {
-              'schemaVersion': 3,
+              'schemaVersion': 4,
               'status': 'pass',
               'repository': 'GoreeCloud/goreecloud-glaze-ui',
               'revision': os.environ['GLAZE_SOURCE_REVISION'],
-              'currentStable': '1.2.0',
-              'currentOfficial': '1.2.0',
-              'activeCandidate': None,
-              'plannedNext': '1.3.0-candidate',
-              'v1.3Qualification': {
-                  'lifecycle': 'qualification-active',
-                  'targetVersion': '1.3.0-candidate',
-                  'representedAsPassedV1.2Evidence': False,
-                  'freshExactRevisionEvidenceRequired': True,
-                  'candidateBlockingWorkstreamCount': 5,
-                  'candidateStageSameExactRevisionRequired': True,
-                  'stableBlockingWorkstreamCountAcrossStages': 6,
-                  'stableCleanupPostCandidate': True,
-                  'candidateActivationImplied': False,
-                  'stablePromotionImplied': False,
+              'currentAuthority': {
+                  'version': '1.3.0',
+                  'lifecycle': 'stable',
+                  'consumerEligible': True,
+                  'activeCandidate': None,
+                  'plannedNext': '1.3.1-candidate',
+              },
+              'retainedV12': {
+                  'version': '1.2.0',
+                  'status': retained.get('status'),
+                  'consumerEligibleForRollbackAudit': retained.get('consumerEligible'),
+                  'stableBaseline': retained.get('stableBaseline'),
+                  'representedAsCurrentStable': False,
+              },
+              'v131DeferredQualification': {
+                  'representedAsPassed': False,
+                  'automaticLifecyclePromotion': False,
               },
               'downstreamConsumerAcceptanceImplied': False,
           }
-          out = root / 'artifacts/glaze-v1.2-stable-boundary.json'
+          out = root / 'artifacts/glaze-v1.2-retained-source-boundary.json'
           out.parent.mkdir(parents=True, exist_ok=True)
           out.write_text(json.dumps(report, indent=2, sort_keys=True) + '\n', encoding='utf-8')
-          print('GLAZE UI V1.2 exact-head Stable boundary: PASS')
-          print('V1.3 staged qualification remains separate from V1.2 Stable evidence and lifecycle authority.')
+          print('GLAZE UI retained V1.2 exact-head boundary: PASS')
+          print('V1.3 / 1.3.0 remains current Stable; V1.2 is retained rollback/audit source and V1.3.1 evidence remains unpassed.')
           PY
 
-      - name: Upload exact-head Stable boundary evidence
+      - name: Upload retained-source boundary evidence
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: glaze-v1.2-stable-boundary-${{ github.event.pull_request.head.sha || github.sha }}
-          path: |
-            artifacts/glaze-v1.2-stable-boundary.json
-            artifacts/glaze-v1.2-lifecycle-version-integrity.json
+          name: glaze-v1.2-retained-source-boundary-${{ github.event.pull_request.head.sha || github.sha }}
+          path: artifacts/glaze-v1.2-retained-source-boundary.json
           if-no-files-found: error
           retention-days: 14
           compression-level: 6
