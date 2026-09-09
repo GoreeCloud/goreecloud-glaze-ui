@@ -63,13 +63,19 @@ def workflow_paths() -> list[Path]:
     return paths
 
 
-def parse_external(ref: str) -> tuple[str, str] | None:
+def parse_external(ref: str, relative: str) -> tuple[str, str] | None:
     if ref.startswith("./"):
         return None
-    require("@" in ref, f"external action reference has no immutable ref separator: {ref}")
+    require(
+        "@" in ref,
+        f"{relative}: external action reference has no immutable ref separator: {ref}",
+    )
     action, revision = ref.rsplit("@", 1)
-    require(action in APPROVED_EXTERNAL_ACTIONS, f"unapproved external action family: {action}")
-    require(SHA.fullmatch(revision) is not None, f"external action is not pinned to a 40-char lowercase SHA: {ref}")
+    require(action in APPROVED_EXTERNAL_ACTIONS, f"{relative}: unapproved external action family: {action}")
+    require(
+        SHA.fullmatch(revision) is not None,
+        f"{relative}: external action is not pinned to a 40-char lowercase SHA: {ref}",
+    )
     return action, revision
 
 
@@ -89,7 +95,7 @@ def validate() -> dict[str, object]:
             files_without_uses.append(relative)
             continue
         for ref in refs:
-            parsed = parse_external(ref)
+            parsed = parse_external(ref, relative)
             if parsed is None:
                 local_reusable.add(ref)
                 continue
