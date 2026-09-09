@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit current V1.2 Stable lifecycle/version language across tracked text sources."""
+"""Audit current V1.3 lifecycle/version language and retained V1.2 history."""
 from __future__ import annotations
 
 import argparse
@@ -11,15 +11,20 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 LIFECYCLE = ROOT / "registry" / "lifecycle.json"
 VERSION = ROOT / "VERSION"
+CURRENT_VERSION = "1.3.0"
+PREVIOUS_STABLE = "1.2.0"
+OLDER_STABLE = "1.1.0"
+CURRENT_LABEL = "GLAZE UI V1.3 — Adaptive Resonance"
 
 CURRENT_AUTHORITY_DOCS = {
-    "README.md": ("current Stable",),
-    "CONTRIBUTING.md": ("current Stable", "Proposed / qualification-active"),
-    "GLAZE_UI_V1_2.md": ("Stable",),
-    "CONFORMANCE.md": ("conformance target",),
-    "ACCEPTANCE.md": ("current Stable",),
-    "ADOPTION.md": ("adoption target",),
-    "ENFORCEMENT.md": ("consumer-conformance target",),
+    "README.md": ("current Official, Stable",),
+    "CONTRIBUTING.md": ("current Official, Stable", "V1.3.1"),
+    "GLAZE_UI_V1_3.md": ("Stable",),
+    "CONFORMANCE.md": ("current Stable", "conformance target"),
+    "ACCEPTANCE.md": ("current Official, Stable",),
+    "ADOPTION.md": ("current Glaze UI adoption target",),
+    "ENFORCEMENT.md": ("current Glaze UI enforcement",),
+    "CONSUMERS.md": ("required target",),
     "website/README.md": ("current Stable",),
     "ICON_CONSTRUCTION.md": ("Current Stable product authority",),
     "ICON_IDENTITY.md": ("Current Stable product authority",),
@@ -29,6 +34,7 @@ HISTORICAL_DOCS = (
     "GLAZE_UI_V1_0.md",
     "GLAZE_UI_V1_1.md",
     "GLAZE_UI_V1_1_CANDIDATE.md",
+    "GLAZE_UI_V1_2.md",
     "GLAZE_UI_V1_2_CANDIDATE.md",
     "MIGRATION_V1_1_TO_V1_2.md",
     "releases/1.0.0.md",
@@ -70,16 +76,37 @@ HISTORICAL_PREPROMOTION_VALIDATORS = {
 }
 
 HISTORICAL_QUALIFIERS = (
-    "historical", "at the time", "at publication", "then-current", "superseded",
-    "not current", "does not define the current", "does not override the current",
-    "was current", "was the current", "previous stable", "prior stable", "rollback",
+    "historical",
+    "at the time",
+    "at publication",
+    "then-current",
+    "superseded",
+    "not current",
+    "does not define the current",
+    "does not override the current",
+    "was current",
+    "was the current",
+    "previous stable",
+    "prior stable",
+    "rollback",
+    "retained",
+    "preceding",
 )
 STRONG_CURRENT_CLAIMS = (
-    "sole current", "current official target", "current stable", "current product identity",
-    "current product version", "current product baseline", "current application target",
-    "current adoption target", "current conformance target", "current target",
+    "sole current",
+    "current official target",
+    "current stable",
+    "current product identity",
+    "current product version",
+    "current product baseline",
+    "current application target",
+    "current adoption target",
+    "current conformance target",
+    "current target",
     "all current glaze ui work targets",
-    "currentstable", "currentofficial", "officialproductlabel",
+    "currentstable",
+    "currentofficial",
+    "officialproductlabel",
 )
 
 
@@ -95,7 +122,9 @@ def read_text(relative: str) -> str:
 
 
 def tracked_files() -> list[str]:
-    result = subprocess.run(["git", "ls-files", "-z"], cwd=ROOT, check=True, capture_output=True)
+    result = subprocess.run(
+        ["git", "ls-files", "-z"], cwd=ROOT, check=True, capture_output=True
+    )
     return sorted(part.decode("utf-8") for part in result.stdout.split(b"\0") if part)
 
 
@@ -134,7 +163,11 @@ def historical_record(relative: str, text: str) -> bool:
 
     if relative.startswith("acceptance/v1.1") or relative.startswith("contracts/v1.1/"):
         return True
+    if relative.startswith("acceptance/v1.2") or relative.startswith("contracts/v1.2/"):
+        return True
     if relative.startswith("releases/1.1") or relative.startswith("reference/v1.1/"):
+        return True
+    if relative.startswith("reference/v1.2/"):
         return True
     if relative.startswith("scripts/") and name in HISTORICAL_PREPROMOTION_VALIDATORS:
         return True
@@ -144,7 +177,13 @@ def historical_record(relative: str, text: str) -> bool:
         return True
 
     preamble = text[:1600].lower()
-    return "historical record" in preamble or "historical status" in preamble or "superseded" in preamble
+    return (
+        "historical record" in preamble
+        or "historical status" in preamble
+        or "historical stable" in preamble
+        or "superseded" in preamble
+        or "retained rollback" in preamble
+    )
 
 
 def main() -> int:
@@ -159,45 +198,59 @@ def main() -> int:
     active_candidate = lifecycle.get("activeCandidate")
     planned_next = lifecycle.get("plannedNext")
 
-    if current_stable != "1.2.0" or current_official != "1.2.0" or version != "1.2.0":
-        fail("VERSION/currentStable/currentOfficial must agree on V1.2 Stable / 1.2.0")
+    if (
+        current_stable != CURRENT_VERSION
+        or current_official != CURRENT_VERSION
+        or version != CURRENT_VERSION
+    ):
+        fail("VERSION/currentStable/currentOfficial must agree on V1.3 Stable / 1.3.0")
+    if lifecycle.get("officialProductLabel") != CURRENT_LABEL:
+        fail("officialProductLabel must identify GLAZE UI V1.3 — Adaptive Resonance")
     if active_candidate is not None:
-        fail("V1.2 Stable must not retain an active V1.2 Candidate")
-    if planned_next != "1.3.0-candidate":
-        fail("plannedNext must identify the deferred V1.3 Candidate track")
+        fail("V1.3 Stable authority must not retain an active Candidate")
+    if planned_next != "1.3.1-candidate":
+        fail("plannedNext must identify the V1.3.1 follow-up Candidate line")
 
-    stable_release = release_for(lifecycle, "1.2.0")
-    previous_release = release_for(lifecycle, "1.1.0")
-    if stable_release.get("status") != "stable" or stable_release.get("consumerEligible") is not True:
-        fail("V1.2 must remain Stable and consumer-eligible at the design-system release level")
-    if stable_release.get("stableBaseline") != "1.1.0":
-        fail("V1.2 rollback baseline must remain 1.1.0")
+    current_release = release_for(lifecycle, CURRENT_VERSION)
+    previous_release = release_for(lifecycle, PREVIOUS_STABLE)
+    older_release = release_for(lifecycle, OLDER_STABLE)
+    if current_release.get("status") != "stable" or current_release.get("consumerEligible") is not True:
+        fail("V1.3 must remain Stable and consumer-eligible at the design-system release level")
+    if current_release.get("stableBaseline") != PREVIOUS_STABLE:
+        fail("V1.3 rollback baseline must remain 1.2.0")
     if previous_release.get("status") != "stable" or previous_release.get("consumerEligible") is not True:
-        fail("V1.1 rollback release record must remain intact")
-
-    stable_label = stable_release.get("label")
-    if not isinstance(stable_label, str) or not stable_label:
-        fail("V1.2 Stable release label is missing")
+        fail("V1.2 retained rollback release record must remain intact")
+    if previous_release.get("stableBaseline") != OLDER_STABLE:
+        fail("V1.2 retained rollback baseline must remain 1.1.0")
+    if older_release.get("status") != "stable" or older_release.get("consumerEligible") is not True:
+        fail("V1.1 historical Stable release record must remain intact")
 
     for relative, required_phrases in CURRENT_AUTHORITY_DOCS.items():
         text = read_text(relative)
-        if "1.2.0" not in text and "GLAZE UI V1.2" not in text:
-            fail(f"{relative} does not identify V1.2 current authority")
+        if CURRENT_VERSION not in text and "GLAZE UI V1.3" not in text:
+            fail(f"{relative} does not identify V1.3 current authority")
         for phrase in required_phrases:
             if phrase.lower() not in text.lower():
                 fail(f"{relative} missing lifecycle phrase {phrase!r}")
 
-    for relative in HISTORICAL_DOCS:
-        text = read_text(relative)
-        preamble = text[:1400].lower()
-        if "historical" not in preamble and "superseded" not in preamble:
-            fail(f"{relative} must identify itself as historical or superseded near its preamble")
-        if "GLAZE UI V1.2" not in text[:2200] and "1.2.0" not in text[:2200]:
-            fail(f"{relative} must point to V1.2 as the current Stable successor near its preamble")
+    v12_contract = read_text("GLAZE_UI_V1_2.md")
+    v12_preamble = v12_contract[:1400].lower()
+    if "historical stable" not in v12_preamble and "retained rollback" not in v12_preamble:
+        fail("GLAZE_UI_V1_2.md must identify V1.2 as retained historical Stable near its preamble")
+    if CURRENT_VERSION not in v12_contract[:2200] and "GLAZE UI V1.3" not in v12_contract[:2200]:
+        fail("GLAZE_UI_V1_2.md must point to V1.3 as current Stable near its preamble")
 
     sources = tracked_text_sources()
     stale_findings: list[dict[str, Any]] = []
-    historical_markers = ("glaze ui v1.0", "glaze ui v1.1", "1.0.0", "1.1.0", "1.2.0-candidate")
+    historical_markers = (
+        "glaze ui v1.0",
+        "glaze ui v1.1",
+        "glaze ui v1.2",
+        "1.0.0",
+        "1.1.0",
+        "1.2.0",
+        "1.3.0-candidate",
+    )
     validator_relative = "scripts/validate_glaze_v1_2_documentation_versions.py"
     for relative, text in sources.items():
         if relative == validator_relative:
@@ -211,29 +264,34 @@ def main() -> int:
                 continue
             if is_history or any(qualifier in lowered for qualifier in HISTORICAL_QUALIFIERS):
                 continue
-            stale_findings.append({"path": relative, "line": line_number, "text": line.strip()[:240]})
+            stale_findings.append(
+                {"path": relative, "line": line_number, "text": line.strip()[:240]}
+            )
 
     if stale_findings:
-        preview = "; ".join(f"{item['path']}:{item['line']} {item['text']}" for item in stale_findings[:20])
+        preview = "; ".join(
+            f"{item['path']}:{item['line']} {item['text']}" for item in stale_findings[:20]
+        )
         fail(f"obsolete lifecycle/version authority language found: {preview}")
 
     report = {
-        "schemaVersion": 6,
+        "schemaVersion": 7,
         "status": "pass",
         "currentOfficial": current_official,
         "currentStable": current_stable,
-        "currentStableLabel": stable_label,
+        "currentStableLabel": current_release.get("label"),
         "activeCandidate": active_candidate,
         "plannedNext": planned_next,
-        "previousStableRollback": "1.1.0",
+        "previousStableRollback": PREVIOUS_STABLE,
+        "olderStableHistory": OLDER_STABLE,
         "auditedTrackedUtf8TextFiles": len(sources),
         "currentAuthorityDocuments": sorted(CURRENT_AUTHORITY_DOCS),
-        "historicalDocumentsExplicitlyQualified": list(HISTORICAL_DOCS),
+        "retainedV12Contract": "GLAZE_UI_V1_2.md",
         "historicalPrePromotionValidators": sorted(HISTORICAL_PREPROMOTION_VALIDATORS),
         "obsoleteLifecycleAuthorityFindings": 0,
-        "scopeRule": "Historical Candidate/RC/release and superseded pre-promotion qualification records are preserved as provenance, while current V1.2 authority surfaces remain fail-closed against superseded lifecycle claims.",
-        "contributingRule": "CONTRIBUTING.md is a current authority surface and must identify V1.2 / 1.2.0 as Stable while V1.3 remains Proposed / qualification-active until governed promotion.",
-        "deferredQualificationRule": "V1.3 deferral does not convert unperformed V1.2 human/manual/physical qualification into passed evidence.",
+        "scopeRule": "Current authority surfaces identify V1.3 / 1.3.0 as Official Stable; V1.2 is retained rollback/audit history and historical Candidate/RC records remain provenance.",
+        "followUpRule": "V1.3.1 hardening and qualification obligations remain unresolved unless fresh accepted evidence exists; their transfer does not manufacture V1.3.0 passes.",
+        "consumerRule": "V1.3 Stable consumer eligibility does not imply downstream conformance or product production acceptance.",
     }
     rendered = json.dumps(report, indent=2, sort_keys=True) + "\n"
     if args.output:
