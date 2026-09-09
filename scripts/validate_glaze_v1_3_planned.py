@@ -68,8 +68,16 @@ def main():
     hardening = (ROOT / "GLAZE_UI_V1_3_1_HARDENING.md").read_text()
     for text, name in [(stable_acceptance, "Stable acceptance"), (deferred, "deferred qualification"), (hardening, "V1.3.1 hardening")]:
         req("V1.3.1" in text, f"{name} must identify V1.3.1 follow-up")
-    req("not represented as passed" in stable_acceptance, "Stable acceptance must not fabricate deferred passes")
-    req("does **not** manufacture" in deferred, "deferred qualification must preserve evidence integrity")
+    stable_integrity_language = (
+        "must not be represented as passed" in stable_acceptance
+        and "not rewritten as a pass" in stable_acceptance
+    )
+    req(stable_integrity_language, "Stable acceptance must not fabricate deferred passes")
+    deferred_integrity_language = (
+        "does **not** manufacture" in deferred
+        and "missing evidence as passed" in deferred
+    )
+    req(deferred_integrity_language, "deferred qualification must preserve evidence integrity")
 
     if errors:
         print("GLAZE UI V1.3 release/deferred qualification validation FAILED:")
