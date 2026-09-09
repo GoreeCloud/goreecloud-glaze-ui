@@ -1,9 +1,9 @@
-# GLAZE UI V1.2 Acceptance
+# GLAZE UI V1.3 Acceptance
 
-GLAZE UI V1.2 / 1.2.0 is the current Stable design-system release under the explicit GoreeCloud project-owner lifecycle decision of 2026-09-06.
+GLAZE UI V1.3 — Adaptive Resonance / `1.3.0` is the current Official, Stable, consumer-eligible design-system release under the explicit GoreeCloud project-owner lifecycle decision of 2026-09-08.
 
-Stable source authority includes the implemented Frosted Neutral + Living Frosted contracts, Stable wrapper entrypoints, current lifecycle and token manifests, inherited V1 semantic/material/accessibility authority, bounded browser/native-reference evidence, and preserved V1.1 rollback authority.
+Stable source authority includes the V1.3 aggregate contract and Stable entrypoints, the current lifecycle and consumer registries, inherited V1 foundations, the promoted Adaptive Resonance source, preserved V1.2 rollback authority, and `acceptance/v1.3-stable.md` as the controlling V1.3 release decision.
 
-The remaining human optical, manual assistive-technology, physical-device/OEM/compositor, production-performance, native Personalization-adapter, and compatibility-namespace qualification work is postponed to V1.3. Those items are not represented as passed V1.2 evidence.
+Human optical and icon-collision review, manual assistive-technology qualification, physical-device/native-platform qualification, physical-device production-performance qualification, native Personalization-adapter qualification, and Stable activation/source-namespace cleanup remain V1.3.1 follow-up obligations. Those items are not represented as passed V1.3.0 evidence.
 
-No downstream GoreeCloud application becomes V1.2-conformant or production-eligible automatically. Each consumer must explicitly target 1.2.0 and satisfy its own exact-revision acceptance boundary.
+No downstream GoreeCloud application becomes V1.3-conformant or production-eligible automatically. Each consumer must explicitly target `1.3.0` and satisfy its own exact-revision acceptance boundary.
