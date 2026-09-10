@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the Proposed GLAZE UI V1.3 Personalization workstream."""
+"""Validate the historical GLAZE UI V1.3 Personalization workstream."""
 from __future__ import annotations
 
 import json
@@ -8,7 +8,8 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 PRODUCT = "GLAZE UI V1.3 — Adaptive Resonance"
-STABLE_VERSION = "1.2.0"
+SOURCE_STABLE_VERSION = "1.2.0"
+CURRENT_STABLE_VERSION = "1.3.0"
 PLAN = "contracts/v1.3/adaptive-resonance.plan.json"
 CONTRACT = "contracts/v1.3/personalization.candidate.json"
 RUNTIME = "js/glaze-v1.3-personalization.candidate.mjs"
@@ -50,15 +51,15 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == STABLE_VERSION, "VERSION must remain 1.2.0")
+    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == CURRENT_STABLE_VERSION, "VERSION must identify current Stable 1.3.0")
     lifecycle = load("registry/lifecycle.json")
-    req(lifecycle.get("currentStable") == STABLE_VERSION, "currentStable must remain 1.2.0")
-    req(lifecycle.get("currentOfficial") == STABLE_VERSION, "currentOfficial must remain 1.2.0")
-    req(lifecycle.get("activeCandidate") is None, "Personalization work must not activate lifecycle Candidate")
+    req(lifecycle.get("currentStable") == CURRENT_STABLE_VERSION, "currentStable must remain 1.3.0")
+    req(lifecycle.get("currentOfficial") == CURRENT_STABLE_VERSION, "currentOfficial must remain 1.3.0")
+    req(lifecycle.get("activeCandidate") is None, "Personalization validation must not activate lifecycle Candidate")
 
     plan = load(PLAN)
     # Phase 0 owns global development-phase sequencing. Personalization must
-    # remain reusable as a dependency revalidation gate in later V1.3 phases.
+    # remain reusable as a dependency revalidation gate after V1.3 promotion.
     workstreams = {item.get("id"): item for item in plan.get("workstreams", [])}
     for dep in DEPENDENCIES:
         req(workstreams.get(dep, {}).get("status") == "implemented-and-validated", f"Personalization requires validated dependency {dep}")
@@ -72,10 +73,10 @@ def main() -> int:
     contract = load(CONTRACT)
     req(contract.get("product") == PRODUCT, "Personalization product mismatch")
     req(contract.get("targetVersion") == "1.3.0-candidate", "Personalization target mismatch")
-    req(contract.get("releaseLifecycle") == "proposed", "Personalization lifecycle must remain Proposed")
+    req(contract.get("releaseLifecycle") == "proposed", "historical Personalization artifact lifecycle must remain Proposed")
     req(contract.get("lifecycleAuthority") is False, "Personalization contract must not carry lifecycle authority")
-    req(contract.get("consumerEligible") is False, "Personalization contract must not be consumer eligible")
-    req(contract.get("sourceStable") == STABLE_VERSION, "Personalization must extend V1.2 Stable")
+    req(contract.get("consumerEligible") is False, "historical Personalization candidate artifact must not be consumer eligible")
+    req(contract.get("sourceStable") == SOURCE_STABLE_VERSION, "historical Personalization artifact must preserve its V1.2 Stable source baseline")
     req(contract.get("principle") == "Personalize expression, not truth or control semantics.", "Personalization principle changed")
     req(contract.get("preferencePrecedence") == EXPECTED_PRECEDENCE, "Personalization precedence changed")
 
@@ -157,7 +158,7 @@ def main() -> int:
         return 1
 
     print("GLAZE UI V1.3 Personalization: PASS")
-    print("Boundary: bounded local personalization is implemented without claiming native adapter, persistence, sync, physical-device, human, production, lifecycle, or consumer acceptance.")
+    print("Boundary: historical V1.3 candidate artifacts preserve their V1.2 source provenance while repository lifecycle authority remains current V1.3.0 Stable; bounded local personalization is revalidated without native-adapter, persistence, human, lifecycle, or consumer acceptance claims.")
     return 0
 
 
