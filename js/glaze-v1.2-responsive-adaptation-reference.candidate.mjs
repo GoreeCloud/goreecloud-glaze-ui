@@ -41,7 +41,8 @@ function initControls(root) {
   }
 }
 
-export function initializeResponsiveAdaptationReference(scope = document) {
+export function initializeResponsiveAdaptationReference(scope = globalThis.document) {
+  if (!scope?.querySelectorAll) return;
   for (const root of scope.querySelectorAll(ROOT_SELECTOR)) {
     initNavigation(root);
     initSelection(root);
@@ -51,7 +52,11 @@ export function initializeResponsiveAdaptationReference(scope = document) {
 
 export function applyReferenceComposition(root, layoutClass) { return recompose(root, layoutClass); }
 
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => initializeResponsiveAdaptationReference(), { once: true });
-else initializeResponsiveAdaptationReference();
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => initializeResponsiveAdaptationReference(), { once: true });
+  else initializeResponsiveAdaptationReference();
+}
 
-window.GlazeV12ResponsiveAdaptation = Object.freeze({ initializeResponsiveAdaptationReference, applyReferenceComposition });
+if (typeof window !== 'undefined') {
+  window.GlazeV12ResponsiveAdaptation = Object.freeze({ initializeResponsiveAdaptationReference, applyReferenceComposition });
+}
