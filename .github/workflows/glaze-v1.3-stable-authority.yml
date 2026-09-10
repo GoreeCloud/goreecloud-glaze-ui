@@ -6,6 +6,7 @@ on:
       - VERSION
       - GLAZE_UI_V1_3.md
       - GLAZE_UI_V1_3_1_HARDENING.md
+      - FEATURE-ROADMAP.md
       - README.md
       - CONSUMERS.md
       - MIGRATION_V1_2_TO_V1_3.md
@@ -17,13 +18,17 @@ on:
       - js/**
       - contracts/v1.3/**
       - evidence/v1.3/**
+      - website/**
       - scripts/validate_glaze_v1_3_*.py
+      - scripts/validate_design_center_responsive.py
+      - scripts/validate_design_center_mobile.py
       - .github/workflows/glaze-v1.3-stable-authority.yml
   pull_request:
     paths:
       - VERSION
       - GLAZE_UI_V1_3.md
       - GLAZE_UI_V1_3_1_HARDENING.md
+      - FEATURE-ROADMAP.md
       - README.md
       - CONSUMERS.md
       - MIGRATION_V1_2_TO_V1_3.md
@@ -35,7 +40,10 @@ on:
       - js/**
       - contracts/v1.3/**
       - evidence/v1.3/**
+      - website/**
       - scripts/validate_glaze_v1_3_*.py
+      - scripts/validate_design_center_responsive.py
+      - scripts/validate_design_center_mobile.py
       - .github/workflows/glaze-v1.3-stable-authority.yml
 
 permissions:
@@ -90,6 +98,15 @@ jobs:
         run: |
           grep -F 'official Stable web entrypoint' css/glaze-v1.3.0.css
           grep -F '@import url("./glaze-v1.2.0.css");' css/glaze-v1.3.0.css
+
+      - name: Validate Design Center authority publication
+        run: python website/validate.py
+
+      - name: Validate Design Center mobile-first source contract
+        run: python scripts/validate_design_center_responsive.py
+
+      - name: Validate rendered Design Center Mobile UI
+        run: python scripts/validate_design_center_mobile.py
 
       - name: Verify release authority markers
         run: |
