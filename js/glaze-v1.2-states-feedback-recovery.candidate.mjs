@@ -77,7 +77,8 @@ function initNoResults(root) {
   }
 }
 
-export function initializeStatesFeedbackRecovery(scope = document) {
+export function initializeStatesFeedbackRecovery(scope = globalThis.document) {
+  if (!scope?.querySelectorAll) return;
   for (const root of scope.querySelectorAll(ROOT_SELECTOR)) {
     initSequences(root);
     initRecovery(root);
@@ -85,10 +86,14 @@ export function initializeStatesFeedbackRecovery(scope = document) {
   }
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => initializeStatesFeedbackRecovery(), { once: true });
-} else {
-  initializeStatesFeedbackRecovery();
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => initializeStatesFeedbackRecovery(), { once: true });
+  } else {
+    initializeStatesFeedbackRecovery();
+  }
 }
 
-window.GlazeV12StatesFeedbackRecovery = Object.freeze({ initializeStatesFeedbackRecovery });
+if (typeof window !== 'undefined') {
+  window.GlazeV12StatesFeedbackRecovery = Object.freeze({ initializeStatesFeedbackRecovery });
+}
