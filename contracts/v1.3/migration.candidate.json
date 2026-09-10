@@ -10,7 +10,7 @@
   "consumerEligible": false,
   "sourceStable": "1.2.0",
   "workstream": "migration-and-consumer-boundary",
-  "purpose": "Define a fail-closed V1.2-to-V1.3 migration control plane, exact-anchor consumer evidence boundary, rollback policy, and later rollout model without changing live lifecycle or consumer targets and without migrating consumers by declaration.",
+  "purpose": "Retain the fail-closed V1.2-to-V1.3 migration control plane, exact-anchor consumer evidence boundary, rollback policy, and governed rollout model after V1.3.0 Stable promotion without granting downstream conformance or production approval by declaration.",
   "extends": [
     "contracts/v1.2/migration.candidate.json",
     "ADOPTION.md",
@@ -21,9 +21,9 @@
     "contracts/v1.3/component-experience.candidate.json"
   ],
   "liveAuthority": {
-    "currentStable": "1.2.0",
-    "currentOfficial": "1.2.0",
-    "requiredConsumerVersion": "1.2.0",
+    "currentStable": "1.3.0",
+    "currentOfficial": "1.3.0",
+    "requiredConsumerVersion": "1.3.0",
     "consumerRegistry": "consumers/registry.json",
     "v1_3MayChangeLiveConsumerTargetInThisWorkstream": false,
     "v1_3MayChangeVersionFileInThisWorkstream": false,
@@ -135,12 +135,10 @@
       "automated-contract-runtime-schema-and-doc-validation"
     ],
     "notEstablished": [
-      "any-consumer-v1.3-migration",
-      "any-consumer-v1.3-conformance",
-      "any-consumer-v1.3-production-eligibility",
-      "v1.3-lifecycle-candidate",
-      "v1.3-release-candidate",
-      "v1.3-stable",
+      "automatic-consumer-v1.3-migration",
+      "automatic-consumer-v1.3-conformance",
+      "automatic-consumer-v1.3-production-eligibility",
+      "retroactive-v1.3-lifecycle-promotion-evidence",
       "native-platform-consumer-acceptance",
       "assistive-technology-consumer-acceptance",
       "physical-device-consumer-acceptance",
