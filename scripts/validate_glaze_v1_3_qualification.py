@@ -86,7 +86,10 @@ def main() -> int:
     hardening = (ROOT / "GLAZE_UI_V1_3_1_HARDENING.md").read_text()
     req("Historical Candidate Qualification Ledger" in candidate, "Candidate ledger must be historical/superseded")
     req("V1.3.1" in deferred and "V1.3.1" in hardening, "deferred qualification must be carried into V1.3.1")
-    req("not represented as passed" in stable, "Stable acceptance must reject fabricated qualification passes")
+    req(
+        "must not be represented as passed until real evidence exists" in stable,
+        "Stable acceptance must explicitly reject fabricated qualification passes until real evidence exists",
+    )
 
     if errors:
         print("GLAZE UI V1.3 qualification boundary validation FAILED:")
