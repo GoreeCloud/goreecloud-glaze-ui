@@ -8,7 +8,8 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 PRODUCT = "GLAZE UI V1.3 — Adaptive Resonance"
-STABLE_VERSION = "1.2.0"
+CURRENT_STABLE_VERSION = "1.3.0"
+SOURCE_STABLE_VERSION = "1.2.0"
 PLAN = "contracts/v1.3/adaptive-resonance.plan.json"
 CONTRACT = "contracts/v1.3/accessibility.candidate.json"
 RUNTIME = "js/glaze-v1.3-accessibility.candidate.mjs"
@@ -60,10 +61,10 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == STABLE_VERSION, "VERSION must remain 1.2.0")
+    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == CURRENT_STABLE_VERSION, "VERSION must remain 1.3.0")
     lifecycle = load("registry/lifecycle.json")
-    req(lifecycle.get("currentStable") == STABLE_VERSION, "currentStable must remain 1.2.0")
-    req(lifecycle.get("currentOfficial") == STABLE_VERSION, "currentOfficial must remain 1.2.0")
+    req(lifecycle.get("currentStable") == CURRENT_STABLE_VERSION, "currentStable must remain 1.3.0")
+    req(lifecycle.get("currentOfficial") == CURRENT_STABLE_VERSION, "currentOfficial must remain 1.3.0")
     req(lifecycle.get("activeCandidate") is None, "Accessibility work must not activate lifecycle Candidate")
 
     plan = load(PLAN)
@@ -85,7 +86,7 @@ def main() -> int:
     req(contract.get("releaseLifecycle") == "proposed", "accessibility lifecycle must remain Proposed")
     req(contract.get("lifecycleAuthority") is False, "accessibility contract must not carry lifecycle authority")
     req(contract.get("consumerEligible") is False, "accessibility contract must not be consumer eligible")
-    req(contract.get("sourceStable") == STABLE_VERSION, "accessibility must extend V1.2 Stable")
+    req(contract.get("sourceStable") == SOURCE_STABLE_VERSION, "accessibility must preserve the V1.2 source baseline")
 
     extends = set(contract.get("extends", []))
     for path in [MATRIX, V12_ADAPTATION, V12_TESTING, V12_AT, *DEPENDENCIES.values()]:
@@ -176,7 +177,7 @@ def main() -> int:
         return 1
 
     print("GLAZE UI V1.3 Accessibility + Resilience: PASS")
-    print("Boundary: automated accessibility composition is implemented without claiming manual assistive-technology, physical-device, native-platform, human, production, lifecycle, or consumer acceptance.")
+    print("Boundary: V1.3.0 remains current Stable; automated accessibility composition preserves V1.2 source provenance without claiming manual assistive-technology, physical-device, native-platform, human, production, or V1.3.1 acceptance.")
     return 0
 
 
