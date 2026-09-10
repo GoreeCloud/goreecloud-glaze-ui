@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-STABLE_VERSION = "1.2.0"
+STABLE_VERSION = "1.3.0"
 CONTRACT = "contracts/v1.3.1/accessibility-interaction-hardening.candidate.json"
 RUNTIME = "js/glaze-v1.3.1-accessibility-interaction-hardening.candidate.mjs"
 STYLESHEET = "css/glaze-v1.3.1-accessibility-interaction-hardening.candidate.css"
@@ -38,18 +38,19 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == STABLE_VERSION, "VERSION must remain 1.2.0")
+    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == STABLE_VERSION, "VERSION must remain 1.3.0")
     lifecycle = load("registry/lifecycle.json")
-    req(lifecycle.get("currentStable") == STABLE_VERSION, "currentStable must remain 1.2.0")
-    req(lifecycle.get("currentOfficial") == STABLE_VERSION, "currentOfficial must remain 1.2.0")
+    req(lifecycle.get("currentStable") == STABLE_VERSION, "currentStable must remain 1.3.0")
+    req(lifecycle.get("currentOfficial") == STABLE_VERSION, "currentOfficial must remain 1.3.0")
     req(lifecycle.get("activeCandidate") is None, "hardening work must not activate a lifecycle Candidate")
+    req(lifecycle.get("plannedNext") == "1.3.1-candidate", "plannedNext must retain the governed V1.3.1 candidate line")
 
     contract = load(CONTRACT)
     req(contract.get("hardeningTrack") == "V1.3.1", "hardening track must be V1.3.1")
     req(contract.get("releaseLifecycle") == "development-only", "hardening artifact must remain development-only")
     req(contract.get("lifecycleAuthority") is False, "hardening artifact must not carry lifecycle authority")
     req(contract.get("consumerEligible") is False, "hardening artifact must not be consumer eligible")
-    req(contract.get("sourceStable") == STABLE_VERSION, "hardening artifact must preserve the V1.2 Stable baseline")
+    req(contract.get("sourceStable") == STABLE_VERSION, "hardening artifact must build from current V1.3.0 Stable")
     for path in DEPENDENCIES:
         req(path in set(contract.get("extends", [])), f"hardening inheritance missing {path}")
 
@@ -93,7 +94,7 @@ def main() -> int:
 
     reference = (ROOT / REFERENCE).read_text(encoding="utf-8")
     req("data-glaze-v1-3-1-hardening" in reference, "reference must opt into the scoped hardening layer")
-    req("../../css/glaze-v1.2.0.css" in reference, "reference must preserve the V1.2 Stable rendering baseline")
+    req("../../css/glaze-v1.3.0.css" in reference, "reference must use the current V1.3.0 Stable rendering baseline")
     req("../../css/glaze-v1.3.1-accessibility-interaction-hardening.candidate.css" in reference, "reference must load the hardening stylesheet")
     req('aria-current="page"' in reference, "reference must demonstrate current-state separation")
     req('aria-pressed="false"' in reference, "reference must demonstrate a pressed/toggle semantic state")
@@ -115,12 +116,26 @@ def main() -> int:
         req(phrase in tests, f"hardening tests missing coverage phrase: {phrase}")
 
     for release_path in (
-        "css/glaze-v1.3.0.css",
-        "js/glaze-v1.3.0.mjs",
         "css/glaze-v1.3.1.css",
         "js/glaze-v1.3.1.mjs",
     ):
-        req(not (ROOT / release_path).exists(), f"hardening work must not create release entrypoint: {release_path}")
+        req(not (ROOT / release_path).exists(), f"hardening work must not create V1.3.1 release entrypoint: {release_path}")
+
+    not_established = set(contract.get("evidenceBoundary", {}).get("notEstablished", []))
+    for item in (
+        "manual-keyboard-acceptance",
+        "manual-screen-reader-acceptance",
+        "manual-switch-or-voice-access-acceptance",
+        "human-optical-acceptance",
+        "physical-device-acceptance",
+        "native-platform-parity",
+        "production-performance-acceptance",
+        "retroactive-v1.3.0-qualification-claim",
+        "v1.3.1-release-candidate",
+        "v1.3.1-stable",
+        "consumer-conformance",
+    ):
+        req(item in not_established, f"hardening evidence boundary must leave {item!r} unestablished")
 
     if errors:
         print("GLAZE UI V1.3.1 accessibility + interaction hardening validation FAILED:")
@@ -129,7 +144,7 @@ def main() -> int:
         return 1
 
     print("GLAZE UI V1.3.1 accessibility + interaction hardening: PASS")
-    print("Boundary: focus-visible, microstate, Reduced Motion, Forced Colors, coarse-pointer, and semantic-state hardening are machine-validated without lifecycle promotion or manual acceptance claims.")
+    print("Boundary: current V1.3.0 Stable remains unchanged; V1.3.1 focus-visible, microstate, Reduced Motion, Forced Colors, coarse-pointer, and semantic-state hardening are machine-validated without V1.3.1 lifecycle promotion or manual acceptance claims.")
     return 0
 
 if __name__ == "__main__":
