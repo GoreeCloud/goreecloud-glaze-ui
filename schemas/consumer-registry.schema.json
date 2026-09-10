@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://goreecloud.dev/schemas/glaze-ui/consumer-registry.schema.json",
-  "title": "Glaze UI V1.2 Consumer Registry",
+  "title": "Glaze UI V1.3 Consumer Registry",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -15,7 +15,7 @@
     "consumers"
   ],
   "properties": {
-    "schemaVersion": {"const": 6},
+    "schemaVersion": {"const": 7},
     "officialBaseline": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
     "officialProductLabel": {"type": "string", "minLength": 1},
     "requiredConsumerVersion": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
@@ -94,11 +94,22 @@
           {
             "if": {"properties": {"status": {"enum": ["adoption-required", "unverified"]}}, "required": ["status"]},
             "then": {
-              "properties": {
-                "targetVersion": {"type": "null"},
-                "referenceRevision": {"type": "null"},
-                "evidence": {"type": "null"}
-              }
+              "oneOf": [
+                {
+                  "properties": {
+                    "targetVersion": {"type": "null"},
+                    "referenceRevision": {"type": "null"},
+                    "evidence": {"type": "null"}
+                  }
+                },
+                {
+                  "properties": {
+                    "targetVersion": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+                    "referenceRevision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+                    "evidence": {"type": "string", "minLength": 1}
+                  }
+                }
+              ]
             }
           },
           {
