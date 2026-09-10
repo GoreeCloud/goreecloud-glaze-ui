@@ -8,7 +8,8 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 PRODUCT = "GLAZE UI V1.3 — Adaptive Resonance"
-STABLE_VERSION = "1.2.0"
+CURRENT_STABLE_VERSION = "1.3.0"
+SOURCE_STABLE_VERSION = "1.2.0"
 CONTRACT = "contracts/v1.3/living-material-2.candidate.json"
 TOKENS = "tokens/glaze-v1.3-material.candidate.json"
 RUNTIME = "js/glaze-v1.3-living-material-2.candidate.mjs"
@@ -61,10 +62,10 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == STABLE_VERSION, "VERSION must remain 1.2.0")
+    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == CURRENT_STABLE_VERSION, "VERSION must remain 1.3.0")
     lifecycle = load("registry/lifecycle.json")
-    req(lifecycle.get("currentStable") == STABLE_VERSION, "currentStable must remain 1.2.0")
-    req(lifecycle.get("currentOfficial") == STABLE_VERSION, "currentOfficial must remain 1.2.0")
+    req(lifecycle.get("currentStable") == CURRENT_STABLE_VERSION, "currentStable must remain 1.3.0")
+    req(lifecycle.get("currentOfficial") == CURRENT_STABLE_VERSION, "currentOfficial must remain 1.3.0")
     req(lifecycle.get("activeCandidate") is None, "Living Material 2.0 must not activate release lifecycle Candidate")
 
     plan = load(PLAN)
@@ -92,7 +93,7 @@ def main() -> int:
     req(contract.get("artifactLifecycle") == "implementation-candidate-artifact", "Living Material 2.0 artifact lifecycle mismatch")
     req(contract.get("lifecycleAuthority") is False, "Living Material 2.0 must not carry lifecycle authority")
     req(contract.get("consumerEligible") is False, "Living Material 2.0 must not be consumer eligible")
-    req(contract.get("sourceStable") == STABLE_VERSION, "Living Material 2.0 must extend V1.2 Stable")
+    req(contract.get("sourceStable") == SOURCE_STABLE_VERSION, "Living Material 2.0 must preserve the V1.2 source baseline")
 
     expected_extends = {
         "contracts/v1.2/living-glaze.candidate.json",
@@ -232,7 +233,7 @@ def main() -> int:
     not_established = set(evidence.get("notEstablished", []))
     req("physical-device-performance" in not_established, "physical-device performance must remain explicitly unestablished")
     req("human-optical-acceptance" in not_established, "human optical acceptance must remain explicitly unestablished")
-    req("stable" in not_established, "Stable must remain explicitly unestablished")
+    req("stable" in not_established, "candidate artifact Stable claim must remain explicitly unestablished")
     req("consumer-conformance" in not_established, "consumer conformance must remain explicitly unestablished")
 
     if errors:
@@ -242,7 +243,7 @@ def main() -> int:
         return 1
 
     print("GLAZE UI V1.3 Living Material 2.0: PASS")
-    print("Boundary: responsive material, local qualitative degradation, and material/transmission separation are implemented without production-budget or lifecycle claims.")
+    print("Boundary: V1.3.0 remains current Stable; responsive material source provenance remains V1.2-derived while production-performance and V1.3.1 qualification claims remain unestablished.")
     return 0
 
 
