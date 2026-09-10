@@ -174,11 +174,16 @@ function init(root) {
   initLog(root);
 }
 
-export function initializeProductiveInterfaces(scope = document) {
+export function initializeProductiveInterfaces(scope = globalThis.document) {
+  if (!scope?.querySelectorAll) return;
   for (const root of scope.querySelectorAll(ROOT_SELECTOR)) init(root);
 }
 
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => initializeProductiveInterfaces(), { once: true });
-else initializeProductiveInterfaces();
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => initializeProductiveInterfaces(), { once: true });
+  else initializeProductiveInterfaces();
+}
 
-window.GlazeV12ProductiveInterfaces = Object.freeze({ initializeProductiveInterfaces });
+if (typeof window !== 'undefined') {
+  window.GlazeV12ProductiveInterfaces = Object.freeze({ initializeProductiveInterfaces });
+}
