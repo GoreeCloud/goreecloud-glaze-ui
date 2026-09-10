@@ -89,7 +89,8 @@ jobs:
         run: node --check js/glaze-v1.3.0.mjs
 
       - name: Resolve Stable runtime module graph
-        run: node -e "import('./js/glaze-v1.3.0.mjs').then(() => console.log('GLAZE UI V1.3 Stable runtime graph: PASS'))"
+        run: |
+          node -e "import('./js/glaze-v1.3.0.mjs').then(() => console.log('GLAZE UI V1.3 Stable runtime graph: PASS'))"
 
       - name: Verify Stable CSS source boundary
         run: |
