@@ -14,8 +14,8 @@ IDENTITY = ROOT / "assets" / "identity" / "official" / "facet"
 # af8b70387bdaedb8d8388a1660b2d2ca29548fe2. The visual geometry is unchanged;
 # this checksum reflects the corrected approved accessible title metadata.
 CANONICAL_SHA256 = "82d3bdc331a96593873ca4d327e3b46d561d1ca96e653cef71e0c5e42fa1a31c"
-LIVE_PRODUCT = "GLAZE UI V1.2"
-LIVE_VERSION = "1.2.0"
+LIVE_PRODUCT = "GLAZE UI V1.3"
+LIVE_VERSION = "1.3.0"
 TRANSITIONAL_ASSET_VERSION = "1.1.0"
 
 for name in ("index.html", "404.html", "site.css", "identity.css", "site.js", "_headers", "build.py"):
@@ -37,7 +37,7 @@ if not mark.is_file() or hashlib.sha256(mark.read_bytes()).hexdigest() != CANONI
 
 # The repository website subtree is retained as transitional deployment/history
 # material. Its build remains reproducible from the retained V1.1-era asset chain,
-# while lifecycle/product copy must point to the live V1.2 Stable authority.
+# while lifecycle/product copy must point to the live V1.3 Stable authority.
 subprocess.run([sys.executable, str(SITE / "build.py")], cwd=ROOT, check=True)
 
 required = (
