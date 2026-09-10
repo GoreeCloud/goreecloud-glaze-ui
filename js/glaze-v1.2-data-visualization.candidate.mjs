@@ -59,11 +59,16 @@ function init(root) {
   initLiveToggle(root);
 }
 
-export function initializeDataVisualization(scope = document) {
+export function initializeDataVisualization(scope = globalThis.document) {
+  if (!scope?.querySelectorAll) return;
   for (const root of scope.querySelectorAll(ROOT_SELECTOR)) init(root);
 }
 
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => initializeDataVisualization(), { once: true });
-else initializeDataVisualization();
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => initializeDataVisualization(), { once: true });
+  else initializeDataVisualization();
+}
 
-window.GlazeV12DataVisualization = Object.freeze({ initializeDataVisualization });
+if (typeof window !== 'undefined') {
+  window.GlazeV12DataVisualization = Object.freeze({ initializeDataVisualization });
+}
