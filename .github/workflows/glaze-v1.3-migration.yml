@@ -3,90 +3,97 @@ name: GLAZE UI V1.3 Migration and Consumer Boundary
 on:
   push:
     branches:
-      - feat/glaze-ui-v1.3-adaptive-resonance
+      - main
     paths:
-      - 'contracts/v1.3/adaptive-resonance.plan.json'
-      - 'contracts/v1.3/migration.candidate.json'
-      - 'contracts/v1.3/consumer-adoption-record.schema.json'
-      - 'contracts/v1.3/accessibility.candidate.json'
-      - 'contracts/v1.3/component-experience.candidate.json'
-      - 'contracts/v1.2/migration.candidate.json'
       - 'consumers/registry.json'
-      - 'ADOPTION.md'
-      - 'CONFORMANCE.md'
+      - 'schemas/consumer-registry.schema.json'
+      - 'scripts/validate_consumer_registry.py'
+      - 'scripts/validate_consumer_summary.py'
       - 'CONSUMERS.md'
-      - 'MIGRATION_V1_2_TO_V1_3.md'
-      - 'js/glaze-v1.3-migration.candidate.mjs'
-      - 'tests/glaze-v1.3-migration.test.mjs'
-      - 'scripts/validate_glaze_v1_2_stable.py'
-      - 'scripts/validate_glaze_v1_3_migration.py'
-      - 'scripts/validate_glaze_v1_3_accessibility.py'
-      - 'scripts/validate_glaze_v1_3_component_experience.py'
-      - 'scripts/validate_glaze_v1_3_phase0.py'
       - 'registry/lifecycle.json'
       - 'VERSION'
+      - 'contracts/v1.3/migration.candidate.json'
+      - 'contracts/v1.3/consumer-adoption-record.schema.json'
       - '.github/workflows/glaze-v1.3-migration.yml'
   pull_request:
     paths:
-      - 'contracts/v1.3/adaptive-resonance.plan.json'
-      - 'contracts/v1.3/migration.candidate.json'
-      - 'contracts/v1.3/consumer-adoption-record.schema.json'
-      - 'contracts/v1.3/accessibility.candidate.json'
-      - 'contracts/v1.3/component-experience.candidate.json'
-      - 'contracts/v1.2/migration.candidate.json'
       - 'consumers/registry.json'
-      - 'ADOPTION.md'
-      - 'CONFORMANCE.md'
+      - 'schemas/consumer-registry.schema.json'
+      - 'scripts/validate_consumer_registry.py'
+      - 'scripts/validate_consumer_summary.py'
       - 'CONSUMERS.md'
-      - 'MIGRATION_V1_2_TO_V1_3.md'
-      - 'js/glaze-v1.3-migration.candidate.mjs'
-      - 'tests/glaze-v1.3-migration.test.mjs'
-      - 'scripts/validate_glaze_v1_2_stable.py'
-      - 'scripts/validate_glaze_v1_3_migration.py'
-      - 'scripts/validate_glaze_v1_3_accessibility.py'
-      - 'scripts/validate_glaze_v1_3_component_experience.py'
-      - 'scripts/validate_glaze_v1_3_phase0.py'
       - 'registry/lifecycle.json'
       - 'VERSION'
+      - 'contracts/v1.3/migration.candidate.json'
+      - 'contracts/v1.3/consumer-adoption-record.schema.json'
       - '.github/workflows/glaze-v1.3-migration.yml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   validate-v1-3-migration:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
     steps:
       - name: Check out exact revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify exact source revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected='${{ github.event.pull_request.head.sha || github.sha }}'
+          actual="$(git rev-parse HEAD)"
+          printf 'Expected source revision: %s\nActual source revision:   %s\n' "$expected" "$actual"
+          test "$actual" = "$expected"
+
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.12'
-      - name: Compile V1.3 validators
+
+      - name: Compile current consumer validators
         run: |
-          python -m py_compile scripts/validate_glaze_v1_3_phase0.py
-          python -m py_compile scripts/validate_glaze_v1_3_accessibility.py
-          python -m py_compile scripts/validate_glaze_v1_3_component_experience.py
-          python -m py_compile scripts/validate_glaze_v1_3_migration.py
-      - name: Preserve V1.2 Stable authority
-        run: python scripts/validate_glaze_v1_2_stable.py
-      - name: Preserve V1.3 pre-promotion boundary
-        run: python scripts/validate_glaze_v1_3_phase0.py
-      - name: Revalidate Accessibility dependency
-        run: python scripts/validate_glaze_v1_3_accessibility.py
-      - name: Revalidate Signature Components and Reference Suite dependency
-        run: python scripts/validate_glaze_v1_3_component_experience.py
-      - name: Validate V1.3 Migration and Consumer Boundary
-        run: python scripts/validate_glaze_v1_3_migration.py
-      - name: Check migration evaluator syntax
-        run: node --check js/glaze-v1.3-migration.candidate.mjs
-      - name: Test migration evaluator
-        run: node --test tests/glaze-v1.3-migration.test.mjs
-      - name: Parse migration JSON authorities
+          python -m py_compile scripts/validate_consumer_registry.py
+          python -m py_compile scripts/validate_consumer_summary.py
+
+      - name: Validate current V1.3 Stable lifecycle and V1.2 rollback authority
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('.')
+          version = (root / 'VERSION').read_text(encoding='utf-8').strip()
+          lifecycle = json.loads((root / 'registry/lifecycle.json').read_text(encoding='utf-8'))
+          assert version == '1.3.0', f'current VERSION must be 1.3.0, got {version}'
+          assert lifecycle.get('currentStable') == version
+          assert lifecycle.get('currentOfficial') == version
+          assert lifecycle.get('activeCandidate') is None
+          current = [r for r in lifecycle.get('releases', []) if r.get('version') == version]
+          assert len(current) == 1 and current[0].get('status') == 'stable' and current[0].get('consumerEligible') is True
+          prior = [r for r in lifecycle.get('releases', []) if r.get('version') == '1.2.0']
+          assert len(prior) == 1 and prior[0].get('status') == 'stable' and prior[0].get('consumerEligible') is True
+          print('V1.3 current Stable authority and V1.2 historical rollback authority: PASS')
+          PY
+
+      - name: Validate current consumer migration boundary
+        run: |
+          python scripts/validate_consumer_registry.py
+          python scripts/validate_consumer_summary.py
+
+      - name: Parse retained migration authorities
         run: |
           python -m json.tool contracts/v1.3/migration.candidate.json >/dev/null
           python -m json.tool contracts/v1.3/consumer-adoption-record.schema.json >/dev/null
           python -m json.tool consumers/registry.json >/dev/null
-          python -m json.tool contracts/v1.3/adaptive-resonance.plan.json >/dev/null
+          python -m json.tool registry/lifecycle.json >/dev/null
+
+      - name: Check retained migration evaluator syntax
+        run: node --check js/glaze-v1.3-migration.candidate.mjs
