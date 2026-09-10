@@ -8,7 +8,8 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 PRODUCT = "GLAZE UI V1.3 — Adaptive Resonance"
-STABLE_VERSION = "1.2.0"
+CURRENT_STABLE_VERSION = "1.3.0"
+SOURCE_STABLE_VERSION = "1.2.0"
 CONTRACT = "contracts/v1.3/adaptive-navigation.candidate.json"
 RUNTIME = "js/glaze-v1.3-adaptive-navigation.candidate.mjs"
 TESTS = "tests/glaze-v1.3-adaptive-navigation.test.mjs"
@@ -38,10 +39,10 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == STABLE_VERSION, "VERSION must remain 1.2.0")
+    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == CURRENT_STABLE_VERSION, "VERSION must remain 1.3.0")
     lifecycle = load("registry/lifecycle.json")
-    req(lifecycle.get("currentStable") == STABLE_VERSION, "currentStable must remain 1.2.0")
-    req(lifecycle.get("currentOfficial") == STABLE_VERSION, "currentOfficial must remain 1.2.0")
+    req(lifecycle.get("currentStable") == CURRENT_STABLE_VERSION, "currentStable must remain 1.3.0")
+    req(lifecycle.get("currentOfficial") == CURRENT_STABLE_VERSION, "currentOfficial must remain 1.3.0")
     req(lifecycle.get("activeCandidate") is None, "Adaptive Navigation must not activate release lifecycle Candidate")
 
     plan = load(PLAN)
@@ -64,7 +65,7 @@ def main() -> int:
     req(contract.get("artifactLifecycle") == "implementation-candidate-artifact", "navigation artifact lifecycle mismatch")
     req(contract.get("lifecycleAuthority") is False, "navigation contract must not carry lifecycle authority")
     req(contract.get("consumerEligible") is False, "navigation contract must not be consumer eligible")
-    req(contract.get("sourceStable") == STABLE_VERSION, "navigation must extend V1.2 Stable")
+    req(contract.get("sourceStable") == SOURCE_STABLE_VERSION, "navigation must preserve the V1.2 source baseline")
     req(set(contract.get("extends", [])) == {V12_ADAPTIVE, V12_SHELL, REACHABILITY}, "navigation inheritance set mismatch")
 
     principles = contract.get("principles", {})
@@ -164,7 +165,7 @@ def main() -> int:
         return 1
 
     print("GLAZE UI V1.3 Adaptive Navigation: PASS")
-    print("Boundary: stable semantic destinations and environment-aware reachable navigation presentation are implemented without platform-threshold, human, physical-device, lifecycle, or consumer acceptance claims.")
+    print("Boundary: V1.3.0 remains current Stable; the candidate-named navigation artifact preserves its V1.2 provenance while platform-threshold, human, physical-device, and V1.3.1 qualification claims remain unestablished.")
     return 0
 
 

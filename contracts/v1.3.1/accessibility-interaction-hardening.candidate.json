@@ -8,9 +8,9 @@
   "releaseLifecycle": "development-only",
   "lifecycleAuthority": false,
   "consumerEligible": false,
-  "sourceStable": "1.2.0",
+  "sourceStable": "1.3.0",
   "sourceImplementation": "integrated-v1.3-adaptive-resonance",
-  "purpose": "Harden the integrated V1.3 interaction presentation with explicit focus-visible, hover, pressed, disabled, reduced-motion, forced-colors, coarse-pointer, and semantic-state separation behavior without activating a release lifecycle or modifying the V1.2 Stable entrypoint.",
+  "purpose": "Harden the current Stable V1.3 interaction presentation with explicit focus-visible, hover, pressed, disabled, reduced-motion, forced-colors, coarse-pointer, and semantic-state separation behavior without activating a V1.3.1 release lifecycle or modifying the V1.3.0 Stable entrypoint.",
   "extends": [
     "contracts/v1.3/accessibility.candidate.json",
     "contracts/v1.3/component-experience.candidate.json",
@@ -120,7 +120,7 @@
       "physical-device-acceptance",
       "native-platform-parity",
       "production-performance-acceptance",
-      "v1.3.0-stable-promotion",
+      "retroactive-v1.3.0-qualification-claim",
       "v1.3.1-release-candidate",
       "v1.3.1-stable",
       "consumer-conformance"

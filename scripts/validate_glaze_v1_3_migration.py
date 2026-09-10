@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the Proposed GLAZE UI V1.3 Migration and Consumer Boundary workstream."""
+"""Validate the GLAZE UI V1.3 Migration and Consumer Boundary control plane."""
 from __future__ import annotations
 
 import json
@@ -8,7 +8,8 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 PRODUCT = "GLAZE UI V1.3 — Adaptive Resonance"
-STABLE_VERSION = "1.2.0"
+CURRENT_STABLE_VERSION = "1.3.0"
+SOURCE_STABLE_VERSION = "1.2.0"
 PLAN = "contracts/v1.3/adaptive-resonance.plan.json"
 CONTRACT = "contracts/v1.3/migration.candidate.json"
 SCHEMA = "contracts/v1.3/consumer-adoption-record.schema.json"
@@ -75,20 +76,23 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == STABLE_VERSION, "VERSION must remain 1.2.0")
+    req(
+        (ROOT / "VERSION").read_text(encoding="utf-8").strip() == CURRENT_STABLE_VERSION,
+        "VERSION must remain 1.3.0",
+    )
     lifecycle = load("registry/lifecycle.json")
-    req(lifecycle.get("currentStable") == STABLE_VERSION, "currentStable must remain 1.2.0")
-    req(lifecycle.get("currentOfficial") == STABLE_VERSION, "currentOfficial must remain 1.2.0")
-    req(lifecycle.get("activeCandidate") is None, "Migration work must not activate lifecycle Candidate")
-    req(lifecycle.get("plannedNext") == "1.3.0-candidate", "plannedNext must remain 1.3.0-candidate")
+    req(lifecycle.get("currentStable") == CURRENT_STABLE_VERSION, "currentStable must remain 1.3.0")
+    req(lifecycle.get("currentOfficial") == CURRENT_STABLE_VERSION, "currentOfficial must remain 1.3.0")
+    req(lifecycle.get("activeCandidate") is None, "migration work must not activate a lifecycle Candidate")
+    req(lifecycle.get("plannedNext") == "1.3.1-candidate", "plannedNext must retain the governed V1.3.1 candidate line")
 
     consumer_registry = load(REGISTRY)
-    req(consumer_registry.get("officialBaseline") == STABLE_VERSION, "consumer registry officialBaseline must remain 1.2.0")
-    req(consumer_registry.get("requiredConsumerVersion") == STABLE_VERSION, "live consumers must continue to require 1.2.0 during Proposed V1.3")
-    req(consumer_registry.get("enforcement", {}).get("officialCurrentRequired") is True, "consumer registry must continue to require the official current release")
+    req(consumer_registry.get("officialBaseline") == CURRENT_STABLE_VERSION, "consumer registry officialBaseline must be 1.3.0")
+    req(consumer_registry.get("requiredConsumerVersion") == CURRENT_STABLE_VERSION, "live consumers must require current Stable 1.3.0")
+    req(consumer_registry.get("enforcement", {}).get("officialCurrentRequired") is True, "consumer registry must require the official current release")
     req(consumer_registry.get("enforcement", {}).get("productionExceptionsAllowed") is False, "consumer registry production exceptions must remain prohibited")
     for item in consumer_registry.get("consumers", []):
-        req(item.get("requiredTargetVersion") == STABLE_VERSION, f"consumer {item.get('name')!r} must retain required target 1.2.0 during Proposed V1.3")
+        req(item.get("requiredTargetVersion") == CURRENT_STABLE_VERSION, f"consumer {item.get('name')!r} must target current Stable 1.3.0")
 
     plan = load(PLAN)
     workstreams = {item.get("id"): item for item in plan.get("workstreams", [])}
@@ -114,21 +118,21 @@ def main() -> int:
 
     contract = load(CONTRACT)
     req(contract.get("product") == PRODUCT, "migration product mismatch")
-    req(contract.get("targetVersion") == "1.3.0-candidate", "migration target mismatch")
-    req(contract.get("releaseLifecycle") == "proposed", "migration lifecycle must remain Proposed")
+    req(contract.get("targetVersion") == "1.3.0-candidate", "migration source target mismatch")
+    req(contract.get("releaseLifecycle") == "proposed", "migration source artifact lifecycle must preserve Proposed provenance")
     req(contract.get("artifactLifecycle") == "implementation-candidate-artifact", "migration artifact lifecycle mismatch")
     req(contract.get("lifecycleAuthority") is False, "migration contract must not carry lifecycle authority")
-    req(contract.get("consumerEligible") is False, "migration contract must remain non-consumer-eligible")
-    req(contract.get("sourceStable") == STABLE_VERSION, "migration must extend V1.2 Stable")
+    req(contract.get("consumerEligible") is False, "candidate-named migration source artifact must remain non-consumer-eligible")
+    req(contract.get("sourceStable") == SOURCE_STABLE_VERSION, "migration source provenance must extend V1.2 Stable")
 
     extends = set(contract.get("extends", []))
     for path in [V12_MIGRATION, "ADOPTION.md", "CONFORMANCE.md", "CONSUMERS.md", REGISTRY, *DEPENDENCIES.values()]:
         req(path in extends, f"migration inheritance missing {path}")
 
     live = contract.get("liveAuthority", {})
-    req(live.get("currentStable") == STABLE_VERSION, "migration live Stable boundary mismatch")
-    req(live.get("currentOfficial") == STABLE_VERSION, "migration live official boundary mismatch")
-    req(live.get("requiredConsumerVersion") == STABLE_VERSION, "migration live consumer version boundary mismatch")
+    req(live.get("currentStable") == CURRENT_STABLE_VERSION, "migration live Stable boundary mismatch")
+    req(live.get("currentOfficial") == CURRENT_STABLE_VERSION, "migration live official boundary mismatch")
+    req(live.get("requiredConsumerVersion") == CURRENT_STABLE_VERSION, "migration live consumer version boundary mismatch")
     req(live.get("consumerRegistry") == REGISTRY, "migration consumer registry authority mismatch")
     for key in (
         "v1_3MayChangeLiveConsumerTargetInThisWorkstream",
@@ -136,10 +140,10 @@ def main() -> int:
         "v1_3MayChangeLifecycleRegistryInThisWorkstream",
         "v1_3CandidateEntrypointMayBeCreatedInThisWorkstream",
     ):
-        req(live.get(key) is False, f"live authority prohibition must remain false: {key}")
+        req(live.get(key) is False, f"migration source workstream must not independently mutate lifecycle authority: {key}")
 
     evaluation = contract.get("evaluationBoundary", {})
-    req(evaluation.get("proposedOrCandidateEvaluation") == "explicit-non-production-opt-in-only", "pre-Stable evaluation must remain explicit non-production opt-in")
+    req(evaluation.get("proposedOrCandidateEvaluation") == "explicit-non-production-opt-in-only", "historical pre-Stable evaluation boundary changed unexpectedly")
     for key in (
         "productionMigrationRequiresLifecycleEligibleRelease",
         "productionMigrationRequiresConsumerEligibleRelease",
@@ -192,11 +196,11 @@ def main() -> int:
     req(truth.get("presentationMayStrengthenUnverifiedSecurityOrPrivacyClaims") is False, "presentation may not strengthen unverified security/privacy claims")
 
     rollout = contract.get("laterRollout", {})
-    req(rollout.get("automatic") is False, "future rollout may not be automatic")
-    req(rollout.get("requiresStablePromotionFirst") is True, "future rollout must require Stable promotion first")
+    req(rollout.get("automatic") is False, "consumer rollout may not be automatic")
+    req(rollout.get("requiresStablePromotionFirst") is True, "rollout policy must preserve Stable-first requirement")
     req(rollout.get("eachConsumerMustPassIndependently") is True, "every consumer must pass independently")
     req(rollout.get("waveEvidenceMaySubstituteForConsumerEvidence") is False, "wave evidence may not substitute for consumer evidence")
-    req([item.get("id") for item in rollout.get("waves", [])] == ["wave-1", "wave-2", "wave-3"], "future rollout wave order mismatch")
+    req([item.get("id") for item in rollout.get("waves", [])] == ["wave-1", "wave-2", "wave-3"], "rollout wave order mismatch")
 
     schema = load(SCHEMA)
     req(schema.get("type") == "object", "consumer adoption schema root must be object")
@@ -249,27 +253,24 @@ def main() -> int:
 
     guide = (ROOT / GUIDE).read_text(encoding="utf-8")
     for phrase in (
-        "**Current Stable authority:** GLAZE UI V1.2 / `1.2.0`",
-        "**Current required consumer target:** GLAZE UI V1.2 / `1.2.0`",
-        "**Lifecycle effect:** None",
-        "does not migrate any consumer repository",
-        "explicit **non-production evaluation only**",
-        "The evaluator's `conformanceGranted` field is always `false` by design.",
+        "**Status:** Active Stable migration control plane",
+        "**Previous Stable baseline:** GLAZE UI V1.2 / `1.2.0`",
+        "**Current Stable authority:** GLAZE UI V1.3 — Adaptive Resonance / `1.3.0`",
+        "**Current required consumer target:** GLAZE UI V1.3 / `1.3.0`",
+        "does not automatically grant conformance or production approval",
         "No wave is automatic.",
-        "does not itself activate V1.3 Candidate",
+        "V1.2.0 remains available as the immediately preceding rollback baseline",
     ):
-        req(phrase in guide, f"migration guide missing required boundary text: {phrase}")
+        req(phrase in guide, f"migration guide missing required post-promotion boundary text: {phrase}")
     req("glaze-v1.3.0-candidate.css" not in guide, "migration guide must not instruct use of a V1.3 Candidate release CSS entrypoint")
     req("glaze-v1.3.0-candidate.mjs" not in guide, "migration guide must not instruct use of a V1.3 Candidate release runtime entrypoint")
 
     not_established = set(contract.get("evidenceBoundary", {}).get("notEstablished", []))
     for item in (
-        "any-consumer-v1.3-migration",
-        "any-consumer-v1.3-conformance",
-        "any-consumer-v1.3-production-eligibility",
-        "v1.3-lifecycle-candidate",
-        "v1.3-release-candidate",
-        "v1.3-stable",
+        "automatic-consumer-v1.3-migration",
+        "automatic-consumer-v1.3-conformance",
+        "automatic-consumer-v1.3-production-eligibility",
+        "retroactive-v1.3-lifecycle-promotion-evidence",
         "native-platform-consumer-acceptance",
         "assistive-technology-consumer-acceptance",
         "physical-device-consumer-acceptance",
@@ -278,8 +279,8 @@ def main() -> int:
     ):
         req(item in not_established, f"migration evidence boundary must leave {item!r} unestablished")
 
-    req(not (ROOT / "css/glaze-v1.3.0-candidate.css").exists(), "Migration work must not create a V1.3 Candidate CSS release entrypoint")
-    req(not (ROOT / "js/glaze-v1.3.0-candidate.mjs").exists(), "Migration work must not create a V1.3 Candidate runtime release entrypoint")
+    req(not (ROOT / "css/glaze-v1.3.0-candidate.css").exists(), "migration control plane must not create a V1.3 Candidate CSS release entrypoint")
+    req(not (ROOT / "js/glaze-v1.3.0-candidate.mjs").exists(), "migration control plane must not create a V1.3 Candidate runtime release entrypoint")
 
     if errors:
         print("GLAZE UI V1.3 Migration and Consumer Boundary validation FAILED:")
@@ -288,7 +289,7 @@ def main() -> int:
         return 1
 
     print("GLAZE UI V1.3 Migration and Consumer Boundary: PASS")
-    print("Boundary: migration readiness policy is implemented without changing V1.2 live consumer authority, activating V1.3 lifecycle state, migrating downstream repositories, or granting consumer conformance.")
+    print("Boundary: V1.3.0 is current Stable and required for consumers; migration remains repository-local, fail-closed, independently accepted, and incapable of granting downstream conformance or production approval by itself.")
     return 0
 
 

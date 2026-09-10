@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the Proposed GLAZE UI V1.3 Signature Components and Reference Suite workstream."""
+"""Validate the GLAZE UI V1.3 Signature Components and Reference Suite workstream."""
 from __future__ import annotations
 
 import json
@@ -8,7 +8,8 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 PRODUCT = "GLAZE UI V1.3 — Adaptive Resonance"
-STABLE_VERSION = "1.2.0"
+CURRENT_STABLE_VERSION = "1.3.0"
+SOURCE_STABLE_VERSION = "1.2.0"
 PLAN = "contracts/v1.3/adaptive-resonance.plan.json"
 CONTRACT = "contracts/v1.3/component-experience.candidate.json"
 RUNTIME = "js/glaze-v1.3-component-experience.candidate.mjs"
@@ -49,26 +50,26 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == STABLE_VERSION, "VERSION must remain 1.2.0")
+    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == CURRENT_STABLE_VERSION, "VERSION must remain 1.3.0")
     lifecycle = load("registry/lifecycle.json")
-    req(lifecycle.get("currentStable") == STABLE_VERSION, "currentStable must remain 1.2.0")
-    req(lifecycle.get("currentOfficial") == STABLE_VERSION, "currentOfficial must remain 1.2.0")
-    req(lifecycle.get("activeCandidate") is None, "Phase 14 must not activate lifecycle Candidate")
+    req(lifecycle.get("currentStable") == CURRENT_STABLE_VERSION, "currentStable must remain 1.3.0")
+    req(lifecycle.get("currentOfficial") == CURRENT_STABLE_VERSION, "currentOfficial must remain 1.3.0")
+    req(lifecycle.get("activeCandidate") is None, "component/reference validation must not activate lifecycle Candidate")
 
     plan = load(PLAN)
     workstreams = {item.get("id"): item for item in plan.get("workstreams", [])}
     for dep in ("system-shell-and-control-center", "personalization", "multi-pane-foldable-desktop"):
-        req(workstreams.get(dep, {}).get("status") == "implemented-and-validated", f"Phase 14 requires validated dependency {dep}")
+        req(workstreams.get(dep, {}).get("status") == "implemented-and-validated", f"Signature Components requires validated dependency {dep}")
     req(workstreams.get("signature-components-and-reference-suite", {}).get("status") in {"implementation-in-progress", "implementation-complete-validation-pending", "implemented-and-validated"}, "Signature Components and Reference Suite workstream must be active or validated")
 
     contract = load(CONTRACT)
     req(contract.get("product") == PRODUCT, "component-experience product mismatch")
-    req(contract.get("targetVersion") == "1.3.0-candidate", "component-experience target mismatch")
-    req(contract.get("releaseLifecycle") == "proposed", "component-experience lifecycle must remain Proposed")
+    req(contract.get("targetVersion") == "1.3.0-candidate", "component-experience source target mismatch")
+    req(contract.get("releaseLifecycle") == "proposed", "component-experience source lifecycle must preserve Proposed provenance")
     req(contract.get("artifactLifecycle") == "implementation-candidate-artifact", "artifact lifecycle mismatch")
     req(contract.get("lifecycleAuthority") is False, "component-experience contract must not carry lifecycle authority")
-    req(contract.get("consumerEligible") is False, "component-experience contract must not be consumer eligible")
-    req(contract.get("sourceStable") == STABLE_VERSION, "component-experience must extend V1.2 Stable")
+    req(contract.get("consumerEligible") is False, "candidate-named component source must not itself carry consumer eligibility")
+    req(contract.get("sourceStable") == SOURCE_STABLE_VERSION, "component-experience must preserve the V1.2 source baseline")
     req(contract.get("catalogAuthority") == CATALOG, "V1 component catalog must remain authoritative")
     req(set(contract.get("extends", [])) == {V12_COMPONENT, V12_SIGNATURE, V12_COMPOSITION, SYSTEM_SHELL, MULTI_PANE, PERSONALIZATION, ACCESSIBILITY}, "component-experience inheritance set mismatch")
 
@@ -124,7 +125,7 @@ def main() -> int:
 
     manifest = load(MANIFEST)
     req(manifest.get("product") == PRODUCT, "reference manifest product mismatch")
-    req(manifest.get("releaseLifecycle") == "proposed", "reference manifest lifecycle must remain Proposed")
+    req(manifest.get("releaseLifecycle") == "proposed", "reference manifest source lifecycle must preserve Proposed provenance")
     req(manifest.get("referenceOnly") is True, "reference manifest must identify itself as reference-only")
     req([item.get("id") for item in manifest.get("signatureComponents", [])] == EXPECTED_COMPONENTS, "reference manifest component set mismatch")
     req([item.get("id") for item in manifest.get("referenceScenes", [])] == EXPECTED_SCENES, "reference manifest scene set mismatch")
@@ -136,13 +137,13 @@ def main() -> int:
         req(manifest_rules.get(key) is True, f"reference manifest rule must be true: {key}")
 
     html = (ROOT / REFERENCE_HTML).read_text(encoding="utf-8")
-    req("../../css/glaze-v1.2.0.css" in html, "reference HTML must inherit the current Stable CSS entrypoint")
-    req("glaze-v1.3.0-candidate" not in html, "reference HTML must not introduce V1.3 Candidate entrypoints")
+    req("../../css/glaze-v1.2.0.css" in html, "reference HTML must preserve its V1.2 source-rendering provenance")
+    req("glaze-v1.3.0-candidate" not in html, "reference HTML must not introduce candidate release entrypoints")
     for component_id in EXPECTED_COMPONENTS:
         req(f'data-signature-component="{component_id}"' in html, f"reference HTML missing {component_id}")
     for scene_id in EXPECTED_SCENES:
         req(f'data-reference-scene="{scene_id}"' in html, f"reference HTML missing scene {scene_id}")
-    req("glaze-v1.3-component-experience.candidate.mjs" in html, "reference HTML must use the Phase 14 resolver")
+    req("glaze-v1.3-component-experience.candidate.mjs" in html, "reference HTML must use the component-experience resolver")
     req("fetch(" not in html, "reference HTML must not require network acquisition")
 
     runtime = (ROOT / RUNTIME).read_text(encoding="utf-8")
@@ -154,13 +155,13 @@ def main() -> int:
         req(forbidden not in runtime, f"component resolver contains forbidden network/viewport/persistence primitive: {forbidden}")
 
     personalization = load(PERSONALIZATION)
-    req(personalization.get("releaseLifecycle") == "proposed", "Personalization dependency must remain Proposed")
-    req(personalization.get("consumerEligible") is False, "Personalization dependency must remain non-consumer-eligible")
+    req(personalization.get("releaseLifecycle") == "proposed", "Personalization source artifact must preserve Proposed provenance")
+    req(personalization.get("consumerEligible") is False, "Personalization source artifact must remain non-consumer-eligible")
     req(personalization.get("principle") == "Personalize expression, not truth or control semantics.", "Personalization principle changed")
 
     not_established = set(contract.get("evidenceBoundary", {}).get("notEstablished", []))
     for item in ("complete-32-component-v1.3-coverage", "native-signature-component-parity", "native-reference-scene-parity", "assistive-technology-human-acceptance", "human-optical-component-acceptance", "physical-device-component-acceptance", "production-component-performance-acceptance", "release-candidate", "stable", "consumer-conformance"):
-        req(item in not_established, f"component/reference evidence boundary must leave {item!r} unestablished")
+        req(item in not_established, f"component/reference source evidence boundary must leave {item!r} unestablished")
 
     if errors:
         print("GLAZE UI V1.3 Signature Components + Reference Suite validation FAILED:")
@@ -169,7 +170,7 @@ def main() -> int:
         return 1
 
     print("GLAZE UI V1.3 Signature Components + Reference Suite: PASS")
-    print("Boundary: canonical Signature components and reference scenes compose validated V1.3 authorities without creating new token/material/semantic/lifecycle authority or claiming complete catalog, native, human, physical-device, production, release, or consumer acceptance.")
+    print("Boundary: V1.3.0 remains current Stable; candidate-named component/reference sources retain V1.2 provenance without creating new authority or manufacturing complete catalog, native, human, physical-device, production, V1.3.1, or consumer acceptance.")
     return 0
 
 

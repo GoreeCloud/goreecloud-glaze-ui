@@ -7,7 +7,9 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-STABLE_VERSION = "1.2.0"
+CURRENT_STABLE = "1.3.0"
+SOURCE_STABLE = "1.2.0"
+PLANNED_NEXT = "1.3.1-candidate"
 PRODUCT = "GLAZE UI V1.3 — Adaptive Resonance"
 CONTRACT_PATH = "contracts/v1.3/adaptive-resonance.candidate.json"
 TOKEN_PATHS = {
@@ -67,19 +69,23 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == STABLE_VERSION, "VERSION must remain 1.2.0")
+    req(
+        (ROOT / "VERSION").read_text(encoding="utf-8").strip() == CURRENT_STABLE,
+        "VERSION must remain current Stable 1.3.0",
+    )
     lifecycle = load("registry/lifecycle.json")
-    req(lifecycle.get("currentStable") == STABLE_VERSION, "currentStable must remain 1.2.0")
-    req(lifecycle.get("currentOfficial") == STABLE_VERSION, "currentOfficial must remain 1.2.0")
-    req(lifecycle.get("activeCandidate") is None, "token architecture must not activate V1.3 Candidate")
+    req(lifecycle.get("currentStable") == CURRENT_STABLE, "currentStable must remain 1.3.0")
+    req(lifecycle.get("currentOfficial") == CURRENT_STABLE, "currentOfficial must remain 1.3.0")
+    req(lifecycle.get("activeCandidate") is None, "V1.3 Stable must not retain an active Candidate")
+    req(lifecycle.get("plannedNext") == PLANNED_NEXT, "plannedNext must remain the V1.3.1 hardening line")
 
     contract = load(CONTRACT_PATH)
     req(contract.get("product") == PRODUCT, "architecture product identity mismatch")
-    req(contract.get("releaseLifecycle") == "proposed", "architecture releaseLifecycle must remain proposed")
+    req(contract.get("releaseLifecycle") == "proposed", "architecture artifact provenance releaseLifecycle must remain proposed")
     req(contract.get("artifactLifecycle") == "implementation-candidate-artifact", "unexpected architecture artifact lifecycle")
     req(contract.get("lifecycleAuthority") is False, "architecture artifact must not carry lifecycle authority")
-    req(contract.get("consumerEligible") is False, "architecture artifact must not be consumer eligible")
-    req(contract.get("sourceStable") == STABLE_VERSION, "architecture sourceStable must be 1.2.0")
+    req(contract.get("consumerEligible") is False, "architecture artifact must not independently grant consumer eligibility")
+    req(contract.get("sourceStable") == SOURCE_STABLE, "architecture sourceStable provenance must remain 1.2.0")
     req(set(contract.get("semanticNamespaces", [])) == EXPECTED_NAMESPACES, "semantic namespace set is incomplete or unexpected")
 
     principles = contract.get("principles", {})
@@ -119,11 +125,11 @@ def main() -> int:
     for namespace, path in TOKEN_PATHS.items():
         data = load(path)
         req(data.get("product") == PRODUCT, f"{path}: product identity mismatch")
-        req(data.get("releaseLifecycle") == "proposed", f"{path}: releaseLifecycle must remain proposed")
+        req(data.get("releaseLifecycle") == "proposed", f"{path}: artifact provenance releaseLifecycle must remain proposed")
         req(data.get("artifactLifecycle") == "implementation-candidate-artifact", f"{path}: artifact lifecycle mismatch")
         req(data.get("lifecycleAuthority") is False, f"{path}: must not carry lifecycle authority")
-        req(data.get("consumerEligible") is False, f"{path}: must not be consumer eligible")
-        req(data.get("sourceStable") == STABLE_VERSION, f"{path}: sourceStable must be 1.2.0")
+        req(data.get("consumerEligible") is False, f"{path}: must not independently grant consumer eligibility")
+        req(data.get("sourceStable") == SOURCE_STABLE, f"{path}: sourceStable provenance must remain 1.2.0")
         req(data.get("namespace") == namespace, f"{path}: namespace mismatch")
 
         semantic = data.get("semanticTokens")
@@ -190,7 +196,7 @@ def main() -> int:
         return 1
 
     print("GLAZE UI V1.3 Adaptive Resonance token architecture: PASS")
-    print("Boundary: six semantic token categories established; later adaptive runtimes remain unestablished; V1.2 remains Stable.")
+    print("Boundary: current Stable is 1.3.0; the six candidate-named token artifacts remain non-authoritative provenance sourced from V1.2 and do not activate V1.3.1.")
     return 0
 
 

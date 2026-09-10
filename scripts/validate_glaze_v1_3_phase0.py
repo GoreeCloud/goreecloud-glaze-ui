@@ -98,7 +98,7 @@ def main() -> int:
     acceptance = (ROOT / "acceptance/v1.3-stable.md").read_text(encoding="utf-8")
     req("**Status:** Official Stable release" in acceptance, "V1.3 Stable acceptance must be active")
     req("V1.3.1 deferred obligations" in acceptance, "V1.3 Stable acceptance must preserve deferred V1.3.1 work")
-    req("not represented as passed" in acceptance, "V1.3 Stable acceptance must preserve evidence integrity")
+    req("not be represented as passed" in acceptance, "V1.3 Stable acceptance must preserve evidence integrity")
 
     hardening = (ROOT / "GLAZE_UI_V1_3_1_HARDENING.md").read_text(encoding="utf-8")
     req("**Current Stable:** GLAZE UI V1.3" in hardening, "V1.3.1 hardening must anchor to V1.3 Stable")

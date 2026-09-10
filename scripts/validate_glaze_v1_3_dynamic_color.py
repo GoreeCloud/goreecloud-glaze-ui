@@ -6,7 +6,8 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-STABLE_VERSION = "1.2.0"
+CURRENT_STABLE_VERSION = "1.3.0"
+SOURCE_STABLE_VERSION = "1.2.0"
 PRODUCT = "GLAZE UI V1.3 — Adaptive Resonance"
 CONTRACT_PATH = "contracts/v1.3/dynamic-color.candidate.json"
 TOKEN_PATH = "tokens/glaze-v1.3-color.candidate.json"
@@ -71,10 +72,19 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == STABLE_VERSION, "VERSION must remain 1.2.0")
+    req(
+        (ROOT / "VERSION").read_text(encoding="utf-8").strip() == CURRENT_STABLE_VERSION,
+        "VERSION must remain 1.3.0",
+    )
     lifecycle = load("registry/lifecycle.json")
-    req(lifecycle.get("currentStable") == STABLE_VERSION, "currentStable must remain 1.2.0")
-    req(lifecycle.get("currentOfficial") == STABLE_VERSION, "currentOfficial must remain 1.2.0")
+    req(
+        lifecycle.get("currentStable") == CURRENT_STABLE_VERSION,
+        "currentStable must remain 1.3.0",
+    )
+    req(
+        lifecycle.get("currentOfficial") == CURRENT_STABLE_VERSION,
+        "currentOfficial must remain 1.3.0",
+    )
     req(lifecycle.get("activeCandidate") is None, "dynamic-color work must not activate V1.3 lifecycle Candidate")
 
     plan = load("contracts/v1.3/adaptive-resonance.plan.json")
@@ -96,7 +106,10 @@ def main() -> int:
     req(contract.get("artifactLifecycle") == "implementation-candidate-artifact", "unexpected dynamic-color artifact lifecycle")
     req(contract.get("lifecycleAuthority") is False, "dynamic-color contract must not carry lifecycle authority")
     req(contract.get("consumerEligible") is False, "dynamic-color contract must not be consumer eligible")
-    req(contract.get("sourceStable") == STABLE_VERSION, "dynamic-color sourceStable must remain 1.2.0")
+    req(
+        contract.get("sourceStable") == SOURCE_STABLE_VERSION,
+        "dynamic-color sourceStable must remain the V1.2 provenance baseline",
+    )
     req(contract.get("authorities") == EXPECTED_AUTHORITIES, "dynamic-color five-authority model mismatch")
     req(contract.get("precedence") == EXPECTED_PRECEDENCE, "dynamic-color precedence mismatch")
     req(contract.get("userAccentFamily") == EXPECTED_ROLES, "user accent family roles mismatch")
@@ -147,7 +160,10 @@ def main() -> int:
     req(token.get("rules", {}).get("networkRequiredForDerivation") is False, "dynamic color must remain local-first")
 
     stable_manifest = load("tokens/glaze-v1.json")
-    req(stable_manifest.get("version") == STABLE_VERSION, "Stable token manifest version changed")
+    req(
+        stable_manifest.get("version") == CURRENT_STABLE_VERSION,
+        "current Stable token manifest must remain bound to V1.3.0",
+    )
     req(stable_manifest.get("status") == "stable", "Stable token manifest status changed")
     req("adaptive-colors.json" not in stable_manifest.get("sources", []), "legacy adaptive-colors.json must not silently become current Stable authority")
 
@@ -167,7 +183,7 @@ def main() -> int:
         return 1
 
     print("GLAZE UI V1.3 Adaptive Resonance dynamic color contract: PASS")
-    print("Boundary: local-first perceptual accent derivation remains valid in later V1.3 phases; semantic truth and V1.2 Stable authority remain protected.")
+    print("Boundary: V1.3.0 remains current Stable while the candidate-named workstream preserves its V1.2 provenance and does not manufacture V1.3.1 qualification evidence.")
     return 0
 
 

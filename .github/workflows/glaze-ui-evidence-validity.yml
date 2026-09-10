@@ -57,7 +57,7 @@ jobs:
           version = Path("VERSION").read_text(encoding="utf-8").strip()
           schema = json.loads(Path("contracts/glaze.conformance-evidence.schema.json").read_text(encoding="utf-8"))
           target = schema["properties"]["target"]["properties"]
-          assert version == "1.2.0"
+          assert version == "1.3.0"
           assert target["glaze_version"]["const"] == version
           assert schema["properties"]["schema_version"]["const"] == 2
           PY

@@ -2,11 +2,12 @@
 
 **Official product identity at release:** GLAZE UI V1.1  
 **Machine version:** 1.1.0  
-**Lifecycle:** Historical Stable / retained rollback baseline  
-**Current Stable successor:** GLAZE UI V1.2 / 1.2.0  
+**Lifecycle:** Historical Stable / retained rollback and audit source  
+**Current Stable successor:** GLAZE UI V1.3 — Adaptive Resonance / 1.3.0  
+**Immediately preceding Stable baseline:** GLAZE UI V1.2 / 1.2.0  
 **Repository:** `GoreeCloud/goreecloud-glaze-ui`
 
-GLAZE UI V1.1 was GoreeCloud's current Stable shared visual and interaction design-system release before V1.2 was promoted on 2026-09-06. It remains the previous known-good Stable rollback baseline and preserves the structural, semantic, accessibility, component, System Shell, and performance contracts established by V1.0 while adding the human-approved Optical Refinement and Extended Atmospheric Color System. It does not override the current V1.2 Stable authority.
+GLAZE UI V1.1 was GoreeCloud's current Stable shared visual and interaction design-system release before V1.2 was promoted on 2026-09-06. V1.2 subsequently became the immediately preceding Stable baseline when V1.3.0 was promoted. V1.1 remains retained historical rollback/audit source and preserves the structural, semantic, accessibility, component, System Shell, and performance contracts established by V1.0 while adding the human-approved Optical Refinement and Extended Atmospheric Color System. It does not override the current V1.3.0 Stable authority.
 
 ## Stable design identity
 
@@ -48,6 +49,6 @@ The Android evidence is bounded design-system reference evidence, not OEM-wide, 
 
 ## Consumer boundary
 
-No downstream GoreeCloud application became V1.1-conformant by the V1.1 release alone. Each consumer required application-specific exact-revision evidence for its supported platforms and production boundary. Current consumer adoption targets V1.2 / 1.2.0 under the same independent, fail-closed conformance rule.
+No downstream GoreeCloud application became V1.1-conformant by the V1.1 release alone. Each consumer required application-specific exact-revision evidence for its supported platforms and production boundary. Current consumer adoption targets V1.3 / 1.3.0 under the same independent, fail-closed conformance rule. V1.2 remains the immediately preceding known-good Stable baseline for rollback where an applicable consumer has verified that path.
 
 Glaze Motion remains separately Experimental unless a later governed contract explicitly changes that lifecycle.

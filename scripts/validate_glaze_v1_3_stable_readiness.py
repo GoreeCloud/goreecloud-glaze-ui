@@ -64,7 +64,11 @@ def main():
     req("Official Stable release" in acceptance, "Stable acceptance must be active")
     req("V1.3.1" in acceptance and "V1.3.1" in deferred and "V1.3.1" in hardening,
         "former Stable-readiness blockers must be visibly transferred to V1.3.1")
-    req("not represented as passed" in acceptance, "Stable release must not fabricate readiness evidence")
+    evidence_integrity_language = (
+        "must not be represented as passed" in acceptance
+        and "not rewritten as a pass" in acceptance
+    )
+    req(evidence_integrity_language, "Stable release must not fabricate readiness evidence")
 
     if errors:
         print("GLAZE UI V1.3 Stable authority validation FAILED:")

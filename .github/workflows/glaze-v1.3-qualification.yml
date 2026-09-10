@@ -55,7 +55,7 @@ on:
   workflow_dispatch:
     inputs:
       source_revision:
-        description: "Frozen promotion-candidate SHA to evaluate; defaults to the checked-out SHA"
+        description: "Frozen follow-up qualification SHA to evaluate; defaults to the checked-out SHA"
         required: false
         type: string
 
@@ -133,13 +133,13 @@ jobs:
           print('Prepared draft remains fail-closed and contributes 0 accepted qualification workstreams.')
           PY
 
-      - name: Preserve V1.2 Stable authority
+      - name: Preserve retained V1.2 rollback authority
         run: python scripts/validate_glaze_v1_2_stable.py
 
       - name: Validate current lifecycle documentation integrity
         run: python scripts/validate_glaze_v1_2_documentation_versions.py
 
-      - name: Preserve V1.3 pre-promotion boundary
+      - name: Preserve V1.3 Stable and deferred-evidence boundary
         run: python scripts/validate_glaze_v1_3_phase0.py
 
       - name: Revalidate Migration and Consumer Boundary dependency
@@ -180,7 +180,7 @@ jobs:
           print(f"Evidence readiness: {result['state']} ({result['acceptedWorkstreamCount']}/{result['requiredWorkstreamCount']})")
           PY
 
-      - name: Audit pre-promotion V1.3 source namespace
+      - name: Audit retained V1.3 candidate-named source namespace
         run: |
           python scripts/audit_glaze_v1_3_namespace.py --output /tmp/glaze-v1.3-namespace.json
           python - <<'PY'
@@ -215,14 +215,18 @@ jobs:
           print('Qualification JSON authorities parse successfully; 55-rule visual-quality authority is present.')
           PY
 
-      - name: Assert Candidate remains inactive
+      - name: Assert current Stable remains active and follow-up cannot self-promote
         run: |
           python - <<'PY'
           import json
           lifecycle = json.load(open('registry/lifecycle.json', encoding='utf-8'))
-          assert lifecycle['currentStable'] == '1.2.0'
-          assert lifecycle['currentOfficial'] == '1.2.0'
+          assert lifecycle['currentStable'] == '1.3.0'
+          assert lifecycle['currentOfficial'] == '1.3.0'
           assert lifecycle['activeCandidate'] is None
-          assert lifecycle['plannedNext'] == '1.3.0-candidate'
-          print('Candidate remains inactive; qualification readiness is not lifecycle promotion.')
+          assert lifecycle['plannedNext'] == '1.3.1-candidate'
+          plan = json.load(open('contracts/v1.3/deferred-qualification.plan.json', encoding='utf-8'))
+          assert plan['sourceStable'] == '1.3.0'
+          assert plan['targetVersion'] == '1.3.1-candidate'
+          assert plan['rules']['v1.3.1LifecyclePromotionAutomatic'] is False
+          print('V1.3.0 remains current Stable; V1.3.1 follow-up readiness is not lifecycle promotion.')
           PY

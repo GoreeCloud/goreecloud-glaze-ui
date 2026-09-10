@@ -7,7 +7,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PRODUCT = "GLAZE UI V1.3 — Adaptive Resonance"
-STABLE_VERSION = "1.2.0"
+CURRENT_STABLE_VERSION = "1.3.0"
+SOURCE_STABLE_VERSION = "1.2.0"
 CONTRACT = "contracts/v1.3/reachability.candidate.json"
 RUNTIME = "js/glaze-v1.3-reachability.candidate.mjs"
 TESTS = "tests/glaze-v1.3-reachability.test.mjs"
@@ -42,10 +43,10 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == STABLE_VERSION, "VERSION must remain 1.2.0")
+    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == CURRENT_STABLE_VERSION, "VERSION must remain 1.3.0")
     lifecycle = load("registry/lifecycle.json")
-    req(lifecycle.get("currentStable") == STABLE_VERSION, "currentStable must remain 1.2.0")
-    req(lifecycle.get("currentOfficial") == STABLE_VERSION, "currentOfficial must remain 1.2.0")
+    req(lifecycle.get("currentStable") == CURRENT_STABLE_VERSION, "currentStable must remain 1.3.0")
+    req(lifecycle.get("currentOfficial") == CURRENT_STABLE_VERSION, "currentOfficial must remain 1.3.0")
     req(lifecycle.get("activeCandidate") is None, "Reachability work must not activate release lifecycle Candidate")
 
     plan = load(PLAN)
@@ -70,7 +71,7 @@ def main() -> int:
     req(contract.get("artifactLifecycle") == "implementation-candidate-artifact", "reachability artifact lifecycle mismatch")
     req(contract.get("lifecycleAuthority") is False, "reachability contract must not carry lifecycle authority")
     req(contract.get("consumerEligible") is False, "reachability must not be consumer eligible")
-    req(contract.get("sourceStable") == STABLE_VERSION, "reachability must extend V1.2 Stable")
+    req(contract.get("sourceStable") == SOURCE_STABLE_VERSION, "reachability must preserve the V1.2 source baseline")
     req(contract.get("extends") == "contracts/v1.2/ergonomic-layout.candidate.json", "reachability must extend V1.2 ergonomic authority")
 
     zones = contract.get("zones", {})
@@ -164,7 +165,7 @@ def main() -> int:
         return 1
 
     print("GLAZE UI V1.3 Human Reachability: PASS")
-    print("Boundary: compact zones and development review scoring are implemented without anthropometric, physical-device, lifecycle, or consumer-conformance claims.")
+    print("Boundary: V1.3.0 remains current Stable; compact zones and development review scoring preserve their V1.2 source baseline without anthropometric, physical-device, V1.3.1, or consumer-conformance claims.")
     return 0
 
 

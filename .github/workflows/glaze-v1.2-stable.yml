@@ -9,13 +9,14 @@ on:
       - "css/glaze-v1.2.0.css"
       - "js/glaze-v1.2.0.mjs"
       - "acceptance/v1.2-stable.md"
+      - "acceptance/v1.3-stable.md"
       - "acceptance/v1.3-deferred-qualification.md"
       - "contracts/v1.3/**"
-      - "tokens/glaze-v1.json"
       - "consumers/**"
       - "CONSUMERS.md"
       - "scripts/validate_glaze_v1.py"
       - "scripts/validate_glaze_v1_2_stable.py"
+      - ".github/workflows/glaze-v1.2-stable.yml"
   push:
     branches: [main]
     paths:
@@ -25,13 +26,14 @@ on:
       - "css/glaze-v1.2.0.css"
       - "js/glaze-v1.2.0.mjs"
       - "acceptance/v1.2-stable.md"
+      - "acceptance/v1.3-stable.md"
       - "acceptance/v1.3-deferred-qualification.md"
       - "contracts/v1.3/**"
-      - "tokens/glaze-v1.json"
       - "consumers/**"
       - "CONSUMERS.md"
       - "scripts/validate_glaze_v1.py"
       - "scripts/validate_glaze_v1_2_stable.py"
+      - ".github/workflows/glaze-v1.2-stable.yml"
   workflow_dispatch:
 
 permissions:
@@ -43,10 +45,15 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
-      - run: python scripts/validate_glaze_v1.py
-      - run: |
-          test "$(cat VERSION)" = "1.2.0"
-          echo "V1.2 Stable is a bounded design-system release; V1.3 deferred qualifications are not represented as passed."
+      - name: Validate current Stable and retained V1.2 source
+        run: |
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          test "$(cat VERSION)" = "1.3.0"
+          python scripts/validate_glaze_v1.py
+          python scripts/validate_glaze_v1_2_stable.py
+          echo "V1.3 / 1.3.0 remains current Stable; V1.2 is retained rollback/audit source and V1.3.1 evidence is not manufactured."
