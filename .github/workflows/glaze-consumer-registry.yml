@@ -50,7 +50,7 @@ jobs:
           python3 -m json.tool registry/lifecycle.json >/dev/null
           python3 -m json.tool schemas/consumer-registry.schema.json >/dev/null
 
-      - name: Validate V1.2 consumer registry semantics
+      - name: Validate current Stable consumer registry semantics
         run: |
           python3 -m py_compile scripts/validate_consumer_registry.py
           python3 scripts/validate_consumer_registry.py

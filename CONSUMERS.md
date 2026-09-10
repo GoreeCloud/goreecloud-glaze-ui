@@ -1,4 +1,4 @@
-# GLAZE UI V1.3 Consumers
+# GLAZE UI V1.3 — Adaptive Resonance Consumers
 
 The machine-readable consumer registry authority for current consumer state is `consumers/registry.json`.
 
