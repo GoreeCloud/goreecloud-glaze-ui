@@ -2,8 +2,6 @@ name: GLAZE UI V1.3 Stable Authority
 
 on:
   push:
-    branches:
-      - main
     paths:
       - VERSION
       - GLAZE_UI_V1_3.md
@@ -105,7 +103,8 @@ jobs:
           grep -F 'V1.3.1' acceptance/v1.3-deferred-qualification.md
           grep -F 'consumer-eligible' releases/1.3.0.md
 
-      - name: Report owner-directed Stable boundary
+      - name: Report exact-revision Stable boundary
         run: |
-          echo 'GLAZE UI V1.3 / 1.3.0 is Official, Stable, and consumer-eligible on main.'
+          echo 'This exact checked source revision declares GLAZE UI V1.3 / 1.3.0 Official, Stable, and consumer-eligible.'
           echo 'Unresolved human/manual/physical-device/performance/native Personalization/source cleanup work remains V1.3.1 follow-up and is not represented as passed.'
+          echo 'A successful workflow validates only this checked revision; merge, downstream conformance, and production acceptance remain separate decisions.'
