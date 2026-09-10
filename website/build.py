@@ -21,7 +21,7 @@ for name in ("site.css", "identity.css", "site.js"):
 
 # This retained repository website subtree is a transitional publication/history
 # surface. It publishes the generic foundations and preserved V1.1 presentation
-# chain required by that snapshot; live lifecycle authority is GLAZE UI V1.2 / 1.2.0.
+# chain required by that snapshot; live lifecycle authority is GLAZE UI V1.3 / 1.3.0.
 # Canonical public static-site source lives in GoreeCloud/goreecloud-static-websites.
 for name in (
     "glaze.css",
@@ -55,6 +55,6 @@ shutil.copy2(REFERENCE / "v1-system-shell.html", DIST / "reference" / "v1-system
 
 print(
     f"Built {DIST.relative_to(ROOT)} as a transitional Design Center snapshot under "
-    "GLAZE UI V1.2 / 1.2.0 current Stable authority, using the explicitly retained "
+    "GLAZE UI V1.3 / 1.3.0 current Stable authority, using the explicitly retained "
     "V1.1 presentation asset chain"
 )
