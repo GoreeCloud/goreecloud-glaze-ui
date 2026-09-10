@@ -11,35 +11,31 @@ on:
       - MIGRATION_V1_2_TO_V1_3.md
       - registry/lifecycle.json
       - consumers/registry.json
-      - acceptance/v1.3-stable.md
-      - acceptance/v1.3-candidate.md
-      - acceptance/v1.3-deferred-qualification.md
+      - acceptance/v1.3-*.md
       - releases/1.3.0.md
-      - css/glaze-v1.3.0.css
-      - js/glaze-v1.3.0.mjs
-      - contracts/v1.3/deferred-qualification.plan.json
-      - contracts/v1.3/qualification-matrix.json
-      - scripts/validate_glaze_v1_3_phase0.py
-      - scripts/validate_glaze_v1_3_planned.py
-      - scripts/validate_glaze_v1_3_qualification.py
-      - scripts/validate_glaze_v1_3_stable_readiness.py
+      - css/**
+      - js/**
+      - contracts/v1.3/**
+      - evidence/v1.3/**
+      - scripts/validate_glaze_v1_3_*.py
       - .github/workflows/glaze-v1.3-stable-authority.yml
   pull_request:
     paths:
       - VERSION
       - GLAZE_UI_V1_3.md
       - GLAZE_UI_V1_3_1_HARDENING.md
+      - README.md
+      - CONSUMERS.md
+      - MIGRATION_V1_2_TO_V1_3.md
       - registry/lifecycle.json
       - consumers/registry.json
-      - acceptance/v1.3-stable.md
-      - css/glaze-v1.3.0.css
-      - js/glaze-v1.3.0.mjs
-      - contracts/v1.3/deferred-qualification.plan.json
-      - contracts/v1.3/qualification-matrix.json
-      - scripts/validate_glaze_v1_3_phase0.py
-      - scripts/validate_glaze_v1_3_planned.py
-      - scripts/validate_glaze_v1_3_qualification.py
-      - scripts/validate_glaze_v1_3_stable_readiness.py
+      - acceptance/v1.3-*.md
+      - releases/1.3.0.md
+      - css/**
+      - js/**
+      - contracts/v1.3/**
+      - evidence/v1.3/**
+      - scripts/validate_glaze_v1_3_*.py
       - .github/workflows/glaze-v1.3-stable-authority.yml
 
 permissions:
