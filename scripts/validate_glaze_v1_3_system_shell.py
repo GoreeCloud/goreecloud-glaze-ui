@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the Proposed GLAZE UI V1.3 System Shell and Control Center workstream."""
+"""Validate the historical GLAZE UI V1.3 System Shell and Control Center workstream."""
 from __future__ import annotations
 
 import json
@@ -8,7 +8,8 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 PRODUCT = "GLAZE UI V1.3 — Adaptive Resonance"
-STABLE_VERSION = "1.2.0"
+SOURCE_STABLE_VERSION = "1.2.0"
+CURRENT_STABLE_VERSION = "1.3.0"
 SHELL = "contracts/v1.3/system-shell.candidate.json"
 CONTROL = "contracts/v1.3/control-center.candidate.json"
 RUNTIME = "js/glaze-v1.3-system-shell.candidate.mjs"
@@ -41,11 +42,11 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == STABLE_VERSION, "VERSION must remain 1.2.0")
+    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == CURRENT_STABLE_VERSION, "VERSION must identify current Stable 1.3.0")
     lifecycle = load("registry/lifecycle.json")
-    req(lifecycle.get("currentStable") == STABLE_VERSION, "currentStable must remain 1.2.0")
-    req(lifecycle.get("currentOfficial") == STABLE_VERSION, "currentOfficial must remain 1.2.0")
-    req(lifecycle.get("activeCandidate") is None, "System Shell work must not activate lifecycle Candidate")
+    req(lifecycle.get("currentStable") == CURRENT_STABLE_VERSION, "currentStable must remain 1.3.0")
+    req(lifecycle.get("currentOfficial") == CURRENT_STABLE_VERSION, "currentOfficial must remain 1.3.0")
+    req(lifecycle.get("activeCandidate") is None, "System Shell validation must not activate lifecycle Candidate")
 
     plan = load(PLAN)
     workstreams = {item.get("id"): item for item in plan.get("workstreams", [])}
@@ -64,10 +65,10 @@ def main() -> int:
     shell = load(SHELL)
     req(shell.get("product") == PRODUCT, "system-shell product mismatch")
     req(shell.get("targetVersion") == "1.3.0-candidate", "system-shell target mismatch")
-    req(shell.get("releaseLifecycle") == "proposed", "system-shell lifecycle must remain Proposed")
+    req(shell.get("releaseLifecycle") == "proposed", "historical system-shell artifact lifecycle must remain Proposed")
     req(shell.get("lifecycleAuthority") is False, "system-shell contract must not carry lifecycle authority")
-    req(shell.get("consumerEligible") is False, "system-shell contract must not be consumer eligible")
-    req(shell.get("sourceStable") == STABLE_VERSION, "system-shell must extend V1.2 Stable")
+    req(shell.get("consumerEligible") is False, "historical system-shell candidate artifact must not be consumer eligible")
+    req(shell.get("sourceStable") == SOURCE_STABLE_VERSION, "historical system-shell artifact must preserve its V1.2 Stable source baseline")
     req(set(shell.get("extends", [])) == {V12_NAV, V12_MATERIAL, NAVIGATION, MATERIAL}, "system-shell inheritance set mismatch")
 
     regions = shell.get("shellRegions", {})
@@ -123,8 +124,8 @@ def main() -> int:
 
     control = load(CONTROL)
     req(control.get("product") == PRODUCT, "control-center product mismatch")
-    req(control.get("releaseLifecycle") == "proposed", "control-center lifecycle must remain Proposed")
-    req(control.get("consumerEligible") is False, "control-center contract must not be consumer eligible")
+    req(control.get("releaseLifecycle") == "proposed", "historical control-center artifact lifecycle must remain Proposed")
+    req(control.get("consumerEligible") is False, "historical control-center candidate artifact must not be consumer eligible")
     req(set(control.get("extends", [])) == {V12_CONTROL, V12_MATERIAL, MATERIAL}, "control-center inheritance set mismatch")
     req(control.get("parentSurface", {}).get("nestedBackdropBlurDefaultAllowed") is False, "control-center nested backdrop blur must remain off by default")
     req(control.get("parentSurface", {}).get("parentRemainsSubstantiallyNeutral") is True, "control-center parent must remain substantially neutral")
@@ -184,7 +185,7 @@ def main() -> int:
         return 1
 
     print("GLAZE UI V1.3 System Shell + Control Center: PASS")
-    print("Boundary: adaptive shell framing and accessible Control Center editing are implemented without native-shell, persistence, sync, physical-device, lifecycle, or consumer acceptance claims.")
+    print("Boundary: historical V1.3 candidate artifacts preserve their V1.2 source provenance while repository lifecycle authority remains current V1.3.0 Stable; shell and Control Center contracts are revalidated without native-shell, persistence, physical-device, lifecycle, or consumer claims.")
     return 0
 
 
