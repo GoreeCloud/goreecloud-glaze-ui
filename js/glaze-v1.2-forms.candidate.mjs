@@ -241,6 +241,7 @@ function initDestructiveConfirmation(container) {
 }
 
 function init() {
+  if (typeof document === 'undefined') return;
   for (const form of document.querySelectorAll(FORM_SELECTOR)) {
     if (!(form instanceof HTMLFormElement)) continue;
     const model = form.dataset.glzFormModel;
@@ -255,13 +256,19 @@ function init() {
 }
 
 export function resolveSubmission(formOrId, result) {
-  const form = typeof formOrId === 'string' ? document.getElementById(formOrId) : formOrId;
-  if (form instanceof HTMLFormElement) finishDeferredSubmission(form, result);
+  const form = typeof formOrId === 'string'
+    ? (typeof document === 'undefined' ? null : document.getElementById(formOrId))
+    : formOrId;
+  if (typeof HTMLFormElement !== 'undefined' && form instanceof HTMLFormElement) finishDeferredSubmission(form, result);
 }
 
 export { init };
 
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
-else init();
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
+  else init();
+}
 
-window.GlazeV12Forms = Object.freeze({ resolveSubmission });
+if (typeof window !== 'undefined') {
+  window.GlazeV12Forms = Object.freeze({ resolveSubmission });
+}
