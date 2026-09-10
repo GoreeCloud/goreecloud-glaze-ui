@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate preserved GLAZE UI V1.1 Stable rollback/source integrity under V1.2."""
+"""Validate preserved GLAZE UI V1.1 Stable rollback/source integrity under current V1.3 authority."""
 from __future__ import annotations
 
 import json
@@ -10,8 +10,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 V11_VERSION = "1.1.0"
 V11_PRODUCT = "GLAZE UI V1.1"
-LIVE_VERSION = "1.2.0"
-LIVE_PRODUCT = "GLAZE UI V1.2"
+LIVE_VERSION = "1.3.0"
+LIVE_PRODUCT = "GLAZE UI V1.3 — Adaptive Resonance"
+PREVIOUS_STABLE_VERSION = "1.2.0"
 STABLE_ACTIVATION = 'html[data-glaze-version="1.1"]'
 CANDIDATE_ACTIVATION = 'html[data-glaze-version-candidate="1.1"]'
 
@@ -51,25 +52,30 @@ def main() -> int:
         if not condition:
             errors.append(message)
 
-    # Live product authority is V1.2; this validator protects the prior Stable
-    # rollback/source package and must never move current lifecycle state backward.
+    # Live product authority is V1.3.0; this validator protects the historical
+    # V1.1 rollback/source package and must never move current lifecycle state backward.
     require((ROOT / "VERSION").read_text(encoding="utf-8").strip() == LIVE_VERSION,
-            "live VERSION must remain V1.2 / 1.2.0")
+            "live VERSION must remain V1.3 / 1.3.0")
     lifecycle = load("registry/lifecycle.json")
     require(lifecycle.get("officialProductLabel") == LIVE_PRODUCT,
-            "live lifecycle official product must remain GLAZE UI V1.2")
+            "live lifecycle official product must remain GLAZE UI V1.3 — Adaptive Resonance")
     require(lifecycle.get("currentOfficial") == LIVE_VERSION,
-            "live lifecycle currentOfficial must remain 1.2.0")
+            "live lifecycle currentOfficial must remain 1.3.0")
     require(lifecycle.get("currentStable") == LIVE_VERSION,
-            "live lifecycle currentStable must remain 1.2.0")
+            "live lifecycle currentStable must remain 1.3.0")
+    require(lifecycle.get("activeCandidate") is None,
+            "historical V1.1 validation must not activate a current Candidate")
     release = next((item for item in lifecycle.get("releases", []) if item.get("version") == V11_VERSION), None)
     require(bool(release) and release.get("status") == "stable",
-            "lifecycle must retain the prior Stable 1.1.0 release")
+            "lifecycle must retain the historical Stable 1.1.0 release")
     require(bool(release) and release.get("consumerEligible") is True,
-            "V1.1 rollback release record must retain its historical consumer eligibility")
+            "V1.1 release record must retain its historical consumer eligibility")
     live_release = next((item for item in lifecycle.get("releases", []) if item.get("version") == LIVE_VERSION), None)
     require(bool(live_release) and live_release.get("status") == "stable" and live_release.get("consumerEligible") is True,
-            "live V1.2 Stable release record drifted")
+            "live V1.3.0 Stable release record drifted")
+    previous_release = next((item for item in lifecycle.get("releases", []) if item.get("version") == PREVIOUS_STABLE_VERSION), None)
+    require(bool(previous_release) and previous_release.get("status") == "stable",
+            "lifecycle must retain V1.2 as the immediately preceding Stable baseline")
 
     for path in (
         "GLAZE_UI_V1_1.md",
@@ -138,48 +144,50 @@ def main() -> int:
     require(len(baseline.get("cases", {})) == 5,
             "V1.1 visual baseline must retain five approved cases")
 
-    # Current consumer and evidence authorities must point forward to V1.2, while
-    # V1.1 remains available only as rollback/audit source.
+    # Current consumer and evidence authorities point to V1.3, while V1.1 remains
+    # available only as historical rollback/audit source.
     consumers = load("consumers/registry.json")
     require(consumers.get("officialBaseline") == LIVE_VERSION and consumers.get("requiredConsumerVersion") == LIVE_VERSION,
-            "current consumer registry must require 1.2.0")
+            "current consumer registry must require 1.3.0")
     require(consumers.get("officialProductLabel") == LIVE_PRODUCT,
-            "current consumer registry product label must be GLAZE UI V1.2")
+            "current consumer registry product label must be GLAZE UI V1.3 — Adaptive Resonance")
     require(all(item.get("requiredTargetVersion") == LIVE_VERSION for item in consumers.get("consumers", [])),
-            "every listed current consumer must require 1.2.0")
+            "every listed current consumer must require 1.3.0")
     require(not any(item.get("productionEligible") is True for item in consumers.get("consumers", [])),
             "design-system Stable promotion must not auto-mark consumers production eligible")
 
     evidence_schema = load("contracts/glaze.conformance-evidence.schema.json")
     target = evidence_schema.get("properties", {}).get("target", {}).get("properties", {})
     require(target.get("glaze_version", {}).get("const") == LIVE_VERSION,
-            "current conformance evidence schema must target 1.2.0")
+            "current conformance evidence schema must target 1.3.0")
 
     token_manifest = load("tokens/glaze-v1.json")
     require(token_manifest.get("product") == LIVE_PRODUCT and token_manifest.get("version") == LIVE_VERSION
             and token_manifest.get("status") == "stable",
-            "current token manifest must remain V1.2 Stable")
+            "current token manifest must remain V1.3.0 Stable")
 
     current_docs = {
-        "README.md": (LIVE_PRODUCT, LIVE_VERSION, "current Stable"),
-        "SPECIFICATIONS.md": (LIVE_PRODUCT, LIVE_VERSION, "Stable"),
-        "BRANDING.md": (LIVE_PRODUCT, LIVE_VERSION, "Stable"),
-        "ACCEPTANCE.md": (LIVE_PRODUCT, LIVE_VERSION, "Stable"),
-        "website/index.html": (LIVE_PRODUCT, LIVE_VERSION, "Current Stable authority"),
-        "website/404.html": (LIVE_PRODUCT, LIVE_VERSION),
+        "README.md": ("V1.3", LIVE_VERSION, "Stable"),
+        "SPECIFICATIONS.md": ("V1.3", LIVE_VERSION, "Stable"),
+        "BRANDING.md": ("V1.3", LIVE_VERSION, "Stable"),
+        "ACCEPTANCE.md": ("V1.3", LIVE_VERSION, "Stable"),
+        "website/index.html": ("V1.3", LIVE_VERSION, "Stable"),
+        "website/404.html": ("V1.3", LIVE_VERSION),
     }
     for path, markers in current_docs.items():
         text = (ROOT / path).read_text(encoding="utf-8")
         for marker in markers:
-            require(marker in text, f"{path} missing current V1.2 authority marker {marker!r}")
+            require(marker in text, f"{path} missing current V1.3 authority marker {marker!r}")
 
     historical_v11 = (ROOT / "GLAZE_UI_V1_1.md").read_text(encoding="utf-8")
     require(V11_PRODUCT in historical_v11 and V11_VERSION in historical_v11,
             "historical V1.1 Stable contract identity missing")
     require("historical" in historical_v11[:1400].lower() or "superseded" in historical_v11[:1400].lower(),
             "V1.1 Stable contract must identify its historical/rollback status near the preamble")
-    require(LIVE_PRODUCT in historical_v11[:2200] or LIVE_VERSION in historical_v11[:2200],
-            "V1.1 Stable contract must point to V1.2 current authority")
+    require(LIVE_PRODUCT in historical_v11[:2400] or LIVE_VERSION in historical_v11[:2400],
+            "V1.1 Stable contract must point to current V1.3 authority")
+    require(PREVIOUS_STABLE_VERSION in historical_v11[:2400],
+            "V1.1 Stable contract must preserve V1.2 as the immediately preceding Stable baseline")
 
     require((ROOT / "GLAZE_UI_V1_0.md").is_file(), "historical V1.0 contract must remain available for audit")
     require((ROOT / "contracts/v1.1/optical-refinement.candidate.json").is_file(),
@@ -193,7 +201,7 @@ def main() -> int:
             print(f"- {error}")
         return 1
     print("GLAZE UI V1.1 rollback Stable source integrity: PASS")
-    print("Authority: live lifecycle remains GLAZE UI V1.2 / 1.2.0; V1.1 is preserved for rollback and audit only.")
+    print("Authority: live lifecycle remains GLAZE UI V1.3 / 1.3.0; V1.2 is the immediately preceding Stable baseline and V1.1 is retained for historical rollback/audit source integrity.")
     return 0
 
 
