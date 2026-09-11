@@ -16,7 +16,7 @@ on:
     paths:
       - 'tokens/glaze-v1.4-optical-material.candidate.json'
       - 'scripts/validate_glaze_v1.4_optical_material.py'
-      - 'tests/test_glaze_v1.4_optical_material.py'
+      - 'tests/test_glaze_v1.4-optical-material.py'
       - '.github/workflows/glaze-v1.4-optical-material.yml'
       - 'VERSION'
       - 'tokens/glaze-v1.3-material.candidate.json'
@@ -26,19 +26,25 @@ permissions:
 
 jobs:
   optical-material-candidate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Check out exact V1.4 candidate revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.12'
+
+      - name: Verify exact checked-out revision
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
 
       - name: Validate V1.4 optical-material candidate
         run: python scripts/validate_glaze_v1.4_optical_material.py
 
       - name: Run V1.4 optical-material regression tests
-        run: python -m unittest tests.test_glaze_v1.4_optical_material
+        run: python tests/test_glaze_v1.4_optical_material.py
