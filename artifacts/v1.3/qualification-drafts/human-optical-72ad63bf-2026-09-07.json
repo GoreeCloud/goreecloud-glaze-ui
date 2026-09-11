@@ -1,0 +1,34 @@
+{
+  "disposition": {
+    "accepted_for_lifecycle_gate": false,
+    "notes": "DRAFT ONLY. No lifecycle promotion, Candidate activation, Stable activation, source cleanup, or consumer conformance is granted by this record."
+  },
+  "environment": {
+    "draft": true,
+    "summary": "DRAFT ONLY — replace with the exact real qualification environment before acceptance."
+  },
+  "evidence_references": [
+    "DRAFT: replace with concrete immutable evidence references from the real qualification session"
+  ],
+  "issues": [
+    {
+      "reference": null,
+      "resolved": false,
+      "severity": "info",
+      "summary": "Real human optical review is incomplete. Review all 55 governed quality rules and record truthful quality_review observations before a pass."
+    }
+  ],
+  "observed_at": "2026-09-07T18:05:00Z",
+  "review_authority": {
+    "authority": "GoreeCloud owner / human reviewer",
+    "mode": "human"
+  },
+  "schema_version": 2,
+  "status": "in_progress",
+  "target": {
+    "product": "GLAZE UI V1.3",
+    "source_revision": "72ad63bf32d80420b25dc98bfd2def47bcc2a427",
+    "target_version": "1.3.0-candidate"
+  },
+  "workstream_id": "human-optical-and-icon-collision-qualification"
+}
