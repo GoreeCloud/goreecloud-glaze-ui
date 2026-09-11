@@ -4,13 +4,13 @@
 
 Source validation is automated. Runtime acceptance remains **pending** until results are recorded for representative supported Firefox desktop lines.
 
-A real Firefox Release workstation baseline has now been exercised on August 20, 2026. That baseline confirms that Firefox 154.0 Flatpak on Zorin OS 17.3 / GNOME / Wayland loads `userChrome.css` successfully and remains functional across the tested browser surfaces. It does **not** yet promote the Release track to accepted because the canonical refined stylesheet, dark appearance, accessibility modes, private browsing, warning/security surfaces, rollback, and ESR remain outstanding.
+A real Firefox Release workstation baseline has now been exercised on August 20, 2026. Firefox 154.0 Flatpak on Zorin OS 17.3 / GNOME / Wayland loads the canonical `userChrome.css`, remains functional across the tested browser surfaces, and has completed a successful canonical light-mode visual pass. It does **not** yet promote the Release track to accepted because dark appearance, accessibility modes, private browsing, warning/security surfaces, rollback, update compatibility, and ESR remain outstanding.
 
 ## Target Matrix
 
 | Track | Target | Status | Notes |
 | --- | --- | --- | --- |
-| Firefox Release | Firefox 153 or newer current Release | In progress | Firefox 154.0 Flatpak baseline on Zorin OS 17.3 / GNOME / Wayland confirmed custom chrome loading and functional primary surfaces; canonical refinement and remaining acceptance scenarios still pending. |
+| Firefox Release | Firefox 153 or newer current Release | In progress | Firefox 154.0 Flatpak on Zorin OS 17.3 / GNOME / Wayland has passed canonical light-mode browser-chrome testing across tabs, URL bar, suggestions, menus, normal browsing, and Firefox internal pages. Remaining dark/accessibility/security/rollback/update scenarios are still pending. |
 | Firefox ESR | Firefox ESR 140 current security-supported point release | Pending | Validate long-lived ESR behavior separately from rapid Release. |
 
 The matrix must be updated when Mozilla changes supported release lines. A version appearing here is a validation target, not a claim that GoreeCloud controls Mozilla's support lifecycle.
@@ -26,29 +26,33 @@ Environment observed directly during workstation testing:
 - No pre-existing `chrome/` directory and no pre-existing legacy user-stylesheet preference were present before the test.
 - Firefox was fully stopped before profile-level customization was created.
 
-Observed functional results with the preliminary Glaze stylesheet:
+Observed functional results:
 
 - Custom `userChrome.css` loading was visibly confirmed.
+- Canonical Glaze UI 1.4 browser chrome was installed from `GoreeCloud/glaze-ui` main and exercised successfully in light appearance.
 - Active and inactive tabs remained usable and distinguishable.
 - Navigation buttons and the address bar remained usable.
-- URL-bar suggestions opened and remained readable.
+- URL-bar focus, typing, and suggestions remained readable and functional.
 - Bookmarks toolbar remained usable.
-- Application menu opened and remained readable.
-- Extensions panel opened and remained readable.
-- `about:preferences` remained usable.
-- `about:addons` remained usable.
-- Normal web content, including GoreeCloud and ChatGPT pages, rendered without browser-chrome overlap or clipping.
+- Application menu, Firefox account/sync panel, extension-related panels, and Multi-Account Containers panel remained readable and functional.
+- `about:preferences` and `about:addons` remained usable.
+- Normal web content, including GoreeCloud, Wardveil Security, Projects, and ChatGPT pages, rendered without browser-chrome overlap or clipping.
+- Native Firefox/site identity and security controls remained recognizable and were not cosmetically relabeled as GoreeCloud security state.
 
-Observed refinement needs:
+### Cache-isolation finding
 
-- Avoid treating the entire navigation row as one oversized capsule; Glaze shape belongs primarily to individual functional controls.
-- Strengthen selected-tab hierarchy while keeping inactive tabs quiet.
-- Unify popup, application-menu, extensions-panel, and URL-suggestion surface hierarchy.
-- Keep bookmarks visually secondary to navigation chrome.
-- Validate dark appearance and Wayland fallback behavior using the canonical stylesheet.
-- Preserve native Firefox identity, permission, certificate, private-browsing, download, update, and warning indicators without cosmetic weakening.
+During the canonical light-mode pass, `projects.goreecloud.com` initially showed partially stale presentation in the normal Firefox window while rendering correctly in a new Private Window and in another browser. A Firefox hard reload with `Ctrl+Shift+R` immediately restored the correct current site presentation. The incident is therefore recorded as stale cached frontend assets in the normal Firefox profile, not a Firefox Glaze `userChrome.css` regression and not a Projects source compatibility defect. No Projects source patch, Firefox permission change, extension removal, or profile-data reset was required.
 
-The screenshots used for this baseline were reviewed interactively and are not embedded in the repository. The baseline is evidence for refinement direction, not final acceptance evidence for the canonical source revision.
+Observed refinement conclusions:
+
+- The canonical refinement correctly avoids treating the full navigation row as one oversized capsule; Glaze geometry is concentrated on functional controls.
+- Selected-tab hierarchy is clearer while inactive tabs remain quiet.
+- Firefox 154 expanded URL suggestions now integrate with the address field without a competing outer popup border.
+- Bookmarks remain secondary to navigation chrome.
+- Native Firefox identity, permission, certificate, account, private-browsing, download, update, and warning semantics must continue to remain authoritative.
+- Dark appearance and Wayland fallback behavior still require target-workstation acceptance.
+
+The screenshots used for this baseline were reviewed interactively and are not embedded in the repository. They establish light-mode runtime progress, not final Release acceptance.
 
 ## Required Scenarios
 
@@ -79,7 +83,7 @@ python3 integrations/firefox/collect_acceptance.py \
   --track release \
   --theme-package integrations/firefox/dist/glaze-ui-firefox-0.2.0.xpi \
   --userchrome enabled \
-  --desktop "KDE Plasma" \
+  --desktop "Zorin GNOME / Wayland" \
   --output firefox-release-acceptance.md
 ```
 
@@ -90,6 +94,8 @@ Run the same process separately for ESR with `--track esr`. The evidence helper 
 A Firefox runtime is accepted only when all required scenarios pass or a documented material exception is approved. Cosmetic consistency must never override Firefox security, identity, permission, update, private-browsing, or warning behavior. `userChrome.css` failures are allowed to fall back to the supported theme layer rather than forcing unsafe browser-chrome overrides.
 
 The supported Firefox theme and optional `userChrome.css` layer must be evaluated independently enough that a `userChrome.css` selector regression can be disabled without invalidating an otherwise safe supported-theme experience.
+
+A site rendering defect that disappears after a cache-bypassing hard reload or only reproduces in a stale normal-window cache must be isolated from browser-chrome acceptance before source changes are made to the site or Firefox integration.
 
 ## Evidence Record
 
