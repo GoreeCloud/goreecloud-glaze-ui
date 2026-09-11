@@ -9,6 +9,7 @@ on:
       - 'reference/v1.1/**'
       - 'scripts/validate_glaze_v1_1_*.py'
       - 'acceptance/v1.1-*.md'
+      - 'releases/1.1.0-web-source.json'
       - '.github/workflows/glaze-v1.1-release-evidence.yml'
       - 'contracts/performance/glaze-v1-performance-budget.json'
       - 'contracts/accessibility/resolution-matrix.json'
@@ -32,7 +33,7 @@ jobs:
           persist-credentials: false
 
       - name: Compile V1.1 release evidence validators
-        run: python3 -m py_compile scripts/validate_glaze_v1_1_rendered.py scripts/validate_glaze_v1_1_visual_baselines.py
+        run: python3 -m py_compile scripts/validate_glaze_v1_1_rendered.py scripts/validate_glaze_v1_1_visual_baselines.py scripts/validate_glaze_v1_1_web_source_manifest.py
 
       - name: Preserve current V1 baseline while V1.1 is a release candidate
         run: python3 scripts/validate_glaze_v1.py
@@ -42,11 +43,37 @@ jobs:
           python3 scripts/validate_glaze_v1_1_candidate.py
           python3 scripts/validate_glaze_v1_1_implementation.py
 
+      - name: Validate immutable V1.1 Stable web source graph
+        run: python3 scripts/validate_glaze_v1_1_web_source_manifest.py
+
       - name: Render exact V1.1 reference scenes
         run: python3 scripts/validate_glaze_v1_1_rendered.py
 
       - name: Compare with human-approved source-pinned baseline
         run: python3 scripts/validate_glaze_v1_1_visual_baselines.py
+
+      - name: Upload exact V1.1 Stable web source graph
+        if: success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: glaze-v1.1-stable-web-source-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            releases/1.1.0-web-source.json
+            css/glaze-v1.1.0.css
+            css/glaze-v1.0.0.css
+            css/glaze-v1.1.css
+            css/glaze-v1.1-appearance.css
+            css/glaze-v1.foundation.css
+            css/glaze-v1.components.css
+            css/glaze-v1.components.adaptive.css
+            css/glaze-v1.components.runtime.css
+            css/glaze-v1.structure.css
+            css/glaze-v1.overlay.css
+            css/glaze-v1.advanced.css
+            css/glaze-v1.visual-refinement.css
+            css/glaze-v1.optical-reachability.css
+          if-no-files-found: error
+          retention-days: 30
 
       - name: Upload V1.1 source-pinned web evidence
         if: success()
