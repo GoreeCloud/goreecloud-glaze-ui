@@ -29,9 +29,11 @@ Glaze UI V1.4 is under active **proposed / implementation-candidate** developmen
 
 The first V1.4 implementation slice is the Optical Material and Chromatic Depth candidate in `tokens/glaze-v1.4-optical-material.candidate.json`. It establishes bounded optical-depth, diffusion, refraction, ambient-tint, color-bleed, highlight-rim, shadow-depth, concentration, fallback, and component-profile contracts while preserving V1.3 token, radius, motion, accessibility, lifecycle, and adoption boundaries.
 
+The candidate now also includes `contracts/v1.4/semantic-optical-runtime.candidate.json`. This semantic layer keeps applications above raw optical values by defining candidate material, frost, and elevation roles; runtime capability negotiation; explicit accepted/downgraded/substituted/rejected outcomes; first-class accessibility and performance profiles; privacy-preserving environmental-sampling boundaries; compositor degradation rules; and truthful authority separation for Wardveil Security, Privacy Shield, GoreeCloud Identity, Everkeep, and application-owned state. The semantic API remains explicitly candidate and is not frozen.
+
 `VERSION` intentionally remains `1.3.0`. The V1.4 candidate has no lifecycle authority, is not consumer-eligible, grants no downstream conformance, and does not establish physical-device qualification, native-renderer parity, production performance budgets, or a Stable V1.4 release.
 
-Source validation for this candidate is governed by `scripts/validate_glaze_v1.4_optical_material.py`, `tests/test_glaze_v1.4_optical_material.py`, and `.github/workflows/glaze-v1.4-optical-material.yml`.
+Source validation for this candidate is governed by `scripts/validate_glaze_v1.4_optical_material.py`, `scripts/validate_glaze_v1_4_semantic_optical_runtime.py`, their paired regression tests, and `.github/workflows/glaze-v1.4-optical-material.yml`.
 
 ## V1.3.1 follow-up
 
