@@ -27,41 +27,24 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Detect historical V1.2 applicability
-        id: applicability
-        shell: bash
-        run: |
-          if [[ "$(tr -d '\r\n' < VERSION)" == "1.2.0" ]]; then
-            echo "applicable=true" >> "$GITHUB_OUTPUT"
-            echo "V1.2 is the checked-out Stable line; historical lifecycle validation is applicable."
-          else
-            echo "applicable=false" >> "$GITHUB_OUTPUT"
-            echo "V1.2 is historical on this revision; the V1.2 candidate validator must not reinterpret a newer Stable README/version as V1.2."
-          fi
-
       - name: Preserve Stable and Candidate authorities
-        if: steps.applicability.outputs.applicable == 'true'
         run: |
           test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
           python scripts/validate_glaze_v1.py
           python scripts/validate_glaze_v1_2_candidate.py
 
       - name: Audit lifecycle and version integrity across tracked text sources
-        if: steps.applicability.outputs.applicable == 'true'
         run: |
           python scripts/validate_glaze_v1_2_documentation_versions.py \
             --output "artifacts/glaze-v1.2-lifecycle-version-integrity-${{ github.event.pull_request.head.sha || github.sha }}.json"
 
       - name: Compile lifecycle-version validator
-        if: steps.applicability.outputs.applicable == 'true'
         run: python -m py_compile scripts/validate_glaze_v1_2_documentation_versions.py
 
       - name: Verify validator did not mutate tracked source
-        if: steps.applicability.outputs.applicable == 'true'
         run: git diff --exit-code
 
       - name: Upload exact-head lifecycle-version evidence
-        if: steps.applicability.outputs.applicable == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: glaze-v1.2-lifecycle-version-integrity-${{ github.event.pull_request.head.sha || github.sha }}
