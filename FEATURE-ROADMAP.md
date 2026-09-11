@@ -23,19 +23,26 @@ This file is the repository-side feature roadmap control for Glaze UI. It record
 | FR-006 | Apply bounded V1.4 optical profiles across the planned surface, elevated-surface, panel, side-panel, shelf, menu, popover, menu-bar, card, list-row, search-field, selector, toolbar, header, footer, dialog, and toast component families. | P0 | Candidate profile mapping implemented; physical/native qualification not established |
 | FR-007 | Preserve fail-safe accessibility and performance behavior: reduced-transparency solid fallback, inherited reduced-motion behavior, static/solid low-performance fallback, and diffusion-only fallback where refraction is unsupported. | P0 | Candidate contract and validator enforce fallback presence; runtime/device qualification pending |
 | FR-008 | Continue V1.4 secondary refinement work for typography, motion, responsive/form-factor behavior, window chrome, performance, and accessibility only where consistent with the binding V1.4 plan and without forcing spatial/AR frameworks. | High | Planned / not established by the current optical-material slice |
+| FR-009 | Establish a semantic optical runtime contract so consumers request material/elevation/accessibility intent instead of binding directly to raw optical values, and require runtimes to report accepted, downgraded, substituted, or rejected outcomes. | P0 | Semantic runtime implementation candidate added; API remains candidate/not frozen; validation gate added |
+| FR-010 | Enforce privacy-preserving environmental sampling, truthful operational-state authority, accessibility-first degradation, and non-claimed performance/native qualification in the V1.4 runtime contract. | P0 | Candidate policy contract and fail-closed regression tests added; runtime/platform qualification remains pending |
 
 ## V1.4 current implementation boundary
 
-The repository currently contains a bounded V1.4 source candidate, not a V1.4 release. The candidate is rooted in Stable `1.3.0`, keeps `VERSION` at `1.3.0`, has no lifecycle authority, is not consumer-eligible, and cannot establish downstream V1.4 conformance.
+The repository currently contains bounded V1.4 source candidates, not a V1.4 release. The candidates are rooted in Stable `1.3.0`, keep `VERSION` at `1.3.0`, have no lifecycle authority, are not consumer-eligible, and cannot establish downstream V1.4 conformance.
 
-Current source artifacts for the first V1.4 slice are:
+Current source artifacts for the first V1.4 slices are:
 
 - `tokens/glaze-v1.4-optical-material.candidate.json`
+- `contracts/v1.4/semantic-optical-runtime.candidate.json`
 - `scripts/validate_glaze_v1.4_optical_material.py`
+- `scripts/validate_glaze_v1_4_semantic_optical_runtime.py`
 - `tests/test_glaze_v1.4_optical_material.py`
+- `tests/test_glaze_v1_4_semantic_optical_runtime.py`
 - `.github/workflows/glaze-v1.4-optical-material.yml`
 
-Physical-device qualification, native-renderer parity, production frame-time/GPU/power budgets, and Stable V1.4 lifecycle promotion remain outside the evidence established by this candidate.
+The semantic runtime candidate defines candidate semantic material/frost/elevation roles, runtime capability negotiation, explicit acceptance dispositions, accessibility profiles, non-qualified performance levels, privacy-preserving environmental-sampling rules, compositor degradation boundaries, and truth-authority separation. Its API names remain candidate and are not frozen.
+
+Physical-device qualification, native-renderer parity, production frame-time/GPU/power budgets, and Stable V1.4 lifecycle promotion remain outside the evidence established by these candidates.
 
 ## Maintenance and synchronization
 
