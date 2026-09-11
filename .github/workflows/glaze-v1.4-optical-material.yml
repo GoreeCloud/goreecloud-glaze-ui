@@ -1,11 +1,14 @@
-name: Glaze V1.4 Optical Material Candidate
+name: Glaze V1.4 Optical Runtime Candidate
 
 on:
   pull_request:
     paths:
       - 'tokens/glaze-v1.4-optical-material.candidate.json'
+      - 'contracts/v1.4/**'
       - 'scripts/validate_glaze_v1.4_optical_material.py'
+      - 'scripts/validate_glaze_v1_4_semantic_optical_runtime.py'
       - 'tests/test_glaze_v1.4_optical_material.py'
+      - 'tests/test_glaze_v1_4_semantic_optical_runtime.py'
       - '.github/workflows/glaze-v1.4-optical-material.yml'
       - 'VERSION'
       - 'tokens/glaze-v1.3-material.candidate.json'
@@ -15,8 +18,11 @@ on:
       - main
     paths:
       - 'tokens/glaze-v1.4-optical-material.candidate.json'
+      - 'contracts/v1.4/**'
       - 'scripts/validate_glaze_v1.4_optical_material.py'
-      - 'tests/test_glaze_v1.4-optical-material.py'
+      - 'scripts/validate_glaze_v1_4_semantic_optical_runtime.py'
+      - 'tests/test_glaze_v1.4_optical_material.py'
+      - 'tests/test_glaze_v1_4_semantic_optical_runtime.py'
       - '.github/workflows/glaze-v1.4-optical-material.yml'
       - 'VERSION'
       - 'tokens/glaze-v1.3-material.candidate.json'
@@ -25,7 +31,7 @@ permissions:
   contents: read
 
 jobs:
-  optical-material-candidate:
+  optical-runtime-candidate:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
@@ -48,3 +54,17 @@ jobs:
 
       - name: Run V1.4 optical-material regression tests
         run: python tests/test_glaze_v1.4_optical_material.py
+
+      - name: Validate V1.4 semantic optical runtime candidate
+        run: python scripts/validate_glaze_v1_4_semantic_optical_runtime.py
+
+      - name: Run V1.4 semantic optical runtime regression tests
+        run: python tests/test_glaze_v1_4_semantic_optical_runtime.py
+
+      - name: Compile V1.4 validators
+        run: |
+          python -m py_compile scripts/validate_glaze_v1.4_optical_material.py
+          python -m py_compile scripts/validate_glaze_v1_4_semantic_optical_runtime.py
+
+      - name: Verify validation did not mutate tracked source
+        run: git diff --exit-code
