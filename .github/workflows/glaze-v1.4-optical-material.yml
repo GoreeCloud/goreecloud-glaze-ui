@@ -1,0 +1,44 @@
+name: Glaze V1.4 Optical Material Candidate
+
+on:
+  pull_request:
+    paths:
+      - 'tokens/glaze-v1.4-optical-material.candidate.json'
+      - 'scripts/validate_glaze_v1.4_optical_material.py'
+      - 'tests/test_glaze_v1.4_optical_material.py'
+      - '.github/workflows/glaze-v1.4-optical-material.yml'
+      - 'VERSION'
+      - 'tokens/glaze-v1.3-material.candidate.json'
+  push:
+    branches:
+      - 'upgrade/glaze-ui-v1.4-*'
+      - main
+    paths:
+      - 'tokens/glaze-v1.4-optical-material.candidate.json'
+      - 'scripts/validate_glaze_v1.4_optical_material.py'
+      - 'tests/test_glaze_v1.4_optical_material.py'
+      - '.github/workflows/glaze-v1.4-optical-material.yml'
+      - 'VERSION'
+      - 'tokens/glaze-v1.3-material.candidate.json'
+
+permissions:
+  contents: read
+
+jobs:
+  optical-material-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate V1.4 optical-material candidate
+        run: python scripts/validate_glaze_v1.4_optical_material.py
+
+      - name: Run V1.4 optical-material regression tests
+        run: python -m unittest tests.test_glaze_v1.4_optical_material
