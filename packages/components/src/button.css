@@ -1,0 +1,36 @@
+.glaze-button {
+  border: 0;
+  border-radius: var(--glaze-radius-md);
+  padding: var(--glaze-space-3) var(--glaze-space-6);
+  font: inherit;
+  cursor: pointer;
+  transition: transform var(--glaze-motion-fast), opacity var(--glaze-motion-fast);
+}
+
+.glaze-button:hover {
+  opacity: .9;
+}
+
+.glaze-button:active {
+  transform: scale(.98);
+}
+
+.glaze-button-primary {
+  background: var(--glaze-color-accent-primary);
+  color: white;
+}
+
+.glaze-button-secondary {
+  background: var(--glaze-color-surface-secondary);
+  color: var(--glaze-color-text-primary);
+}
+
+.glaze-button-ghost {
+  background: transparent;
+  color: var(--glaze-color-text-primary);
+}
+
+.glaze-button-danger {
+  background: var(--glaze-color-danger);
+  color: white;
+}

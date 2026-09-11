@@ -1,0 +1,33 @@
+:root {
+  --glaze-color-surface-primary: #ffffff;
+  --glaze-color-surface-secondary: #f6f7f9;
+  --glaze-color-text-primary: #111827;
+  --glaze-color-text-secondary: #4b5563;
+  --glaze-color-accent-primary: #2563eb;
+  --glaze-color-danger: #dc2626;
+
+  --glaze-space-1: 0.25rem;
+  --glaze-space-2: 0.5rem;
+  --glaze-space-3: 0.75rem;
+  --glaze-space-4: 1rem;
+  --glaze-space-6: 1.5rem;
+  --glaze-space-8: 2rem;
+
+  --glaze-radius-sm: 0.5rem;
+  --glaze-radius-md: 0.75rem;
+  --glaze-radius-lg: 1rem;
+  --glaze-radius-xl: 1.5rem;
+
+  --glaze-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.08);
+  --glaze-shadow-md: 0 8px 24px rgb(0 0 0 / 0.12);
+
+  --glaze-motion-fast: 120ms;
+  --glaze-motion-normal: 220ms;
+}
+
+[data-glaze-theme='dark'] {
+  --glaze-color-surface-primary: #111827;
+  --glaze-color-surface-secondary: #1f2937;
+  --glaze-color-text-primary: #f9fafb;
+  --glaze-color-text-secondary: #d1d5db;
+}
