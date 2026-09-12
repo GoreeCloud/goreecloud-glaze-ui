@@ -15,11 +15,13 @@ on:
       - 'scripts/validate_glaze_v1_4_accessibility_composition.py'
       - 'scripts/validate_glaze_v1_4_accessibility_qualification.py'
       - 'scripts/evaluate_glaze_v1_4_accessibility_qualification.py'
+      - 'scripts/prepare_glaze_v1_4_accessibility_qualification_packet.py'
       - 'tests/test_glaze_v1.4_optical_material.py'
       - 'tests/test_glaze_v1_4_semantic_optical_runtime.py'
       - 'tests/test_glaze_v1_4_browser_capabilities.py'
       - 'tests/test_glaze_v1_4_accessibility_composition.py'
       - 'tests/test_glaze_v1_4_accessibility_qualification.py'
+      - 'tests/test_glaze_v1_4_accessibility_qualification_packet.py'
       - 'tests/glaze-v1.4-*.test.mjs'
       - '.github/workflows/glaze-v1.4-optical-material.yml'
       - 'VERSION'
@@ -35,17 +37,19 @@ on:
       - 'js/glaze-v1.4-*'
       - 'reference/glaze-v1.4-*'
       - 'evidence/v1.4/**'
-      - 'scripts/validate_glaze_v1.4_optical_material.py'
+      - 'scripts/validate_glaze-v1.4-optical-material.py'
       - 'scripts/validate_glaze_v1_4_semantic_optical_runtime.py'
       - 'scripts/validate_glaze_v1_4_browser_capabilities.py'
       - 'scripts/validate_glaze_v1_4_accessibility_composition.py'
       - 'scripts/validate_glaze_v1_4_accessibility_qualification.py'
       - 'scripts/evaluate_glaze_v1_4_accessibility_qualification.py'
+      - 'scripts/prepare_glaze_v1_4_accessibility_qualification_packet.py'
       - 'tests/test_glaze_v1.4_optical_material.py'
       - 'tests/test_glaze_v1_4_semantic_optical_runtime.py'
       - 'tests/test_glaze_v1_4_browser_capabilities.py'
       - 'tests/test_glaze_v1_4_accessibility_composition.py'
       - 'tests/test_glaze_v1_4_accessibility_qualification.py'
+      - 'tests/test_glaze_v1_4_accessibility_qualification_packet.py'
       - 'tests/glaze-v1.4-*.test.mjs'
       - '.github/workflows/glaze-v1.4-optical-material.yml'
       - 'VERSION'
@@ -103,6 +107,9 @@ jobs:
       - name: Run V1.4 accessibility qualification regressions
         run: python tests/test_glaze_v1_4_accessibility_qualification.py
 
+      - name: Run V1.4 accessibility qualification packet regressions
+        run: python tests/test_glaze_v1_4_accessibility_qualification_packet.py
+
       - name: Verify qualification template remains blocked and non-promoting
         run: |
           python scripts/evaluate_glaze_v1_4_accessibility_qualification.py \
@@ -117,6 +124,35 @@ jobs:
           assert result['acceptedForLifecycleGate'] is False
           PY
 
+      - name: Verify prepared qualification packet is exact-bound, blocked, and non-promoting
+        run: |
+          SOURCE_REVISION="$(git rev-parse HEAD)"
+          SOURCE_TREE_REVISION="$(git rev-parse HEAD^{tree})"
+          PACKET_DIR="artifacts/v1.4/accessibility-qualification-drafts/ci-smoke"
+          python scripts/prepare_glaze_v1_4_accessibility_qualification_packet.py \
+            --output-dir "$PACKET_DIR" \
+            --authority "CI smoke preparation only" \
+            --review-mode combined \
+            --source-revision "$SOURCE_REVISION" \
+            --source-tree-revision "$SOURCE_TREE_REVISION" \
+            --platform-family web \
+            --os-name "GitHub Actions Ubuntu" \
+            --os-version "24.04"
+          python scripts/evaluate_glaze_v1_4_accessibility_qualification.py \
+            "$PACKET_DIR/qualification-record.json" \
+            --expected-source-revision "$SOURCE_REVISION" \
+            --expected-source-tree-revision "$SOURCE_TREE_REVISION" \
+            > /tmp/glaze-v1.4-accessibility-packet-evaluation.json
+          python - <<'PY'
+          import json
+          with open('/tmp/glaze-v1.4-accessibility-packet-evaluation.json', encoding='utf-8') as handle:
+              result = json.load(handle)
+          assert result['evaluatorDisposition'] == 'blocked'
+          assert result['acceptedForAccessibilityQualification'] is False
+          assert result['acceptedForLifecycleGate'] is False
+          PY
+          rm -rf "$PACKET_DIR"
+
       - name: Run V1.4 executable runtime, web, browser, and accessibility regressions
         run: |
           node --test \
@@ -125,7 +161,7 @@ jobs:
             tests/glaze-v1.4-browser-capabilities.test.mjs \
             tests/glaze-v1.4-accessibility-composition.test.mjs
 
-      - name: Compile V1.4 validators and evaluators
+      - name: Compile V1.4 validators, evaluators, and packet preparation
         run: |
           python -m py_compile scripts/validate_glaze_v1.4_optical_material.py
           python -m py_compile scripts/validate_glaze_v1_4_semantic_optical_runtime.py
@@ -133,6 +169,7 @@ jobs:
           python -m py_compile scripts/validate_glaze_v1_4_accessibility_composition.py
           python -m py_compile scripts/validate_glaze_v1_4_accessibility_qualification.py
           python -m py_compile scripts/evaluate_glaze_v1_4_accessibility_qualification.py
+          python -m py_compile scripts/prepare_glaze_v1_4_accessibility_qualification_packet.py
 
       - name: Verify validation did not mutate tracked source
         run: git diff --exit-code
