@@ -95,6 +95,36 @@ class GlazeV14AccessibilityQualificationTests(unittest.TestCase):
         self.assertTrue(result["acceptedForAccessibilityQualification"])
         self.assertFalse(result["acceptedForLifecycleGate"])
 
+    def test_observation_time_without_timezone_is_blocked(self) -> None:
+        record = accepted_record()
+        record["observedAt"] = "2026-09-12T00:00:00"
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn("observation-time-invalid", result["reasons"])
+
+    def test_observation_time_with_surrounding_whitespace_is_blocked(self) -> None:
+        record = accepted_record()
+        record["observedAt"] = " 2026-09-12T00:00:00Z"
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn("observation-time-invalid", result["reasons"])
+
+    def test_environment_reference_with_surrounding_whitespace_is_blocked(self) -> None:
+        record = accepted_record()
+        record["environment"]["evidenceReferences"] = [" artifact:environment.json"]
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn("environment-evidence-references-invalid", result["reasons"])
+
+    def test_passing_scenario_reference_with_surrounding_whitespace_is_blocked(self) -> None:
+        record = accepted_record()
+        for scenario in record["scenarioResults"]:
+            if scenario["id"] == "keyboard-focus-order":
+                scenario["evidenceReferences"] = [" artifact:keyboard-focus-order.json"]
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn("keyboard-focus-order", result["missingScenarioIds"])
+
     def test_web_record_without_browser_identity_is_blocked(self) -> None:
         record = accepted_record()
         record["environment"].pop("browser")
