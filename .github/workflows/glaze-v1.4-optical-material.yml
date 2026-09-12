@@ -9,7 +9,7 @@ on:
       - 'js/glaze-v1.4-*'
       - 'reference/glaze-v1.4-*'
       - 'evidence/v1.4/**'
-      - 'scripts/validate_glaze_v1.4_optical_material.py'
+      - 'scripts/validate_glaze-v1.4-optical-material.py'
       - 'scripts/validate_glaze_v1_4_semantic_optical_runtime.py'
       - 'scripts/validate_glaze_v1_4_browser_capabilities.py'
       - 'scripts/validate_glaze_v1_4_accessibility_composition.py'
@@ -37,7 +37,7 @@ on:
       - 'js/glaze-v1.4-*'
       - 'reference/glaze-v1.4-*'
       - 'evidence/v1.4/**'
-      - 'scripts/validate_glaze_v1.4_optical_material.py'
+      - 'scripts/validate_glaze-v1.4-optical-material.py'
       - 'scripts/validate_glaze_v1_4_semantic_optical_runtime.py'
       - 'scripts/validate_glaze_v1_4_browser_capabilities.py'
       - 'scripts/validate_glaze_v1_4_accessibility_composition.py'
@@ -153,13 +153,14 @@ jobs:
           PY
           rm -rf "$PACKET_DIR"
 
-      - name: Run V1.4 executable runtime, web, browser, and accessibility regressions
+      - name: Run V1.4 executable runtime, web, browser, accessibility, and observation-capture regressions
         run: |
           node --test \
             tests/glaze-v1.4-optical-runtime.test.mjs \
             tests/glaze-v1.4-optical-web.test.mjs \
             tests/glaze-v1.4-browser-capabilities.test.mjs \
-            tests/glaze-v1.4-accessibility-composition.test.mjs
+            tests/glaze-v1.4-accessibility-composition.test.mjs \
+            tests/glaze-v1.4-accessibility-observation-capture.test.mjs
 
       - name: Compile V1.4 validators, evaluators, and packet preparation
         run: |
