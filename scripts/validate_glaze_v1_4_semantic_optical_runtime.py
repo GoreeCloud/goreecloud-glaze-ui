@@ -10,6 +10,10 @@ CONTRACT = ROOT / "contracts" / "v1.4" / "semantic-optical-runtime.candidate.jso
 OPTICAL = ROOT / "tokens" / "glaze-v1.4-optical-material.candidate.json"
 RUNTIME = ROOT / "js" / "glaze-v1.4-optical-runtime.candidate.mjs"
 RUNTIME_TEST = ROOT / "tests" / "glaze-v1.4-optical-runtime.test.mjs"
+WEB_ADAPTER = ROOT / "js" / "glaze-v1.4-optical-web.candidate.mjs"
+WEB_RENDERER = ROOT / "css" / "glaze-v1.4-optical-runtime.candidate.css"
+WEB_TEST = ROOT / "tests" / "glaze-v1.4-optical-web.test.mjs"
+STABLE_WEB_ENTRYPOINT = ROOT / "css" / "glaze-v1.3.0.css"
 VERSION = ROOT / "VERSION"
 
 EXPECTED_REQUEST_DIMENSIONS = [
@@ -93,6 +97,24 @@ EXPECTED_SOURCE_ARTIFACTS = {
     "opticalMaterial": "tokens/glaze-v1.4-optical-material.candidate.json",
     "runtimeResolver": "js/glaze-v1.4-optical-runtime.candidate.mjs",
     "runtimeRegression": "tests/glaze-v1.4-optical-runtime.test.mjs",
+    "webAdapter": "js/glaze-v1.4-optical-web.candidate.mjs",
+    "webRenderer": "css/glaze-v1.4-optical-runtime.candidate.css",
+    "webRegression": "tests/glaze-v1.4-optical-web.test.mjs",
+}
+EXPECTED_WEB_RENDERER = {
+    "implementationStatus": "source-candidate",
+    "runtimeAdapter": "js/glaze-v1.4-optical-web.candidate.mjs",
+    "stylesheet": "css/glaze-v1.4-optical-runtime.candidate.css",
+    "activation": "accepted-runtime-data-attributes",
+    "importsStableV1_3": True,
+    "automaticallyIncludedByStableEntrypoint": False,
+    "directRawOpticalConsumerContract": False,
+    "remoteAssetsRequired": False,
+    "environmentalSamplingImplemented": False,
+    "browserQualificationEstablished": False,
+    "assistiveTechnologyQualificationEstablished": False,
+    "productionPerformanceQualificationEstablished": False,
+    "nativeRendererParityEstablished": False,
 }
 
 
@@ -290,6 +312,42 @@ def validate_privacy_and_compositor(contract: dict) -> None:
     require_false(compositor, "productionNumericLayerBudgetEstablished", "compositorPolicy")
 
 
+def validate_web_renderer(contract: dict) -> None:
+    renderer = contract.get("webReferenceRenderer")
+    if renderer != EXPECTED_WEB_RENDERER:
+        fail("webReferenceRenderer boundary drifted")
+
+    for path in (WEB_ADAPTER, WEB_RENDERER, WEB_TEST, STABLE_WEB_ENTRYPOINT):
+        if not path.is_file():
+            fail(f"governed web artifact missing: {path.relative_to(ROOT)}")
+
+    adapter_text = WEB_ADAPTER.read_text(encoding="utf-8")
+    for required_export in (
+        "export function applyResolvedOpticalWebState",
+        "export function applyOpticalWebRuntime",
+        "export function createOpticalWebAdapter",
+        "export const opticalWebCandidate",
+    ):
+        if required_export not in adapter_text:
+            fail(f"web adapter is missing required export: {required_export}")
+
+    renderer_text = WEB_RENDERER.read_text(encoding="utf-8")
+    if '@import url("./glaze-v1.3.0.css");' not in renderer_text:
+        fail("web renderer must build on the Stable V1.3 web entrypoint")
+    if "http://" in renderer_text or "https://" in renderer_text:
+        fail("web renderer must not require remote assets or styles")
+    for profile in ("subdued", "standard", "elevated", "transient", "deep"):
+        if f'[data-glaze-v14-profile="{profile}"]' not in renderer_text:
+            fail(f"web renderer is missing profile selector: {profile}")
+    for mode in ("optical-glaze", "static-glaze", "solid-semantic-surface"):
+        if f'[data-glaze-v14-rendering="{mode}"]' not in renderer_text:
+            fail(f"web renderer is missing rendering-mode selector: {mode}")
+
+    stable_text = STABLE_WEB_ENTRYPOINT.read_text(encoding="utf-8")
+    if "glaze-v1.4" in stable_text:
+        fail("Stable V1.3 web entrypoint must not import the V1.4 candidate renderer")
+
+
 def validate_truth_authority(contract: dict) -> None:
     truth = contract.get("truthAuthority")
     if not isinstance(truth, dict):
@@ -310,6 +368,7 @@ def validate_not_established(contract: dict) -> None:
         "frozen-v1.4-semantic-api",
         "production-v1.4-performance-budgets",
         "physical-device-v1.4-qualification",
+        "browser-v1.4-renderer-qualification",
         "native-v1.4-renderer-parity",
         "ecosystem-wide-v1.4-adoption",
     }
@@ -345,6 +404,7 @@ def validate_contract(contract: dict, optical: dict) -> None:
     validate_capabilities(contract)
     validate_accessibility_and_performance(contract)
     validate_privacy_and_compositor(contract)
+    validate_web_renderer(contract)
     validate_truth_authority(contract)
     validate_not_established(contract)
 
