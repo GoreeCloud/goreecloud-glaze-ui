@@ -93,7 +93,7 @@
     "requiresNetworkAccess": false
   },
   "qualificationBoundary": {
-    "sourceBehaviorVerifiedByAutomatedTests": false,
+    "sourceBehaviorVerifiedByAutomatedTests": true,
     "browserMatrixQualificationEstablished": false,
     "assistiveTechnologyQualificationEstablished": false,
     "physicalDeviceQualificationEstablished": false,
