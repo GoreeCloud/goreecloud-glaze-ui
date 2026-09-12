@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Glaze UI V1.4 Accessibility Observation Capture Candidate</title>
+  <link rel="stylesheet" href="../css/glaze-v1.4-optical-runtime.candidate.css">
+  <style>
+    :root { color-scheme: light dark; }
+    body { margin: 0; font-family: system-ui, sans-serif; background: Canvas; color: CanvasText; }
+    main { max-width: 90rem; margin: 0 auto; padding: 2rem; display: grid; gap: 1.25rem; }
+    .candidate-note, .panel { padding: 1rem; border: 1px solid currentColor; border-radius: 1rem; }
+    .actions { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+    dl { display: grid; grid-template-columns: minmax(12rem, 1fr) 2fr; gap: .5rem 1rem; }
+    dt { font-weight: 650; }
+    dd { margin: 0; overflow-wrap: anywhere; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid color-mix(in srgb, currentColor 30%, transparent); padding: .65rem; text-align: left; vertical-align: top; }
+    th { font-weight: 650; }
+    select, textarea, input, button { font: inherit; }
+    select, textarea, input[type="file"] { width: 100%; max-width: 100%; box-sizing: border-box; }
+    textarea { min-width: 12rem; resize: vertical; }
+    button { padding: .65rem 1rem; }
+    pre { overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .scroll { overflow-x: auto; }
+    .muted { opacity: .8; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Glaze UI V1.4 Accessibility Observation Capture Candidate</h1>
+      <p class="candidate-note"><strong>Local capture aid only.</strong> Load a prepared V1.4 qualification packet, explicitly record reviewer observations, and export a local JSON evidence draft. This page does not auto-pass scenarios, does not auto-accept local feature detection as qualification evidence, does not perform human acceptance, and cannot grant consumer conformance, lifecycle promotion, or Stable V1.4 status. Data is not transmitted or stored remotely; export happens only when you choose the export action.</p>
+      <p><a href="./glaze-v1.4-browser-qualification.candidate.html">Return to the local browser capability diagnostic</a></p>
+    </header>
+
+    <section class="panel" aria-labelledby="glz14-packet-heading">
+      <h2 id="glz14-packet-heading">1. Load prepared packet</h2>
+      <div class="actions">
+        <label for="glz14-packet-file">Prepared <code>qualification-record.json</code></label>
+        <input id="glz14-packet-file" type="file" accept="application/json,.json">
+        <button id="glz14-refresh-hints" type="button">Refresh local preference hints</button>
+      </div>
+      <p id="glz14-capture-status" class="muted" role="status">No packet loaded.</p>
+      <dl id="glz14-source-summary"></dl>
+    </section>
+
+    <section class="panel" aria-labelledby="glz14-environment-heading">
+      <h2 id="glz14-environment-heading">2. Environment evidence</h2>
+      <p>The packet controls browser/OS/device identity. Add only explicit evidence references and assistive technologies actually used during this session.</p>
+      <label for="glz14-environment-evidence">Environment evidence references, one per line</label>
+      <textarea id="glz14-environment-evidence" rows="4"></textarea>
+      <label for="glz14-assistive-technologies">Assistive technologies, one per line as <code>mode | name | version</code></label>
+      <textarea id="glz14-assistive-technologies" rows="4" placeholder="screen-reader | Example Reader | 1.0"></textarea>
+    </section>
+
+    <section class="panel" aria-labelledby="glz14-preference-heading">
+      <h2 id="glz14-preference-heading">3. Preference observations</h2>
+      <p>Local media-query detection is displayed only as a hint. The reviewer must explicitly choose the qualification state and provide an evidence reference for tested or unsupported states.</p>
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr><th>Preference</th><th>Local hint</th><th>Reviewer-confirmed state</th><th>Evidence references</th></tr>
+          </thead>
+          <tbody id="glz14-observation-preferences"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="glz14-scenario-heading">
+      <h2 id="glz14-scenario-heading">4. Scenario observations</h2>
+      <p>No scenario is passed automatically. Pass/fail results require explicit reviewer evidence references. Required or claimed scenarios cannot be marked not-applicable.</p>
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr><th>Scenario</th><th>Requirement</th><th>Reviewer result</th><th>Evidence references</th><th>Notes</th></tr>
+          </thead>
+          <tbody id="glz14-observation-scenarios"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="glz14-export-heading">
+      <h2 id="glz14-export-heading">5. Export observation draft</h2>
+      <p>Export preserves the exact source/tree identity, keeps the record in-progress, keeps human review pending, and forces accessibility/lifecycle acceptance false. Run the repository evaluator separately against the exported record and exact expected revisions.</p>
+      <button id="glz14-export-record" type="button" disabled>Export local observation JSON</button>
+    </section>
+  </main>
+  <script type="module" src="./glaze-v1.4-accessibility-observation-capture.candidate.mjs"></script>
+</body>
+</html>
