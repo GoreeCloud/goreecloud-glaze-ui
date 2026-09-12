@@ -81,6 +81,14 @@ class GlazeV14AccessibilityQualificationTests(unittest.TestCase):
         self.assertTrue(result["acceptedForAccessibilityQualification"])
         self.assertFalse(result["acceptedForLifecycleGate"])
 
+    def test_web_record_without_browser_identity_is_blocked(self) -> None:
+        record = accepted_record()
+        record["environment"].pop("browser")
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn("browser-evidence-invalid", result["reasons"])
+        self.assertFalse(result["acceptedForAccessibilityQualification"])
+
     def test_machine_complete_record_with_pending_human_review_is_review_ready(self) -> None:
         record = accepted_record()
         record["status"] = "review-ready"
