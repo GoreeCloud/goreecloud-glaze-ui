@@ -140,7 +140,7 @@ def _result(disposition: str, reasons: list[str], *, required: list[str], missin
 
 
 def evaluate_record(
-    record: dict[str, Any],
+    record: Any,
     plan: dict[str, Any],
     *,
     expected_source_revision: str | None = None,
@@ -158,6 +158,15 @@ def evaluate_record(
     if evaluated_at.tzinfo is None or evaluated_at.utcoffset() is None:
         raise ValueError("evaluation_time must include timezone information")
     evaluated_at = evaluated_at.astimezone(timezone.utc)
+
+    if not isinstance(record, dict):
+        return _result(
+            "blocked",
+            ["record-shape-invalid"],
+            required=list(plan.get("requiredScenarios", [])),
+            missing=missing,
+            failed=failed,
+        )
 
     required_base = set(plan.get("requiredScenarios", []))
     conditional = plan.get("claimConditionalScenarios", {})

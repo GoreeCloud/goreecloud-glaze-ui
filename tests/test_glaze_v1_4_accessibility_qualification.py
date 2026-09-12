@@ -77,6 +77,15 @@ def accepted_record() -> dict:
 
 
 class GlazeV14AccessibilityQualificationTests(unittest.TestCase):
+    def test_non_object_top_level_records_are_blocked(self) -> None:
+        for record in (None, [], "not-an-object", 7):
+            with self.subTest(record=record):
+                result = evaluator.evaluate_record(record, PLAN)
+                self.assertEqual(result["evaluatorDisposition"], "blocked")
+                self.assertFalse(result["acceptedForAccessibilityQualification"])
+                self.assertFalse(result["acceptedForLifecycleGate"])
+                self.assertIn("record-shape-invalid", result["reasons"])
+
     def test_draft_template_is_blocked(self) -> None:
         result = evaluator.evaluate_record(copy.deepcopy(TEMPLATE), PLAN)
         self.assertEqual(result["evaluatorDisposition"], "blocked")
