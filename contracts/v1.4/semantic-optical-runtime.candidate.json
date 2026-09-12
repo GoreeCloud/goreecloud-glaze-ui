@@ -13,7 +13,10 @@
   "sourceArtifacts": {
     "opticalMaterial": "tokens/glaze-v1.4-optical-material.candidate.json",
     "runtimeResolver": "js/glaze-v1.4-optical-runtime.candidate.mjs",
-    "runtimeRegression": "tests/glaze-v1.4-optical-runtime.test.mjs"
+    "runtimeRegression": "tests/glaze-v1.4-optical-runtime.test.mjs",
+    "webAdapter": "js/glaze-v1.4-optical-web.candidate.mjs",
+    "webRenderer": "css/glaze-v1.4-optical-runtime.candidate.css",
+    "webRegression": "tests/glaze-v1.4-optical-web.test.mjs"
   },
   "compatibility": {
     "v1_3ContractsPreserved": true,
@@ -221,6 +224,21 @@
     "privacyRestrictedSurfaceSamplingAllowed": false,
     "fallbackWhenUnavailable": "governed-static-semantic-material"
   },
+  "webReferenceRenderer": {
+    "implementationStatus": "source-candidate",
+    "runtimeAdapter": "js/glaze-v1.4-optical-web.candidate.mjs",
+    "stylesheet": "css/glaze-v1.4-optical-runtime.candidate.css",
+    "activation": "accepted-runtime-data-attributes",
+    "importsStableV1_3": true,
+    "automaticallyIncludedByStableEntrypoint": false,
+    "directRawOpticalConsumerContract": false,
+    "remoteAssetsRequired": false,
+    "environmentalSamplingImplemented": false,
+    "browserQualificationEstablished": false,
+    "assistiveTechnologyQualificationEstablished": false,
+    "productionPerformanceQualificationEstablished": false,
+    "nativeRendererParityEstablished": false
+  },
   "compositorPolicy": {
     "nestedBackdropBlurDefaultAllowed": false,
     "automaticFullStrengthChildMaterialAllowed": false,
@@ -259,6 +277,7 @@
     "frozen-v1.4-semantic-api",
     "production-v1.4-performance-budgets",
     "physical-device-v1.4-qualification",
+    "browser-v1.4-renderer-qualification",
     "native-v1.4-renderer-parity",
     "ecosystem-wide-v1.4-adoption"
   ]
