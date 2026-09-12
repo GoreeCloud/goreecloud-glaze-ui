@@ -130,6 +130,70 @@ class GlazeV14AccessibilityQualificationTests(unittest.TestCase):
         self.assertEqual(result["evaluatorDisposition"], "blocked")
         self.assertIn("support-claims-invalid", result["reasons"])
 
+    def test_hidden_scenario_field_is_blocked(self) -> None:
+        record = accepted_record()
+        record["scenarioResults"][0]["acceptedForStable"] = True
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn("invalid-scenario-entry", result["reasons"])
+
+    def test_hidden_preference_observation_field_is_blocked(self) -> None:
+        record = accepted_record()
+        record["preferenceCoverage"]["reducedMotion"]["autoAccepted"] = True
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn(
+            "preference-evidence-shape-invalid:reducedMotion", result["reasons"]
+        )
+
+    def test_unknown_preference_key_is_blocked(self) -> None:
+        record = accepted_record()
+        record["preferenceCoverage"]["futureAutoQualification"] = {
+            "state": "tested-active",
+            "evidenceReferences": ["artifact:future.json"],
+        }
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn("preference-coverage-fields-invalid", result["reasons"])
+
+    def test_hidden_issue_field_is_blocked(self) -> None:
+        record = accepted_record()
+        record["issues"] = [
+            {
+                "summary": "Informational issue",
+                "severity": "info",
+                "resolved": True,
+                "reference": "issue:info",
+                "qualificationOverride": True,
+            }
+        ]
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn("invalid-issue-entry", result["reasons"])
+
+    def test_oversized_scenario_and_issue_arrays_are_blocked(self) -> None:
+        scenario_record = accepted_record()
+        scenario_record["scenarioResults"] = [
+            copy.deepcopy(scenario_record["scenarioResults"][0]) for _ in range(101)
+        ]
+        scenario_result = evaluator.evaluate_record(scenario_record, PLAN)
+        self.assertEqual(scenario_result["evaluatorDisposition"], "blocked")
+        self.assertIn("scenario-results-invalid", scenario_result["reasons"])
+
+        issue_record = accepted_record()
+        issue_record["issues"] = [
+            {
+                "summary": f"issue-{index}",
+                "severity": "info",
+                "resolved": True,
+                "reference": f"issue:{index}",
+            }
+            for index in range(101)
+        ]
+        issue_result = evaluator.evaluate_record(issue_record, PLAN)
+        self.assertEqual(issue_result["evaluatorDisposition"], "blocked")
+        self.assertIn("issues-array-invalid", issue_result["reasons"])
+
     def test_observation_time_without_timezone_is_blocked(self) -> None:
         record = accepted_record()
         record["observedAt"] = "2026-09-12T00:00:00"
