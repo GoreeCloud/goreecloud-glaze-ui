@@ -33,6 +33,6 @@ The following work remains explicitly carried into V1.3.1 and is not represented
 
 No downstream GoreeCloud application, service, website, desktop client, mobile client, television surface, wearable surface, or other consumer becomes V1.3-conformant or production-ready automatically because the shared design system is Stable.
 
-Each consumer must explicitly target `1.3.0`, preserve the authority boundaries of Manager, Privacy Shield, Wardveil Security, Everkeep, GoreeCloud Mesh, and GoreeCloud Identity, and produce fresh repository-local evidence appropriate to its supported platforms and production boundary.
+Each consumer must explicitly target `1.3.0`, preserve the authority boundaries of Manager, Privacy Shield, Wardveil Security, Everkeep, GoreeCloud Mesh, GoreeCloud Identity, and GoreeCloud Sync, and produce fresh repository-local evidence appropriate to its supported platforms and production boundary.
 
 Consumer acceptance must fail closed when required source, rendered, accessibility, responsive/form-factor, native/device, rollback, release, deployment, or production evidence is missing, stale, contradictory, or scoped to a different revision.

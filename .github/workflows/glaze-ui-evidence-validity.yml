@@ -68,5 +68,6 @@ jobs:
               "wardveil_security",
               "everkeep",
               "goreecloud_mesh",
+              "sync",
           }
           PY

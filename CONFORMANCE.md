@@ -2,11 +2,11 @@
 
 GLAZE UI V1.3 (`1.3.0`) is the current Stable Glaze UI conformance target. GLAZE UI V1.2 (`1.2.0`) remains the previous known-good Stable rollback baseline, not the current target.
 
-The Glaze UI repository is authoritative for presentation, interaction, material, component, accessibility-contract, adaptive-layout, and design-system lifecycle state. It does not authenticate identities, authorize privacy operations, enforce security, prove recoverability, perform GoreeCloud Mesh coordination, or replace GoreeCloud Manager operational authority.
+The Glaze UI repository is authoritative for presentation, interaction, material, component, accessibility-contract, adaptive-layout, and design-system lifecycle state. It does not authenticate identities, authorize privacy operations, enforce security, prove recoverability, perform GoreeCloud Mesh coordination, reconcile GoreeCloud Sync state, or replace GoreeCloud Manager operational authority.
 
 ## Shared-system conformance
 
-This repository's `goreecloud.platform.yaml` evaluates all seven GoreeCloud Integral Platform Systems. Integrations that do not belong inside the design-system source repository are explicitly recorded as `not-applicable-justified` rather than simulated. Those justifications do not waive any consuming application's own Manager, Privacy Shield, Wardveil Security, Everkeep, Glaze UI, Mesh, or Identity obligations.
+This repository's `goreecloud.platform.yaml` evaluates all eight GoreeCloud Integral Platform Systems. Integrations that do not belong inside the design-system source repository are explicitly recorded as `not-applicable-justified` rather than simulated. Those justifications do not waive any consuming application's own Manager, Privacy Shield, Wardveil Security, Everkeep, Glaze UI, Mesh, Identity, or Sync obligations.
 
 GLAZE UI's own Platform System slot is `not-applicable-justified` because this repository implements that authority directly; a separate GLAZE-UI-to-GLAZE-UI runtime integration would be artificial.
 
@@ -14,7 +14,7 @@ GLAZE UI's own Platform System slot is `not-applicable-justified` because this r
 
 A consumer is conformant only when its exact repository revision satisfies the applicable V1.3 design, accessibility, interaction, responsive/form-factor, platform, semantic-state, migration/rollback, and production gates for that product.
 
-Conformance must fail closed when required evidence is missing, stale, contradictory, or scoped to another revision. A consumer must not infer security, privacy, identity, continuity, operational, or integration truth from Glaze materials, colors, icons, motion, labels, or other presentation alone.
+Conformance must fail closed when required evidence is missing, stale, contradictory, or scoped to another revision. A consumer must not infer security, privacy, identity, continuity, synchronization, operational, or integration truth from Glaze materials, colors, icons, motion, labels, or other presentation alone.
 
 Promotion of the shared design system to V1.3 does not automatically make any downstream GoreeCloud application conformant. Each consumer must explicitly target `1.3.0` and produce its own exact-revision evidence for its supported platforms and production boundary.
 

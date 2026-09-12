@@ -49,6 +49,7 @@ def valid_record() -> dict[str, object]:
             "wardveil_security": integration(),
             "everkeep": integration(),
             "goreecloud_mesh": integration(),
+            "sync": integration(),
         },
         "evidence_references": ["evidence://glaze/current"],
     }
@@ -69,6 +70,12 @@ class EvidenceValidityTests(unittest.TestCase):
         record = valid_record()
         del record["integral_platform_integrations"]["manager"]  # type: ignore[index]
         with self.assertRaisesRegex(EvidenceError, "manager"):
+            validate_record(record, now=NOW)
+
+    def test_requires_sync_integration_evaluation(self) -> None:
+        record = valid_record()
+        del record["integral_platform_integrations"]["sync"]  # type: ignore[index]
+        with self.assertRaisesRegex(EvidenceError, "sync"):
             validate_record(record, now=NOW)
 
     def test_rejects_expired_evidence(self) -> None:

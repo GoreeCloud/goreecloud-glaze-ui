@@ -21,6 +21,7 @@ INTEGRATIONS = {
     "wardveil_security",
     "everkeep",
     "goreecloud_mesh",
+    "sync",
 }
 TOP_LEVEL = {
     "schema_version",

@@ -15,7 +15,7 @@ Applicable acceptance should cover the consumer's actual surface and risk bounda
 - keyboard, touch, pointer, and assistive-input behavior as applicable;
 - Reduced Motion, Reduced Transparency, Increased Contrast, Forced Colors, large text, and other supported accessibility preferences;
 - responsive and supported form-factor behavior;
-- semantic-state integrity so presentation never manufactures Manager, Privacy Shield, Wardveil Security, Everkeep, Mesh, or Identity truth;
+- semantic-state integrity so presentation never manufactures Manager, Privacy Shield, Wardveil Security, Everkeep, Mesh, Identity, or Sync truth;
 - migration and rollback behavior;
 - representative platform/device validation where the consumer claims native or device-specific support; and
 - release, deployment, and production acceptance appropriate to that consumer.
