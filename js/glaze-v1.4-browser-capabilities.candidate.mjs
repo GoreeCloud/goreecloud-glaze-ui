@@ -61,6 +61,29 @@ function freezeRecord(record) {
   return Object.freeze({...record});
 }
 
+function mergeAccessibilityRequirements(detected, requested) {
+  const merged = new Set(detected);
+  const values = requested instanceof Set || Array.isArray(requested)
+    ? [...requested]
+    : requested == null ? [] : [requested];
+  for (const value of values) {
+    if (typeof value === 'string') merged.add(value);
+  }
+  const order = [
+    'reduced-transparency',
+    'forced-colors',
+    'increased-contrast',
+    'reduced-motion',
+    'low-power-performance-constrained',
+    'large-text',
+    'color-vision-accommodation'
+  ];
+  return Object.freeze([
+    ...order.filter(value => merged.has(value)),
+    ...[...merged].filter(value => !order.includes(value)).sort()
+  ]);
+}
+
 /**
  * Detect only local, synchronous browser rendering capabilities that have bounded
  * feature tests. The adapter intentionally avoids browser identity, hardware
@@ -95,7 +118,9 @@ export function detectBrowserOpticalCapabilities(environment = globalThis) {
 
   const reducedTransparency = mediaEvidence.reducedTransparency.matches;
   const reducedMotion = mediaEvidence.reducedMotion.matches;
-  const increasedContrast = mediaEvidence.increasedContrast.matches || mediaEvidence.forcedColors.matches;
+  const increasedContrastPreference = mediaEvidence.increasedContrast.matches;
+  const forcedColors = mediaEvidence.forcedColors.matches;
+  const increasedContrast = increasedContrastPreference || forcedColors;
 
   const capabilities = new Set();
   pushCapability(capabilities, 'translucency', translucency);
@@ -116,6 +141,12 @@ export function detectBrowserOpticalCapabilities(environment = globalThis) {
   if (increasedContrast) activePreferences.push('increased-contrast');
   if (reducedMotion) activePreferences.push('reduced-motion');
 
+  const activeRequirements = [];
+  if (reducedTransparency) activeRequirements.push('reduced-transparency');
+  if (forcedColors) activeRequirements.push('forced-colors');
+  if (increasedContrastPreference) activeRequirements.push('increased-contrast');
+  if (reducedMotion) activeRequirements.push('reduced-motion');
+
   const recommendedAccessibilityProfile =
     reducedTransparency ? 'reduced-transparency' :
       increasedContrast ? 'increased-contrast' :
@@ -129,9 +160,12 @@ export function detectBrowserOpticalCapabilities(environment = globalThis) {
     capabilities: Object.freeze(orderedCapabilities),
     neverAutoDeclared: NEVER_AUTO_DECLARE,
     activeAccessibilityPreferences: Object.freeze(activePreferences),
+    activeAccessibilityRequirements: Object.freeze(activeRequirements),
     recommendedAccessibilityProfile,
+    recommendedAccessibilityProfileIsCompatibilitySummaryOnly: true,
     recommendedAppearanceMode: mediaEvidence.darkAppearance.matches ? 'dark' : 'light',
-    multipleAccessibilityPreferencesActive: activePreferences.length > 1,
+    multipleAccessibilityPreferencesActive: activeRequirements.length > 1,
+    composableAccessibilityRequirementsSupported: true,
     recommendationIsQualificationEvidence: false,
     evidence: Object.freeze({
       cssSupportsAvailable: typeof environment?.CSS?.supports === 'function',
@@ -182,16 +216,22 @@ export function createBrowserOpticalCapabilityAdapter({environment = globalThis}
     },
     prepareRequest(request = {}) {
       const snapshot = detectBrowserOpticalCapabilities(environment);
+      const accessibilityRequirements = mergeAccessibilityRequirements(
+        snapshot.activeAccessibilityRequirements,
+        request.accessibilityRequirements
+      );
       const prepared = {
         ...request,
         platformCapabilities: request.platformCapabilities ?? snapshot.capabilities,
-        accessibilityProfile: request.accessibilityProfile ?? snapshot.recommendedAccessibilityProfile,
+        accessibilityProfile: request.accessibilityProfile ?? 'standard',
+        accessibilityRequirements,
         appearanceMode: request.appearanceMode ?? snapshot.recommendedAppearanceMode
       };
       return Object.freeze({
         request: Object.freeze(prepared),
         snapshot,
-        consumerPolicyRequired: snapshot.multipleAccessibilityPreferencesActive
+        consumerPolicyRequired: false,
+        browserAccessibilityRequirementsApplied: snapshot.activeAccessibilityRequirements.length > 0
       });
     }
   });
@@ -209,6 +249,8 @@ export const browserCapabilityCandidate = Object.freeze({
   persistentStorageRequired: false,
   networkAccessRequired: false,
   screenCaptureRequired: false,
+  composableAccessibilityRequirementsSupported: true,
+  browserDetectedAccessibilityRequirementsAreAdditive: true,
   environmentalSamplingAutoDeclared: false,
   reflectionAutoDeclared: false,
   hdrAwareLuminanceAutoDeclared: false,
