@@ -45,7 +45,9 @@ const FULL_CSS_SUPPORT = [
 test('browser capability detection fails closed when feature evidence is unavailable', () => {
   const snapshot = detectBrowserOpticalCapabilities({});
   assert.deepEqual(snapshot.capabilities, []);
+  assert.deepEqual(snapshot.activeAccessibilityRequirements, []);
   assert.equal(snapshot.recommendedAccessibilityProfile, 'standard');
+  assert.equal(snapshot.recommendedAccessibilityProfileIsCompatibilitySummaryOnly, true);
   assert.equal(snapshot.recommendedAppearanceMode, 'light');
   assert.equal(snapshot.qualification.browserMatrixEstablished, false);
   assert.equal(snapshot.privacy.telemetryUsed, false);
@@ -92,7 +94,7 @@ test('webkit backdrop-filter support is accepted as bounded backdrop evidence', 
   assert.ok(snapshot.capabilities.includes('adaptive-frost'));
 });
 
-test('accessibility preferences are recorded independently with explicit recommendation limits', () => {
+test('accessibility preferences are preserved independently for composition', () => {
   const environment = makeEnvironment({
     media: {
       '(prefers-reduced-transparency: reduce)': true,
@@ -110,27 +112,43 @@ test('accessibility preferences are recorded independently with explicit recomme
     'increased-contrast',
     'reduced-motion'
   ]);
+  assert.deepEqual(snapshot.activeAccessibilityRequirements, [
+    'reduced-transparency',
+    'forced-colors',
+    'reduced-motion'
+  ]);
   assert.equal(snapshot.recommendedAccessibilityProfile, 'reduced-transparency');
+  assert.equal(snapshot.recommendedAccessibilityProfileIsCompatibilitySummaryOnly, true);
   assert.equal(snapshot.recommendedAppearanceMode, 'dark');
   assert.equal(snapshot.multipleAccessibilityPreferencesActive, true);
-  assert.equal(prepared.consumerPolicyRequired, true);
-  assert.equal(prepared.request.accessibilityProfile, 'reduced-transparency');
+  assert.equal(prepared.consumerPolicyRequired, false);
+  assert.equal(prepared.browserAccessibilityRequirementsApplied, true);
+  assert.equal(prepared.request.accessibilityProfile, 'standard');
+  assert.deepEqual(prepared.request.accessibilityRequirements, [
+    'reduced-transparency',
+    'forced-colors',
+    'reduced-motion'
+  ]);
   assert.equal(snapshot.recommendationIsQualificationEvidence, false);
 });
 
-test('explicit consumer request values override browser recommendations', () => {
+test('consumer requirements compose additively with browser accessibility requirements', () => {
   const environment = makeEnvironment({
-    supports: FULL_CSS_SUPPORT,
     media: {'(prefers-reduced-motion: reduce)': true}
   });
   const adapter = createBrowserOpticalCapabilityAdapter({environment});
   const prepared = adapter.prepareRequest({
     accessibilityProfile: 'standard',
+    accessibilityRequirements: ['low-power-performance-constrained'],
     appearanceMode: 'deep-dark',
     platformCapabilities: ['translucency']
   });
 
   assert.equal(prepared.request.accessibilityProfile, 'standard');
+  assert.deepEqual(prepared.request.accessibilityRequirements, [
+    'reduced-motion',
+    'low-power-performance-constrained'
+  ]);
   assert.equal(prepared.request.appearanceMode, 'deep-dark');
   assert.deepEqual(prepared.request.platformCapabilities, ['translucency']);
   assert.equal(Object.isFrozen(prepared.request), true);
@@ -140,6 +158,8 @@ test('explicit consumer request values override browser recommendations', () => 
 test('candidate metadata never claims browser or production qualification', () => {
   assert.equal(browserCapabilityCandidate.consumerEligible, false);
   assert.equal(browserCapabilityCandidate.lifecycleAuthority, false);
+  assert.equal(browserCapabilityCandidate.composableAccessibilityRequirementsSupported, true);
+  assert.equal(browserCapabilityCandidate.browserDetectedAccessibilityRequirementsAreAdditive, true);
   assert.equal(browserCapabilityCandidate.browserMatrixQualificationEstablished, false);
   assert.equal(browserCapabilityCandidate.assistiveTechnologyQualificationEstablished, false);
   assert.equal(browserCapabilityCandidate.physicalDeviceQualificationEstablished, false);
