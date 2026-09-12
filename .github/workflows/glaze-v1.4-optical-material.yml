@@ -7,10 +7,13 @@ on:
       - 'contracts/v1.4/**'
       - 'css/glaze-v1.4-*'
       - 'js/glaze-v1.4-*'
+      - 'reference/glaze-v1.4-*'
       - 'scripts/validate_glaze_v1.4_optical_material.py'
       - 'scripts/validate_glaze_v1_4_semantic_optical_runtime.py'
+      - 'scripts/validate_glaze_v1_4_browser_capabilities.py'
       - 'tests/test_glaze-v1.4_optical_material.py'
       - 'tests/test_glaze_v1_4_semantic_optical_runtime.py'
+      - 'tests/test_glaze_v1_4_browser_capabilities.py'
       - 'tests/glaze-v1.4-*.test.mjs'
       - '.github/workflows/glaze-v1.4-optical-material.yml'
       - 'VERSION'
@@ -24,10 +27,13 @@ on:
       - 'contracts/v1.4/**'
       - 'css/glaze-v1.4-*'
       - 'js/glaze-v1.4-*'
+      - 'reference/glaze-v1.4-*'
       - 'scripts/validate_glaze_v1.4_optical_material.py'
       - 'scripts/validate_glaze_v1_4_semantic_optical_runtime.py'
-      - 'tests/test_glaze-v1.4-optical_material.py'
+      - 'scripts/validate_glaze_v1_4_browser_capabilities.py'
+      - 'tests/test_glaze-v1.4_optical_material.py'
       - 'tests/test_glaze_v1_4_semantic_optical_runtime.py'
+      - 'tests/test_glaze_v1_4_browser_capabilities.py'
       - 'tests/glaze-v1.4-*.test.mjs'
       - '.github/workflows/glaze-v1.4-optical-material.yml'
       - 'VERSION'
@@ -67,16 +73,24 @@ jobs:
       - name: Run V1.4 semantic optical runtime contract regressions
         run: python tests/test_glaze_v1_4_semantic_optical_runtime.py
 
-      - name: Run V1.4 executable optical runtime and web regressions
+      - name: Validate V1.4 browser capability candidate
+        run: python scripts/validate_glaze_v1_4_browser_capabilities.py
+
+      - name: Run V1.4 browser capability contract regressions
+        run: python tests/test_glaze_v1_4_browser_capabilities.py
+
+      - name: Run V1.4 executable runtime, web, and browser regressions
         run: |
           node --test \
             tests/glaze-v1.4-optical-runtime.test.mjs \
-            tests/glaze-v1.4-optical-web.test.mjs
+            tests/glaze-v1.4-optical-web.test.mjs \
+            tests/glaze-v1.4-browser-capabilities.test.mjs
 
       - name: Compile V1.4 validators
         run: |
           python -m py_compile scripts/validate_glaze_v1.4_optical_material.py
           python -m py_compile scripts/validate_glaze_v1_4_semantic_optical_runtime.py
+          python -m py_compile scripts/validate_glaze_v1_4_browser_capabilities.py
 
       - name: Verify validation did not mutate tracked source
         run: git diff --exit-code
