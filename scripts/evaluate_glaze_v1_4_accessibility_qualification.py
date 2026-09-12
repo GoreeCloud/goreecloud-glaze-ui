@@ -138,7 +138,7 @@ def evaluate_record(
             structural_blockers = True
         if environment.get("platformFamily") == "web":
             browser = environment.get("browser")
-            if browser is not None and (
+            if (
                 not isinstance(browser, dict)
                 or not str(browser.get("name", "")).strip()
                 or not str(browser.get("version", "")).strip()
