@@ -11,7 +11,9 @@
   "sourceStable": "1.3.0",
   "semanticApiStability": "candidate-not-frozen",
   "sourceArtifacts": {
-    "opticalMaterial": "tokens/glaze-v1.4-optical-material.candidate.json"
+    "opticalMaterial": "tokens/glaze-v1.4-optical-material.candidate.json",
+    "runtimeResolver": "js/glaze-v1.4-optical-runtime.candidate.mjs",
+    "runtimeRegression": "tests/glaze-v1.4-optical-runtime.test.mjs"
   },
   "compatibility": {
     "v1_3ContractsPreserved": true,
