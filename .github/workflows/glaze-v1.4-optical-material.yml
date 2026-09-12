@@ -30,7 +30,7 @@ on:
       - 'css/glaze-v1.4-*'
       - 'js/glaze-v1.4-*'
       - 'reference/glaze-v1.4-*'
-      - 'scripts/validate_glaze-v1.4_optical_material.py'
+      - 'scripts/validate_glaze_v1.4_optical_material.py'
       - 'scripts/validate_glaze_v1_4_semantic_optical_runtime.py'
       - 'scripts/validate_glaze_v1_4_browser_capabilities.py'
       - 'scripts/validate_glaze_v1_4_accessibility_composition.py'
@@ -99,7 +99,7 @@ jobs:
 
       - name: Compile V1.4 validators
         run: |
-          python -m py_compile scripts/validate_glaze-v1.4_optical_material.py
+          python -m py_compile scripts/validate_glaze_v1.4_optical_material.py
           python -m py_compile scripts/validate_glaze_v1_4_semantic_optical_runtime.py
           python -m py_compile scripts/validate_glaze_v1_4_browser_capabilities.py
           python -m py_compile scripts/validate_glaze_v1_4_accessibility_composition.py
