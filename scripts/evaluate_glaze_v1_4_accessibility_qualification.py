@@ -35,6 +35,28 @@ VALID_ASSISTIVE_MODES = {
     "keyboard",
     "other",
 }
+RECORD_FIELDS = {
+    "schemaVersion",
+    "recordKind",
+    "target",
+    "status",
+    "observedAt",
+    "reviewAuthority",
+    "environment",
+    "supportClaims",
+    "preferenceCoverage",
+    "scenarioResults",
+    "issues",
+    "disposition",
+}
+TARGET_FIELDS = {"product", "targetVersion", "sourceRevision", "sourceTreeRevision"}
+REVIEW_AUTHORITY_FIELDS = {"mode", "authority", "humanReviewStatus"}
+DISPOSITION_FIELDS = {
+    "evaluatorDisposition",
+    "acceptedForAccessibilityQualification",
+    "acceptedForLifecycleGate",
+    "notes",
+}
 ENVIRONMENT_FIELDS = {
     "platformFamily",
     "operatingSystem",
@@ -125,6 +147,9 @@ def evaluate_record(
             failed=failed,
         )
 
+    if set(record) != RECORD_FIELDS:
+        reasons.append("record-fields-invalid")
+        structural_blockers = True
     if record.get("schemaVersion") != 1:
         reasons.append("record-schema-version-invalid")
         structural_blockers = True
@@ -136,6 +161,9 @@ def evaluate_record(
         structural_blockers = True
 
     target = record.get("target", {}) if isinstance(record.get("target"), dict) else {}
+    if set(target) != TARGET_FIELDS:
+        reasons.append("target-fields-invalid")
+        structural_blockers = True
     if target.get("product") != EXPECTED_PRODUCT:
         reasons.append("target-product-invalid")
         structural_blockers = True
@@ -158,6 +186,9 @@ def evaluate_record(
         reasons.append("record-status-invalid")
         structural_blockers = True
     review = record.get("reviewAuthority", {}) if isinstance(record.get("reviewAuthority"), dict) else {}
+    if set(review) != REVIEW_AUTHORITY_FIELDS:
+        reasons.append("review-authority-fields-invalid")
+        structural_blockers = True
     human_status = review.get("humanReviewStatus")
     review_mode = review.get("mode")
     if review_mode not in VALID_REVIEW_MODES or _bounded_text(review.get("authority"), 240) is None:
@@ -172,10 +203,23 @@ def evaluate_record(
     if status == "superseded":
         reasons.append("record-is-superseded")
 
-    if not isinstance(record.get("supportClaims"), dict) or any(
+    if not isinstance(record.get("supportClaims"), dict) or set(claims) != set(conditional) or any(
         claims.get(key) not in {True, False} for key in conditional
     ):
         reasons.append("support-claims-invalid")
+        structural_blockers = True
+
+    if set(disposition) != DISPOSITION_FIELDS:
+        reasons.append("disposition-fields-invalid")
+        structural_blockers = True
+    if _bounded_text(disposition.get("evaluatorDisposition"), 80) is None:
+        reasons.append("disposition-value-invalid")
+        structural_blockers = True
+    if disposition.get("acceptedForAccessibilityQualification") not in {True, False}:
+        reasons.append("accessibility-disposition-invalid")
+        structural_blockers = True
+    if _bounded_text(disposition.get("notes"), 2000) is None:
+        reasons.append("disposition-notes-invalid")
         structural_blockers = True
 
     environment = record.get("environment")
