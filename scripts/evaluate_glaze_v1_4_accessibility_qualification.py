@@ -11,6 +11,8 @@ import argparse
 import copy
 import json
 import re
+import unicodedata
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -54,9 +56,11 @@ def _bounded_text(value: Any, maximum: int) -> str | None:
     if not isinstance(value, str):
         return None
     normalized = value.strip()
-    if not normalized or len(normalized) > maximum:
+    if not normalized or normalized != value or len(value) > maximum:
         return None
-    return normalized
+    if any(unicodedata.category(char).startswith("C") for char in value):
+        return None
+    return value
 
 
 def _valid_reference_list(value: Any, maximum_items: int) -> bool:
@@ -64,6 +68,18 @@ def _valid_reference_list(value: Any, maximum_items: int) -> bool:
         return False
     normalized = [_bounded_text(item, 1000) for item in value]
     return all(item is not None for item in normalized) and len(set(normalized)) == len(normalized)
+
+
+def _valid_observed_at(value: Any) -> bool:
+    """Require an RFC3339-style timestamp with explicit timezone information."""
+    if not isinstance(value, str) or not value or value != value.strip():
+        return False
+    normalized = value[:-1] + "+00:00" if value.endswith("Z") else value
+    try:
+        parsed = datetime.fromisoformat(normalized)
+    except ValueError:
+        return False
+    return parsed.tzinfo is not None and parsed.utcoffset() is not None
 
 
 def _result(disposition: str, reasons: list[str], *, required: list[str], missing: list[str], failed: list[str]) -> dict[str, Any]:
@@ -115,6 +131,9 @@ def evaluate_record(
     if record.get("recordKind") != EXPECTED_RECORD_KIND:
         reasons.append("record-kind-invalid")
         structural_blockers = True
+    if not _valid_observed_at(record.get("observedAt")):
+        reasons.append("observation-time-invalid")
+        structural_blockers = True
 
     target = record.get("target", {}) if isinstance(record.get("target"), dict) else {}
     if target.get("product") != EXPECTED_PRODUCT:
@@ -141,7 +160,7 @@ def evaluate_record(
     review = record.get("reviewAuthority", {}) if isinstance(record.get("reviewAuthority"), dict) else {}
     human_status = review.get("humanReviewStatus")
     review_mode = review.get("mode")
-    if review_mode not in VALID_REVIEW_MODES or not isinstance(review.get("authority"), str) or not review.get("authority", "").strip():
+    if review_mode not in VALID_REVIEW_MODES or _bounded_text(review.get("authority"), 240) is None:
         reasons.append("review-authority-invalid")
         structural_blockers = True
     if human_status not in VALID_HUMAN_STATUSES:
@@ -223,8 +242,8 @@ def evaluate_record(
                     structural_blockers = True
                     continue
                 key = (
-                    item["name"].strip(),
-                    item["version"].strip(),
+                    item["name"],
+                    item["version"],
                     item["mode"],
                 )
                 if key in seen_assistive:
@@ -275,7 +294,7 @@ def evaluate_record(
                 missing.append(scenario_id)
                 reasons.append(f"claimed-assistive-scenario-cannot-be-not-applicable:{scenario_id}")
         elif result == "pass":
-            if not isinstance(evidence, list) or not evidence or not all(isinstance(item, str) and item.strip() for item in evidence):
+            if not _valid_reference_list(evidence, 100) or not evidence:
                 missing.append(scenario_id)
                 reasons.append(f"passing-scenario-missing-evidence:{scenario_id}")
         else:
@@ -297,10 +316,10 @@ def evaluate_record(
             if state == "not-tested" or state is None:
                 reasons.append(f"preference-not-tested:{preference}")
             elif state == "not-supported":
-                if not isinstance(evidence, list) or not evidence:
+                if not _valid_reference_list(evidence, 25) or not evidence:
                     reasons.append(f"unsupported-preference-missing-evidence:{preference}")
             elif state in ("tested-active", "tested-inactive"):
-                if not isinstance(evidence, list) or not evidence:
+                if not _valid_reference_list(evidence, 25) or not evidence:
                     reasons.append(f"tested-preference-missing-evidence:{preference}")
             else:
                 reasons.append(f"invalid-preference-state:{preference}")
