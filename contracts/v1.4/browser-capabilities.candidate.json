@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.4.browser-capabilities.candidate",
+  "product": "Glaze UI V1.4 — Optical Material and Chromatic Depth",
+  "targetVersion": "1.4.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.3.0",
+  "semanticApiStability": "candidate-not-frozen",
+  "sourceArtifacts": {
+    "semanticRuntime": "contracts/v1.4/semantic-optical-runtime.candidate.json",
+    "browserAdapter": "js/glaze-v1.4-browser-capabilities.candidate.mjs",
+    "browserRegression": "tests/glaze-v1.4-browser-capabilities.test.mjs",
+    "qualificationHarness": "reference/glaze-v1.4-browser-qualification.candidate.html",
+    "qualificationHarnessRuntime": "reference/glaze-v1.4-browser-qualification.candidate.mjs"
+  },
+  "compatibility": {
+    "v1_3EntrypointsPreserved": true,
+    "stableVersionUnchangedByCandidate": true,
+    "automaticStableImportAllowed": false,
+    "consumerAdoptionRequiresIndependentAcceptance": true
+  },
+  "detectionPolicy": {
+    "localOnly": true,
+    "synchronousFeatureDetectionOnly": true,
+    "failClosed": true,
+    "unknownCapabilityIsUnsupported": true,
+    "userAgentSniffingAllowed": false,
+    "hardwareFingerprintingAllowed": false,
+    "batteryApiAllowed": false,
+    "networkProbingAllowed": false,
+    "screenCaptureAllowed": false,
+    "cameraOrMicrophoneAccessAllowed": false,
+    "persistentStorageAllowed": false,
+    "telemetryAllowed": false,
+    "analyticsAllowed": false
+  },
+  "automaticCapabilityDetection": {
+    "cssCapabilities": {
+      "translucency": "alpha-color-support",
+      "backdrop-blur": "backdrop-filter-or-webkit-backdrop-filter",
+      "dynamic-opacity": "opacity-and-transition-property",
+      "aura": "radial-gradient-and-filter-blur",
+      "edge-illumination": "linear-gradient-and-box-shadow",
+      "shadow-diffusion": "box-shadow"
+    },
+    "webAnimationCapabilities": {
+      "material-aware-motion": "element-animate-function",
+      "connected-transformation": "element-animate-function"
+    },
+    "derivedCapabilities": {
+      "adaptive-frost": [
+        "translucency",
+        "backdrop-blur",
+        "dynamic-opacity"
+      ]
+    },
+    "neverAutoDeclare": [
+      "environmental-sampling",
+      "reflection",
+      "hdr-aware-luminance"
+    ]
+  },
+  "accessibilityPreferenceDetection": {
+    "queries": {
+      "reducedTransparency": "(prefers-reduced-transparency: reduce)",
+      "reducedMotion": "(prefers-reduced-motion: reduce)",
+      "increasedContrast": "(prefers-contrast: more)",
+      "forcedColors": "(forced-colors: active)",
+      "darkAppearance": "(prefers-color-scheme: dark)"
+    },
+    "activePreferencesRecordedIndependently": true,
+    "recommendedProfilePrecedence": [
+      "reduced-transparency",
+      "increased-contrast",
+      "reduced-motion",
+      "standard"
+    ],
+    "forcedColorsMapsToIncreasedContrastRecommendation": true,
+    "recommendationIsQualificationEvidence": false,
+    "multipleActivePreferencesMayRequireConsumerPolicy": true
+  },
+  "privacyBoundary": {
+    "readsUserAgent": false,
+    "readsDeviceMemory": false,
+    "readsHardwareConcurrency": false,
+    "readsBatteryState": false,
+    "readsNetworkConnectionDetails": false,
+    "readsScreenDimensions": false,
+    "capturesScreenOrWindowPixels": false,
+    "persistsCapabilitySnapshot": false,
+    "transmitsCapabilitySnapshot": false,
+    "requiresRemoteAssets": false
+  },
+  "qualificationHarness": {
+    "status": "source-candidate",
+    "purpose": "local manual browser inspection and diagnostics",
+    "automaticQualificationDecision": false,
+    "recordsBrowserIdentity": false,
+    "recordsDeviceIdentity": false,
+    "persistsResults": false,
+    "transmitsResults": false,
+    "browserMatrixQualificationEstablished": false,
+    "assistiveTechnologyQualificationEstablished": false,
+    "physicalDeviceQualificationEstablished": false,
+    "productionPerformanceQualificationEstablished": false
+  },
+  "notEstablished": [
+    "stable-v1.4-release",
+    "consumer-v1.4-conformance",
+    "frozen-v1.4-browser-capability-api",
+    "browser-matrix-v1.4-qualification",
+    "assistive-technology-v1.4-qualification",
+    "physical-device-v1.4-qualification",
+    "production-v1.4-performance-budgets",
+    "native-v1.4-renderer-parity",
+    "ecosystem-wide-v1.4-adoption"
+  ]
+}
