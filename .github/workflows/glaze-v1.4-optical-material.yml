@@ -12,7 +12,7 @@ on:
       - 'scripts/validate_glaze_v1_4_semantic_optical_runtime.py'
       - 'scripts/validate_glaze_v1_4_browser_capabilities.py'
       - 'scripts/validate_glaze_v1_4_accessibility_composition.py'
-      - 'tests/test_glaze-v1.4_optical_material.py'
+      - 'tests/test_glaze_v1.4_optical_material.py'
       - 'tests/test_glaze_v1_4_semantic_optical_runtime.py'
       - 'tests/test_glaze_v1_4_browser_capabilities.py'
       - 'tests/test_glaze_v1_4_accessibility_composition.py'
@@ -34,7 +34,7 @@ on:
       - 'scripts/validate_glaze_v1_4_semantic_optical_runtime.py'
       - 'scripts/validate_glaze_v1_4_browser_capabilities.py'
       - 'scripts/validate_glaze_v1_4_accessibility_composition.py'
-      - 'tests/test_glaze-v1.4_optical_material.py'
+      - 'tests/test_glaze_v1.4_optical_material.py'
       - 'tests/test_glaze_v1_4_semantic_optical_runtime.py'
       - 'tests/test_glaze_v1_4_browser_capabilities.py'
       - 'tests/test_glaze_v1_4_accessibility_composition.py'
@@ -69,7 +69,7 @@ jobs:
         run: python scripts/validate_glaze_v1.4_optical_material.py
 
       - name: Run V1.4 optical-material regression tests
-        run: python tests/test_glaze-v1.4_optical_material.py
+        run: python tests/test_glaze_v1.4_optical_material.py
 
       - name: Validate V1.4 semantic optical runtime candidate
         run: python scripts/validate_glaze_v1_4_semantic_optical_runtime.py
