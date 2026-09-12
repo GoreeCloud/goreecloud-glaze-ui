@@ -1,0 +1,65 @@
+name: Glaze V1.4 Root Shape Hardening
+
+on:
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  harden:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Apply fail-closed root-shape hardening
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          evaluator = Path("scripts/evaluate_glaze_v1_4_accessibility_qualification.py")
+          source = evaluator.read_text(encoding="utf-8")
+          replacements = [
+              (
+                  "def evaluate_record(\n    record: dict[str, Any],\n",
+                  "def evaluate_record(\n    record: Any,\n",
+              ),
+              (
+                  "    evaluated_at = evaluated_at.astimezone(timezone.utc)\n\n    required_base = set(plan.get(\"requiredScenarios\", []))\n",
+                  "    evaluated_at = evaluated_at.astimezone(timezone.utc)\n\n    if not isinstance(record, dict):\n        return _result(\n            \"blocked\",\n            [\"record-shape-invalid\"],\n            required=list(plan.get(\"requiredScenarios\", [])),\n            missing=missing,\n            failed=failed,\n        )\n\n    required_base = set(plan.get(\"requiredScenarios\", []))\n",
+              ),
+          ]
+          for old, new in replacements:
+              if source.count(old) != 1:
+                  raise SystemExit(f"expected exactly one evaluator patch target: {old!r}")
+              source = source.replace(old, new, 1)
+          evaluator.write_text(source, encoding="utf-8")
+
+          tests = Path("tests/test_glaze_v1_4_accessibility_qualification.py")
+          text = tests.read_text(encoding="utf-8")
+          marker = "    def test_draft_template_is_blocked(self) -> None:\n"
+          inserted = '''    def test_non_object_top_level_records_are_blocked(self) -> None:\n        for record in (None, [], \"not-an-object\", 7):\n            with self.subTest(record=record):\n                result = evaluator.evaluate_record(record, PLAN)\n                self.assertEqual(result[\"evaluatorDisposition\"], \"blocked\")\n                self.assertFalse(result[\"acceptedForAccessibilityQualification\"])\n                self.assertFalse(result[\"acceptedForLifecycleGate\"])\n                self.assertIn(\"record-shape-invalid\", result[\"reasons\"])\n\n'''
+          if text.count(marker) != 1:
+              raise SystemExit("expected exactly one Glaze qualification test insertion point")
+          tests.write_text(text.replace(marker, inserted + marker, 1), encoding="utf-8")
+          PY
+      - name: Run qualification regressions
+        run: python tests/test_glaze_v1_4_accessibility_qualification.py
+      - name: Compile evaluator and regressions
+        run: >-
+          python -m py_compile
+          scripts/evaluate_glaze_v1_4_accessibility_qualification.py
+          tests/test_glaze_v1_4_accessibility_qualification.py
+      - name: Commit bounded evaluator hardening
+        run: |
+          if git diff --quiet -- scripts/evaluate_glaze_v1_4_accessibility_qualification.py tests/test_glaze_v1_4_accessibility_qualification.py; then
+            echo "Glaze V1.4 root-shape boundary already hardened."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/evaluate_glaze_v1_4_accessibility_qualification.py tests/test_glaze_v1_4_accessibility_qualification.py
+          git commit -m "fix: fail closed on malformed Glaze qualification roots"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
