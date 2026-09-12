@@ -12,8 +12,10 @@ PLAN = ROOT / "contracts" / "v1.4" / "accessibility-qualification.candidate.json
 SCHEMA = ROOT / "contracts" / "v1.4" / "accessibility-qualification-evidence.schema.candidate.json"
 COMPOSITION = ROOT / "contracts" / "v1.4" / "accessibility-composition.candidate.json"
 EVALUATOR = ROOT / "scripts" / "evaluate_glaze_v1_4_accessibility_qualification.py"
+PACKET_GENERATOR = ROOT / "scripts" / "prepare_glaze_v1_4_accessibility_qualification_packet.py"
 TEMPLATE = ROOT / "evidence" / "v1.4" / "templates" / "accessibility-qualification-record.candidate.json"
 REGRESSION = ROOT / "tests" / "test_glaze_v1_4_accessibility_qualification.py"
+PACKET_REGRESSION = ROOT / "tests" / "test_glaze_v1_4_accessibility_qualification_packet.py"
 VERSION = ROOT / "VERSION"
 
 EXPECTED_REQUIRED_SCENARIOS = [
@@ -36,9 +38,11 @@ EXPECTED_SOURCE_ARTIFACTS = {
     "accessibilityComposition": "contracts/v1.4/accessibility-composition.candidate.json",
     "evidenceSchema": "contracts/v1.4/accessibility-qualification-evidence.schema.candidate.json",
     "evaluator": "scripts/evaluate_glaze_v1_4_accessibility_qualification.py",
+    "packetGenerator": "scripts/prepare_glaze_v1_4_accessibility_qualification_packet.py",
     "validator": "scripts/validate_glaze_v1_4_accessibility_qualification.py",
     "recordTemplate": "evidence/v1.4/templates/accessibility-qualification-record.candidate.json",
     "regression": "tests/test_glaze_v1_4_accessibility_qualification.py",
+    "packetRegression": "tests/test_glaze_v1_4_accessibility_qualification_packet.py",
 }
 
 
@@ -114,6 +118,30 @@ def validate_plan(plan: dict) -> None:
     ):
         require_false(policy, key, "evaluationPolicy")
 
+    packet = plan.get("packetPreparationPolicy", {})
+    for key in (
+        "exactSourceRevisionRequired",
+        "exactSourceTreeRevisionRequired",
+        "outputRestrictedToQualificationDraftArea",
+        "claimedAssistiveTechnologyScenarioStartsNotTested",
+        "unclaimedAssistiveTechnologyScenarioStartsNotApplicable",
+        "acceptedEvidenceRequiresSeparateGovernedReview",
+    ):
+        require_true(packet, key, "packetPreparationPolicy")
+    for key in (
+        "preparedAcceptedForAccessibilityQualification",
+        "preparedAcceptedForLifecycleGate",
+        "preparedPacketMayFabricateEvidenceReferences",
+        "preparedPacketMayFabricateScenarioPassOrFail",
+    ):
+        require_false(packet, key, "packetPreparationPolicy")
+    if packet.get("preparedStatus") != "in-progress":
+        fail("prepared packet status must remain in-progress")
+    if packet.get("preparedHumanReviewStatus") != "pending":
+        fail("prepared packet human review must remain pending")
+    if packet.get("preparedEvaluatorDisposition") != "blocked":
+        fail("prepared packet evaluator disposition must remain blocked")
+
     acceptance = plan.get("acceptanceRules", {})
     if acceptance.get("recordStatus") != "passed":
         fail("accepted evidence must require record status passed")
@@ -183,7 +211,7 @@ def validate_schema(schema: dict) -> None:
 
 
 def validate_source_boundaries(plan: dict) -> None:
-    for path in (PLAN, SCHEMA, COMPOSITION, EVALUATOR, TEMPLATE, REGRESSION, VERSION):
+    for path in (PLAN, SCHEMA, COMPOSITION, EVALUATOR, PACKET_GENERATOR, TEMPLATE, REGRESSION, PACKET_REGRESSION, VERSION):
         if not path.is_file():
             fail(f"governed artifact missing: {path.relative_to(ROOT)}")
     if VERSION.read_text(encoding="utf-8").strip() != "1.3.0":
@@ -212,6 +240,22 @@ def validate_source_boundaries(plan: dict) -> None:
     ):
         if required not in evaluator_text:
             fail(f"evaluator missing governed boundary: {required}")
+
+    generator_text = PACKET_GENERATOR.read_text(encoding="utf-8")
+    for required in (
+        "def build_record(",
+        "def build_checklist(",
+        "def assert_prepared_fail_closed(",
+        "accessibility-qualification-drafts",
+        '"humanReviewStatus": "pending"',
+        '"evaluatorDisposition": "blocked"',
+        '"acceptedForAccessibilityQualification": False',
+        '"acceptedForLifecycleGate": False',
+        "prepared scenarios may not claim pass/fail results",
+        "prepared scenarios must not fabricate evidence references",
+    ):
+        if required not in generator_text:
+            fail(f"packet generator missing governed fail-closed boundary: {required}")
 
     template = load_json(TEMPLATE)
     if template.get("status") != "in-progress":
