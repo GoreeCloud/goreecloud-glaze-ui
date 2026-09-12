@@ -29,6 +29,7 @@ VALID_PREFERENCE_STATES = {
     "not-supported",
     "not-tested",
 }
+VALID_EVALUATOR_DISPOSITIONS = {"blocked", "review-ready", "failed", "accepted"}
 EXPECTED_PRODUCT = "Glaze UI V1.4 — Optical Material and Chromatic Depth"
 EXPECTED_VERSION = "1.4.0-candidate"
 EXPECTED_RECORD_KIND = "glaze-v1.4-accessibility-qualification-evidence-candidate"
@@ -220,9 +221,6 @@ def evaluate_record(
     if human_status not in VALID_HUMAN_STATUSES:
         reasons.append("human-review-status-invalid")
         structural_blockers = True
-    if status == "failed" or human_status == "rejected":
-        reasons.append("record-or-human-review-explicitly-failed")
-        return _result("failed", reasons, required=required, missing=missing, failed=failed)
     if status == "superseded":
         reasons.append("record-is-superseded")
 
@@ -235,15 +233,29 @@ def evaluate_record(
     if set(disposition) != DISPOSITION_FIELDS:
         reasons.append("disposition-fields-invalid")
         structural_blockers = True
-    if _bounded_text(disposition.get("evaluatorDisposition"), 80) is None:
+    disposition_value = disposition.get("evaluatorDisposition")
+    if disposition_value not in VALID_EVALUATOR_DISPOSITIONS:
         reasons.append("disposition-value-invalid")
         structural_blockers = True
-    if disposition.get("acceptedForAccessibilityQualification") not in {True, False}:
+    accessibility_accepted = disposition.get("acceptedForAccessibilityQualification")
+    if accessibility_accepted not in {True, False}:
         reasons.append("accessibility-disposition-invalid")
         structural_blockers = True
     if not _bounded_string(disposition.get("notes"), 4000):
         reasons.append("disposition-notes-invalid")
         structural_blockers = True
+    if status == "passed":
+        if disposition_value != "accepted" or accessibility_accepted is not True:
+            reasons.append("passed-record-disposition-inconsistent")
+            structural_blockers = True
+    elif status in VALID_STATUSES:
+        if disposition_value == "accepted" or accessibility_accepted is not False:
+            reasons.append("non-passed-record-disposition-inconsistent")
+            structural_blockers = True
+
+    if status == "failed" or human_status == "rejected":
+        reasons.append("record-or-human-review-explicitly-failed")
+        return _result("failed", reasons, required=required, missing=missing, failed=failed)
 
     environment = record.get("environment")
     if not isinstance(environment, dict):
@@ -468,7 +480,7 @@ def evaluate_record(
         reasons.append("automated-only-review-cannot-accept-accessibility-qualification")
         return _result("review-ready", reasons, required=required, missing=missing, failed=failed)
 
-    if status != "passed" or disposition.get("acceptedForAccessibilityQualification") is not True:
+    if status != "passed" or disposition_value != "accepted" or accessibility_accepted is not True:
         reasons.append("explicit-passed-record-and-accessibility-disposition-required")
         return _result("review-ready", reasons, required=required, missing=missing, failed=failed)
 
