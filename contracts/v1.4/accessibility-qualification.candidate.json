@@ -14,9 +14,11 @@
     "accessibilityComposition": "contracts/v1.4/accessibility-composition.candidate.json",
     "evidenceSchema": "contracts/v1.4/accessibility-qualification-evidence.schema.candidate.json",
     "evaluator": "scripts/evaluate_glaze_v1_4_accessibility_qualification.py",
+    "packetGenerator": "scripts/prepare_glaze_v1_4_accessibility_qualification_packet.py",
     "validator": "scripts/validate_glaze_v1_4_accessibility_qualification.py",
     "recordTemplate": "evidence/v1.4/templates/accessibility-qualification-record.candidate.json",
-    "regression": "tests/test_glaze_v1_4_accessibility_qualification.py"
+    "regression": "tests/test_glaze_v1_4_accessibility_qualification.py",
+    "packetRegression": "tests/test_glaze_v1_4_accessibility_qualification_packet.py"
   },
   "evaluationPolicy": {
     "exactSourceRevisionRequired": true,
@@ -35,6 +37,21 @@
     "allRequiredScenariosMustPass": true,
     "allClaimedAssistiveTechnologyScenariosMustPass": true,
     "acceptedAccessibilityQualificationDoesNotGrantLifecycleGate": true
+  },
+  "packetPreparationPolicy": {
+    "exactSourceRevisionRequired": true,
+    "exactSourceTreeRevisionRequired": true,
+    "outputRestrictedToQualificationDraftArea": true,
+    "preparedStatus": "in-progress",
+    "preparedHumanReviewStatus": "pending",
+    "preparedEvaluatorDisposition": "blocked",
+    "preparedAcceptedForAccessibilityQualification": false,
+    "preparedAcceptedForLifecycleGate": false,
+    "preparedPacketMayFabricateEvidenceReferences": false,
+    "preparedPacketMayFabricateScenarioPassOrFail": false,
+    "claimedAssistiveTechnologyScenarioStartsNotTested": true,
+    "unclaimedAssistiveTechnologyScenarioStartsNotApplicable": true,
+    "acceptedEvidenceRequiresSeparateGovernedReview": true
   },
   "evaluatorDispositions": [
     "blocked",
