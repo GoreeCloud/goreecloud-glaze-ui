@@ -59,14 +59,14 @@ Current source artifacts for the V1.4 optical-runtime, accessibility-composition
 - `reference/glaze-v1.4-accessibility-observation-capture.candidate.html`
 - `reference/glaze-v1.4-accessibility-observation-capture.candidate.mjs`
 - `evidence/v1.4/templates/accessibility-qualification-record.candidate.json`
-- `scripts/validate_glaze-v1.4_optical_material.py`
+- `scripts/validate_glaze_v1.4_optical_material.py`
 - `scripts/validate_glaze_v1_4_semantic_optical_runtime.py`
 - `scripts/validate_glaze_v1_4_browser_capabilities.py`
 - `scripts/validate_glaze_v1_4_accessibility_composition.py`
 - `scripts/validate_glaze_v1_4_accessibility_qualification.py`
 - `scripts/evaluate_glaze_v1_4_accessibility_qualification.py`
 - `scripts/prepare_glaze_v1_4_accessibility_qualification_packet.py`
-- `tests/test_glaze-v1.4_optical_material.py`
+- `tests/test_glaze_v1.4_optical_material.py`
 - `tests/test_glaze_v1_4_semantic_optical_runtime.py`
 - `tests/test_glaze_v1_4_browser_capabilities.py`
 - `tests/test_glaze_v1_4_accessibility_composition.py`
