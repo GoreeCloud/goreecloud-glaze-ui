@@ -19,6 +19,12 @@ DEFAULT_PLAN = ROOT / "contracts" / "v1.4" / "accessibility-qualification.candid
 HEX40 = re.compile(r"^[0-9a-f]{40}$")
 ZERO_SHA = "0" * 40
 BLOCKING_SEVERITIES = {"high", "critical"}
+EXPECTED_PRODUCT = "Glaze UI V1.4 — Optical Material and Chromatic Depth"
+EXPECTED_VERSION = "1.4.0-candidate"
+EXPECTED_RECORD_KIND = "glaze-v1.4-accessibility-qualification-evidence-candidate"
+VALID_STATUSES = {"in-progress", "review-ready", "passed", "failed", "superseded"}
+VALID_REVIEW_MODES = {"human", "combined", "automated"}
+VALID_HUMAN_STATUSES = {"pending", "accepted", "rejected"}
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -52,6 +58,7 @@ def evaluate_record(
     reasons: list[str] = []
     missing: list[str] = []
     failed: list[str] = []
+    structural_blockers = False
 
     required = list(plan.get("requiredScenarios", []))
     conditional = plan.get("claimConditionalScenarios", {})
@@ -70,7 +77,20 @@ def evaluate_record(
             failed=failed,
         )
 
+    if record.get("schemaVersion") != 1:
+        reasons.append("record-schema-version-invalid")
+        structural_blockers = True
+    if record.get("recordKind") != EXPECTED_RECORD_KIND:
+        reasons.append("record-kind-invalid")
+        structural_blockers = True
+
     target = record.get("target", {}) if isinstance(record.get("target"), dict) else {}
+    if target.get("product") != EXPECTED_PRODUCT:
+        reasons.append("target-product-invalid")
+        structural_blockers = True
+    if target.get("targetVersion") != EXPECTED_VERSION:
+        reasons.append("target-version-invalid")
+        structural_blockers = True
     source_revision = target.get("sourceRevision")
     source_tree_revision = target.get("sourceTreeRevision")
     if not isinstance(source_revision, str) or not HEX40.fullmatch(source_revision) or source_revision == ZERO_SHA:
@@ -83,14 +103,57 @@ def evaluate_record(
         reasons.append("source-tree-revision-does-not-match-expected-tree")
 
     status = record.get("status")
+    if status not in VALID_STATUSES:
+        reasons.append("record-status-invalid")
+        structural_blockers = True
     review = record.get("reviewAuthority", {}) if isinstance(record.get("reviewAuthority"), dict) else {}
     human_status = review.get("humanReviewStatus")
     review_mode = review.get("mode")
+    if review_mode not in VALID_REVIEW_MODES or not isinstance(review.get("authority"), str) or not review.get("authority", "").strip():
+        reasons.append("review-authority-invalid")
+        structural_blockers = True
+    if human_status not in VALID_HUMAN_STATUSES:
+        reasons.append("human-review-status-invalid")
+        structural_blockers = True
     if status == "failed" or human_status == "rejected":
         reasons.append("record-or-human-review-explicitly-failed")
         return _result("failed", reasons, required=required, missing=missing, failed=failed)
     if status == "superseded":
         reasons.append("record-is-superseded")
+
+    if not isinstance(record.get("supportClaims"), dict) or any(
+        claims.get(key) not in {True, False} for key in conditional
+    ):
+        reasons.append("support-claims-invalid")
+        structural_blockers = True
+
+    environment = record.get("environment")
+    if not isinstance(environment, dict):
+        reasons.append("environment-missing")
+        structural_blockers = True
+    else:
+        operating_system = environment.get("operatingSystem")
+        if not isinstance(operating_system, dict) or not str(operating_system.get("name", "")).strip() or not str(operating_system.get("version", "")).strip():
+            reasons.append("operating-system-evidence-invalid")
+            structural_blockers = True
+        if environment.get("platformFamily") == "web":
+            browser = environment.get("browser")
+            if browser is not None and (
+                not isinstance(browser, dict)
+                or not str(browser.get("name", "")).strip()
+                or not str(browser.get("version", "")).strip()
+            ):
+                reasons.append("browser-evidence-invalid")
+                structural_blockers = True
+        if environment.get("physicalDevice") not in {True, False}:
+            reasons.append("physical-device-field-invalid")
+            structural_blockers = True
+        if not isinstance(environment.get("assistiveTechnologies"), list):
+            reasons.append("assistive-technology-inventory-invalid")
+            structural_blockers = True
+        if not isinstance(environment.get("evidenceReferences"), list):
+            reasons.append("environment-evidence-references-invalid")
+            structural_blockers = True
 
     scenarios = record.get("scenarioResults")
     scenario_map: dict[str, dict[str, Any]] = {}
@@ -138,12 +201,6 @@ def evaluate_record(
             missing.append(scenario_id)
             reasons.append(f"invalid-scenario-result:{scenario_id}")
 
-    for claim_key, scenario_id in conditional.items():
-        if claims.get(claim_key) is not True:
-            entry = scenario_map.get(scenario_id)
-            if entry is not None and entry.get("result") not in ("not-applicable", "not-tested"):
-                reasons.append(f"unclaimed-assistive-scenario-recorded:{scenario_id}")
-
     preferences = record.get("preferenceCoverage")
     required_preferences = plan.get("preferenceEvidence", {}).get("requiredPreferences", [])
     if not isinstance(preferences, dict):
@@ -175,6 +232,7 @@ def evaluate_record(
                 unresolved_blocking.append(issue.get("summary", "unnamed issue"))
     else:
         reasons.append("issues-array-missing")
+        structural_blockers = True
     if unresolved_blocking:
         reasons.append("unresolved-high-or-critical-issue")
 
@@ -183,7 +241,8 @@ def evaluate_record(
         return _result("failed", reasons, required=required, missing=missing, failed=failed)
 
     evidence_blockers = bool(
-        missing
+        structural_blockers
+        or missing
         or duplicate_ids
         or unresolved_blocking
         or any(reason.startswith((
