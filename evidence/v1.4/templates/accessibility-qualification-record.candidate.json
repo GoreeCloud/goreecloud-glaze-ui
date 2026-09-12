@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "recordKind": "glaze-v1.4-accessibility-qualification-evidence-candidate",
+  "target": {
+    "product": "Glaze UI V1.4 — Optical Material and Chromatic Depth",
+    "targetVersion": "1.4.0-candidate",
+    "sourceRevision": "0000000000000000000000000000000000000000",
+    "sourceTreeRevision": "0000000000000000000000000000000000000000"
+  },
+  "status": "in-progress",
+  "observedAt": "1970-01-01T00:00:00Z",
+  "reviewAuthority": {
+    "mode": "human",
+    "authority": "PENDING — replace with the authorized accessibility reviewer or combined review authority",
+    "humanReviewStatus": "pending"
+  },
+  "environment": {
+    "platformFamily": "web",
+    "operatingSystem": {
+      "name": "PENDING",
+      "version": "PENDING"
+    },
+    "browser": null,
+    "physicalDevice": false,
+    "assistiveTechnologies": [],
+    "evidenceReferences": []
+  },
+  "supportClaims": {
+    "screenReaderClaimed": false,
+    "voiceControlClaimed": false,
+    "switchControlClaimed": false
+  },
+  "preferenceCoverage": {
+    "reducedTransparency": {"state": "not-tested", "evidenceReferences": []},
+    "increasedContrast": {"state": "not-tested", "evidenceReferences": []},
+    "reducedMotion": {"state": "not-tested", "evidenceReferences": []},
+    "forcedColors": {"state": "not-tested", "evidenceReferences": []}
+  },
+  "scenarioResults": [
+    {"id": "source-and-runtime-identity", "result": "not-tested", "evidenceReferences": [], "notes": "PENDING real exact-source evidence."},
+    {"id": "multi-preference-composition", "result": "not-tested", "evidenceReferences": [], "notes": "PENDING real multi-preference observation."},
+    {"id": "reduced-transparency-solid-fallback", "result": "not-tested", "evidenceReferences": [], "notes": "PENDING real Reduced Transparency observation."},
+    {"id": "increased-contrast-separation", "result": "not-tested", "evidenceReferences": [], "notes": "PENDING real Increased Contrast observation."},
+    {"id": "reduced-motion-motion-suppression", "result": "not-tested", "evidenceReferences": [], "notes": "PENDING real Reduced Motion observation."},
+    {"id": "forced-colors-system-color-path", "result": "not-tested", "evidenceReferences": [], "notes": "PENDING real forced-colors observation."},
+    {"id": "large-text-zoom-reflow", "result": "not-tested", "evidenceReferences": [], "notes": "PENDING real large-text/zoom/reflow observation."},
+    {"id": "keyboard-focus-order", "result": "not-tested", "evidenceReferences": [], "notes": "PENDING real keyboard/focus observation."},
+    {"id": "color-independent-semantic-state", "result": "not-tested", "evidenceReferences": [], "notes": "PENDING real non-chromatic state-cue observation."},
+    {"id": "screen-reader-semantics-and-announcements", "result": "not-applicable", "evidenceReferences": [], "notes": "Set to required and test when screenReaderClaimed is true."},
+    {"id": "voice-control-purpose-and-operation", "result": "not-applicable", "evidenceReferences": [], "notes": "Set to required and test when voiceControlClaimed is true."},
+    {"id": "switch-control-operability", "result": "not-applicable", "evidenceReferences": [], "notes": "Set to required and test when switchControlClaimed is true."}
+  ],
+  "issues": [
+    {
+      "summary": "Real exact-source browser/OS/preference/assistive-technology qualification evidence has not yet been captured or accepted.",
+      "severity": "info",
+      "resolved": false,
+      "reference": "contracts/v1.4/accessibility-qualification.candidate.json"
+    }
+  ],
+  "disposition": {
+    "evaluatorDisposition": "blocked",
+    "acceptedForAccessibilityQualification": false,
+    "acceptedForLifecycleGate": false,
+    "notes": "TEMPLATE / DRAFT ONLY. Automated source tests and feature detection do not grant V1.4 accessibility qualification, consumer conformance, or lifecycle promotion."
+  }
+}
