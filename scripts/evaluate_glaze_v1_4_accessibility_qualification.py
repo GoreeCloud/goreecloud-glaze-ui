@@ -25,6 +25,22 @@ EXPECTED_RECORD_KIND = "glaze-v1.4-accessibility-qualification-evidence-candidat
 VALID_STATUSES = {"in-progress", "review-ready", "passed", "failed", "superseded"}
 VALID_REVIEW_MODES = {"human", "combined", "automated"}
 VALID_HUMAN_STATUSES = {"pending", "accepted", "rejected"}
+VALID_PLATFORM_FAMILIES = {"web", "android", "linux", "other"}
+VALID_ASSISTIVE_MODES = {
+    "screen-reader",
+    "voice-control",
+    "switch-control",
+    "keyboard",
+    "other",
+}
+ENVIRONMENT_FIELDS = {
+    "platformFamily",
+    "operatingSystem",
+    "browser",
+    "physicalDevice",
+    "assistiveTechnologies",
+    "evidenceReferences",
+}
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -32,6 +48,22 @@ def _load_json(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError(f"{path} must contain a JSON object")
     return value
+
+
+def _bounded_text(value: Any, maximum: int) -> str | None:
+    if not isinstance(value, str):
+        return None
+    normalized = value.strip()
+    if not normalized or len(normalized) > maximum:
+        return None
+    return normalized
+
+
+def _valid_reference_list(value: Any, maximum_items: int) -> bool:
+    if not isinstance(value, list) or len(value) > maximum_items:
+        return False
+    normalized = [_bounded_text(item, 1000) for item in value]
+    return all(item is not None for item in normalized) and len(set(normalized)) == len(normalized)
 
 
 def _result(disposition: str, reasons: list[str], *, required: list[str], missing: list[str], failed: list[str]) -> dict[str, Any]:
@@ -132,26 +164,75 @@ def evaluate_record(
         reasons.append("environment-missing")
         structural_blockers = True
     else:
+        if set(environment) - ENVIRONMENT_FIELDS:
+            reasons.append("environment-fields-invalid")
+            structural_blockers = True
+        platform_family = environment.get("platformFamily")
+        if platform_family not in VALID_PLATFORM_FAMILIES:
+            reasons.append("platform-family-invalid")
+            structural_blockers = True
+
         operating_system = environment.get("operatingSystem")
-        if not isinstance(operating_system, dict) or not str(operating_system.get("name", "")).strip() or not str(operating_system.get("version", "")).strip():
+        if (
+            not isinstance(operating_system, dict)
+            or set(operating_system) != {"name", "version"}
+            or _bounded_text(operating_system.get("name"), 120) is None
+            or _bounded_text(operating_system.get("version"), 120) is None
+        ):
             reasons.append("operating-system-evidence-invalid")
             structural_blockers = True
-        if environment.get("platformFamily") == "web":
-            browser = environment.get("browser")
+
+        browser = environment.get("browser")
+        if platform_family == "web":
             if (
                 not isinstance(browser, dict)
-                or not str(browser.get("name", "")).strip()
-                or not str(browser.get("version", "")).strip()
+                or set(browser) != {"name", "version"}
+                or _bounded_text(browser.get("name"), 120) is None
+                or _bounded_text(browser.get("version"), 120) is None
             ):
                 reasons.append("browser-evidence-invalid")
                 structural_blockers = True
+        elif browser is not None and (
+            not isinstance(browser, dict)
+            or set(browser) != {"name", "version"}
+            or _bounded_text(browser.get("name"), 120) is None
+            or _bounded_text(browser.get("version"), 120) is None
+        ):
+            reasons.append("browser-evidence-invalid")
+            structural_blockers = True
+
         if environment.get("physicalDevice") not in {True, False}:
             reasons.append("physical-device-field-invalid")
             structural_blockers = True
-        if not isinstance(environment.get("assistiveTechnologies"), list):
+
+        assistive = environment.get("assistiveTechnologies")
+        if not isinstance(assistive, list) or len(assistive) > 50:
             reasons.append("assistive-technology-inventory-invalid")
             structural_blockers = True
-        if not isinstance(environment.get("evidenceReferences"), list):
+        else:
+            seen_assistive: set[tuple[str, str, str]] = set()
+            for item in assistive:
+                if (
+                    not isinstance(item, dict)
+                    or set(item) != {"name", "version", "mode"}
+                    or _bounded_text(item.get("name"), 120) is None
+                    or _bounded_text(item.get("version"), 120) is None
+                    or item.get("mode") not in VALID_ASSISTIVE_MODES
+                ):
+                    reasons.append("assistive-technology-inventory-invalid")
+                    structural_blockers = True
+                    continue
+                key = (
+                    item["name"].strip(),
+                    item["version"].strip(),
+                    item["mode"],
+                )
+                if key in seen_assistive:
+                    reasons.append("duplicate-assistive-technology")
+                    structural_blockers = True
+                seen_assistive.add(key)
+
+        if not _valid_reference_list(environment.get("evidenceReferences"), 100):
             reasons.append("environment-evidence-references-invalid")
             structural_blockers = True
 
