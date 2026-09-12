@@ -13,9 +13,13 @@ SCHEMA = ROOT / "contracts" / "v1.4" / "accessibility-qualification-evidence.sch
 COMPOSITION = ROOT / "contracts" / "v1.4" / "accessibility-composition.candidate.json"
 EVALUATOR = ROOT / "scripts" / "evaluate_glaze_v1_4_accessibility_qualification.py"
 PACKET_GENERATOR = ROOT / "scripts" / "prepare_glaze_v1_4_accessibility_qualification_packet.py"
+OBSERVATION_CAPTURE = ROOT / "js" / "glaze-v1.4-accessibility-observation-capture.candidate.mjs"
+OBSERVATION_REFERENCE = ROOT / "reference" / "glaze-v1.4-accessibility-observation-capture.candidate.html"
+OBSERVATION_REFERENCE_RUNTIME = ROOT / "reference" / "glaze-v1.4-accessibility-observation-capture.candidate.mjs"
 TEMPLATE = ROOT / "evidence" / "v1.4" / "templates" / "accessibility-qualification-record.candidate.json"
 REGRESSION = ROOT / "tests" / "test_glaze_v1_4_accessibility_qualification.py"
 PACKET_REGRESSION = ROOT / "tests" / "test_glaze_v1_4_accessibility_qualification_packet.py"
+OBSERVATION_REGRESSION = ROOT / "tests" / "glaze-v1.4-accessibility-observation-capture.test.mjs"
 VERSION = ROOT / "VERSION"
 
 EXPECTED_REQUIRED_SCENARIOS = [
@@ -39,10 +43,14 @@ EXPECTED_SOURCE_ARTIFACTS = {
     "evidenceSchema": "contracts/v1.4/accessibility-qualification-evidence.schema.candidate.json",
     "evaluator": "scripts/evaluate_glaze_v1_4_accessibility_qualification.py",
     "packetGenerator": "scripts/prepare_glaze_v1_4_accessibility_qualification_packet.py",
+    "observationCaptureRuntime": "js/glaze-v1.4-accessibility-observation-capture.candidate.mjs",
+    "observationCaptureReference": "reference/glaze-v1.4-accessibility-observation-capture.candidate.html",
+    "observationCaptureReferenceRuntime": "reference/glaze-v1.4-accessibility-observation-capture.candidate.mjs",
     "validator": "scripts/validate_glaze_v1_4_accessibility_qualification.py",
     "recordTemplate": "evidence/v1.4/templates/accessibility-qualification-record.candidate.json",
     "regression": "tests/test_glaze_v1_4_accessibility_qualification.py",
     "packetRegression": "tests/test_glaze_v1_4_accessibility_qualification_packet.py",
+    "observationCaptureRegression": "tests/glaze-v1.4-accessibility-observation-capture.test.mjs",
 }
 
 
@@ -142,6 +150,41 @@ def validate_plan(plan: dict) -> None:
     if packet.get("preparedEvaluatorDisposition") != "blocked":
         fail("prepared packet evaluator disposition must remain blocked")
 
+    capture = plan.get("observationCapturePolicy", {})
+    for key in (
+        "preparedOrInProgressExactBoundRecordRequired",
+        "localDetectionMayOnlyProvideHints",
+        "reviewerConfirmationRequiredForTestedPreference",
+        "reviewerEvidenceReferenceRequiredForTestedOrUnsupportedPreference",
+        "reviewerEvidenceReferenceRequiredForScenarioPassOrFail",
+        "exportRequiresExplicitUserAction",
+    ):
+        require_true(capture, key, "observationCapturePolicy")
+    for key in (
+        "sourceRevisionMutable",
+        "sourceTreeRevisionMutable",
+        "localDetectionIsQualificationEvidence",
+        "automaticPreferenceAcceptanceAllowed",
+        "automaticScenarioPassAllowed",
+        "automaticHumanAcceptanceAllowed",
+        "automaticAccessibilityQualificationAllowed",
+        "automaticLifecycleAcceptanceAllowed",
+        "browserIdentitySniffingAllowed",
+        "networkAccessRequired",
+        "telemetryRequired",
+        "analyticsRequired",
+        "persistentStorageRequired",
+        "capturedAcceptedForAccessibilityQualification",
+        "capturedAcceptedForLifecycleGate",
+    ):
+        require_false(capture, key, "observationCapturePolicy")
+    if capture.get("capturedStatus") != "in-progress":
+        fail("captured observation record status must remain in-progress")
+    if capture.get("capturedHumanReviewStatus") != "pending":
+        fail("captured observation record human review must remain pending")
+    if capture.get("capturedEvaluatorDisposition") != "blocked":
+        fail("captured observation record evaluator disposition must remain blocked")
+
     acceptance = plan.get("acceptanceRules", {})
     if acceptance.get("recordStatus") != "passed":
         fail("accepted evidence must require record status passed")
@@ -211,7 +254,12 @@ def validate_schema(schema: dict) -> None:
 
 
 def validate_source_boundaries(plan: dict) -> None:
-    for path in (PLAN, SCHEMA, COMPOSITION, EVALUATOR, PACKET_GENERATOR, TEMPLATE, REGRESSION, PACKET_REGRESSION, VERSION):
+    governed_paths = (
+        PLAN, SCHEMA, COMPOSITION, EVALUATOR, PACKET_GENERATOR,
+        OBSERVATION_CAPTURE, OBSERVATION_REFERENCE, OBSERVATION_REFERENCE_RUNTIME,
+        TEMPLATE, REGRESSION, PACKET_REGRESSION, OBSERVATION_REGRESSION, VERSION,
+    )
+    for path in governed_paths:
         if not path.is_file():
             fail(f"governed artifact missing: {path.relative_to(ROOT)}")
     if VERSION.read_text(encoding="utf-8").strip() != "1.3.0":
@@ -256,6 +304,58 @@ def validate_source_boundaries(plan: dict) -> None:
     ):
         if required not in generator_text:
             fail(f"packet generator missing governed fail-closed boundary: {required}")
+
+    capture_text = OBSERVATION_CAPTURE.read_text(encoding="utf-8")
+    for required in (
+        "glaze-v1.4-accessibility-observation-capture-candidate",
+        "localDetectionIsQualificationEvidence: false",
+        "automaticPreferenceAcceptanceAllowed: false",
+        "automaticScenarioPassAllowed: false",
+        "automaticHumanAcceptanceAllowed: false",
+        "automaticAccessibilityQualificationAllowed: false",
+        "automaticLifecycleAcceptanceAllowed: false",
+        "networkAccessRequired: false",
+        "telemetryRequired: false",
+        "analyticsRequired: false",
+        "persistentStorageRequired: false",
+        "browserIdentitySniffingAllowed: false",
+        "acceptedForAccessibilityQualification: false",
+        "acceptedForLifecycleGate: false",
+        "humanReviewStatus = 'pending'",
+        "scenarioResults must not contain duplicate scenario ids",
+        "requires explicit reviewer evidence references",
+    ):
+        if required not in capture_text:
+            fail(f"observation capture runtime missing governed boundary: {required}")
+
+    reference_runtime_text = OBSERVATION_REFERENCE_RUNTIME.read_text(encoding="utf-8")
+    reference_html_text = OBSERVATION_REFERENCE.read_text(encoding="utf-8")
+    forbidden_patterns = (
+        "fetch(", "XMLHttpRequest", "sendBeacon", "WebSocket",
+        "localStorage", "sessionStorage", "indexedDB",
+        "navigator.userAgent", "navigator.userAgentData", "navigator.platform",
+        "getUserMedia", "getDisplayMedia", "http://", "https://",
+    )
+    for pattern in forbidden_patterns:
+        if pattern in capture_text or pattern in reference_runtime_text or pattern in reference_html_text:
+            fail(f"observation capture must not introduce remote/persistent/identity/capture path: {pattern}")
+    for required in (
+        "file.text()",
+        "new Blob",
+        "URL.createObjectURL",
+        "URL.revokeObjectURL",
+        "no state is auto-confirmed",
+        "no qualification or lifecycle acceptance was granted",
+    ):
+        if required not in reference_runtime_text:
+            fail(f"observation capture reference runtime missing local/manual boundary: {required}")
+    for required in (
+        "Local capture aid only.",
+        "does not auto-pass scenarios",
+        "export happens only when you choose the export action",
+    ):
+        if required not in reference_html_text:
+            fail(f"observation capture reference HTML missing disclosure: {required}")
 
     template = load_json(TEMPLATE)
     if template.get("status") != "in-progress":
