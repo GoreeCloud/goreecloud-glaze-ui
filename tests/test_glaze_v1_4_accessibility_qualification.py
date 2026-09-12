@@ -5,6 +5,7 @@ import importlib.util
 import json
 import sys
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -231,6 +232,18 @@ class GlazeV14AccessibilityQualificationTests(unittest.TestCase):
         result = evaluator.evaluate_record(record, PLAN)
         self.assertEqual(result["evaluatorDisposition"], "blocked")
         self.assertIn("observation-time-invalid", result["reasons"])
+
+    def test_future_observation_time_is_blocked(self) -> None:
+        record = accepted_record()
+        record["observedAt"] = "2026-09-12T10:00:00.001Z"
+        result = evaluator.evaluate_record(
+            record,
+            PLAN,
+            evaluation_time=datetime(2026, 9, 12, 10, 0, tzinfo=timezone.utc),
+        )
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn("observation-time-from-future", result["reasons"])
+        self.assertFalse(result["acceptedForAccessibilityQualification"])
 
     def test_environment_reference_with_surrounding_whitespace_is_blocked(self) -> None:
         record = accepted_record()
