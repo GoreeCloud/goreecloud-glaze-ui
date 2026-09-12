@@ -8,14 +8,18 @@ on:
       - 'css/glaze-v1.4-*'
       - 'js/glaze-v1.4-*'
       - 'reference/glaze-v1.4-*'
+      - 'evidence/v1.4/**'
       - 'scripts/validate_glaze_v1.4_optical_material.py'
       - 'scripts/validate_glaze_v1_4_semantic_optical_runtime.py'
       - 'scripts/validate_glaze_v1_4_browser_capabilities.py'
       - 'scripts/validate_glaze_v1_4_accessibility_composition.py'
+      - 'scripts/validate_glaze_v1_4_accessibility_qualification.py'
+      - 'scripts/evaluate_glaze_v1_4_accessibility_qualification.py'
       - 'tests/test_glaze_v1.4_optical_material.py'
       - 'tests/test_glaze_v1_4_semantic_optical_runtime.py'
       - 'tests/test_glaze_v1_4_browser_capabilities.py'
       - 'tests/test_glaze_v1_4_accessibility_composition.py'
+      - 'tests/test_glaze_v1_4_accessibility_qualification.py'
       - 'tests/glaze-v1.4-*.test.mjs'
       - '.github/workflows/glaze-v1.4-optical-material.yml'
       - 'VERSION'
@@ -30,14 +34,18 @@ on:
       - 'css/glaze-v1.4-*'
       - 'js/glaze-v1.4-*'
       - 'reference/glaze-v1.4-*'
+      - 'evidence/v1.4/**'
       - 'scripts/validate_glaze_v1.4_optical_material.py'
       - 'scripts/validate_glaze_v1_4_semantic_optical_runtime.py'
       - 'scripts/validate_glaze_v1_4_browser_capabilities.py'
       - 'scripts/validate_glaze_v1_4_accessibility_composition.py'
+      - 'scripts/validate_glaze_v1_4_accessibility_qualification.py'
+      - 'scripts/evaluate_glaze_v1_4_accessibility_qualification.py'
       - 'tests/test_glaze_v1.4_optical_material.py'
       - 'tests/test_glaze_v1_4_semantic_optical_runtime.py'
       - 'tests/test_glaze_v1_4_browser_capabilities.py'
       - 'tests/test_glaze_v1_4_accessibility_composition.py'
+      - 'tests/test_glaze_v1_4_accessibility_qualification.py'
       - 'tests/glaze-v1.4-*.test.mjs'
       - '.github/workflows/glaze-v1.4-optical-material.yml'
       - 'VERSION'
@@ -89,6 +97,26 @@ jobs:
       - name: Run V1.4 accessibility composition contract regressions
         run: python tests/test_glaze_v1_4_accessibility_composition.py
 
+      - name: Validate V1.4 accessibility qualification support
+        run: python scripts/validate_glaze_v1_4_accessibility_qualification.py
+
+      - name: Run V1.4 accessibility qualification regressions
+        run: python tests/test_glaze_v1_4_accessibility_qualification.py
+
+      - name: Verify qualification template remains blocked and non-promoting
+        run: |
+          python scripts/evaluate_glaze_v1_4_accessibility_qualification.py \
+            evidence/v1.4/templates/accessibility-qualification-record.candidate.json \
+            > /tmp/glaze-v1.4-accessibility-template-evaluation.json
+          python - <<'PY'
+          import json
+          with open('/tmp/glaze-v1.4-accessibility-template-evaluation.json', encoding='utf-8') as handle:
+              result = json.load(handle)
+          assert result['evaluatorDisposition'] == 'blocked'
+          assert result['acceptedForAccessibilityQualification'] is False
+          assert result['acceptedForLifecycleGate'] is False
+          PY
+
       - name: Run V1.4 executable runtime, web, browser, and accessibility regressions
         run: |
           node --test \
@@ -97,12 +125,14 @@ jobs:
             tests/glaze-v1.4-browser-capabilities.test.mjs \
             tests/glaze-v1.4-accessibility-composition.test.mjs
 
-      - name: Compile V1.4 validators
+      - name: Compile V1.4 validators and evaluators
         run: |
           python -m py_compile scripts/validate_glaze_v1.4_optical_material.py
           python -m py_compile scripts/validate_glaze_v1_4_semantic_optical_runtime.py
           python -m py_compile scripts/validate_glaze_v1_4_browser_capabilities.py
           python -m py_compile scripts/validate_glaze_v1_4_accessibility_composition.py
+          python -m py_compile scripts/validate_glaze_v1_4_accessibility_qualification.py
+          python -m py_compile scripts/evaluate_glaze_v1_4_accessibility_qualification.py
 
       - name: Verify validation did not mutate tracked source
         run: git diff --exit-code
