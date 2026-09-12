@@ -29,19 +29,23 @@ This file is the repository-side feature roadmap control for Glaze UI. It record
 | FR-012 | Maintain deterministic capability negotiation and fallback regression coverage for V1.4 optical runtime and Web rendering behavior. | P0 | Python contract validators plus executable runtime/Web regressions remain in the exact-head V1.4 CI gate; production/native acceptance not established |
 | FR-013 | Add a privacy-bounded browser capability adapter that detects only local, synchronous rendering capabilities and accessibility/appearance preferences, fails closed on missing evidence, and avoids browser identity, hardware fingerprinting, network, capture, persistence, telemetry, and analytics. | P0 | `contracts/v1.4/browser-capabilities.candidate.json` and `js/glaze-v1.4-browser-capabilities.candidate.mjs` implemented as candidates; source validation green; environmental sampling, reflection, and HDR are never auto-declared |
 | FR-014 | Provide a local browser diagnostic/qualification harness that exercises the candidate browser adapter and Web renderer without representing diagnostics as browser-matrix, assistive-technology, device, performance, consumer, or release qualification. | High | Local candidate harness implemented at `reference/glaze-v1.4-browser-qualification.candidate.html` with companion module; source regressions green; real browser/device qualification remains pending |
-| FR-015 | Compose simultaneous V1.4 accessibility requirements instead of collapsing Reduced Transparency, Increased Contrast, Reduced Motion, forced-colors, large-text, color-vision accommodation, and constrained-performance behavior into a single mutually exclusive profile. | P0 | `contracts/v1.4/accessibility-composition.candidate.json` and `js/glaze-v1.4-accessibility-runtime.candidate.mjs` implemented; browser requirements compose additively; Web renderer exposes independent accessibility state; exact implementation head `d6858b35b5c87ef8600580e3a6e68450bcdb0786` passed dedicated run `34662883331` |
-| FR-016 | Qualify composed accessibility behavior across real browser, operating-system preference, forced-colors/high-contrast, assistive-technology, and representative device combinations without treating feature detection as acceptance evidence. | P0 | Planned qualification work; source composition behavior is automated and green, but browser-matrix, assistive-technology, and physical-device qualification remain unestablished |
+| FR-015 | Compose simultaneous V1.4 accessibility requirements instead of collapsing Reduced Transparency, Increased Contrast, Reduced Motion, forced-colors, large-text, color-vision accommodation, and constrained-performance behavior into a single mutually exclusive profile. | P0 | `contracts/v1.4/accessibility-composition.candidate.json` and `js/glaze-v1.4-accessibility-runtime.candidate.mjs` implemented; browser requirements compose additively; Web renderer exposes independent accessibility state; source behavior is now explicitly recorded as automated-test verified while real qualification flags remain false |
+| FR-016 | Qualify composed accessibility behavior across real browser, operating-system preference, forced-colors/high-contrast, assistive-technology, and representative device combinations without treating feature detection as acceptance evidence. | P0 | Qualification-support infrastructure is implemented and source-verified; real browser/OS/AT observations and authorized review acceptance remain pending |
+| FR-017 | Establish a canonical, exact-source V1.4 accessibility qualification evidence contract, draft record format, and deterministic fail-closed evaluator that can distinguish blocked, review-ready, failed, and accessibility-slice-accepted records without granting lifecycle promotion. | P0 | `contracts/v1.4/accessibility-qualification.candidate.json`, evidence schema, evaluator, validator, template, and regressions implemented; exact implementation head `bf1f8a7b44a0df6cccf69115cddd139030c3e110` passed dedicated run `34663696760`; evaluator always keeps lifecycle-gate acceptance false |
+| FR-018 | Capture and review actual V1.4 accessibility evidence against the governed qualification contract for required preference, keyboard/focus, large-text/reflow, color-independent state, and claimed screen-reader/voice/switch scenarios. | P0 | Planned evidence execution; included template intentionally remains blocked until exact source/tree revisions, real observations, evidence references, and authorized human/combined review are supplied |
 
 ## V1.4 current implementation boundary
 
-The repository currently contains bounded V1.4 source, executable runtime, composable accessibility, Web reference-renderer, and browser-capability candidates, not a V1.4 release. The candidates are rooted in Stable `1.3.0`, keep `VERSION` at `1.3.0`, have no lifecycle authority, are not consumer-eligible, and cannot establish downstream V1.4 conformance.
+The repository currently contains bounded V1.4 source, executable runtime, composable accessibility, Web reference-renderer, browser-capability, and accessibility-qualification-support candidates, not a V1.4 release. The candidates are rooted in Stable `1.3.0`, keep `VERSION` at `1.3.0`, have no lifecycle authority, are not consumer-eligible, and cannot establish downstream V1.4 conformance.
 
-Current source artifacts for the V1.4 optical-runtime, accessibility-composition, Web-renderer, and browser-capability slices are:
+Current source artifacts for the V1.4 optical-runtime, accessibility-composition, Web-renderer, browser-capability, and accessibility-qualification-support slices are:
 
 - `tokens/glaze-v1.4-optical-material.candidate.json`
 - `contracts/v1.4/semantic-optical-runtime.candidate.json`
 - `contracts/v1.4/browser-capabilities.candidate.json`
 - `contracts/v1.4/accessibility-composition.candidate.json`
+- `contracts/v1.4/accessibility-qualification.candidate.json`
+- `contracts/v1.4/accessibility-qualification-evidence.schema.candidate.json`
 - `js/glaze-v1.4-optical-runtime.candidate.mjs`
 - `js/glaze-v1.4-accessibility-runtime.candidate.mjs`
 - `js/glaze-v1.4-optical-web.candidate.mjs`
@@ -49,14 +53,18 @@ Current source artifacts for the V1.4 optical-runtime, accessibility-composition
 - `css/glaze-v1.4-optical-runtime.candidate.css`
 - `reference/glaze-v1.4-browser-qualification.candidate.html`
 - `reference/glaze-v1.4-browser-qualification.candidate.mjs`
+- `evidence/v1.4/templates/accessibility-qualification-record.candidate.json`
 - `scripts/validate_glaze_v1.4_optical_material.py`
 - `scripts/validate_glaze_v1_4_semantic_optical_runtime.py`
 - `scripts/validate_glaze_v1_4_browser_capabilities.py`
 - `scripts/validate_glaze_v1_4_accessibility_composition.py`
+- `scripts/validate_glaze_v1_4_accessibility_qualification.py`
+- `scripts/evaluate_glaze_v1_4_accessibility_qualification.py`
 - `tests/test_glaze_v1.4_optical_material.py`
 - `tests/test_glaze_v1_4_semantic_optical_runtime.py`
 - `tests/test_glaze_v1_4_browser_capabilities.py`
 - `tests/test_glaze_v1_4_accessibility_composition.py`
+- `tests/test_glaze_v1_4_accessibility_qualification.py`
 - `tests/glaze-v1.4-optical-runtime.test.mjs`
 - `tests/glaze-v1.4-accessibility-composition.test.mjs`
 - `tests/glaze-v1.4-optical-web.test.mjs`
@@ -71,9 +79,11 @@ The browser capability adapter adds local, synchronous feature detection for bou
 
 The local browser diagnostic harness exercises those candidate paths without persisting or transmitting results and without converting local detection into a browser-matrix or release claim.
 
-Exact implementation head `d6858b35b5c87ef8600580e3a6e68450bcdb0786` passed dedicated workflow run `34662883331`. The gate verified the exact checked-out revision, all four V1.4 validators, all four Python regression layers, executable runtime/accessibility/Web/browser Node regressions, validator compilation, and no tracked-source mutation. This is source-level evidence only.
+The accessibility qualification-support layer adds an exact-source evidence schema and deterministic evaluator. Required qualification scenarios cover runtime/source identity, multi-preference composition, Reduced Transparency, Increased Contrast, Reduced Motion, forced-colors, large-text/reflow, keyboard/focus order, and color-independent semantic state; screen-reader, voice-control, and switch-control scenarios become mandatory when those support claims are asserted. Passing observations require evidence references, missing or not-tested required coverage blocks progression, any required/claimed failure fails the slice, unresolved high/critical issues block acceptance, and automated-only review cannot accept the slice. Even a valid human/combined accepted accessibility record cannot grant lifecycle-gate acceptance, Stable V1.4, consumer conformance, browser-matrix qualification, physical-device qualification, or production-performance qualification.
 
-Human visual acceptance, assistive-technology acceptance, browser matrix qualification, physical-device qualification, native-renderer parity, production frame-time/GPU/power budgets, consumer migration evidence, and Stable V1.4 lifecycle promotion remain outside the evidence established by these candidates.
+Exact implementation head `bf1f8a7b44a0df6cccf69115cddd139030c3e110` passed dedicated workflow run `34663696760`. The gate verified the exact checked-out revision, all five V1.4 validators, all five Python regression layers, the blocked/non-promoting qualification-template invariant, executable runtime/accessibility/Web/browser Node regressions, validator/evaluator compilation, and no tracked-source mutation. This is source-level candidate and qualification-support evidence only.
+
+Human visual acceptance, real assistive-technology acceptance, browser matrix qualification, physical-device qualification, native-renderer parity, production frame-time/GPU/power budgets, consumer migration evidence, and Stable V1.4 lifecycle promotion remain outside the evidence established by these candidates.
 
 ## Maintenance and synchronization
 
