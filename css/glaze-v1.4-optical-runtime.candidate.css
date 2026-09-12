@@ -1,0 +1,154 @@
+/*
+ * Glaze UI V1.4 — Optical Material and Chromatic Depth web renderer Candidate.
+ *
+ * This file is an implementation-candidate reference layer. It imports the current
+ * Stable V1.3 web entrypoint, but it is not imported by that Stable entrypoint and
+ * therefore cannot opt consumers into V1.4 implicitly.
+ *
+ * Runtime authority comes from js/glaze-v1.4-optical-runtime.candidate.mjs. The
+ * renderer consumes accepted data-glaze-v14-* state; applications should not bind
+ * directly to the normalized optical values below.
+ */
+@import url("./glaze-v1.3.0.css");
+
+[data-glaze-v14-rendering] {
+  /* Default semantic profile mirrors the V1.4 standard candidate values. */
+  --glz14-optical-depth: 0.24;
+  --glz14-diffusion: 0.54;
+  --glz14-refraction: 0.30;
+  --glz14-color-bleed: 0.12;
+  --glz14-highlight-rim: 0.09;
+  --glz14-shadow-depth: 0.18;
+
+  /* Existing Stable material primitives remain the rendering substrate. */
+  --glz14-render-background: var(
+    --glz12-glass-overlay,
+    color-mix(in srgb, Canvas 88%, transparent)
+  );
+  --glz14-render-border: var(
+    --glz12-structural-border,
+    color-mix(in srgb, CanvasText 16%, transparent)
+  );
+  --glz14-render-shadow: var(--glz12-shadow-soft, none);
+  --glz14-render-blur: var(--glz12-frost-standard-blur, 28px);
+  --glz14-render-saturation: var(--glz12-saturation-standard, 1);
+  --glz14-local-ambient-tint: transparent;
+
+  background-color: var(--glz14-render-background);
+  background-image: linear-gradient(
+    var(--glz14-local-ambient-tint),
+    var(--glz14-local-ambient-tint)
+  );
+  border-color: var(--glz14-render-border);
+  box-shadow: var(--glz14-render-shadow);
+}
+
+[data-glaze-v14-profile="subdued"] {
+  --glz14-optical-depth: 0.18;
+  --glz14-diffusion: 0.46;
+  --glz14-refraction: 0.20;
+  --glz14-color-bleed: 0.08;
+  --glz14-highlight-rim: 0.06;
+  --glz14-shadow-depth: 0.14;
+  --glz14-render-background: var(
+    --glz12-glass-base,
+    color-mix(in srgb, Canvas 84%, transparent)
+  );
+  --glz14-render-blur: var(--glz12-frost-mist-blur, 18px);
+}
+
+[data-glaze-v14-profile="standard"] {
+  --glz14-optical-depth: 0.24;
+  --glz14-diffusion: 0.54;
+  --glz14-refraction: 0.30;
+  --glz14-color-bleed: 0.12;
+  --glz14-highlight-rim: 0.09;
+  --glz14-shadow-depth: 0.18;
+  --glz14-render-background: var(
+    --glz12-glass-overlay,
+    color-mix(in srgb, Canvas 88%, transparent)
+  );
+  --glz14-render-blur: var(--glz12-frost-standard-blur, 28px);
+}
+
+[data-glaze-v14-profile="elevated"] {
+  --glz14-optical-depth: 0.30;
+  --glz14-diffusion: 0.62;
+  --glz14-refraction: 0.40;
+  --glz14-color-bleed: 0.17;
+  --glz14-highlight-rim: 0.12;
+  --glz14-shadow-depth: 0.24;
+  --glz14-render-background: var(
+    --glz12-glass-panel,
+    color-mix(in srgb, Canvas 92%, transparent)
+  );
+  --glz14-render-blur: var(--glz12-frost-dense-blur, 44px);
+  --glz14-render-shadow: var(--glz12-shadow-float, var(--glz12-shadow-soft, none));
+}
+
+[data-glaze-v14-profile="transient"] {
+  --glz14-optical-depth: 0.22;
+  --glz14-diffusion: 0.58;
+  --glz14-refraction: 0.34;
+  --glz14-color-bleed: 0.14;
+  --glz14-highlight-rim: 0.10;
+  --glz14-shadow-depth: 0.20;
+  --glz14-render-background: var(
+    --glz12-glass-overlay,
+    color-mix(in srgb, Canvas 90%, transparent)
+  );
+  --glz14-render-blur: var(--glz12-frost-standard-blur, 28px);
+  --glz14-render-shadow: var(--glz12-shadow-float, var(--glz12-shadow-soft, none));
+}
+
+[data-glaze-v14-profile="deep"] {
+  --glz14-optical-depth: 0.36;
+  --glz14-diffusion: 0.68;
+  --glz14-refraction: 0.48;
+  --glz14-color-bleed: 0.22;
+  --glz14-highlight-rim: 0.14;
+  --glz14-shadow-depth: 0.28;
+  --glz14-render-background: var(
+    --glz12-glass-panel,
+    color-mix(in srgb, Canvas 94%, transparent)
+  );
+  --glz14-render-blur: var(--glz12-frost-dense-blur, 44px);
+  --glz14-render-shadow: var(--glz12-shadow-float, var(--glz12-shadow-soft, none));
+}
+
+/* Only the resolver's accepted optical-glaze mode receives backdrop processing. */
+[data-glaze-v14-rendering="optical-glaze"] {
+  -webkit-backdrop-filter:
+    blur(var(--glz14-render-blur))
+    saturate(var(--glz14-render-saturation));
+  backdrop-filter:
+    blur(var(--glz14-render-blur))
+    saturate(var(--glz14-render-saturation));
+}
+
+/* Efficient or unsupported-blur paths retain semantic material without backdrop work. */
+[data-glaze-v14-rendering="static-glaze"] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* Reduced Transparency and unavailable translucency use a designed opaque surface. */
+[data-glaze-v14-rendering="solid-semantic-surface"],
+[data-glaze-v14-profile="solid-semantic-surface"] {
+  --glz14-render-background: var(--glz1-raised, Canvas);
+  --glz14-render-blur: 0px;
+  background-image: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* Increased Contrast removes optional atmospheric tint from the reference renderer. */
+[data-glaze-v14-accessibility="increased-contrast"] {
+  --glz14-local-ambient-tint: transparent;
+  --glz14-render-border: var(--glz1-border-strong, CanvasText);
+}
+
+/* The renderer never derives authority from visual styling. These selectors are
+ * presentation-only and intentionally do not map security/privacy/identity/recovery
+ * states to material variants.
+ */
