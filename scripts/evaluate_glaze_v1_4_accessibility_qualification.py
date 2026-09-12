@@ -21,6 +21,14 @@ DEFAULT_PLAN = ROOT / "contracts" / "v1.4" / "accessibility-qualification.candid
 HEX40 = re.compile(r"^[0-9a-f]{40}$")
 ZERO_SHA = "0" * 40
 BLOCKING_SEVERITIES = {"high", "critical"}
+VALID_ISSUE_SEVERITIES = {"info", "low", "medium", "high", "critical"}
+VALID_SCENARIO_RESULTS = {"pass", "fail", "not-tested", "not-applicable"}
+VALID_PREFERENCE_STATES = {
+    "tested-active",
+    "tested-inactive",
+    "not-supported",
+    "not-tested",
+}
 EXPECTED_PRODUCT = "Glaze UI V1.4 — Optical Material and Chromatic Depth"
 EXPECTED_VERSION = "1.4.0-candidate"
 EXPECTED_RECORD_KIND = "glaze-v1.4-accessibility-qualification-evidence-candidate"
@@ -65,6 +73,10 @@ ENVIRONMENT_FIELDS = {
     "assistiveTechnologies",
     "evidenceReferences",
 }
+SCENARIO_FIELDS = {"id", "result", "evidenceReferences", "notes"}
+PREFERENCE_OBSERVATION_FIELDS = {"state", "evidenceReferences"}
+ISSUE_REQUIRED_FIELDS = {"summary", "severity", "resolved"}
+ISSUE_FIELDS = {*ISSUE_REQUIRED_FIELDS, "reference"}
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -83,6 +95,14 @@ def _bounded_text(value: Any, maximum: int) -> str | None:
     if any(unicodedata.category(char).startswith("C") for char in value):
         return None
     return value
+
+
+def _bounded_string(value: Any, maximum: int, *, allow_none: bool = False) -> bool:
+    if value is None:
+        return allow_none
+    if not isinstance(value, str) or len(value) > maximum or value != value.strip():
+        return False
+    return not any(unicodedata.category(char).startswith("C") for char in value)
 
 
 def _valid_reference_list(value: Any, maximum_items: int) -> bool:
@@ -130,8 +150,11 @@ def evaluate_record(
     failed: list[str] = []
     structural_blockers = False
 
-    required = list(plan.get("requiredScenarios", []))
+    required_base = set(plan.get("requiredScenarios", []))
     conditional = plan.get("claimConditionalScenarios", {})
+    conditional_values = set(conditional.values())
+    allowed_scenarios = required_base | conditional_values
+    required = list(plan.get("requiredScenarios", []))
     claims = record.get("supportClaims", {}) if isinstance(record.get("supportClaims"), dict) else {}
     for claim_key, scenario_id in conditional.items():
         if claims.get(claim_key) is True:
@@ -218,7 +241,7 @@ def evaluate_record(
     if disposition.get("acceptedForAccessibilityQualification") not in {True, False}:
         reasons.append("accessibility-disposition-invalid")
         structural_blockers = True
-    if _bounded_text(disposition.get("notes"), 2000) is None:
+    if not _bounded_string(disposition.get("notes"), 4000):
         reasons.append("disposition-notes-invalid")
         structural_blockers = True
 
@@ -302,23 +325,36 @@ def evaluate_record(
     scenarios = record.get("scenarioResults")
     scenario_map: dict[str, dict[str, Any]] = {}
     duplicate_ids: set[str] = set()
-    if isinstance(scenarios, list):
+    if not isinstance(scenarios, list) or not scenarios or len(scenarios) > 100:
+        reasons.append("scenario-results-invalid")
+        structural_blockers = True
+    else:
         for entry in scenarios:
-            if not isinstance(entry, dict) or not isinstance(entry.get("id"), str):
+            if not isinstance(entry, dict) or set(entry) != SCENARIO_FIELDS:
                 reasons.append("invalid-scenario-entry")
+                structural_blockers = True
                 continue
-            scenario_id = entry["id"]
+            scenario_id = entry.get("id")
+            if _bounded_text(scenario_id, 160) is None or scenario_id not in allowed_scenarios:
+                reasons.append("invalid-scenario-id")
+                structural_blockers = True
+                continue
+            if entry.get("result") not in VALID_SCENARIO_RESULTS:
+                reasons.append(f"invalid-scenario-result:{scenario_id}")
+                structural_blockers = True
+            if not _valid_reference_list(entry.get("evidenceReferences"), 100):
+                reasons.append(f"scenario-evidence-references-invalid:{scenario_id}")
+                structural_blockers = True
+            if not _bounded_string(entry.get("notes"), 4000):
+                reasons.append(f"scenario-notes-invalid:{scenario_id}")
+                structural_blockers = True
             if scenario_id in scenario_map:
                 duplicate_ids.add(scenario_id)
             else:
                 scenario_map[scenario_id] = entry
-    else:
-        reasons.append("scenario-results-missing")
     if duplicate_ids:
         reasons.append("duplicate-scenario-ids")
 
-    required_base = set(plan.get("requiredScenarios", []))
-    conditional_values = set(conditional.values())
     for scenario_id in required:
         entry = scenario_map.get(scenario_id)
         if entry is None:
@@ -346,37 +382,56 @@ def evaluate_record(
             reasons.append(f"invalid-scenario-result:{scenario_id}")
 
     preferences = record.get("preferenceCoverage")
-    required_preferences = plan.get("preferenceEvidence", {}).get("requiredPreferences", [])
-    if not isinstance(preferences, dict):
-        reasons.append("preference-coverage-missing")
-    else:
-        for preference in required_preferences:
-            observation = preferences.get(preference)
-            if not isinstance(observation, dict):
-                reasons.append(f"preference-evidence-missing:{preference}")
-                continue
-            state = observation.get("state")
-            evidence = observation.get("evidenceReferences")
-            if state == "not-tested" or state is None:
-                reasons.append(f"preference-not-tested:{preference}")
-            elif state == "not-supported":
-                if not _valid_reference_list(evidence, 25) or not evidence:
-                    reasons.append(f"unsupported-preference-missing-evidence:{preference}")
-            elif state in ("tested-active", "tested-inactive"):
-                if not _valid_reference_list(evidence, 25) or not evidence:
-                    reasons.append(f"tested-preference-missing-evidence:{preference}")
-            else:
-                reasons.append(f"invalid-preference-state:{preference}")
+    required_preferences = list(plan.get("preferenceEvidence", {}).get("requiredPreferences", []))
+    if not isinstance(preferences, dict) or set(preferences) != set(required_preferences):
+        reasons.append("preference-coverage-fields-invalid")
+        structural_blockers = True
+        preferences = preferences if isinstance(preferences, dict) else {}
+    for preference in required_preferences:
+        observation = preferences.get(preference)
+        if not isinstance(observation, dict) or set(observation) != PREFERENCE_OBSERVATION_FIELDS:
+            reasons.append(f"preference-evidence-shape-invalid:{preference}")
+            structural_blockers = True
+            continue
+        state = observation.get("state")
+        evidence = observation.get("evidenceReferences")
+        if state not in VALID_PREFERENCE_STATES:
+            reasons.append(f"invalid-preference-state:{preference}")
+            structural_blockers = True
+            continue
+        if not _valid_reference_list(evidence, 25):
+            reasons.append(f"preference-evidence-references-invalid:{preference}")
+            structural_blockers = True
+            continue
+        if state == "not-tested":
+            reasons.append(f"preference-not-tested:{preference}")
+        elif state == "not-supported":
+            if not evidence:
+                reasons.append(f"unsupported-preference-missing-evidence:{preference}")
+        elif state in ("tested-active", "tested-inactive"):
+            if not evidence:
+                reasons.append(f"tested-preference-missing-evidence:{preference}")
 
     unresolved_blocking = []
     issues = record.get("issues")
-    if isinstance(issues, list):
-        for issue in issues:
-            if isinstance(issue, dict) and issue.get("severity") in BLOCKING_SEVERITIES and issue.get("resolved") is not True:
-                unresolved_blocking.append(issue.get("summary", "unnamed issue"))
-    else:
-        reasons.append("issues-array-missing")
+    if not isinstance(issues, list) or len(issues) > 100:
+        reasons.append("issues-array-invalid")
         structural_blockers = True
+    else:
+        for issue in issues:
+            if (
+                not isinstance(issue, dict)
+                or not ISSUE_REQUIRED_FIELDS <= set(issue) <= ISSUE_FIELDS
+                or _bounded_text(issue.get("summary"), 1000) is None
+                or issue.get("severity") not in VALID_ISSUE_SEVERITIES
+                or issue.get("resolved") not in {True, False}
+                or not _bounded_string(issue.get("reference"), 1000, allow_none=True)
+            ):
+                reasons.append("invalid-issue-entry")
+                structural_blockers = True
+                continue
+            if issue["severity"] in BLOCKING_SEVERITIES and issue["resolved"] is not True:
+                unresolved_blocking.append(issue["summary"])
     if unresolved_blocking:
         reasons.append("unresolved-high-or-critical-issue")
 
