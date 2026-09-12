@@ -15,10 +15,14 @@
     "evidenceSchema": "contracts/v1.4/accessibility-qualification-evidence.schema.candidate.json",
     "evaluator": "scripts/evaluate_glaze_v1_4_accessibility_qualification.py",
     "packetGenerator": "scripts/prepare_glaze_v1_4_accessibility_qualification_packet.py",
+    "observationCaptureRuntime": "js/glaze-v1.4-accessibility-observation-capture.candidate.mjs",
+    "observationCaptureReference": "reference/glaze-v1.4-accessibility-observation-capture.candidate.html",
+    "observationCaptureReferenceRuntime": "reference/glaze-v1.4-accessibility-observation-capture.candidate.mjs",
     "validator": "scripts/validate_glaze_v1_4_accessibility_qualification.py",
     "recordTemplate": "evidence/v1.4/templates/accessibility-qualification-record.candidate.json",
     "regression": "tests/test_glaze_v1_4_accessibility_qualification.py",
-    "packetRegression": "tests/test_glaze_v1_4_accessibility_qualification_packet.py"
+    "packetRegression": "tests/test_glaze_v1_4_accessibility_qualification_packet.py",
+    "observationCaptureRegression": "tests/glaze-v1.4-accessibility-observation-capture.test.mjs"
   },
   "evaluationPolicy": {
     "exactSourceRevisionRequired": true,
@@ -52,6 +56,32 @@
     "claimedAssistiveTechnologyScenarioStartsNotTested": true,
     "unclaimedAssistiveTechnologyScenarioStartsNotApplicable": true,
     "acceptedEvidenceRequiresSeparateGovernedReview": true
+  },
+  "observationCapturePolicy": {
+    "preparedOrInProgressExactBoundRecordRequired": true,
+    "sourceRevisionMutable": false,
+    "sourceTreeRevisionMutable": false,
+    "localDetectionMayOnlyProvideHints": true,
+    "localDetectionIsQualificationEvidence": false,
+    "reviewerConfirmationRequiredForTestedPreference": true,
+    "reviewerEvidenceReferenceRequiredForTestedOrUnsupportedPreference": true,
+    "reviewerEvidenceReferenceRequiredForScenarioPassOrFail": true,
+    "automaticPreferenceAcceptanceAllowed": false,
+    "automaticScenarioPassAllowed": false,
+    "automaticHumanAcceptanceAllowed": false,
+    "automaticAccessibilityQualificationAllowed": false,
+    "automaticLifecycleAcceptanceAllowed": false,
+    "browserIdentitySniffingAllowed": false,
+    "networkAccessRequired": false,
+    "telemetryRequired": false,
+    "analyticsRequired": false,
+    "persistentStorageRequired": false,
+    "exportRequiresExplicitUserAction": true,
+    "capturedStatus": "in-progress",
+    "capturedHumanReviewStatus": "pending",
+    "capturedEvaluatorDisposition": "blocked",
+    "capturedAcceptedForAccessibilityQualification": false,
+    "capturedAcceptedForLifecycleGate": false
   },
   "evaluatorDispositions": [
     "blocked",
