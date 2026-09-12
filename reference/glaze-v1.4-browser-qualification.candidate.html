@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Glaze UI V1.4 Browser Capability Candidate</title>
+  <link rel="stylesheet" href="../css/glaze-v1.4-optical-runtime.candidate.css">
+  <style>
+    :root { color-scheme: light dark; }
+    body { margin: 0; font-family: system-ui, sans-serif; background: Canvas; color: CanvasText; }
+    main { max-width: 72rem; margin: 0 auto; padding: 2rem; display: grid; gap: 1rem; }
+    .candidate-note { padding: 1rem; border: 1px solid currentColor; border-radius: 1rem; }
+    .surface-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+    .surface { min-height: 10rem; padding: 1rem; border: 1px solid transparent; border-radius: 1.25rem; }
+    dl { display: grid; grid-template-columns: minmax(10rem, 1fr) 2fr; gap: .5rem 1rem; }
+    dt { font-weight: 650; }
+    dd { margin: 0; overflow-wrap: anywhere; }
+    pre { overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
+    button { font: inherit; padding: .65rem 1rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Glaze UI V1.4 Browser Capability Candidate</h1>
+      <p class="candidate-note"><strong>Candidate diagnostic only.</strong> This page does not establish browser qualification, production acceptance, Stable V1.4 status, or consumer conformance. Results stay local to this page and are not persisted or transmitted.</p>
+      <button id="glz14-rerun" type="button">Re-run local detection</button>
+      <p><a href="./glaze-v1.4-accessibility-observation-capture.candidate.html">Open the local accessibility observation capture aid</a></p>
+    </header>
+
+    <section aria-labelledby="glz14-capability-heading">
+      <h2 id="glz14-capability-heading">Detected capability snapshot</h2>
+      <dl id="glz14-capability-list"></dl>
+    </section>
+
+    <section aria-labelledby="glz14-preference-heading">
+      <h2 id="glz14-preference-heading">Accessibility and appearance preferences</h2>
+      <dl id="glz14-preference-list"></dl>
+    </section>
+
+    <section aria-labelledby="glz14-render-heading">
+      <h2 id="glz14-render-heading">Resolved reference surfaces</h2>
+      <div class="surface-grid">
+        <article class="surface glz14-reference-surface" data-glz14-demo="primary">
+          <h3>Detected runtime material</h3>
+          <p>The active candidate renderer uses the locally detected capability snapshot and recommended accessibility profile.</p>
+        </article>
+        <article class="surface glz14-reference-surface" data-glz14-demo="solid">
+          <h3>Designed solid fallback</h3>
+          <p>This surface demonstrates the explicit Reduced Transparency / unavailable-translucency fallback path.</p>
+        </article>
+      </div>
+    </section>
+
+    <section aria-labelledby="glz14-resolution-heading">
+      <h2 id="glz14-resolution-heading">Resolution diagnostics</h2>
+      <pre id="glz14-resolution-output"></pre>
+    </section>
+  </main>
+  <script type="module" src="./glaze-v1.4-browser-qualification.candidate.mjs"></script>
+</body>
+</html>

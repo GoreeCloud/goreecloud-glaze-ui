@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.4.optical-material.tokens.candidate",
+  "product": "Glaze UI V1.4 — Optical Material and Chromatic Depth",
+  "targetVersion": "1.4.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.3.0",
+  "namespace": "surface",
+  "compatibility": {
+    "v1_3ContractsPreserved": true,
+    "v1_3TokensRenamed": false,
+    "v1_3TokensRemoved": false,
+    "consumerAdoptionRequired": true,
+    "stableVersionUnchangedByCandidate": true
+  },
+  "opticalEngine": {
+    "layers": [
+      "base-surface",
+      "ambient-tint",
+      "diffusion",
+      "concentration",
+      "depth"
+    ],
+    "orderIsNormative": true,
+    "nestedBackdropBlurDefaultAllowed": false,
+    "accessibilityMayForceSolidFallback": true,
+    "materialEffectsDegradeBeforeContentCorrectness": true
+  },
+  "propertyContracts": {
+    "surface.opticalDepth": {
+      "type": "number",
+      "minimum": 0.18,
+      "maximum": 0.36,
+      "meaning": "perceived optical thickness of a normal translucent surface"
+    },
+    "surface.diffusion": {
+      "type": "number",
+      "minimum": 0.42,
+      "maximum": 0.68,
+      "meaning": "bounded visual diffusion applied behind the material"
+    },
+    "surface.refraction": {
+      "type": "number",
+      "minimum": 0.2,
+      "maximum": 0.48,
+      "meaning": "bounded apparent displacement and optical bending strength"
+    },
+    "surface.ambientTint": {
+      "type": "context-derived-color",
+      "meaning": "environment-aware tint response that remains subordinate to semantic color"
+    },
+    "surface.colorBleed": {
+      "type": "number",
+      "minimum": 0.08,
+      "maximum": 0.22,
+      "meaning": "bounded neighboring-scene chromatic influence"
+    },
+    "surface.highlightRim": {
+      "type": "number",
+      "minimum": 0.06,
+      "maximum": 0.14,
+      "meaning": "subtle edge-light contribution used to communicate material depth"
+    },
+    "surface.shadowDepth": {
+      "type": "number",
+      "minimum": 0.14,
+      "maximum": 0.28,
+      "meaning": "bounded depth-shadow contribution"
+    },
+    "surface.concentration": {
+      "type": "derived-number",
+      "meaning": "material concentration derived from the selected optical profile and local accessibility/performance constraints"
+    }
+  },
+  "opticalProfiles": {
+    "subdued": {
+      "opticalDepth": 0.18,
+      "diffusion": 0.46,
+      "refraction": 0.2,
+      "ambientTint": "context-derived",
+      "colorBleed": 0.08,
+      "highlightRim": 0.06,
+      "shadowDepth": 0.14,
+      "concentration": "derived-from-optical-depth"
+    },
+    "standard": {
+      "opticalDepth": 0.24,
+      "diffusion": 0.54,
+      "refraction": 0.3,
+      "ambientTint": "context-derived",
+      "colorBleed": 0.12,
+      "highlightRim": 0.09,
+      "shadowDepth": 0.18,
+      "concentration": "derived-from-optical-depth"
+    },
+    "elevated": {
+      "opticalDepth": 0.3,
+      "diffusion": 0.62,
+      "refraction": 0.4,
+      "ambientTint": "context-derived",
+      "colorBleed": 0.17,
+      "highlightRim": 0.12,
+      "shadowDepth": 0.24,
+      "concentration": "derived-from-optical-depth"
+    },
+    "transient": {
+      "opticalDepth": 0.22,
+      "diffusion": 0.58,
+      "refraction": 0.34,
+      "ambientTint": "context-derived",
+      "colorBleed": 0.14,
+      "highlightRim": 0.1,
+      "shadowDepth": 0.2,
+      "concentration": "derived-from-optical-depth"
+    },
+    "deep": {
+      "opticalDepth": 0.36,
+      "diffusion": 0.68,
+      "refraction": 0.48,
+      "ambientTint": "context-derived",
+      "colorBleed": 0.22,
+      "highlightRim": 0.14,
+      "shadowDepth": 0.28,
+      "concentration": "derived-from-optical-depth"
+    }
+  },
+  "componentProfiles": {
+    "surface": {"opticalProfile": "standard", "cornerRadiusToken": "inherited-v1.3", "motionProfile": "inherited-v1.3"},
+    "elevated-surface": {"opticalProfile": "elevated", "cornerRadiusToken": "inherited-v1.3", "motionProfile": "inherited-v1.3"},
+    "panel": {"opticalProfile": "standard", "cornerRadiusToken": "inherited-v1.3", "motionProfile": "inherited-v1.3"},
+    "side-panel": {"opticalProfile": "standard", "cornerRadiusToken": "inherited-v1.3", "motionProfile": "inherited-v1.3"},
+    "shelf": {"opticalProfile": "subdued", "cornerRadiusToken": "inherited-v1.3", "motionProfile": "inherited-v1.3"},
+    "menu": {"opticalProfile": "transient", "cornerRadiusToken": "inherited-v1.3", "motionProfile": "inherited-v1.3"},
+    "popover": {"opticalProfile": "transient", "cornerRadiusToken": "inherited-v1.3", "motionProfile": "inherited-v1.3"},
+    "menu-bar": {"opticalProfile": "subdued", "cornerRadiusToken": "inherited-v1.3", "motionProfile": "inherited-v1.3"},
+    "card": {"opticalProfile": "standard", "cornerRadiusToken": "inherited-v1.3", "motionProfile": "inherited-v1.3"},
+    "list-row": {"opticalProfile": "subdued", "cornerRadiusToken": "inherited-v1.3", "motionProfile": "inherited-v1.3"},
+    "search-field": {"opticalProfile": "subdued", "cornerRadiusToken": "inherited-v1.3", "motionProfile": "inherited-v1.3"},
+    "selector": {"opticalProfile": "standard", "cornerRadiusToken": "inherited-v1.3", "motionProfile": "inherited-v1.3"},
+    "toolbar": {"opticalProfile": "subdued", "cornerRadiusToken": "inherited-v1.3", "motionProfile": "inherited-v1.3"},
+    "header": {"opticalProfile": "subdued", "cornerRadiusToken": "inherited-v1.3", "motionProfile": "inherited-v1.3"},
+    "footer": {"opticalProfile": "subdued", "cornerRadiusToken": "inherited-v1.3", "motionProfile": "inherited-v1.3"},
+    "dialog": {"opticalProfile": "deep", "cornerRadiusToken": "inherited-v1.3", "motionProfile": "inherited-v1.3"},
+    "toast": {"opticalProfile": "transient", "cornerRadiusToken": "inherited-v1.3", "motionProfile": "inherited-v1.3"}
+  },
+  "fallbacks": {
+    "reducedTransparency": "solid-semantic-surface",
+    "reducedMotion": "inherited-v1.3-reduced-motion",
+    "lowPerformanceTier": "static-or-solid-material",
+    "unsupportedRefraction": "diffusion-only-material"
+  },
+  "notEstablished": [
+    "stable-v1.4-release",
+    "consumer-v1.4-conformance",
+    "production-v1.4-performance-budgets",
+    "physical-device-v1.4-qualification",
+    "native-v1.4-renderer-parity",
+    "spatial-or-ar-framework-adoption"
+  ]
+}

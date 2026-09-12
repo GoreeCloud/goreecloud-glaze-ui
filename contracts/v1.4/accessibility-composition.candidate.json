@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.4.accessibility-composition.candidate",
+  "product": "Glaze UI V1.4 — Optical Material and Chromatic Depth",
+  "targetVersion": "1.4.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.3.0",
+  "semanticApiStability": "candidate-not-frozen",
+  "sourceArtifacts": {
+    "semanticRuntime": "js/glaze-v1.4-optical-runtime.candidate.mjs",
+    "compositionRuntime": "js/glaze-v1.4-accessibility-runtime.candidate.mjs",
+    "browserAdapter": "js/glaze-v1.4-browser-capabilities.candidate.mjs",
+    "webAdapter": "js/glaze-v1.4-optical-web.candidate.mjs",
+    "webRenderer": "css/glaze-v1.4-optical-runtime.candidate.css",
+    "regression": "tests/glaze-v1.4-accessibility-composition.test.mjs"
+  },
+  "compatibility": {
+    "legacyAccessibilityProfileStillAccepted": true,
+    "legacyAccessibilityProfileRemainsSummaryOnlyWhenRequirementsArePresent": true,
+    "baseSemanticResolverRemainsAvailable": true,
+    "v1_3EntrypointsPreserved": true,
+    "stableVersionUnchangedByCandidate": true,
+    "consumerAdoptionRequiresIndependentAcceptance": true
+  },
+  "requestContract": {
+    "composableDimension": "accessibilityRequirements",
+    "runtimeAcceptsArrayOrSet": true,
+    "duplicateRequirementsCollapsed": true,
+    "legacyProfileMergedIntoRequirements": true,
+    "unknownRequirementDisposition": "substituted-and-ignored",
+    "missingRequirementsDefault": "derive-from-legacy-profile-or-standard"
+  },
+  "supportedRequirements": [
+    "reduced-transparency",
+    "increased-contrast",
+    "reduced-motion",
+    "forced-colors",
+    "large-text",
+    "color-vision-accommodation",
+    "low-power-performance-constrained"
+  ],
+  "compositionPolicy": {
+    "simultaneousRequirementsPreserved": true,
+    "requirementsAreBehaviorAuthority": true,
+    "legacySummaryProfileIsBehaviorAuthority": false,
+    "legacySummaryPrecedence": [
+      "reduced-transparency",
+      "forced-colors",
+      "increased-contrast",
+      "reduced-motion",
+      "low-power-performance-constrained",
+      "large-text",
+      "color-vision-accommodation",
+      "standard"
+    ],
+    "reducedTransparencyForcesDesignedSolidMaterial": true,
+    "increasedContrastSuppressesOptionalAtmosphericEffects": true,
+    "forcedColorsIncludesIncreasedContrastSemantics": true,
+    "forcedColorsUsesSystemColorCompatibleWebTreatment": true,
+    "reducedMotionDisablesOptionalMaterialMotion": true,
+    "lowPowerPerformanceConstrainsToEfficientLevel": true,
+    "largeTextMayNotHideOrClipRequiredContent": true,
+    "colorVisionAccommodationRequiresNonChromaticStateCues": true,
+    "contentCorrectnessPrecedesOptionalOptics": true,
+    "allActiveRequirementsSurviveResolution": true
+  },
+  "webProjection": {
+    "perRequirementDataAttributes": true,
+    "summaryAccessibilityAttributeRetained": true,
+    "forcedColorsAndIncreasedContrastCanCoexistWithReducedTransparency": true,
+    "remoteAssetsRequired": false,
+    "telemetryRequired": false,
+    "analyticsRequired": false
+  },
+  "browserIntegration": {
+    "activeRequirementsRecordedIndependently": true,
+    "forcedColorsPreservedAsIndependentRequirement": true,
+    "recommendedLegacyProfileIsCompatibilitySummaryOnly": true,
+    "knownMultipleRequirementsRequireConsumerSelection": false,
+    "preferenceDetectionIsQualificationEvidence": false
+  },
+  "privacyBoundary": {
+    "requiresBrowserIdentity": false,
+    "requiresHardwareFingerprinting": false,
+    "requiresScreenCapture": false,
+    "requiresPersistentStorage": false,
+    "requiresTelemetry": false,
+    "requiresAnalytics": false,
+    "requiresNetworkAccess": false
+  },
+  "qualificationBoundary": {
+    "sourceBehaviorVerifiedByAutomatedTests": true,
+    "browserMatrixQualificationEstablished": false,
+    "assistiveTechnologyQualificationEstablished": false,
+    "physicalDeviceQualificationEstablished": false,
+    "productionPerformanceQualificationEstablished": false
+  },
+  "notEstablished": [
+    "stable-v1.4-release",
+    "consumer-v1.4-conformance",
+    "frozen-v1.4-accessibility-composition-api",
+    "browser-matrix-v1.4-qualification",
+    "assistive-technology-v1.4-qualification",
+    "physical-device-v1.4-qualification",
+    "production-v1.4-performance-budgets",
+    "native-v1.4-renderer-parity",
+    "ecosystem-wide-v1.4-adoption"
+  ]
+}

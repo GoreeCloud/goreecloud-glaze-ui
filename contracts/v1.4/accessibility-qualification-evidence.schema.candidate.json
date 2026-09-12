@@ -1,0 +1,235 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goreecloud.com/schemas/glaze-v1.4-accessibility-qualification-evidence.candidate.json",
+  "title": "Glaze UI V1.4 Accessibility Qualification Evidence Candidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "recordKind",
+    "target",
+    "status",
+    "observedAt",
+    "reviewAuthority",
+    "environment",
+    "supportClaims",
+    "preferenceCoverage",
+    "scenarioResults",
+    "issues",
+    "disposition"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "recordKind": {"const": "glaze-v1.4-accessibility-qualification-evidence-candidate"},
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["product", "targetVersion", "sourceRevision", "sourceTreeRevision"],
+      "properties": {
+        "product": {"const": "Glaze UI V1.4 — Optical Material and Chromatic Depth"},
+        "targetVersion": {"const": "1.4.0-candidate"},
+        "sourceRevision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "sourceTreeRevision": {"type": "string", "pattern": "^[0-9a-f]{40}$"}
+      }
+    },
+    "status": {"enum": ["in-progress", "review-ready", "passed", "failed", "superseded"]},
+    "observedAt": {"type": "string", "format": "date-time"},
+    "reviewAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "authority", "humanReviewStatus"],
+      "properties": {
+        "mode": {"enum": ["human", "combined", "automated"]},
+        "authority": {"type": "string", "minLength": 1, "maxLength": 240},
+        "humanReviewStatus": {"enum": ["pending", "accepted", "rejected"]}
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["platformFamily", "operatingSystem", "physicalDevice", "assistiveTechnologies", "evidenceReferences"],
+      "properties": {
+        "platformFamily": {"enum": ["web", "android", "linux", "other"]},
+        "operatingSystem": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "version"],
+          "properties": {
+            "name": {"type": "string", "minLength": 1, "maxLength": 120},
+            "version": {"type": "string", "minLength": 1, "maxLength": 120}
+          }
+        },
+        "browser": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["name", "version"],
+              "properties": {
+                "name": {"type": "string", "minLength": 1, "maxLength": 120},
+                "version": {"type": "string", "minLength": 1, "maxLength": 120}
+              }
+            }
+          ]
+        },
+        "physicalDevice": {"type": "boolean"},
+        "assistiveTechnologies": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "version", "mode"],
+            "properties": {
+              "name": {"type": "string", "minLength": 1, "maxLength": 120},
+              "version": {"type": "string", "minLength": 1, "maxLength": 120},
+              "mode": {"enum": ["screen-reader", "voice-control", "switch-control", "keyboard", "other"]}
+            }
+          }
+        },
+        "evidenceReferences": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 100,
+          "items": {"type": "string", "minLength": 1, "maxLength": 1000}
+        }
+      }
+    },
+    "supportClaims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["screenReaderClaimed", "voiceControlClaimed", "switchControlClaimed"],
+      "properties": {
+        "screenReaderClaimed": {"type": "boolean"},
+        "voiceControlClaimed": {"type": "boolean"},
+        "switchControlClaimed": {"type": "boolean"}
+      }
+    },
+    "preferenceCoverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reducedTransparency", "increasedContrast", "reducedMotion", "forcedColors"],
+      "properties": {
+        "reducedTransparency": {"$ref": "#/$defs/preferenceObservation"},
+        "increasedContrast": {"$ref": "#/$defs/preferenceObservation"},
+        "reducedMotion": {"$ref": "#/$defs/preferenceObservation"},
+        "forcedColors": {"$ref": "#/$defs/preferenceObservation"}
+      }
+    },
+    "scenarioResults": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {"$ref": "#/$defs/scenarioResult"}
+    },
+    "issues": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["summary", "severity", "resolved"],
+        "properties": {
+          "summary": {"type": "string", "minLength": 1, "maxLength": 1000},
+          "severity": {"enum": ["info", "low", "medium", "high", "critical"]},
+          "resolved": {"type": "boolean"},
+          "reference": {"type": ["string", "null"], "maxLength": 1000}
+        }
+      }
+    },
+    "disposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evaluatorDisposition", "acceptedForAccessibilityQualification", "acceptedForLifecycleGate", "notes"],
+      "properties": {
+        "evaluatorDisposition": {"enum": ["blocked", "review-ready", "failed", "accepted"]},
+        "acceptedForAccessibilityQualification": {"type": "boolean"},
+        "acceptedForLifecycleGate": {"const": false},
+        "notes": {"type": "string", "maxLength": 4000}
+      }
+    }
+  },
+  "$defs": {
+    "preferenceObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "evidenceReferences"],
+      "properties": {
+        "state": {"enum": ["tested-active", "tested-inactive", "not-supported", "not-tested"]},
+        "evidenceReferences": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 25,
+          "items": {"type": "string", "minLength": 1, "maxLength": 1000}
+        }
+      }
+    },
+    "scenarioResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "result", "evidenceReferences", "notes"],
+      "properties": {
+        "id": {
+          "enum": [
+            "source-and-runtime-identity",
+            "multi-preference-composition",
+            "reduced-transparency-solid-fallback",
+            "increased-contrast-separation",
+            "reduced-motion-motion-suppression",
+            "forced-colors-system-color-path",
+            "large-text-zoom-reflow",
+            "keyboard-focus-order",
+            "color-independent-semantic-state",
+            "screen-reader-semantics-and-announcements",
+            "voice-control-purpose-and-operation",
+            "switch-control-operability"
+          ]
+        },
+        "result": {"enum": ["pass", "fail", "not-tested", "not-applicable"]},
+        "evidenceReferences": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 100,
+          "items": {"type": "string", "minLength": 1, "maxLength": 1000}
+        },
+        "notes": {"type": "string", "maxLength": 4000}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "passed"}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "reviewAuthority": {
+            "properties": {
+              "mode": {"enum": ["human", "combined"]},
+              "humanReviewStatus": {"const": "accepted"}
+            }
+          },
+          "disposition": {
+            "properties": {
+              "evaluatorDisposition": {"const": "accepted"},
+              "acceptedForAccessibilityQualification": {"const": true},
+              "acceptedForLifecycleGate": {"const": false}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"status": {"enum": ["in-progress", "review-ready", "failed", "superseded"]}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "disposition": {
+            "properties": {
+              "acceptedForAccessibilityQualification": {"const": false},
+              "acceptedForLifecycleGate": {"const": false}
+            }
+          }
+        }
+      }
+    }
+  ]
+}

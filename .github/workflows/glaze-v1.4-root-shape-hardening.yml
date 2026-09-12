@@ -1,0 +1,40 @@
+name: Glaze V1.4 Root Shape Hardening
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  harden:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Verify fail-closed root-shape hardening is present
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          evaluator = Path("scripts/evaluate_glaze_v1_4_accessibility_qualification.py").read_text(encoding="utf-8")
+          tests = Path("tests/test_glaze_v1_4_accessibility_qualification.py").read_text(encoding="utf-8")
+
+          required_evaluator_markers = (
+              "def evaluate_record(\n    record: Any,\n",
+              "if not isinstance(record, dict):",
+              '"record-shape-invalid"',
+          )
+          for marker in required_evaluator_markers:
+              if marker not in evaluator:
+                  raise SystemExit(f"missing V1.4 root-shape hardening marker: {marker!r}")
+
+          if "def test_non_object_top_level_records_are_blocked(self) -> None:" not in tests:
+              raise SystemExit("missing non-object root regression coverage")
+          PY
+      - name: Run qualification regressions
+        run: python tests/test_glaze_v1_4_accessibility_qualification.py
+      - name: Compile evaluator and regressions
+        run: >-
+          python -m py_compile
+          scripts/evaluate_glaze_v1_4_accessibility_qualification.py
+          tests/test_glaze_v1_4_accessibility_qualification.py

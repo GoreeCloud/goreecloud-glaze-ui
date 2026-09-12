@@ -1,0 +1,284 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.4.semantic-optical-runtime.candidate",
+  "product": "Glaze UI V1.4 — Optical Material and Chromatic Depth",
+  "targetVersion": "1.4.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "implementation-candidate-artifact",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.3.0",
+  "semanticApiStability": "candidate-not-frozen",
+  "sourceArtifacts": {
+    "opticalMaterial": "tokens/glaze-v1.4-optical-material.candidate.json",
+    "runtimeResolver": "js/glaze-v1.4-optical-runtime.candidate.mjs",
+    "runtimeRegression": "tests/glaze-v1.4-optical-runtime.test.mjs",
+    "webAdapter": "js/glaze-v1.4-optical-web.candidate.mjs",
+    "webRenderer": "css/glaze-v1.4-optical-runtime.candidate.css",
+    "webRegression": "tests/glaze-v1.4-optical-web.test.mjs"
+  },
+  "compatibility": {
+    "v1_3ContractsPreserved": true,
+    "v1_3TokensRenamed": false,
+    "v1_3TokensRemoved": false,
+    "stableVersionUnchangedByCandidate": true,
+    "consumerAdoptionRequiresIndependentAcceptance": true
+  },
+  "resolutionContract": {
+    "requestDimensions": [
+      "materialRole",
+      "elevationRole",
+      "interactionState",
+      "appearanceMode",
+      "accessibilityProfile",
+      "performanceLevel",
+      "environmentalResponse",
+      "platformCapabilities"
+    ],
+    "resultFields": [
+      "requested",
+      "accepted",
+      "disposition",
+      "reasons",
+      "effectiveOpticalProfile",
+      "capabilityEvidence",
+      "fallbacks"
+    ],
+    "dispositions": [
+      "accepted",
+      "downgraded",
+      "substituted",
+      "rejected"
+    ],
+    "noImplicitAcceptance": true,
+    "unknownCapabilityIsUnsupported": true,
+    "contentCorrectnessPrecedesOptics": true,
+    "accessibilityPrecedesOptionalOptics": true,
+    "acceptedStateMustReflectRuntimeReality": true
+  },
+  "semanticMaterialRoles": {
+    "glz.material.canvas": {
+      "opticalProfile": "subdued",
+      "intent": "lowest-emphasis application canvas material"
+    },
+    "glz.material.surface": {
+      "opticalProfile": "standard",
+      "intent": "default semantic surface"
+    },
+    "glz.material.softGlaze": {
+      "opticalProfile": "subdued",
+      "intent": "quiet translucent treatment for supporting surfaces"
+    },
+    "glz.material.glaze": {
+      "opticalProfile": "standard",
+      "intent": "primary Glaze material treatment"
+    },
+    "glz.material.deepGlaze": {
+      "opticalProfile": "deep",
+      "intent": "high-separation material for modal or strongly elevated surfaces"
+    },
+    "glz.material.liveGlaze": {
+      "opticalProfile": "elevated",
+      "intent": "environment-responsive material when accepted capabilities and privacy policy permit",
+      "optionalCapabilities": [
+        "environmental-sampling",
+        "dynamic-opacity",
+        "adaptive-frost"
+      ]
+    }
+  },
+  "frostRoles": {
+    "glz.frost.clear": {
+      "renderingClass": "optical",
+      "opticalProfile": "subdued"
+    },
+    "glz.frost.mist": {
+      "renderingClass": "optical",
+      "opticalProfile": "subdued"
+    },
+    "glz.frost.standard": {
+      "renderingClass": "optical",
+      "opticalProfile": "standard"
+    },
+    "glz.frost.dense": {
+      "renderingClass": "optical",
+      "opticalProfile": "elevated"
+    },
+    "glz.frost.opaque": {
+      "renderingClass": "solid",
+      "fallback": "solid-semantic-surface"
+    }
+  },
+  "elevationRoles": {
+    "glz.elevation.embedded": {
+      "profileInfluence": "subdued"
+    },
+    "glz.elevation.raised": {
+      "profileInfluence": "standard"
+    },
+    "glz.elevation.interactive": {
+      "profileInfluence": "standard"
+    },
+    "glz.elevation.floating": {
+      "profileInfluence": "elevated"
+    },
+    "glz.elevation.modal": {
+      "profileInfluence": "deep"
+    },
+    "glz.elevation.focus": {
+      "profileInfluence": "transient"
+    }
+  },
+  "runtimeCapabilities": [
+    "backdrop-blur",
+    "translucency",
+    "dynamic-opacity",
+    "environmental-sampling",
+    "reflection",
+    "adaptive-frost",
+    "aura",
+    "edge-illumination",
+    "material-aware-motion",
+    "connected-transformation",
+    "shadow-diffusion",
+    "hdr-aware-luminance",
+    "reduced-transparency",
+    "increased-contrast",
+    "reduced-motion"
+  ],
+  "capabilityRules": {
+    "runtimeMustDeclareCapabilities": true,
+    "undeclaredCapabilitiesAccepted": false,
+    "unsupportedFeatureDisposition": "downgraded-or-substituted",
+    "requiredContentMayNotDependOnOptionalOptics": true,
+    "fullOpticalStatusRequiresAcceptedRuntimeCapabilities": true
+  },
+  "accessibilityProfiles": {
+    "standard": {
+      "mode": "normal",
+      "requiredBehavior": "resolve normally within accepted runtime capabilities"
+    },
+    "reduced-transparency": {
+      "mode": "force-solid-capable",
+      "requiredBehavior": "replace translucency-dependent material with a designed solid semantic surface"
+    },
+    "increased-contrast": {
+      "mode": "clarity-first",
+      "requiredBehavior": "increase separation and preserve semantic contrast before optional optical depth"
+    },
+    "reduced-motion": {
+      "mode": "continuity-without-decorative-motion",
+      "requiredBehavior": "disable optional material-aware motion and connected transformations while preserving state continuity"
+    },
+    "large-text": {
+      "mode": "layout-preserving",
+      "requiredBehavior": "preserve readable hierarchy and reflow without clipping or hiding required content"
+    },
+    "color-vision-accommodation": {
+      "mode": "redundant-state-cues",
+      "requiredBehavior": "never rely on chromatic treatment alone for semantic state"
+    },
+    "low-power-performance-constrained": {
+      "mode": "efficient-optics",
+      "requiredBehavior": "degrade optional optical effects before readability, interaction, or content correctness"
+    }
+  },
+  "performanceLevels": {
+    "full": {
+      "intent": "use accepted optical capabilities when resource and accessibility policy permit"
+    },
+    "balanced": {
+      "intent": "reduce sampling, reflection, blur complexity, and animated material work before content quality"
+    },
+    "efficient": {
+      "intent": "prefer static tint, bounded diffusion, or solid semantic surfaces"
+    }
+  },
+  "performanceQualification": {
+    "productionNumericBudgetsEstablished": false,
+    "physicalDeviceQualificationEstablished": false,
+    "nativeRendererParityEstablished": false,
+    "downgradeOrder": [
+      "environmental-sampling-frequency",
+      "reflection-complexity",
+      "aura-complexity",
+      "material-aware-motion",
+      "blur-complexity",
+      "translucency"
+    ]
+  },
+  "environmentalSampling": {
+    "defaultDisposition": "disabled-until-accepted",
+    "localOnly": true,
+    "ephemeral": true,
+    "purposeLimited": true,
+    "minimumPracticalRegion": true,
+    "remotePixelTransmissionAllowed": false,
+    "remoteDerivedColorTransmissionAllowed": false,
+    "persistentHistoryAllowed": false,
+    "analyticsCaptureAllowed": false,
+    "generalScreenshotPermissionRequired": false,
+    "generalScreenRecordingPermissionRequired": false,
+    "protectedSurfaceSamplingAllowed": false,
+    "privacyRestrictedSurfaceSamplingAllowed": false,
+    "fallbackWhenUnavailable": "governed-static-semantic-material"
+  },
+  "webReferenceRenderer": {
+    "implementationStatus": "source-candidate",
+    "runtimeAdapter": "js/glaze-v1.4-optical-web.candidate.mjs",
+    "stylesheet": "css/glaze-v1.4-optical-runtime.candidate.css",
+    "activation": "accepted-runtime-data-attributes",
+    "importsStableV1_3": true,
+    "automaticallyIncludedByStableEntrypoint": false,
+    "directRawOpticalConsumerContract": false,
+    "remoteAssetsRequired": false,
+    "environmentalSamplingImplemented": false,
+    "browserQualificationEstablished": false,
+    "assistiveTechnologyQualificationEstablished": false,
+    "productionPerformanceQualificationEstablished": false,
+    "nativeRendererParityEstablished": false
+  },
+  "compositorPolicy": {
+    "nestedBackdropBlurDefaultAllowed": false,
+    "automaticFullStrengthChildMaterialAllowed": false,
+    "contentCorrectnessPrecedesEffects": true,
+    "accessibilityPrecedesEffects": true,
+    "productionNumericLayerBudgetEstablished": false,
+    "degradeBeforeFailure": [
+      "environmental-sampling",
+      "reflection",
+      "aura",
+      "material-aware-motion",
+      "blur",
+      "translucency"
+    ]
+  },
+  "truthAuthority": {
+    "visualLayerIsOperationalAuthority": false,
+    "authorities": {
+      "security": "Wardveil Security",
+      "privacy": "Privacy Shield",
+      "identity": "GoreeCloud Identity",
+      "recovery": "Everkeep",
+      "applicationState": "owning GoreeCloud application or service"
+    },
+    "rules": [
+      "Glaze UI may render verified state but must not invent it",
+      "visual protection treatment cannot imply Wardveil protection without accepted Wardveil state",
+      "privacy treatment cannot imply Privacy Shield authorization without accepted Privacy Shield state",
+      "synchronized or recoverable treatment cannot imply Everkeep durability without accepted Everkeep state",
+      "authenticated treatment cannot imply authority beyond GoreeCloud Identity grants"
+    ]
+  },
+  "notEstablished": [
+    "stable-v1.4-release",
+    "consumer-v1.4-conformance",
+    "frozen-v1.4-semantic-api",
+    "production-v1.4-performance-budgets",
+    "physical-device-v1.4-qualification",
+    "browser-v1.4-renderer-qualification",
+    "native-v1.4-renderer-parity",
+    "ecosystem-wide-v1.4-adoption"
+  ]
+}

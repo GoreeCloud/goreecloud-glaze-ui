@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "id": "goreecloud.glaze-ui.v1.4.accessibility-qualification.candidate",
+  "product": "Glaze UI V1.4 — Optical Material and Chromatic Depth",
+  "targetVersion": "1.4.0-candidate",
+  "releaseLifecycle": "proposed",
+  "artifactLifecycle": "qualification-support-candidate",
+  "lifecycleAuthority": false,
+  "consumerEligible": false,
+  "sourceStable": "1.3.0",
+  "qualificationApiStability": "candidate-not-frozen",
+  "sourceArtifacts": {
+    "accessibilityComposition": "contracts/v1.4/accessibility-composition.candidate.json",
+    "evidenceSchema": "contracts/v1.4/accessibility-qualification-evidence.schema.candidate.json",
+    "evaluator": "scripts/evaluate_glaze_v1_4_accessibility_qualification.py",
+    "packetGenerator": "scripts/prepare_glaze_v1_4_accessibility_qualification_packet.py",
+    "observationCaptureRuntime": "js/glaze-v1.4-accessibility-observation-capture.candidate.mjs",
+    "observationCaptureReference": "reference/glaze-v1.4-accessibility-observation-capture.candidate.html",
+    "observationCaptureReferenceRuntime": "reference/glaze-v1.4-accessibility-observation-capture.candidate.mjs",
+    "validator": "scripts/validate_glaze_v1_4_accessibility_qualification.py",
+    "recordTemplate": "evidence/v1.4/templates/accessibility-qualification-record.candidate.json",
+    "regression": "tests/test_glaze_v1_4_accessibility_qualification.py",
+    "packetRegression": "tests/test_glaze_v1_4_accessibility_qualification_packet.py",
+    "observationCaptureRegression": "tests/glaze-v1.4-accessibility-observation-capture.test.mjs"
+  },
+  "evaluationPolicy": {
+    "exactSourceRevisionRequired": true,
+    "exactSourceTreeRevisionRequired": true,
+    "sourceAndTreeMustBeNonPlaceholderForReviewReadyOrAccepted": true,
+    "deterministicEvaluation": true,
+    "failClosed": true,
+    "evaluatorMayMutateEvidence": false,
+    "evaluatorMayGrantHumanAcceptance": false,
+    "evaluatorMayGrantLifecycleStatus": false,
+    "automatedFeatureDetectionIsQualificationEvidence": false,
+    "automatedRegressionPassingIsQualificationEvidence": false,
+    "humanOrCombinedReviewRequiredForAcceptance": true,
+    "unresolvedHighOrCriticalIssueBlocksAcceptance": true,
+    "passScenarioRequiresEvidenceReferences": true,
+    "allRequiredScenariosMustPass": true,
+    "allClaimedAssistiveTechnologyScenariosMustPass": true,
+    "acceptedAccessibilityQualificationDoesNotGrantLifecycleGate": true
+  },
+  "packetPreparationPolicy": {
+    "exactSourceRevisionRequired": true,
+    "exactSourceTreeRevisionRequired": true,
+    "outputRestrictedToQualificationDraftArea": true,
+    "preparedStatus": "in-progress",
+    "preparedHumanReviewStatus": "pending",
+    "preparedEvaluatorDisposition": "blocked",
+    "preparedAcceptedForAccessibilityQualification": false,
+    "preparedAcceptedForLifecycleGate": false,
+    "preparedPacketMayFabricateEvidenceReferences": false,
+    "preparedPacketMayFabricateScenarioPassOrFail": false,
+    "claimedAssistiveTechnologyScenarioStartsNotTested": true,
+    "unclaimedAssistiveTechnologyScenarioStartsNotApplicable": true,
+    "acceptedEvidenceRequiresSeparateGovernedReview": true
+  },
+  "observationCapturePolicy": {
+    "preparedOrInProgressExactBoundRecordRequired": true,
+    "sourceRevisionMutable": false,
+    "sourceTreeRevisionMutable": false,
+    "localDetectionMayOnlyProvideHints": true,
+    "localDetectionIsQualificationEvidence": false,
+    "reviewerConfirmationRequiredForTestedPreference": true,
+    "reviewerEvidenceReferenceRequiredForTestedOrUnsupportedPreference": true,
+    "reviewerEvidenceReferenceRequiredForScenarioPassOrFail": true,
+    "automaticPreferenceAcceptanceAllowed": false,
+    "automaticScenarioPassAllowed": false,
+    "automaticHumanAcceptanceAllowed": false,
+    "automaticAccessibilityQualificationAllowed": false,
+    "automaticLifecycleAcceptanceAllowed": false,
+    "browserIdentitySniffingAllowed": false,
+    "networkAccessRequired": false,
+    "telemetryRequired": false,
+    "analyticsRequired": false,
+    "persistentStorageRequired": false,
+    "exportRequiresExplicitUserAction": true,
+    "capturedStatus": "in-progress",
+    "capturedHumanReviewStatus": "pending",
+    "capturedEvaluatorDisposition": "blocked",
+    "capturedAcceptedForAccessibilityQualification": false,
+    "capturedAcceptedForLifecycleGate": false
+  },
+  "evaluatorDispositions": [
+    "blocked",
+    "review-ready",
+    "failed",
+    "accepted"
+  ],
+  "requiredScenarios": [
+    "source-and-runtime-identity",
+    "multi-preference-composition",
+    "reduced-transparency-solid-fallback",
+    "increased-contrast-separation",
+    "reduced-motion-motion-suppression",
+    "forced-colors-system-color-path",
+    "large-text-zoom-reflow",
+    "keyboard-focus-order",
+    "color-independent-semantic-state"
+  ],
+  "claimConditionalScenarios": {
+    "screenReaderClaimed": "screen-reader-semantics-and-announcements",
+    "voiceControlClaimed": "voice-control-purpose-and-operation",
+    "switchControlClaimed": "switch-control-operability"
+  },
+  "scenarioRules": {
+    "requiredScenarioMayBeNotApplicable": false,
+    "conditionalScenarioMayBeNotApplicableOnlyWhenClaimIsFalse": true,
+    "anyRequiredOrClaimedFailureFailsQualification": true,
+    "missingOrNotTestedRequiredScenarioBlocksQualification": true,
+    "duplicateScenarioIdsAllowed": false,
+    "unknownScenarioMaySatisfyRequiredCoverage": false
+  },
+  "preferenceEvidence": {
+    "requiredPreferences": [
+      "reducedTransparency",
+      "increasedContrast",
+      "reducedMotion",
+      "forcedColors"
+    ],
+    "states": [
+      "tested-active",
+      "tested-inactive",
+      "not-supported",
+      "not-tested"
+    ],
+    "notTestedBlocksReviewReady": true,
+    "notSupportedRequiresEvidenceReference": true
+  },
+  "acceptanceRules": {
+    "recordStatus": "passed",
+    "reviewAuthorityModes": [
+      "human",
+      "combined"
+    ],
+    "humanReviewStatus": "accepted",
+    "acceptedForAccessibilityQualification": true,
+    "acceptedForLifecycleGate": false,
+    "allRequiredAndClaimedScenarios": "pass",
+    "allRequiredPreferenceEvidence": "tested-or-evidenced-not-supported",
+    "noUnresolvedHighOrCriticalIssues": true
+  },
+  "nonPromotionBoundary": {
+    "acceptedAccessibilitySliceIsStableV1_4": false,
+    "acceptedAccessibilitySliceIsConsumerConformance": false,
+    "acceptedAccessibilitySliceIsBrowserMatrixQualification": false,
+    "acceptedAccessibilitySliceIsPhysicalDeviceQualification": false,
+    "acceptedAccessibilitySliceIsProductionPerformanceQualification": false,
+    "acceptedAccessibilitySliceIsNativeRendererParity": false,
+    "lifecyclePromotionRequiresSeparateGovernedDecision": true,
+    "downstreamConsumerAcceptanceRemainsIndependent": true
+  },
+  "notEstablished": [
+    "stable-v1.4-release",
+    "consumer-v1.4-conformance",
+    "frozen-v1.4-accessibility-qualification-api",
+    "browser-matrix-v1.4-qualification",
+    "assistive-technology-v1.4-qualification",
+    "physical-device-v1.4-qualification",
+    "production-v1.4-performance-budgets",
+    "native-v1.4-renderer-parity",
+    "ecosystem-wide-v1.4-adoption"
+  ]
+}

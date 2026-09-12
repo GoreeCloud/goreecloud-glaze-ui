@@ -1,0 +1,122 @@
+name: Glaze V1.4 to V1.3 Compatibility Boundary
+
+on:
+  pull_request:
+    paths:
+      - 'tokens/glaze-v1.4-optical-material.candidate.json'
+      - 'contracts/v1.4/**'
+      - 'css/glaze-v1.4-*'
+      - 'js/glaze-v1.4-*'
+      - 'reference/glaze-v1.4-*'
+      - 'evidence/v1.4/**'
+      - 'scripts/validate_glaze_v1.4_optical_material.py'
+      - 'scripts/validate_glaze_v1_4_semantic_optical_runtime.py'
+      - 'scripts/validate_glaze_v1_4_browser_capabilities.py'
+      - 'scripts/validate_glaze_v1_4_accessibility_composition.py'
+      - 'scripts/validate_glaze_v1_4_accessibility_qualification.py'
+      - 'tokens/glaze-v1.3-material.candidate.json'
+      - 'consumers/registry.json'
+      - 'schemas/consumer-registry.schema.json'
+      - 'scripts/validate_consumer_registry.py'
+      - 'scripts/validate_consumer_summary.py'
+      - 'CONSUMERS.md'
+      - 'registry/lifecycle.json'
+      - 'VERSION'
+      - '.github/workflows/glaze-v1.4-v1.3-compatibility.yml'
+  push:
+    branches:
+      - 'upgrade/glaze-ui-v1.4-*'
+      - main
+    paths:
+      - 'tokens/glaze-v1.4-optical-material.candidate.json'
+      - 'contracts/v1.4/**'
+      - 'css/glaze-v1.4-*'
+      - 'js/glaze-v1.4-*'
+      - 'reference/glaze-v1.4-*'
+      - 'evidence/v1.4/**'
+      - 'scripts/validate_glaze_v1.4_optical_material.py'
+      - 'scripts/validate_glaze_v1_4_semantic_optical_runtime.py'
+      - 'scripts/validate_glaze_v1_4_browser_capabilities.py'
+      - 'scripts/validate_glaze_v1_4_accessibility_composition.py'
+      - 'scripts/validate_glaze_v1_4_accessibility_qualification.py'
+      - 'tokens/glaze-v1.3-material.candidate.json'
+      - 'consumers/registry.json'
+      - 'schemas/consumer-registry.schema.json'
+      - 'scripts/validate_consumer_registry.py'
+      - 'scripts/validate_consumer_summary.py'
+      - 'CONSUMERS.md'
+      - 'registry/lifecycle.json'
+      - 'VERSION'
+      - '.github/workflows/glaze-v1.4-v1.3-compatibility.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-v1-4-v1-3-compatibility:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out exact candidate revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Verify exact source revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected='${{ github.event.pull_request.head.sha || github.sha }}'
+          actual="$(git rev-parse HEAD)"
+          printf 'Expected source revision: %s\nActual source revision:   %s\n' "$expected" "$actual"
+          test "$actual" = "$expected"
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+
+      - name: Compile compatibility validators
+        run: |
+          python -m py_compile scripts/validate_consumer_registry.py
+          python -m py_compile scripts/validate_consumer_summary.py
+          python -m py_compile scripts/validate_glaze_v1.4_optical_material.py
+
+      - name: Validate Stable V1.3 lifecycle authority
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('.')
+          version = (root / 'VERSION').read_text(encoding='utf-8').strip()
+          lifecycle = json.loads((root / 'registry/lifecycle.json').read_text(encoding='utf-8'))
+
+          assert version == '1.3.0', f'current VERSION must remain 1.3.0 while V1.4 is candidate, got {version}'
+          assert lifecycle.get('currentStable') == version
+          assert lifecycle.get('currentOfficial') == version
+          current = [release for release in lifecycle.get('releases', []) if release.get('version') == version]
+          assert len(current) == 1
+          assert current[0].get('status') == 'stable'
+          assert current[0].get('consumerEligible') is True
+          print('Stable V1.3 lifecycle authority preserved: PASS')
+          PY
+
+      - name: Validate current V1.3 consumer boundary
+        run: |
+          python scripts/validate_consumer_registry.py
+          python scripts/validate_consumer_summary.py
+
+      - name: Validate V1.4 candidate preserves V1.3 contract boundary
+        run: python scripts/validate_glaze_v1.4_optical_material.py
+
+      - name: Parse governed lifecycle and consumer sources
+        run: |
+          python -m json.tool consumers/registry.json >/dev/null
+          python -m json.tool registry/lifecycle.json >/dev/null
+          python -m json.tool tokens/glaze-v1.3-material.candidate.json >/dev/null
+          python -m json.tool tokens/glaze-v1.4-optical-material.candidate.json >/dev/null
+
+      - name: Verify validation did not mutate tracked source
+        run: git diff --exit-code
