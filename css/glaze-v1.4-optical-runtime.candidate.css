@@ -5,9 +5,9 @@
  * Stable V1.3 web entrypoint, but it is not imported by that Stable entrypoint and
  * therefore cannot opt consumers into V1.4 implicitly.
  *
- * Runtime authority comes from js/glaze-v1.4-optical-runtime.candidate.mjs. The
- * renderer consumes accepted data-glaze-v14-* state; applications should not bind
- * directly to the normalized optical values below.
+ * Runtime authority comes from the V1.4 semantic optical runtime plus the bounded
+ * accessibility-composition layer. The renderer consumes accepted data-glaze-v14-*
+ * state; applications should not bind directly to the normalized optical values below.
  */
 @import url("./glaze-v1.3.0.css");
 
@@ -134,7 +134,8 @@
 
 /* Reduced Transparency and unavailable translucency use a designed opaque surface. */
 [data-glaze-v14-rendering="solid-semantic-surface"],
-[data-glaze-v14-profile="solid-semantic-surface"] {
+[data-glaze-v14-profile="solid-semantic-surface"],
+[data-glaze-v14-a11y-reduced-transparency="on"] {
   --glz14-render-background: var(--glz1-raised, Canvas);
   --glz14-render-blur: 0px;
   background-image: none;
@@ -142,10 +143,24 @@
   backdrop-filter: none;
 }
 
-/* Increased Contrast removes optional atmospheric tint from the reference renderer. */
-[data-glaze-v14-accessibility="increased-contrast"] {
+/* Increased Contrast is independently composable with other accessibility requirements. */
+[data-glaze-v14-accessibility="increased-contrast"],
+[data-glaze-v14-a11y-increased-contrast="on"],
+[data-glaze-v14-a11y-forced-colors="on"] {
   --glz14-local-ambient-tint: transparent;
   --glz14-render-border: var(--glz1-border-strong, CanvasText);
+}
+
+/* Forced Colors preserves system-color-compatible surfaces instead of inventing a palette. */
+[data-glaze-v14-a11y-forced-colors="on"] {
+  --glz14-render-background: Canvas;
+  --glz14-render-border: CanvasText;
+  --glz14-render-shadow: none;
+  --glz14-local-ambient-tint: transparent;
+  background-color: Canvas;
+  color: CanvasText;
+  border-color: CanvasText;
+  box-shadow: none;
 }
 
 /* The renderer never derives authority from visual styling. These selectors are
