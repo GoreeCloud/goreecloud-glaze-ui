@@ -8,6 +8,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT = ROOT / "contracts" / "v1.4" / "semantic-optical-runtime.candidate.json"
 OPTICAL = ROOT / "tokens" / "glaze-v1.4-optical-material.candidate.json"
+RUNTIME = ROOT / "js" / "glaze-v1.4-optical-runtime.candidate.mjs"
+RUNTIME_TEST = ROOT / "tests" / "glaze-v1.4-optical-runtime.test.mjs"
 VERSION = ROOT / "VERSION"
 
 EXPECTED_REQUEST_DIMENSIONS = [
@@ -86,6 +88,11 @@ EXPECTED_TRUTH_AUTHORITIES = {
     "identity": "GoreeCloud Identity",
     "recovery": "Everkeep",
     "applicationState": "owning GoreeCloud application or service",
+}
+EXPECTED_SOURCE_ARTIFACTS = {
+    "opticalMaterial": "tokens/glaze-v1.4-optical-material.candidate.json",
+    "runtimeResolver": "js/glaze-v1.4-optical-runtime.candidate.mjs",
+    "runtimeRegression": "tests/glaze-v1.4-optical-runtime.test.mjs",
 }
 
 
@@ -310,11 +317,26 @@ def validate_not_established(contract: dict) -> None:
         fail("candidate must explicitly preserve all non-established V1.4 boundaries")
 
 
+def validate_runtime_artifacts() -> None:
+    for path in (RUNTIME, RUNTIME_TEST):
+        if not path.is_file():
+            fail(f"governed runtime artifact missing: {path.relative_to(ROOT)}")
+    runtime_text = RUNTIME.read_text(encoding="utf-8")
+    for required_export in (
+        "export function resolveOpticalRuntime",
+        "export function applyOpticalRuntime",
+        "export function createOpticalRuntimeResolver",
+        "export const opticalRuntimeCandidate",
+    ):
+        if required_export not in runtime_text:
+            fail(f"runtime resolver is missing required export: {required_export}")
+
+
 def validate_contract(contract: dict, optical: dict) -> None:
     validate_lifecycle(contract)
     source = contract.get("sourceArtifacts")
-    if source != {"opticalMaterial": "tokens/glaze-v1.4-optical-material.candidate.json"}:
-        fail("semantic runtime must point to the canonical V1.4 optical-material candidate")
+    if source != EXPECTED_SOURCE_ARTIFACTS:
+        fail("semantic runtime source artifact authority drifted")
     profiles = optical.get("opticalProfiles")
     if not isinstance(profiles, dict) or not profiles:
         fail("optical-material source has no profiles")
@@ -343,6 +365,7 @@ def validate_repository_boundary(optical: dict) -> None:
 def main() -> None:
     optical = load_json(OPTICAL)
     validate_repository_boundary(optical)
+    validate_runtime_artifacts()
     validate_contract(load_json(CONTRACT), optical)
     print("Glaze UI V1.4 semantic optical runtime candidate validation passed")
 
