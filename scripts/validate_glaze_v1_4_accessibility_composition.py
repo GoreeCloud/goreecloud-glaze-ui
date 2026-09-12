@@ -144,6 +144,7 @@ def validate_contract(contract: dict) -> None:
         fail("accessibility composition must not add privacy-invasive dependencies")
 
     qualification = contract.get("qualificationBoundary", {})
+    require_true(qualification, "sourceBehaviorVerifiedByAutomatedTests", "qualificationBoundary")
     for key in (
         "browserMatrixQualificationEstablished",
         "assistiveTechnologyQualificationEstablished",
