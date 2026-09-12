@@ -32,14 +32,15 @@ This file is the repository-side feature roadmap control for Glaze UI. It record
 | FR-015 | Compose simultaneous V1.4 accessibility requirements instead of collapsing Reduced Transparency, Increased Contrast, Reduced Motion, forced-colors, large-text, color-vision accommodation, and constrained-performance behavior into a single mutually exclusive profile. | P0 | `contracts/v1.4/accessibility-composition.candidate.json` and `js/glaze-v1.4-accessibility-runtime.candidate.mjs` implemented; browser requirements compose additively; Web renderer exposes independent accessibility state; source behavior is now explicitly recorded as automated-test verified while real qualification flags remain false |
 | FR-016 | Qualify composed accessibility behavior across real browser, operating-system preference, forced-colors/high-contrast, assistive-technology, and representative device combinations without treating feature detection as acceptance evidence. | P0 | Qualification-support infrastructure is implemented and source-verified; real browser/OS/AT observations and authorized review acceptance remain pending |
 | FR-017 | Establish a canonical, exact-source V1.4 accessibility qualification evidence contract, draft record format, and deterministic fail-closed evaluator that can distinguish blocked, review-ready, failed, and accessibility-slice-accepted records without granting lifecycle promotion. | P0 | `contracts/v1.4/accessibility-qualification.candidate.json`, evidence schema, evaluator, validator, template, and regressions implemented; evaluator always keeps lifecycle-gate acceptance false |
-| FR-018 | Capture and review actual V1.4 accessibility evidence against the governed qualification contract for required preference, keyboard/focus, large-text/reflow, color-independent state, and claimed screen-reader/voice/switch scenarios. | P0 | Preparation tooling now exists, but real evidence execution remains pending; no browser/OS/AT/device qualification is claimed until actual observations, evidence references, and authorized human/combined review are supplied |
-| FR-019 | Provide a governed qualification packet generator that binds a draft to an immutable source commit/tree, confines output to the draft area, emits a capture checklist, and cannot fabricate observations, evidence references, qualification acceptance, consumer conformance, or lifecycle promotion. | P0 | `scripts/prepare_glaze_v1_4_accessibility_qualification_packet.py` and packet regressions implemented; exact implementation/workflow-scope head `e3b3996c25e7636e399c2ed763b7c9b75cc4b90c` passed dedicated run `34664367694`; packet implementation was first verified at `afbe19f4822d43d8bfd9d7c8050ee5095e76f440` in run `34664300800` |
+| FR-018 | Capture and review actual V1.4 accessibility evidence against the governed qualification contract for required preference, keyboard/focus, large-text/reflow, color-independent state, and claimed screen-reader/voice/switch scenarios. | P0 | Preparation and local observation-capture tooling now exist, but real evidence execution remains pending; no browser/OS/AT/device qualification is claimed until actual observations, evidence references, and authorized human/combined review are supplied |
+| FR-019 | Provide a governed qualification packet generator that binds a draft to an immutable source commit/tree, confines output to the draft area, emits a capture checklist, and cannot fabricate observations, evidence references, qualification acceptance, consumer conformance, or lifecycle promotion. | P0 | `scripts/prepare_glaze_v1_4_accessibility_qualification_packet.py` and packet regressions implemented and retained in the exact-head V1.4 gate |
+| FR-020 | Provide a local exact-source accessibility observation-capture adapter that loads prepared packets, shows local preference detection only as non-qualifying hints, requires explicit reviewer confirmation and evidence references for tested preference and scenario results, and exports schema-compatible local JSON without automatic human acceptance, qualification, consumer conformance, telemetry, persistence, or lifecycle promotion. | P0 | `js/glaze-v1.4-accessibility-observation-capture.candidate.mjs` plus local reference HTML/module and Node regressions implemented; exact implementation head `5c69c6428d9a8b1f07841240f0ebfba0d94440e9` passed dedicated run `34665681174`; real evidence capture/review remains pending under FR-018 |
 
 ## V1.4 current implementation boundary
 
-The repository currently contains bounded V1.4 source, executable runtime, composable accessibility, Web reference-renderer, browser-capability, accessibility-qualification-support, and qualification-packet-preparation candidates, not a V1.4 release. The candidates are rooted in Stable `1.3.0`, keep `VERSION` at `1.3.0`, have no lifecycle authority, are not consumer-eligible, and cannot establish downstream V1.4 conformance.
+The repository currently contains bounded V1.4 source, executable runtime, composable accessibility, Web reference-renderer, browser-capability, accessibility-qualification-support, qualification-packet-preparation, and local observation-capture candidates, not a V1.4 release. The candidates are rooted in Stable `1.3.0`, keep `VERSION` at `1.3.0`, have no lifecycle authority, are not consumer-eligible, and cannot establish downstream V1.4 conformance.
 
-Current source artifacts for the V1.4 optical-runtime, accessibility-composition, Web-renderer, browser-capability, accessibility-qualification-support, and packet-preparation slices are:
+Current source artifacts for the V1.4 optical-runtime, accessibility-composition, Web-renderer, browser-capability, accessibility-qualification-support, packet-preparation, and observation-capture slices are:
 
 - `tokens/glaze-v1.4-optical-material.candidate.json`
 - `contracts/v1.4/semantic-optical-runtime.candidate.json`
@@ -51,18 +52,21 @@ Current source artifacts for the V1.4 optical-runtime, accessibility-composition
 - `js/glaze-v1.4-accessibility-runtime.candidate.mjs`
 - `js/glaze-v1.4-optical-web.candidate.mjs`
 - `js/glaze-v1.4-browser-capabilities.candidate.mjs`
+- `js/glaze-v1.4-accessibility-observation-capture.candidate.mjs`
 - `css/glaze-v1.4-optical-runtime.candidate.css`
 - `reference/glaze-v1.4-browser-qualification.candidate.html`
 - `reference/glaze-v1.4-browser-qualification.candidate.mjs`
+- `reference/glaze-v1.4-accessibility-observation-capture.candidate.html`
+- `reference/glaze-v1.4-accessibility-observation-capture.candidate.mjs`
 - `evidence/v1.4/templates/accessibility-qualification-record.candidate.json`
-- `scripts/validate_glaze_v1.4_optical_material.py`
+- `scripts/validate_glaze-v1.4_optical_material.py`
 - `scripts/validate_glaze_v1_4_semantic_optical_runtime.py`
 - `scripts/validate_glaze_v1_4_browser_capabilities.py`
 - `scripts/validate_glaze_v1_4_accessibility_composition.py`
 - `scripts/validate_glaze_v1_4_accessibility_qualification.py`
 - `scripts/evaluate_glaze_v1_4_accessibility_qualification.py`
 - `scripts/prepare_glaze_v1_4_accessibility_qualification_packet.py`
-- `tests/test_glaze_v1.4_optical_material.py`
+- `tests/test_glaze-v1.4_optical_material.py`
 - `tests/test_glaze_v1_4_semantic_optical_runtime.py`
 - `tests/test_glaze_v1_4_browser_capabilities.py`
 - `tests/test_glaze_v1_4_accessibility_composition.py`
@@ -72,6 +76,7 @@ Current source artifacts for the V1.4 optical-runtime, accessibility-composition
 - `tests/glaze-v1.4-accessibility-composition.test.mjs`
 - `tests/glaze-v1.4-optical-web.test.mjs`
 - `tests/glaze-v1.4-browser-capabilities.test.mjs`
+- `tests/glaze-v1.4-accessibility-observation-capture.test.mjs`
 - `.github/workflows/glaze-v1.4-optical-material.yml`
 
 The scalar semantic runtime remains available for compatibility and resolves candidate material/elevation/accessibility/performance/environment intent against explicitly declared runtime capabilities. The accessibility-composition layer builds above it and preserves simultaneous requirements in `accessibilityRequirements`; the retained scalar `accessibilityProfile` becomes a compatibility summary rather than the behavior authority when composed requirements are present. Reduced Transparency can force a solid semantic surface while forced-colors/increased contrast, Reduced Motion, and efficient-performance requirements continue to apply independently.
@@ -86,7 +91,9 @@ The accessibility qualification-support layer adds an exact-source evidence sche
 
 The packet-preparation layer turns that contract into a safe qualification-session starting point. It binds each prepared record to an exact commit and tree, accepts only explicit review/environment/support-claim metadata, keeps review pending, leaves all required preference and scenario evidence untested, converts claimed assistive-technology scenarios to not-tested rather than passing them, emits a capture checklist, confines generated files to `artifacts/v1.4/accessibility-qualification-drafts/`, and requires the prepared record to evaluate as blocked. It therefore reduces manual setup error without manufacturing evidence or expanding lifecycle authority.
 
-Exact implementation/workflow-scope head `e3b3996c25e7636e399c2ed763b7c9b75cc4b90c` passed dedicated workflow run `34664367694`. The gate verified the exact checked-out revision, all five V1.4 validators, all six Python regression layers, the blocked/non-promoting qualification-template invariant, an exact-source/tree-bound generated packet smoke test, executable runtime/accessibility/Web/browser Node regressions, validator/evaluator/generator compilation, and no tracked-source mutation. Packet behavior itself had already passed the same expanded gate at `afbe19f4822d43d8bfd9d7c8050ee5095e76f440` in run `34664300800`; `e3b3996c...` adds only the workflow push-path correction. This is source-level candidate and qualification-support evidence only.
+The local observation-capture layer consumes only an exact-bound in-progress packet with pending human review. Local media-query results may be shown as reviewer hints but are never written as qualification evidence automatically. Tested/unsupported preference states and pass/fail scenario results require explicit reviewer evidence references; required or claimed scenarios cannot be marked not-applicable; duplicate scenario IDs and malformed support claims are rejected; exact source/tree identity is immutable. Export is an explicit local action using a browser-generated JSON file. The capture adapter does not require network access, telemetry, analytics, persistent storage, browser-identity sniffing, or screen-capture APIs, and it always keeps human review pending plus accessibility/lifecycle acceptance false.
+
+Exact implementation head `5c69c6428d9a8b1f07841240f0ebfba0d94440e9` passed dedicated workflow run `34665681174`. The gate verified the exact checked-out revision, all five V1.4 validators, all six Python regression layers, the blocked/non-promoting qualification-template invariant, an exact-source/tree-bound generated packet smoke test, executable runtime/accessibility/Web/browser/observation-capture Node regressions, validator/evaluator/generator compilation, and no tracked-source mutation. This is source-level candidate and qualification-support evidence only.
 
 Human visual acceptance, real assistive-technology acceptance, browser matrix qualification, physical-device qualification, native-renderer parity, production frame-time/GPU/power budgets, consumer migration evidence, and Stable V1.4 lifecycle promotion remain outside the evidence established by these candidates.
 
