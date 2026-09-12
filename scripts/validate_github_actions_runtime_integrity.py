@@ -89,13 +89,19 @@ def validate() -> dict[str, object]:
             files_without_uses.append(relative)
             continue
         for ref in refs:
-            parsed = parse_external(ref)
+            try:
+                parsed = parse_external(ref)
+            except IntegrityError as error:
+                raise IntegrityError(f"{relative}: {error}") from error
             if parsed is None:
                 local_reusable.add(ref)
                 continue
             action, revision = parsed
             expected = APPROVED_EXTERNAL_ACTIONS[action]
-            require(revision == expected["sha"], f"{relative} pins {action} to {revision}, expected approved {expected['release']} SHA {expected['sha']}")
+            require(
+                revision == expected["sha"],
+                f"{relative} pins {action} to {revision}, expected approved {expected['release']} SHA {expected['sha']}",
+            )
             entry = observed.setdefault(action, {"count": 0, "workflows": []})
             entry["count"] = int(entry["count"]) + 1
             workflows = entry["workflows"]

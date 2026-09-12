@@ -1,0 +1,225 @@
+schema_version: "0.3"
+
+component:
+  type: platform-system
+  id: goreecloud-glaze-ui
+  product_name: GLAZE UI V1.3 — Adaptive Resonance
+  repository: GoreeCloud/goreecloud-glaze-ui
+
+lifecycle: stable
+version: 1.3.0
+
+supported_platforms:
+  - web
+
+api:
+  versions:
+    - "1.3.0"
+  endpoints: []
+
+platform_systems:
+  manager:
+    result: not-applicable-justified
+    version: null
+    evidence:
+      - GLAZE_UI_V1_3.md
+      - CONFORMANCE.md
+    notes: GLAZE UI is a presentation and interaction authority, not GoreeCloud Manager's operational or administrative runtime authority. Consuming applications retain their own Manager integration obligations.
+  privacy_shield:
+    result: not-applicable-justified
+    version: null
+    evidence:
+      - GLAZE_UI_V1_3.md
+      - EVIDENCE_PRESENTATION.md
+    notes: GLAZE UI defines privacy-respecting presentation behavior but does not authorize data processing, consent, retention, or privacy policy. Consumers integrate Privacy Shield where their data responsibilities apply.
+  wardveil_security:
+    result: not-applicable-justified
+    version: null
+    evidence:
+      - SECURITY.md
+      - STATES.md
+      - EVIDENCE_PRESENTATION.md
+    notes: GLAZE UI can present evidence-backed security state but does not enforce security controls or inherit Wardveil authority. Consumer runtimes remain responsible for substantive Wardveil integration.
+  everkeep:
+    result: not-applicable-justified
+    version: null
+    evidence:
+      - STABILITY.md
+      - acceptance/v1.3-stable.md
+      - releases/1.3.0.md
+    notes: The shared design-system source owns no user backup or recovery state requiring an Everkeep runtime adapter. Versioned release and rollback records remain source-level provenance, while consumers retain their own Everkeep obligations.
+  glaze_ui:
+    result: not-applicable-justified
+    version: 1.3.0
+    evidence:
+      - VERSION
+      - GLAZE_UI_V1_3.md
+      - registry/lifecycle.json
+      - consumers/registry.json
+      - acceptance/v1.3-stable.md
+      - releases/1.3.0.md
+    notes: This repository implements the GLAZE UI authority itself, so a separate GLAZE-UI-to-GLAZE-UI integration is not applicable.
+  mesh:
+    result: not-applicable-justified
+    version: null
+    evidence:
+      - GLAZE_UI_V1_3.md
+      - CONFORMANCE.md
+    notes: GLAZE UI is distributed as versioned design-system source and does not perform service discovery, evidence transport, event routing, or runtime coordination. Consumers retain any applicable GoreeCloud Mesh obligations.
+    capabilities: []
+    dependencies: []
+    published_events: []
+    consumed_events: []
+  identity:
+    result: not-applicable-justified
+    version: null
+    evidence:
+      - SECURITY.md
+      - STATES.md
+    notes: GLAZE UI defines presentation primitives for identity and authorization surfaces but does not authenticate principals, issue credentials, own sessions, or authorize actions. Consumers retain GoreeCloud Identity obligations.
+  sync:
+    result: not-applicable-justified
+    version: null
+    evidence:
+      - GLAZE_UI_V1_3.md
+      - CONFORMANCE.md
+      - STATES.md
+    notes: GLAZE UI defines presentation and interaction contracts for synchronization state where a consumer needs them, but the design-system repository does not replicate, reconcile, or transport application data. Consumers retain their own GoreeCloud Sync obligations.
+
+health:
+  health_endpoint: null
+  readiness_endpoint: null
+
+continuity:
+  backup:
+    required: false
+    requirements: []
+  restore:
+    required: false
+    requirements: []
+  export:
+    required: true
+    requirements:
+      - Keep Stable CSS, JavaScript, JSON contracts and tokens, Markdown specifications, reference assets, and release records independently retrievable in standard source formats.
+  portability:
+    required: true
+    requirements:
+      - Keep the design-system contract implementation-independent enough for web consumers and separately accepted native mappings without requiring a proprietary GoreeCloud runtime to interpret the Stable source specification.
+
+external_dependencies: []
+
+compatibility:
+  platform_contract: "0.3"
+  glaze_ui_required: null
+  requires:
+    - goreecloud-platform-contract==0.3
+  provides:
+    - glaze-ui==1.3.0
+
+evidence:
+  acceptance_tests:
+    - id: glaze-v1.3-api-contract
+      category: api
+      path: js/glaze-v1.3.0.mjs
+      revision: ff34f232f295c9dcb07e4c681f66d4104d0b9323
+      result: passed
+      observed_at: "2026-09-08T17:08:08Z"
+      notes: The published Stable runtime entrypoint and source contract are part of the V1.3 release authority; this design-system API is source-level rather than an HTTP service API.
+    - id: glaze-v1.3-accessibility-source-contract
+      category: accessibility
+      path: acceptance/v1.3-stable.md
+      revision: ff34f232f295c9dcb07e4c681f66d4104d0b9323
+      result: passed
+      observed_at: "2026-09-08T17:08:08Z"
+      notes: V1.3.0 Stable includes its source-level accessibility and alternate-preference contract. Manual assistive-technology and physical-device qualification remain explicitly deferred to V1.3.1 and are not claimed by this evidence.
+    - id: glaze-v1.3-web-supported-platform
+      category: supported-platform
+      path: css/glaze-v1.3.0.css
+      revision: ff34f232f295c9dcb07e4c681f66d4104d0b9323
+      result: passed
+      observed_at: "2026-09-08T17:08:08Z"
+      notes: The published Stable web entrypoint is the supported platform claimed by this manifest. Native and physical-device qualification remains separately gated.
+    - id: glaze-v1.3-security-boundary
+      category: security
+      path: SECURITY.md
+      revision: ff34f232f295c9dcb07e4c681f66d4104d0b9323
+      result: passed
+      observed_at: "2026-09-08T17:08:08Z"
+      notes: GLAZE UI carries no authentication, authorization, encryption, malware-protection, or trust authority and must preserve evidence-backed security presentation boundaries.
+    - id: glaze-v1.3-privacy-boundary
+      category: privacy
+      path: EVIDENCE_PRESENTATION.md
+      revision: ff34f232f295c9dcb07e4c681f66d4104d0b9323
+      result: passed
+      observed_at: "2026-09-08T17:08:08Z"
+      notes: Presentation contracts preserve underlying privacy authority and do not convert visual state into privacy authorization or policy truth.
+    - id: glaze-v1.3-backup-boundary
+      category: backup
+      path: releases/1.3.0.md
+      revision: ff34f232f295c9dcb07e4c681f66d4104d0b9323
+      result: passed
+      observed_at: "2026-09-08T17:08:08Z"
+      notes: This category records that V1.3 owns no mutable user backup state. Release-source preservation is versioned provenance only and is not represented as an Everkeep backup acceptance claim.
+    - id: glaze-v1.3-restore-boundary
+      category: restore
+      path: STABILITY.md
+      revision: ff34f232f295c9dcb07e4c681f66d4104d0b9323
+      result: passed
+      observed_at: "2026-09-08T17:08:08Z"
+      notes: GLAZE UI has no runtime user-state restore boundary. Rollback uses governed release identities and source history without manufacturing Everkeep restore evidence.
+    - id: glaze-v1.3-export-portability
+      category: export-portability
+      path: GLAZE_UI_V1_3.md
+      revision: ff34f232f295c9dcb07e4c681f66d4104d0b9323
+      result: passed
+      observed_at: "2026-09-08T17:08:08Z"
+      notes: Stable contracts are distributed as standard CSS, JavaScript, JSON, Markdown, and reference-source artifacts that remain independently interpretable.
+    - id: glaze-v1.3-documentation
+      category: documentation
+      path: README.md
+      revision: ff34f232f295c9dcb07e4c681f66d4104d0b9323
+      result: passed
+      observed_at: "2026-09-08T17:08:08Z"
+      notes: The V1.3 contract, lifecycle registry, consumer registry, acceptance authority, migration guidance, Stable entrypoints, and deferred V1.3.1 obligations identify the current product boundary.
+    - id: glaze-v1.3-integration
+      category: integration
+      path: MIGRATION_V1_2_TO_V1_3.md
+      revision: ff34f232f295c9dcb07e4c681f66d4104d0b9323
+      result: passed
+      observed_at: "2026-09-08T17:08:08Z"
+      notes: V1.3 provides an explicit downstream migration contract while preserving independent consumer acceptance and the authority of all other Integral Platform Systems.
+    - id: glaze-v1.3-release-acceptance
+      category: release
+      path: acceptance/v1.3-stable.md
+      revision: ff34f232f295c9dcb07e4c681f66d4104d0b9323
+      result: passed
+      observed_at: "2026-09-08T17:08:08Z"
+      notes: The owner release decision established V1.3.0 as Official Stable and consumer-eligible while explicitly carrying unfinished human, manual, native, performance, Personalization-adapter, and source-cleanup qualification into V1.3.1.
+  release:
+    - id: glaze-v1.3.0-stable-release
+      version: 1.3.0
+      revision: ff34f232f295c9dcb07e4c681f66d4104d0b9323
+      path: releases/1.3.0.md
+      result: published
+      observed_at: "2026-09-08T17:08:08Z"
+      artifact_digest: git-tree:39e3ae41537016868a2cbc6e779b42a48ca61c31
+      notes: GitHub Release v1.3.0 is published from the recorded Stable release commit; the release record preserves the V1.3.1 carry-forward boundary.
+
+conformance:
+  status: conformant
+  validated_at: "2026-09-11T15:31:00Z"
+  evidence:
+    - goreecloud.platform.yaml
+    - README.md
+    - VERSION
+    - GLAZE_UI_V1_3.md
+    - registry/lifecycle.json
+    - consumers/registry.json
+    - css/glaze-v1.3.0.css
+    - js/glaze-v1.3.0.mjs
+    - acceptance/v1.3-stable.md
+    - releases/1.3.0.md
+    - MIGRATION_V1_2_TO_V1_3.md
+    - SECURITY.md
+    - EVIDENCE_PRESENTATION.md
+  blockers: []

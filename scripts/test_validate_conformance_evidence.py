@@ -7,7 +7,7 @@ from datetime import UTC, datetime, timedelta
 
 from validate_conformance_evidence import EvidenceError, validate_record
 
-NOW = datetime(2026, 9, 1, 23, 55, tzinfo=UTC)
+NOW = datetime(2026, 9, 11, 15, 45, tzinfo=UTC)
 REVISION = "a" * 40
 
 
@@ -27,11 +27,11 @@ def integration(applicable: bool = True, valid: bool = True) -> dict[str, object
 
 def valid_record() -> dict[str, object]:
     return {
-        "schema_version": 2,
+        "schema_version": 3,
         "producer": {"system": "goreecloud-acceptance", "authoritative": True},
         "target": {
             "application": "example-app",
-            "glaze_version": "1.2.0",
+            "glaze_version": "1.3.0",
             "source_revision": REVISION,
             "form_factors": ["mobile", "desktop"],
         },
@@ -43,11 +43,13 @@ def valid_record() -> dict[str, object]:
             "application_specific_acceptance_complete": True,
         },
         "integral_platform_integrations": {
+            "manager": integration(),
             "identity": integration(),
             "privacy_shield": integration(),
             "wardveil_security": integration(),
             "everkeep": integration(),
             "goreecloud_mesh": integration(),
+            "sync": integration(),
         },
         "evidence_references": ["evidence://glaze/current"],
     }
@@ -60,8 +62,20 @@ class EvidenceValidityTests(unittest.TestCase):
 
     def test_rejects_wrong_glaze_product_version(self) -> None:
         record = valid_record()
-        record["target"]["glaze_version"] = "1.0.1"  # type: ignore[index]
-        with self.assertRaisesRegex(EvidenceError, "current GLAZE UI V1.2 product version"):
+        record["target"]["glaze_version"] = "1.2.0"  # type: ignore[index]
+        with self.assertRaisesRegex(EvidenceError, "current GLAZE UI V1.3 product version"):
+            validate_record(record, now=NOW)
+
+    def test_requires_manager_integration_evaluation(self) -> None:
+        record = valid_record()
+        del record["integral_platform_integrations"]["manager"]  # type: ignore[index]
+        with self.assertRaisesRegex(EvidenceError, "manager"):
+            validate_record(record, now=NOW)
+
+    def test_requires_sync_integration_evaluation(self) -> None:
+        record = valid_record()
+        del record["integral_platform_integrations"]["sync"]  # type: ignore[index]
+        with self.assertRaisesRegex(EvidenceError, "sync"):
             validate_record(record, now=NOW)
 
     def test_rejects_expired_evidence(self) -> None:
@@ -86,7 +100,7 @@ class EvidenceValidityTests(unittest.TestCase):
 
     def test_accepts_rfc3339_z_suffix(self) -> None:
         record = valid_record()
-        record["observed_at"] = "2026-09-01T23:55:00Z"
+        record["observed_at"] = "2026-09-11T15:45:00Z"
         self.assertEqual(validate_record(record, now=NOW), record)
 
     def test_rejects_accepted_claim_without_application_acceptance(self) -> None:

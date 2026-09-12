@@ -1,0 +1,41 @@
+name: Platform Contract
+
+on:
+  pull_request:
+    paths:
+      - goreecloud.platform.yaml
+      - .github/workflows/platform-contract.yml
+      - VERSION
+      - GLAZE_UI_V1_3.md
+      - registry/lifecycle.json
+      - consumers/registry.json
+      - acceptance/v1.3-stable.md
+      - releases/1.3.0.md
+      - ACCEPTANCE.md
+      - ADOPTION.md
+      - CONFORMANCE.md
+  push:
+    branches:
+      - main
+    paths:
+      - goreecloud.platform.yaml
+      - .github/workflows/platform-contract.yml
+      - VERSION
+      - GLAZE_UI_V1_3.md
+      - registry/lifecycle.json
+      - consumers/registry.json
+      - acceptance/v1.3-stable.md
+      - releases/1.3.0.md
+      - ACCEPTANCE.md
+      - ADOPTION.md
+      - CONFORMANCE.md
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    uses: GoreeCloud/GoreeCloud/.github/workflows/reusable-platform-manifest.yml@908701c6795ffcd608bd3d8a1e787395a04f1d62
+    with:
+      manifest-path: goreecloud.platform.yaml
