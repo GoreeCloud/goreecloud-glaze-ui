@@ -95,6 +95,41 @@ class GlazeV14AccessibilityQualificationTests(unittest.TestCase):
         self.assertTrue(result["acceptedForAccessibilityQualification"])
         self.assertFalse(result["acceptedForLifecycleGate"])
 
+    def test_hidden_top_level_field_is_blocked(self) -> None:
+        record = accepted_record()
+        record["stableApproved"] = True
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn("record-fields-invalid", result["reasons"])
+
+    def test_hidden_target_override_is_blocked(self) -> None:
+        record = accepted_record()
+        record["target"]["productionAccepted"] = True
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn("target-fields-invalid", result["reasons"])
+
+    def test_hidden_review_authority_field_is_blocked(self) -> None:
+        record = accepted_record()
+        record["reviewAuthority"]["autoAccepted"] = True
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn("review-authority-fields-invalid", result["reasons"])
+
+    def test_hidden_disposition_field_is_blocked(self) -> None:
+        record = accepted_record()
+        record["disposition"]["acceptedForStable"] = True
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn("disposition-fields-invalid", result["reasons"])
+
+    def test_hidden_support_claim_is_blocked(self) -> None:
+        record = accepted_record()
+        record["supportClaims"]["automaticConformanceClaimed"] = True
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn("support-claims-invalid", result["reasons"])
+
     def test_observation_time_without_timezone_is_blocked(self) -> None:
         record = accepted_record()
         record["observedAt"] = "2026-09-12T00:00:00"
