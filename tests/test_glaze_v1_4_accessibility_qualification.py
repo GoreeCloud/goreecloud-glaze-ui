@@ -9,15 +9,25 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 EVALUATOR_PATH = ROOT / "scripts" / "evaluate_glaze_v1_4_accessibility_qualification.py"
-SPEC = importlib.util.spec_from_file_location("evaluate_glaze_v1_4_accessibility_qualification", EVALUATOR_PATH)
+SPEC = importlib.util.spec_from_file_location(
+    "evaluate_glaze_v1_4_accessibility_qualification", EVALUATOR_PATH
+)
 assert SPEC and SPEC.loader
 evaluator = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = evaluator
 SPEC.loader.exec_module(evaluator)
 
-with (ROOT / "contracts" / "v1.4" / "accessibility-qualification.candidate.json").open(encoding="utf-8") as handle:
+with (
+    ROOT / "contracts" / "v1.4" / "accessibility-qualification.candidate.json"
+).open(encoding="utf-8") as handle:
     PLAN = json.load(handle)
-with (ROOT / "evidence" / "v1.4" / "templates" / "accessibility-qualification-record.candidate.json").open(encoding="utf-8") as handle:
+with (
+    ROOT
+    / "evidence"
+    / "v1.4"
+    / "templates"
+    / "accessibility-qualification-record.candidate.json"
+).open(encoding="utf-8") as handle:
     TEMPLATE = json.load(handle)
 
 SOURCE = "a" * 40
@@ -40,7 +50,9 @@ def accepted_record() -> dict:
         "operatingSystem": {"name": "Test OS", "version": "1"},
         "browser": {"name": "Test Browser", "version": "1"},
         "physicalDevice": True,
-        "assistiveTechnologies": [{"name": "Keyboard", "version": "system", "mode": "keyboard"}],
+        "assistiveTechnologies": [
+            {"name": "Keyboard", "version": "system", "mode": "keyboard"}
+        ],
         "evidenceReferences": ["artifact:environment.json"],
     }
     for observation in record["preferenceCoverage"].values():
@@ -70,7 +82,9 @@ class GlazeV14AccessibilityQualificationTests(unittest.TestCase):
         self.assertFalse(result["acceptedForAccessibilityQualification"])
         self.assertFalse(result["acceptedForLifecycleGate"])
 
-    def test_complete_human_accepted_record_is_accepted_only_for_accessibility_slice(self) -> None:
+    def test_complete_human_accepted_record_is_accepted_only_for_accessibility_slice(
+        self,
+    ) -> None:
         result = evaluator.evaluate_record(
             accepted_record(),
             PLAN,
@@ -89,7 +103,41 @@ class GlazeV14AccessibilityQualificationTests(unittest.TestCase):
         self.assertIn("browser-evidence-invalid", result["reasons"])
         self.assertFalse(result["acceptedForAccessibilityQualification"])
 
-    def test_machine_complete_record_with_pending_human_review_is_review_ready(self) -> None:
+    def test_environment_with_unknown_field_is_blocked(self) -> None:
+        record = accepted_record()
+        record["environment"]["automaticQualification"] = True
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn("environment-fields-invalid", result["reasons"])
+
+    def test_duplicate_assistive_technology_entry_is_blocked(self) -> None:
+        record = accepted_record()
+        record["environment"]["assistiveTechnologies"].append(
+            copy.deepcopy(record["environment"]["assistiveTechnologies"][0])
+        )
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn("duplicate-assistive-technology", result["reasons"])
+
+    def test_invalid_assistive_technology_mode_is_blocked(self) -> None:
+        record = accepted_record()
+        record["environment"]["assistiveTechnologies"][0]["mode"] = "auto-accepted"
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn("assistive-technology-inventory-invalid", result["reasons"])
+
+    def test_duplicate_environment_evidence_reference_is_blocked(self) -> None:
+        record = accepted_record()
+        record["environment"]["evidenceReferences"].append(
+            record["environment"]["evidenceReferences"][0]
+        )
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn("environment-evidence-references-invalid", result["reasons"])
+
+    def test_machine_complete_record_with_pending_human_review_is_review_ready(
+        self,
+    ) -> None:
         record = accepted_record()
         record["status"] = "review-ready"
         record["reviewAuthority"]["humanReviewStatus"] = "pending"
@@ -102,7 +150,9 @@ class GlazeV14AccessibilityQualificationTests(unittest.TestCase):
     def test_missing_required_scenario_is_blocked(self) -> None:
         record = accepted_record()
         record["scenarioResults"] = [
-            scenario for scenario in record["scenarioResults"] if scenario["id"] != "keyboard-focus-order"
+            scenario
+            for scenario in record["scenarioResults"]
+            if scenario["id"] != "keyboard-focus-order"
         ]
         result = evaluator.evaluate_record(record, PLAN)
         self.assertEqual(result["evaluatorDisposition"], "blocked")
@@ -113,7 +163,9 @@ class GlazeV14AccessibilityQualificationTests(unittest.TestCase):
         record["supportClaims"]["screenReaderClaimed"] = True
         result = evaluator.evaluate_record(record, PLAN)
         self.assertEqual(result["evaluatorDisposition"], "blocked")
-        self.assertIn("screen-reader-semantics-and-announcements", result["missingScenarioIds"])
+        self.assertIn(
+            "screen-reader-semantics-and-announcements", result["missingScenarioIds"]
+        )
 
     def test_required_scenario_failure_fails_qualification(self) -> None:
         record = accepted_record()
@@ -132,16 +184,20 @@ class GlazeV14AccessibilityQualificationTests(unittest.TestCase):
             expected_source_tree_revision=TREE,
         )
         self.assertEqual(result["evaluatorDisposition"], "blocked")
-        self.assertIn("source-revision-does-not-match-expected-revision", result["reasons"])
+        self.assertIn(
+            "source-revision-does-not-match-expected-revision", result["reasons"]
+        )
 
     def test_unresolved_high_issue_is_blocked(self) -> None:
         record = accepted_record()
-        record["issues"] = [{
-            "summary": "Blocking accessibility defect",
-            "severity": "high",
-            "resolved": False,
-            "reference": "issue:1",
-        }]
+        record["issues"] = [
+            {
+                "summary": "Blocking accessibility defect",
+                "severity": "high",
+                "resolved": False,
+                "reference": "issue:1",
+            }
+        ]
         result = evaluator.evaluate_record(record, PLAN)
         self.assertEqual(result["evaluatorDisposition"], "blocked")
         self.assertIn("unresolved-high-or-critical-issue", result["reasons"])
@@ -152,7 +208,9 @@ class GlazeV14AccessibilityQualificationTests(unittest.TestCase):
         result = evaluator.evaluate_record(record, PLAN)
         self.assertEqual(result["evaluatorDisposition"], "failed")
         self.assertFalse(result["acceptedForLifecycleGate"])
-        self.assertIn("accessibility-evidence-may-not-grant-lifecycle-gate", result["reasons"])
+        self.assertIn(
+            "accessibility-evidence-may-not-grant-lifecycle-gate", result["reasons"]
+        )
 
     def test_automated_only_review_cannot_accept(self) -> None:
         record = accepted_record()
