@@ -12,7 +12,7 @@ import copy
 import json
 import re
 import unicodedata
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -113,16 +113,18 @@ def _valid_reference_list(value: Any, maximum_items: int) -> bool:
     return all(item is not None for item in normalized) and len(set(normalized)) == len(normalized)
 
 
-def _valid_observed_at(value: Any) -> bool:
-    """Require an RFC3339-style timestamp with explicit timezone information."""
+def _parse_observed_at(value: Any) -> datetime | None:
+    """Parse a canonical-enough timestamp with explicit timezone information."""
     if not isinstance(value, str) or not value or value != value.strip():
-        return False
+        return None
     normalized = value[:-1] + "+00:00" if value.endswith("Z") else value
     try:
         parsed = datetime.fromisoformat(normalized)
     except ValueError:
-        return False
-    return parsed.tzinfo is not None and parsed.utcoffset() is not None
+        return None
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        return None
+    return parsed.astimezone(timezone.utc)
 
 
 def _result(disposition: str, reasons: list[str], *, required: list[str], missing: list[str], failed: list[str]) -> dict[str, Any]:
@@ -143,6 +145,7 @@ def evaluate_record(
     *,
     expected_source_revision: str | None = None,
     expected_source_tree_revision: str | None = None,
+    evaluation_time: datetime | None = None,
 ) -> dict[str, Any]:
     """Evaluate one evidence record without mutating it."""
     record = copy.deepcopy(record)
@@ -150,6 +153,11 @@ def evaluate_record(
     missing: list[str] = []
     failed: list[str] = []
     structural_blockers = False
+
+    evaluated_at = evaluation_time or datetime.now(timezone.utc)
+    if evaluated_at.tzinfo is None or evaluated_at.utcoffset() is None:
+        raise ValueError("evaluation_time must include timezone information")
+    evaluated_at = evaluated_at.astimezone(timezone.utc)
 
     required_base = set(plan.get("requiredScenarios", []))
     conditional = plan.get("claimConditionalScenarios", {})
@@ -180,8 +188,12 @@ def evaluate_record(
     if record.get("recordKind") != EXPECTED_RECORD_KIND:
         reasons.append("record-kind-invalid")
         structural_blockers = True
-    if not _valid_observed_at(record.get("observedAt")):
+    observed_at = _parse_observed_at(record.get("observedAt"))
+    if observed_at is None:
         reasons.append("observation-time-invalid")
+        structural_blockers = True
+    elif observed_at > evaluated_at:
+        reasons.append("observation-time-from-future")
         structural_blockers = True
 
     target = record.get("target", {}) if isinstance(record.get("target"), dict) else {}
