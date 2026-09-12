@@ -26,32 +26,45 @@ This file is the repository-side feature roadmap control for Glaze UI. It record
 | FR-009 | Establish a semantic optical runtime contract so consumers request material/elevation/accessibility intent instead of binding directly to raw optical values, and require runtimes to report accepted, downgraded, substituted, or rejected outcomes. | P0 | Contract plus executable semantic resolver implemented as candidate; API remains candidate/not frozen; exact-head automated validation green |
 | FR-010 | Enforce privacy-preserving environmental sampling, truthful operational-state authority, accessibility-first degradation, and non-claimed performance/native qualification in the V1.4 runtime contract. | P0 | Contract and executable resolver enforce local/ephemeral sampling boundaries, protected/privacy-restricted surface blocking, accessibility fallbacks, and truth-authority separation; platform qualification pending |
 | FR-011 | Provide a bounded Web reference renderer for accepted V1.4 semantic optical state without exposing raw optical values as the consumer contract or granting visual-layer operational authority. | P0 | Dedicated candidate Web adapter and stylesheet implemented at `js/glaze-v1.4-optical-web.candidate.mjs` and `css/glaze-v1.4-optical-runtime.candidate.css`; exact-head runtime/Web regressions green; browser/device visual qualification pending |
-| FR-012 | Maintain deterministic capability negotiation and fallback regression coverage for V1.4 optical runtime and Web rendering behavior. | P0 | Python contract validators plus executable runtime/Web Node regressions are integrated into the exact-head V1.4 CI gate; implementation head `1868e111431c60d80aefad38d360e15d3cc974bf` passed run `34661235305`; production/native acceptance not established |
+| FR-012 | Maintain deterministic capability negotiation and fallback regression coverage for V1.4 optical runtime and Web rendering behavior. | P0 | Python contract validators plus executable runtime/Web regressions remain in the exact-head V1.4 CI gate; production/native acceptance not established |
+| FR-013 | Add a privacy-bounded browser capability adapter that detects only local, synchronous rendering capabilities and accessibility/appearance preferences, fails closed on missing evidence, and avoids browser identity, hardware fingerprinting, network, capture, persistence, telemetry, and analytics. | P0 | `contracts/v1.4/browser-capabilities.candidate.json` and `js/glaze-v1.4-browser-capabilities.candidate.mjs` implemented as candidates; exact-head source validation green; environmental sampling, reflection, and HDR are never auto-declared |
+| FR-014 | Provide a local browser diagnostic/qualification harness that exercises the candidate browser adapter and Web renderer without representing diagnostics as browser-matrix, assistive-technology, device, performance, consumer, or release qualification. | High | Local candidate harness implemented at `reference/glaze-v1.4-browser-qualification.candidate.html` with companion module; source regressions green; real browser/device qualification remains pending |
 
 ## V1.4 current implementation boundary
 
-The repository currently contains bounded V1.4 source, executable runtime, and Web reference-renderer candidates, not a V1.4 release. The candidates are rooted in Stable `1.3.0`, keep `VERSION` at `1.3.0`, have no lifecycle authority, are not consumer-eligible, and cannot establish downstream V1.4 conformance.
+The repository currently contains bounded V1.4 source, executable runtime, Web reference-renderer, and browser-capability candidates, not a V1.4 release. The candidates are rooted in Stable `1.3.0`, keep `VERSION` at `1.3.0`, have no lifecycle authority, are not consumer-eligible, and cannot establish downstream V1.4 conformance.
 
-Current source artifacts for the V1.4 optical-runtime and Web-renderer slices are:
+Current source artifacts for the V1.4 optical-runtime, Web-renderer, and browser-capability slices are:
 
 - `tokens/glaze-v1.4-optical-material.candidate.json`
 - `contracts/v1.4/semantic-optical-runtime.candidate.json`
+- `contracts/v1.4/browser-capabilities.candidate.json`
 - `js/glaze-v1.4-optical-runtime.candidate.mjs`
 - `js/glaze-v1.4-optical-web.candidate.mjs`
+- `js/glaze-v1.4-browser-capabilities.candidate.mjs`
 - `css/glaze-v1.4-optical-runtime.candidate.css`
-- `scripts/validate_glaze_v1.4_optical_material.py`
+- `reference/glaze-v1.4-browser-qualification.candidate.html`
+- `reference/glaze-v1.4-browser-qualification.candidate.mjs`
+- `scripts/validate_glaze-v1.4_optical_material.py`
 - `scripts/validate_glaze_v1_4_semantic_optical_runtime.py`
-- `tests/test_glaze_v1.4_optical_material.py`
+- `scripts/validate_glaze_v1_4_browser_capabilities.py`
+- `tests/test_glaze-v1.4_optical_material.py`
 - `tests/test_glaze_v1_4_semantic_optical_runtime.py`
+- `tests/test_glaze_v1_4_browser_capabilities.py`
 - `tests/glaze-v1.4-optical-runtime.test.mjs`
 - `tests/glaze-v1.4-optical-web.test.mjs`
+- `tests/glaze-v1.4-browser-capabilities.test.mjs`
 - `.github/workflows/glaze-v1.4-optical-material.yml`
 
 The semantic runtime resolves candidate material/elevation/accessibility/performance/environment intent against explicitly declared runtime capabilities. It records accepted runtime state and downgrade/substitution reasons, preserves designed solid material fallbacks, blocks adaptive sampling on protected or privacy-restricted surfaces, and does not expose raw optical property values as the application-facing contract.
 
 The bounded Web renderer consumes that accepted state through a dedicated JavaScript adapter and candidate stylesheet. It locally builds on Stable V1.3 rendering primitives, preserves optical/static/solid fallback paths, requires no remote assets, is not imported by the Stable V1.3 entrypoint, and does not implement environmental pixel sampling or create security, privacy, identity, recovery, or application-state authority.
 
-Exact implementation head `1868e111431c60d80aefad38d360e15d3cc974bf` passed dedicated workflow run `34661235305`. The gate verified the exact checked-out revision, both V1.4 contract validators, both Python regression suites, executable runtime and Web Node regressions, validator compilation, and no tracked-source mutation. This is source-level evidence only.
+The browser capability adapter adds local, synchronous feature detection for bounded CSS/Web Animation support and local accessibility/appearance media preferences. It fails closed if evidence is absent; never auto-declares environmental sampling, reflection, or HDR-aware luminance; and does not inspect browser identity, device-memory/hardware-concurrency values, battery/network details, screen dimensions, capture APIs, persistent storage, telemetry, or analytics. Multiple active accessibility preferences remain visible to consumer policy rather than being treated as browser qualification evidence.
+
+The local browser diagnostic harness exercises those candidate paths without persisting or transmitting results and without converting local detection into a browser-matrix or release claim.
+
+Exact implementation head `68f9368f869eacff79b4abfdfd9b287442c07a54` passed dedicated workflow run `34662105347`. The gate verified the exact checked-out revision, all three V1.4 validators, all three Python regression layers, executable runtime/Web/browser Node regressions, validator compilation, and no tracked-source mutation. This is source-level evidence only.
 
 Human visual acceptance, assistive-technology acceptance, browser matrix qualification, physical-device qualification, native-renderer parity, production frame-time/GPU/power budgets, consumer migration evidence, and Stable V1.4 lifecycle promotion remain outside the evidence established by these candidates.
 
