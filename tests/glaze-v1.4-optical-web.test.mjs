@@ -40,6 +40,7 @@ test('web adapter projects accepted semantic runtime state without raw optical v
   assert.equal(target.dataset.glazeV14Profile, 'standard');
   assert.equal(target.dataset.glazeV14Rendering, 'optical-glaze');
   assert.equal(target.dataset.glazeV14Accessibility, 'standard');
+  assert.equal(target.dataset.glazeV14AccessibilityRequirements, '');
   assert.equal(target.dataset.glazeV14BackdropBlur, 'on');
   assert.equal(properties.get('--glz14-optical-profile'), 'standard');
   assert.equal(properties.has('--glz14-optical-depth'), false);
@@ -58,8 +59,69 @@ test('web adapter preserves reduced-transparency solid fallback state', () => {
   assert.equal(result.disposition, 'substituted');
   assert.equal(target.dataset.glazeV14Rendering, 'solid-semantic-surface');
   assert.equal(target.dataset.glazeV14Profile, 'solid-semantic-surface');
+  assert.equal(target.dataset.glazeV14A11yReducedTransparency, 'on');
   assert.equal(target.dataset.glazeV14Translucency, 'off');
   assert.equal(target.dataset.glazeV14BackdropBlur, 'off');
+});
+
+test('web adapter projects simultaneous accessibility requirements independently', () => {
+  const {target} = fakeTarget();
+  const result = applyOpticalWebRuntime(target, {
+    accessibilityRequirements: [
+      'reduced-transparency',
+      'forced-colors',
+      'reduced-motion',
+      'low-power-performance-constrained'
+    ],
+    performanceLevel: 'full',
+    platformCapabilities: [
+      ...BASE_CAPABILITIES,
+      'reflection',
+      'aura',
+      'edge-illumination',
+      'material-aware-motion',
+      'connected-transformation'
+    ]
+  });
+
+  assert.deepEqual(result.accepted.accessibilityRequirements, [
+    'reduced-transparency',
+    'forced-colors',
+    'reduced-motion',
+    'low-power-performance-constrained'
+  ]);
+  assert.equal(target.dataset.glazeV14Accessibility, 'reduced-transparency');
+  assert.equal(target.dataset.glazeV14A11yReducedTransparency, 'on');
+  assert.equal(target.dataset.glazeV14A11yForcedColors, 'on');
+  assert.equal(target.dataset.glazeV14A11yReducedMotion, 'on');
+  assert.equal(target.dataset.glazeV14A11yPerformanceConstrained, 'on');
+  assert.equal(target.dataset.glazeV14A11yIncreasedContrast, 'off');
+  assert.equal(target.dataset.glazeV14Reflection, 'off');
+  assert.equal(target.dataset.glazeV14Aura, 'off');
+  assert.equal(target.dataset.glazeV14MaterialMotion, 'off');
+});
+
+test('browser capability adapter preparation is consumed by the web adapter', () => {
+  const capabilityAdapter = {
+    prepareRequest(request) {
+      return {
+        request: {
+          ...request,
+          accessibilityRequirements: ['reduced-motion', 'forced-colors'],
+          platformCapabilities: ['translucency', 'backdrop-blur', 'material-aware-motion', 'reflection']
+        }
+      };
+    }
+  };
+  const adapter = createOpticalWebAdapter({capabilityAdapter});
+  const {target} = fakeTarget();
+  const result = adapter.apply(target, {accessibilityProfile: 'standard', performanceLevel: 'full'});
+
+  assert.deepEqual(result.accepted.accessibilityRequirements, ['forced-colors', 'reduced-motion']);
+  assert.equal(target.dataset.glazeV14A11yForcedColors, 'on');
+  assert.equal(target.dataset.glazeV14A11yReducedMotion, 'on');
+  assert.equal(target.dataset.glazeV14Reflection, 'off');
+  assert.equal(target.dataset.glazeV14MaterialMotion, 'off');
 });
 
 test('web adapter metadata does not claim qualification or operational authority', () => {
@@ -71,6 +133,7 @@ test('web adapter metadata does not claim qualification or operational authority
 
   assert.equal(result.disposition, 'accepted');
   assert.equal(adapter.environmentalSamplingImplemented, false);
+  assert.equal(adapter.composableAccessibilityRequirementsSupported, true);
   assert.equal(adapter.browserQualificationEstablished, false);
   assert.equal(adapter.nativeRendererParityEstablished, false);
   assert.equal(adapter.telemetryRequired, false);
@@ -88,6 +151,8 @@ test('candidate stylesheet is isolated from the Stable entrypoint and imports St
   assert.match(css, /\[data-glaze-v14-rendering="optical-glaze"\]/);
   assert.match(css, /\[data-glaze-v14-rendering="static-glaze"\]/);
   assert.match(css, /\[data-glaze-v14-rendering="solid-semantic-surface"\]/);
+  assert.match(css, /\[data-glaze-v14-a11y-increased-contrast="on"\]/);
+  assert.match(css, /\[data-glaze-v14-a11y-forced-colors="on"\]/);
 });
 
 test('candidate stylesheet profile diagnostics match the governed optical token source', async () => {
