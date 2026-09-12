@@ -123,6 +123,30 @@ class GlazeV14AccessibilityQualificationTests(unittest.TestCase):
         self.assertEqual(result["evaluatorDisposition"], "blocked")
         self.assertIn("disposition-fields-invalid", result["reasons"])
 
+    def test_unknown_evaluator_disposition_is_blocked(self) -> None:
+        record = accepted_record()
+        record["disposition"]["evaluatorDisposition"] = "stable-approved"
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertIn("disposition-value-invalid", result["reasons"])
+
+    def test_passed_record_requires_accepted_disposition_label(self) -> None:
+        record = accepted_record()
+        record["disposition"]["evaluatorDisposition"] = "review-ready"
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertFalse(result["acceptedForAccessibilityQualification"])
+        self.assertIn("passed-record-disposition-inconsistent", result["reasons"])
+
+    def test_non_passed_record_cannot_claim_accessibility_acceptance(self) -> None:
+        record = accepted_record()
+        record["status"] = "review-ready"
+        record["reviewAuthority"]["humanReviewStatus"] = "pending"
+        result = evaluator.evaluate_record(record, PLAN)
+        self.assertEqual(result["evaluatorDisposition"], "blocked")
+        self.assertFalse(result["acceptedForAccessibilityQualification"])
+        self.assertIn("non-passed-record-disposition-inconsistent", result["reasons"])
+
     def test_hidden_support_claim_is_blocked(self) -> None:
         record = accepted_record()
         record["supportClaims"]["automaticConformanceClaimed"] = True
