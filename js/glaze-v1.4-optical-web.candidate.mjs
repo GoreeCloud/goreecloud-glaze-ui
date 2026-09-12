@@ -1,7 +1,7 @@
 import {
-  opticalRuntimeCandidate,
-  resolveOpticalRuntime
-} from './glaze-v1.4-optical-runtime.candidate.mjs';
+  accessibilityCompositionCandidate,
+  resolveAccessibleOpticalRuntime
+} from './glaze-v1.4-accessibility-runtime.candidate.mjs';
 
 function rootOf(target) {
   if (!target) throw new TypeError('A V1.4 optical web target is required');
@@ -10,6 +10,16 @@ function rootOf(target) {
 
 function onOff(value) {
   return value ? 'on' : 'off';
+}
+
+function accessibilityRequirementsOf(accepted) {
+  if (Array.isArray(accepted?.accessibilityRequirements)) {
+    return new Set(accepted.accessibilityRequirements);
+  }
+  if (accepted?.accessibilityProfile && accepted.accessibilityProfile !== 'standard') {
+    return new Set([accepted.accessibilityProfile]);
+  }
+  return new Set();
 }
 
 /**
@@ -29,6 +39,7 @@ export function applyResolvedOpticalWebState(target, resolved) {
 
   const accepted = resolved.accepted;
   const effects = accepted.effects;
+  const requirements = accessibilityRequirementsOf(accepted);
 
   element.dataset.glazeV14Renderer = 'web-candidate';
   element.dataset.glazeV14Material = accepted.materialRole;
@@ -36,6 +47,16 @@ export function applyResolvedOpticalWebState(target, resolved) {
   element.dataset.glazeV14Interaction = accepted.interactionState;
   element.dataset.glazeV14Appearance = accepted.appearanceMode;
   element.dataset.glazeV14Accessibility = accepted.accessibilityProfile;
+  element.dataset.glazeV14AccessibilityRequirements = [...requirements].join(' ');
+  element.dataset.glazeV14A11yReducedTransparency = onOff(requirements.has('reduced-transparency'));
+  element.dataset.glazeV14A11yIncreasedContrast = onOff(requirements.has('increased-contrast'));
+  element.dataset.glazeV14A11yReducedMotion = onOff(requirements.has('reduced-motion'));
+  element.dataset.glazeV14A11yForcedColors = onOff(requirements.has('forced-colors'));
+  element.dataset.glazeV14A11yPerformanceConstrained = onOff(
+    requirements.has('low-power-performance-constrained')
+  );
+  element.dataset.glazeV14A11yLargeText = onOff(requirements.has('large-text'));
+  element.dataset.glazeV14A11yColorVision = onOff(requirements.has('color-vision-accommodation'));
   element.dataset.glazeV14Performance = accepted.performanceLevel;
   element.dataset.glazeV14Disposition = resolved.disposition;
   element.dataset.glazeV14Profile = resolved.effectiveOpticalProfile;
@@ -61,7 +82,7 @@ export function applyResolvedOpticalWebState(target, resolved) {
 }
 
 export function applyOpticalWebRuntime(target, request = {}) {
-  return applyResolvedOpticalWebState(target, resolveOpticalRuntime(request));
+  return applyResolvedOpticalWebState(target, resolveAccessibleOpticalRuntime(request));
 }
 
 export function createOpticalWebAdapter({capabilityAdapter = null} = {}) {
@@ -71,13 +92,17 @@ export function createOpticalWebAdapter({capabilityAdapter = null} = {}) {
     telemetryRequired: false,
     analyticsRequired: false,
     environmentalSamplingImplemented: false,
+    composableAccessibilityRequirementsSupported: true,
     browserQualificationEstablished: false,
     nativeRendererParityEstablished: false,
     resolve(request = {}) {
+      if (typeof capabilityAdapter?.prepareRequest === 'function') {
+        return resolveAccessibleOpticalRuntime(capabilityAdapter.prepareRequest(request).request);
+      }
       const declared = request.platformCapabilities ?? (
         typeof capabilityAdapter?.resolve === 'function' ? capabilityAdapter.resolve() : []
       );
-      return resolveOpticalRuntime({...request, platformCapabilities: declared});
+      return resolveAccessibleOpticalRuntime({...request, platformCapabilities: declared});
     },
     apply(target, request = {}) {
       return applyResolvedOpticalWebState(target, this.resolve(request));
@@ -86,7 +111,7 @@ export function createOpticalWebAdapter({capabilityAdapter = null} = {}) {
 }
 
 export const opticalWebCandidate = Object.freeze({
-  targetVersion: opticalRuntimeCandidate.targetVersion,
+  targetVersion: accessibilityCompositionCandidate.targetVersion,
   releaseLifecycle: 'proposed',
   consumerEligible: false,
   lifecycleAuthority: false,
@@ -96,6 +121,7 @@ export const opticalWebCandidate = Object.freeze({
   telemetryRequired: false,
   analyticsRequired: false,
   environmentalSamplingImplemented: false,
+  composableAccessibilityRequirementsSupported: true,
   browserQualificationEstablished: false,
   assistiveTechnologyQualificationEstablished: false,
   physicalDeviceQualificationEstablished: false,
