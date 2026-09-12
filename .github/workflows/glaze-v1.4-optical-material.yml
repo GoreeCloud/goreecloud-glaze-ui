@@ -5,10 +5,12 @@ on:
     paths:
       - 'tokens/glaze-v1.4-optical-material.candidate.json'
       - 'contracts/v1.4/**'
+      - 'js/glaze-v1.4-*'
       - 'scripts/validate_glaze_v1.4_optical_material.py'
       - 'scripts/validate_glaze_v1_4_semantic_optical_runtime.py'
       - 'tests/test_glaze_v1.4_optical_material.py'
       - 'tests/test_glaze_v1_4_semantic_optical_runtime.py'
+      - 'tests/glaze-v1.4-*.test.mjs'
       - '.github/workflows/glaze-v1.4-optical-material.yml'
       - 'VERSION'
       - 'tokens/glaze-v1.3-material.candidate.json'
@@ -19,10 +21,12 @@ on:
     paths:
       - 'tokens/glaze-v1.4-optical-material.candidate.json'
       - 'contracts/v1.4/**'
+      - 'js/glaze-v1.4-*'
       - 'scripts/validate_glaze_v1.4_optical_material.py'
       - 'scripts/validate_glaze_v1_4_semantic_optical_runtime.py'
-      - 'tests/test_glaze_v1.4_optical_material.py'
+      - 'tests/test_glaze-v1.4-optical_material.py'
       - 'tests/test_glaze_v1_4_semantic_optical_runtime.py'
+      - 'tests/glaze-v1.4-*.test.mjs'
       - '.github/workflows/glaze-v1.4-optical-material.yml'
       - 'VERSION'
       - 'tokens/glaze-v1.3-material.candidate.json'
@@ -58,8 +62,11 @@ jobs:
       - name: Validate V1.4 semantic optical runtime candidate
         run: python scripts/validate_glaze_v1_4_semantic_optical_runtime.py
 
-      - name: Run V1.4 semantic optical runtime regression tests
+      - name: Run V1.4 semantic optical runtime contract regressions
         run: python tests/test_glaze_v1_4_semantic_optical_runtime.py
+
+      - name: Run V1.4 executable optical runtime regressions
+        run: node --test tests/glaze-v1.4-optical-runtime.test.mjs
 
       - name: Compile V1.4 validators
         run: |
