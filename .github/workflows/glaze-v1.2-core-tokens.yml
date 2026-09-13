@@ -1,8 +1,7 @@
 name: Glaze V1.2 Core Token Authority Candidate
 
 on:
-  push:
-  pull_request:
+  workflow_dispatch:
 
 jobs:
   core-token-authority:

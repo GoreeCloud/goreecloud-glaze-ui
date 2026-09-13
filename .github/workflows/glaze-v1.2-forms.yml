@@ -1,8 +1,7 @@
 name: Glaze V1.2 Forms and Data Entry Candidate
 
 on:
-  push:
-  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read

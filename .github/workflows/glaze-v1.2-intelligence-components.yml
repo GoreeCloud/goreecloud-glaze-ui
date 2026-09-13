@@ -1,7 +1,6 @@
 name: Glaze V1.2 Intelligence Components Candidate
 on:
-  push:
-  pull_request:
+  workflow_dispatch:
 jobs:
   intelligence-components-rendered:
     runs-on: ubuntu-latest
