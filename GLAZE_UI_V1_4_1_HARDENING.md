@@ -2,7 +2,7 @@
 
 **Lifecycle:** Planned follow-up  
 **Baseline:** GLAZE UI V1.4 / `1.4.0` Stable  
-**Purpose:** Human validation, human verification, physical-device qualification, subjective optical polish, and additive optical-runtime hardening.
+**Purpose:** Human validation, human verification, physical-device qualification, subjective optical polish, additive optical-runtime hardening, and fail-closed review preparation.
 
 V1.4.1 is the explicit home for human-dependent validation deferred from the V1.4.0 Stable release by owner direction. Deferral does not mean these checks passed; it means they are non-blocking for V1.4.0 lifecycle activation and remain open work for this patch track.
 
@@ -53,6 +53,48 @@ node scripts/verify_glaze_v1_4_1_optical_runtime.mjs
 ```
 
 Passing this runtime verifier proves only the bounded machine behavior described by the contract. It does not establish human optical quality, physical-device behavior, assistive-technology acceptance, real-device performance, or V1.4.1 release readiness.
+
+## Human review packet preparation
+
+Human review preparation must be convenient without allowing tooling to impersonate the reviewer or pre-authorize acceptance. V1.4.1 therefore defines a separate **review packet** format for preparing an exact revision, build, environment, and the canonical 34-check review matrix before a person begins testing.
+
+A review packet is deliberately **not** a human-validation evidence record. It uses a different `packetType`, declares `authority: pre-review-planning-only`, contains no human reviewer or reviewer role, contains no review timestamp, contains no human evidence sessions, forces every check to `pending`, starts with no findings or evidence references, and forces `promotionEligible: false`.
+
+The review-packet authority is:
+
+- `schemas/v1.4.1-human-review-packet.schema.json` — planning-only structural schema with exactly 34 pending checks.
+- `scripts/generate_glaze_v1_4_1_review_packet.mjs` — fail-closed generator for exact revision/build/environment packets.
+- `scripts/verify_glaze_v1_4_1_review_packet.mjs` — contract/schema parity and packet verifier that also proves the real human-evidence verifier rejects planning packets.
+
+Generate a packet for a real review environment before review begins:
+
+```sh
+node scripts/generate_glaze_v1_4_1_review_packet.mjs \
+  --source-revision <40-character-tested-revision> \
+  --artifact <artifact-or-build-path> \
+  --build-id <build-identifier> \
+  --platform <platform> \
+  --os-version <os-version> \
+  --device <device-or-environment> \
+  --form-factor <form-factor> \
+  --display <display-context> \
+  --input-modality <input> \
+  --assistive-technology <assistive-technology> \
+  --output review-packets/<packet-name>.json
+```
+
+`--input-modality` and `--assistive-technology` may be repeated. The generator creates missing output directories and refuses to overwrite an existing packet unless `--force` is explicitly supplied.
+
+Verify a prepared packet before giving it to a reviewer:
+
+```sh
+node scripts/verify_glaze_v1_4_1_review_packet.mjs \
+  --packet review-packets/<packet-name>.json
+```
+
+The packet verifier checks canonical contract/schema parity, exact 34-check coverage, pending-only state, empty generated findings/evidence, absence of human-authority fields, and `promotionEligible: false`. It then invokes the actual V1.4.1 human-evidence verifier and requires that verifier to reject the planning packet as evidence.
+
+After real review, do **not** simply relabel the packet or change `promotionEligible`. Human-authorized findings must be recorded in the separate human-validation record format with the real reviewer identity, role, review timestamp, tested build/revision, environment, findings, limitations, and evidence references required by the human-evidence protocol.
 
 ## Evidence rule
 
@@ -105,4 +147,4 @@ V1.4.1 may be promoted only after its claimed human/manual/physical-device evide
 
 Promotion additionally requires the structured record to cover every canonical required check, contain no unresolved exceptions, contain no `pending`, `blocked`, or `fail` results, explicitly declare an accepted decision, explicitly declare promotion eligibility, and bind every contributing review session to the exact revision supplied to the promotion gate.
 
-Machine runtime hardening may remove release-blocking implementation defects, but it cannot satisfy or waive human-authority checks. V1.4.1 remains non-promotable until both its claimed machine hardening and its required real human evidence are valid for the governed release revision.
+Machine runtime hardening may remove release-blocking implementation defects, and review-packet tooling may prepare real review work, but neither can satisfy or waive human-authority checks. V1.4.1 remains non-promotable until both its claimed machine hardening and its required real human evidence are valid for the governed release revision.

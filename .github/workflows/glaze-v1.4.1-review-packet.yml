@@ -1,0 +1,94 @@
+name: GLAZE UI V1.4.1 Human Review Packet
+
+on:
+  pull_request:
+    paths:
+      - 'contracts/v1.4.1/human-validation.contract.json'
+      - 'schemas/v1.4.1-human-review-packet.schema.json'
+      - 'scripts/generate_glaze_v1_4_1_review_packet.mjs'
+      - 'scripts/verify_glaze_v1_4_1_review_packet.mjs'
+      - 'scripts/verify_glaze_v1_4_1_human_validation.mjs'
+      - 'GLAZE_UI_V1_4_1_HARDENING.md'
+      - '.github/workflows/glaze-v1.4.1-review-packet.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'contracts/v1.4.1/human-validation.contract.json'
+      - 'schemas/v1.4.1-human-review-packet.schema.json'
+      - 'scripts/generate_glaze_v1_4_1_review_packet.mjs'
+      - 'scripts/verify_glaze_v1_4_1_review_packet.mjs'
+      - 'scripts/verify_glaze_v1_4_1_human_validation.mjs'
+      - 'GLAZE_UI_V1_4_1_HARDENING.md'
+      - '.github/workflows/glaze-v1.4.1-review-packet.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  review-packet:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Verify exact revision
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+
+      - name: Check review-packet tooling syntax
+        run: |
+          node --check scripts/generate_glaze_v1_4_1_review_packet.mjs
+          node --check scripts/verify_glaze_v1_4_1_review_packet.mjs
+
+      - name: Run generator and verifier self-tests
+        run: |
+          node scripts/generate_glaze_v1_4_1_review_packet.mjs --self-test
+          node scripts/verify_glaze_v1_4_1_review_packet.mjs --self-test
+
+      - name: Generate exact-head planning packet
+        run: |
+          node scripts/generate_glaze_v1_4_1_review_packet.mjs \
+            --source-revision "${{ github.event.pull_request.head.sha || github.sha }}" \
+            --artifact 'ci-planning-artifact-not-review-evidence' \
+            --build-id 'ci-review-packet-planning-only' \
+            --platform 'ci-structure-only' \
+            --os-version 'ci-structure-only' \
+            --device 'ci-structure-only' \
+            --form-factor 'ci-structure-only' \
+            --display 'ci-structure-only' \
+            --input-modality 'structure-only' \
+            --output artifacts/v1.4.1-human-review-packet.planning-only.json
+
+      - name: Verify generated packet stays non-evidence
+        run: |
+          node scripts/verify_glaze_v1_4_1_review_packet.mjs \
+            --packet artifacts/v1.4.1-human-review-packet.planning-only.json
+
+      - name: Preserve human-evidence authority boundary
+        run: |
+          node scripts/verify_glaze_v1_4_1_human_validation_schema.mjs
+          node scripts/verify_glaze_v1_4_1_human_validation.mjs --source-only
+          node scripts/verify_glaze_v1_4_1_human_validation.mjs --self-test
+
+      - name: Upload planning packet artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: v1.4.1-review-packet-planning-only-${{ github.event.pull_request.head.sha || github.sha }}
+          path: artifacts/v1.4.1-human-review-packet.planning-only.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Report authority boundary
+        run: |
+          echo 'Generated review packets are planning artifacts only.'
+          echo 'They contain no human reviewer authorization or review timestamp, all checks remain pending, and promotionEligible is permanently false.'
+          echo 'The real V1.4.1 human-evidence verifier must reject these packets as evidence.'

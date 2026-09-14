@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GLAZE UI V1.4.1 Human Review Packet",
+  "description": "Pre-review planning packet for a real V1.4.1 human validation session. This format is intentionally not a human-validation evidence record and can never establish acceptance or promotion eligibility.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "glazeUiVersion",
+    "baselineVersion",
+    "repository",
+    "authority",
+    "sourceRevision",
+    "build",
+    "environment",
+    "checks",
+    "promotionEligible",
+    "notice"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "packetType": {"const": "glaze-v1.4.1-human-review-packet"},
+    "glazeUiVersion": {"const": "1.4.1"},
+    "baselineVersion": {"const": "1.4.0"},
+    "repository": {"const": "GoreeCloud/goreecloud-glaze-ui"},
+    "authority": {"const": "pre-review-planning-only"},
+    "sourceRevision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact", "buildIdentifier"],
+      "properties": {
+        "artifact": {"type": "string", "minLength": 1},
+        "buildIdentifier": {"type": "string", "minLength": 1}
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "platform",
+        "osVersion",
+        "device",
+        "formFactor",
+        "display",
+        "inputModalities",
+        "assistiveTechnologies"
+      ],
+      "properties": {
+        "platform": {"type": "string", "minLength": 1},
+        "osVersion": {"type": "string", "minLength": 1},
+        "device": {"type": "string", "minLength": 1},
+        "formFactor": {"type": "string", "minLength": 1},
+        "display": {"type": "string", "minLength": 1},
+        "inputModalities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "assistiveTechnologies": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 34,
+      "maxItems": 34,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "category", "description", "status", "finding", "limitations", "evidenceRefs"],
+        "properties": {
+          "id": {
+            "enum": [
+              "optical.content-aware-frost",
+              "optical.semantic-blur-protection",
+              "optical.environment-tint",
+              "optical.chromatic-depth",
+              "optical.environmental-color-memory",
+              "accessibility.reduced-transparency",
+              "accessibility.increased-contrast",
+              "accessibility.forced-colors",
+              "accessibility.reduced-motion",
+              "accessibility.large-text",
+              "accessibility.rtl",
+              "input.keyboard",
+              "input.touch",
+              "input.pointer",
+              "input.switch",
+              "input.voice",
+              "assistive-technology.supported-set",
+              "platform.android-oem",
+              "platform.linux-compositor-window",
+              "form-factor.desktop",
+              "form-factor.mobile",
+              "form-factor.tablet",
+              "form-factor.tv",
+              "form-factor.watch",
+              "form-factor.foldable",
+              "performance.real-device",
+              "performance.thermal-power",
+              "performance.animation-smoothness",
+              "performance.degradation",
+              "polish.glass-quality",
+              "polish.depth-warmth",
+              "polish.animation-touch-feel",
+              "polish.visual-balance",
+              "identity.goreecloud-recognition"
+            ]
+          },
+          "category": {"type": "string", "minLength": 1},
+          "description": {"type": "string", "minLength": 1},
+          "status": {"const": "pending"},
+          "finding": {"const": null},
+          "limitations": {"type": "array", "maxItems": 0},
+          "evidenceRefs": {"type": "array", "maxItems": 0}
+        }
+      }
+    },
+    "promotionEligible": {"const": false},
+    "notice": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}
