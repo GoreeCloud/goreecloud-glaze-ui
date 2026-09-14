@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en" data-review-surface="v1.4.1-session-011-large-text-rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>GLAZE UI V1.4.1 — Session 011 Large Text + RTL Human Review</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.4.1.candidate.css">
+  <style>
+    :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#080b12;color:#f6f8fc}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:#080b12}
+    button{font:inherit}
+    .shell{width:min(960px,100%);margin:auto;padding:16px}
+    .authority{border:1px solid rgba(255,190,70,.58);background:rgba(70,43,5,.58);border-radius:20px;padding:16px 18px;line-height:1.45;margin-bottom:16px}
+    .authority strong{color:#ffd889;display:block;margin-bottom:6px}
+    .authority code{overflow-wrap:anywhere}
+    .toolbar{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+    .toolbar button{min-height:52px;padding:.85rem 1rem;border-radius:16px;border:1px solid rgba(255,255,255,.18);background:#121927;color:#f5f7fb}
+    .toolbar button[aria-pressed="true"]{border-color:#88afff;background:#223657}
+    .meta{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px;font-size:.85rem;color:#c3c9d4}
+    .pill{border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:6px 10px}
+    .pending{color:#ffd889}
+    .stage{border:1px solid rgba(255,255,255,.15);border-radius:30px;padding:16px;background:#05070c;overflow:hidden}
+    .scene{position:relative;min-height:760px;overflow:hidden;border-radius:28px;color:#f6f8fc;background:linear-gradient(145deg,#10162a,#21172e 48%,#172a31);isolation:isolate}
+    .scene::before,.scene::after{content:"";position:absolute;border-radius:999px;z-index:-2;filter:blur(4px);opacity:.94}
+    .scene::before{width:470px;height:470px;left:-140px;top:-120px;background:radial-gradient(circle at 35% 35%,#7db3ff 0 12%,#7447e5 42%,transparent 73%)}
+    .scene::after{width:520px;height:520px;right:-170px;bottom:-190px;background:radial-gradient(circle at 35% 35%,#ffb45f 0 10%,#d43d8b 40%,transparent 72%)}
+    .texture{position:absolute;inset:0;z-index:-1;pointer-events:none;background-image:radial-gradient(circle at 12% 78%,rgba(255,255,255,.34) 0 1px,transparent 2px),radial-gradient(circle at 67% 28%,rgba(255,255,255,.28) 0 1px,transparent 2px),repeating-linear-gradient(115deg,transparent 0 27px,rgba(255,255,255,.08) 28px 29px);background-size:29px 31px,41px 43px,auto;opacity:.38}
+    .content{padding:clamp(18px,5vw,46px);min-height:760px;display:grid;align-content:center;gap:16px;min-width:0}
+    .topline{display:flex;justify-content:space-between;gap:12px;font-size:.86rem;font-weight:750;min-width:0}
+    .brand{display:flex;align-items:center;gap:8px;min-width:0}
+    .crystal{width:26px;height:26px;flex:none;border-radius:9px 13px 9px 13px;background:linear-gradient(145deg,#b9ddff,#8c7cff 48%,#f2a7d8);box-shadow:inset 0 1px 1px rgba(255,255,255,.75),0 8px 20px rgba(69,68,163,.28);transform:rotate(5deg)}
+    .card{min-width:0;padding:clamp(22px,5vw,38px);border-radius:30px;border:1px solid color-mix(in srgb,currentColor 18%,transparent);box-shadow:0 25px 80px rgba(0,0,0,.22);overflow-wrap:anywhere}
+    .eyebrow{font-size:.76em;font-weight:850;letter-spacing:.08em;text-transform:uppercase;opacity:.78}
+    h1{font-size:2.3em;line-height:.98;letter-spacing:-.045em;margin:.28em 0 .38em;max-width:12ch}
+    .lead{line-height:1.58;font-size:1em;margin:0 0 1em}
+    .actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.65em;margin:1em 0}
+    .actions button{min-height:48px;padding:.78em 1em;border-radius:15px;border:1px solid color-mix(in srgb,currentColor 20%,transparent);font-weight:760;min-width:0;white-space:normal}
+    .primary{background:#172440;color:white}
+    .secondary{background:color-mix(in srgb,currentColor 10%,transparent);color:inherit}
+    .status-grid{display:grid;grid-template-columns:1fr;gap:.7em}
+    .status{padding:1em;border-radius:18px;border:1px solid color-mix(in srgb,currentColor 18%,transparent);background:color-mix(in srgb,currentColor 7%,transparent);min-width:0}
+    .status strong{display:block;margin-bottom:.35em}
+    .critical{border-color:color-mix(in srgb,#ffb86b 70%,transparent)}
+    .microcopy{font-size:.8em;line-height:1.55;opacity:.82;margin-top:1em}
+    .readout{direction:ltr;text-align:left;margin-top:1em;padding:12px;border-radius:15px;background:rgba(0,0,0,.34);color:#f5f7fb;font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}
+    .questions{margin-top:16px;padding:16px 18px;border-radius:20px;border:1px solid rgba(255,255,255,.14);background:#0f1521;color:#d9dee8;line-height:1.55}
+    .questions strong{color:#fff}
+    .large-text .card{font-size:200%}
+    .large-text .topline{font-size:1rem}
+    .large-text h1{max-width:none}
+    .large-text .actions{grid-template-columns:1fr}
+    .rtl-surface{direction:rtl;text-align:right}
+    .rtl-surface .topline{flex-direction:row-reverse}
+    .rtl-surface h1{max-width:none;letter-spacing:0}
+    .rtl-surface .actions{direction:rtl}
+    .rtl-surface .status{text-align:right}
+    .overflow-ok{color:#9fe2bb}.overflow-bad{color:#ff9c9c}
+    @media(max-width:700px){.shell{padding:10px}.stage{padding:8px}.toolbar{grid-template-columns:1fr 1fr}.content{padding:20px}.scene,.content{min-height:700px}.topline{flex-wrap:wrap}.actions{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<main class="shell">
+  <section class="authority">
+    <strong>Session 011 human review surface — not acceptance evidence.</strong>
+    <div>Use this exact-revision surface to judge Large Text and RTL layout usability. The page never records a pass or creates human evidence.</div>
+    <div>Review target: <code id="revision">UNBOUND — add ?revision=&lt;40-hex-sha&gt;</code></div>
+  </section>
+
+  <div class="toolbar" aria-label="Large text and RTL review states">
+    <button type="button" data-mode="large" aria-pressed="true">Large text — 200%</button>
+    <button type="button" data-mode="rtl" aria-pressed="false">RTL — Arabic layout</button>
+  </div>
+
+  <div class="meta">
+    <span class="pill">Runtime: V1.4.1 Candidate</span>
+    <span class="pill">Physical mobile review</span>
+    <span class="pill">Network: local-only</span>
+    <span class="pill pending">Human result: PENDING</span>
+    <span class="pill" id="overflowPill">Horizontal overflow: checking…</span>
+  </div>
+
+  <section class="stage">
+    <div class="scene large-text" id="scene" data-mode="large">
+      <div class="texture" aria-hidden="true"></div>
+      <div class="content">
+        <div class="topline"><span class="brand"><span class="crystal" aria-hidden="true"></span>GoreeCloud</span><span id="scenarioLabel">Large text — 200%</span></div>
+        <article class="card" id="reviewCard" data-glaze-semantic-surface="protected">
+          <div class="eyebrow" id="eyebrow">Accessibility / Session 011</div>
+          <h1 id="titleText">Large text should remain usable.</h1>
+          <p class="lead" id="leadText">At 200% text size, content should wrap naturally without clipping, overlap, hidden controls, horizontal scrolling, or broken hierarchy.</p>
+          <div class="actions">
+            <button type="button" class="primary" id="primaryAction">Primary action</button>
+            <button type="button" class="secondary" id="secondaryAction">Secondary action</button>
+          </div>
+          <div class="status-grid">
+            <div class="status"><strong id="readableLabel">Readable label</strong><span id="readableText">Supporting text should remain comfortable to read at the larger scale.</span></div>
+            <div class="status critical"><strong id="criticalLabel">Critical state</strong><span id="criticalText">Important information must remain visible and structurally clear.</span></div>
+            <div class="status"><strong id="iconLabel">Icon + text</strong><span id="iconText">◆ &nbsp;Labels and symbols should remain balanced after reflow.</span></div>
+          </div>
+          <p class="microcopy" id="microcopy">Inspect wrapping, spacing, control size, text clipping, overflow, hierarchy, and whether the result still feels polished and recognizably Glaze UI.</p>
+          <div class="readout" id="readout">Runtime state pending…</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="questions">
+    <strong>Human questions:</strong> For Large Text, confirm that all content remains readable and operable at 200% without clipping, overlap, hidden controls, or horizontal scrolling. For RTL, judge layout direction, logical alignment, card/control order, spacing, and whether the Arabic sample surface looks intentional rather than like a mirrored LTR layout. This review judges layout behavior, not translation quality.
+  </section>
+</main>
+
+<script type="module">
+import {createGlazeOpticalEngineV141Candidate} from '../../js/glaze-v1.4.1.candidate.mjs';
+
+const HEX40=/^[0-9a-f]{40}$/;
+const revision=new URLSearchParams(location.search).get('revision')||'';
+const revisionNode=document.querySelector('#revision');
+if(HEX40.test(revision)){revisionNode.textContent=revision;revisionNode.dataset.bound='true'}else{revisionNode.textContent='UNBOUND — exact-revision human review requires ?revision=<40-hex-sha>';revisionNode.dataset.bound='false'}
+
+const copy={
+  large:{label:'Large text — 200%',eyebrow:'Accessibility / Session 011',title:'Large text should remain usable.',lead:'At 200% text size, content should wrap naturally without clipping, overlap, hidden controls, horizontal scrolling, or broken hierarchy.',primary:'Primary action',secondary:'Secondary action',readableLabel:'Readable label',readableText:'Supporting text should remain comfortable to read at the larger scale.',criticalLabel:'Critical state',criticalText:'Important information must remain visible and structurally clear.',iconLabel:'Icon + text',iconText:'◆  Labels and symbols should remain balanced after reflow.',microcopy:'Inspect wrapping, spacing, control size, text clipping, overflow, hierarchy, and whether the result still feels polished and recognizably Glaze UI.'},
+  rtl:{label:'RTL — Arabic layout',eyebrow:'إمكانية الوصول / الجلسة 011',title:'يجب أن يبقى التخطيط واضحًا من اليمين إلى اليسار.',lead:'يجب أن تتدفق العناصر والنصوص والأزرار باتجاه منطقي من اليمين إلى اليسار مع الحفاظ على الوضوح والتسلسل البصري.',primary:'الإجراء الأساسي',secondary:'الإجراء الثانوي',readableLabel:'تسمية قابلة للقراءة',readableText:'يجب أن يبقى النص الداعم واضحًا ومريحًا للقراءة.',criticalLabel:'حالة مهمة',criticalText:'يجب أن تبقى المعلومات المهمة واضحة ومحميّة بصريًا.',iconLabel:'أيقونة + نص',iconText:'◆  يجب أن يبقى التوازن بين الأيقونة والتسمية واضحًا.',microcopy:'افحص الاتجاه والمحاذاة والتفاف النص وترتيب عناصر التحكم والمسافات وعدم وجود قص أو تمرير أفقي.'}
+};
+
+function setText(id,value){document.querySelector('#'+id).textContent=value}
+function checkOverflow(){requestAnimationFrame(()=>{const has=document.documentElement.scrollWidth>window.innerWidth+1;const pill=document.querySelector('#overflowPill');pill.textContent=`Horizontal overflow: ${has?'YES':'no'}`;pill.classList.toggle('overflow-bad',has);pill.classList.toggle('overflow-ok',!has);document.querySelector('#readout').dataset.horizontalOverflow=String(has)})}
+
+function applyMode(mode){
+  const scene=document.querySelector('#scene');
+  const card=document.querySelector('#reviewCard');
+  const value=copy[mode];
+  scene.classList.toggle('large-text',mode==='large');
+  scene.classList.toggle('rtl-surface',mode==='rtl');
+  scene.dataset.mode=mode;
+  scene.dir=mode==='rtl'?'rtl':'ltr';
+  card.dir=mode==='rtl'?'rtl':'ltr';
+  document.querySelectorAll('[data-mode]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.mode===mode)));
+  setText('scenarioLabel',value.label);setText('eyebrow',value.eyebrow);setText('titleText',value.title);setText('leadText',value.lead);setText('primaryAction',value.primary);setText('secondaryAction',value.secondary);setText('readableLabel',value.readableLabel);setText('readableText',value.readableText);setText('criticalLabel',value.criticalLabel);setText('criticalText',value.criticalText);setText('iconLabel',value.iconLabel);setText('iconText',value.iconText);setText('microcopy',value.microcopy);
+  const engine=createGlazeOpticalEngineV141Candidate();
+  const resolved=engine.apply(card,{appearance:'dark',backgroundComplexity:'moderate',backgroundLuminance:'mid',daypart:'day',depth:'raised',memoryTint:{css:'rgb(112 124 238)',influence:.06},semanticImportance:.92,accessibility:{reducedTransparency:false,increasedContrast:false,forcedColors:false,reducedMotion:false}});
+  document.querySelector('#readout').textContent=[`mode=${mode}`,`direction=${mode==='rtl'?'rtl':'ltr'}`,`textScale=${mode==='large'?'200%':'100%'}`,`runtimeMode=${resolved.mode}`,`semanticProtection=${resolved.semanticProtection}`,`surfaceStrength=${resolved.semanticSurfaceStrength}`].join(' · ');
+  checkOverflow();
+}
+
+document.querySelectorAll('[data-mode]').forEach(button=>button.addEventListener('click',()=>applyMode(button.dataset.mode)));
+window.addEventListener('resize',checkOverflow);
+applyMode('large');
+</script>
+</body>
+</html>
