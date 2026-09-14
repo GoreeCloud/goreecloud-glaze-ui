@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en" data-review-harness="glaze-v1.4.1">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>GLAZE UI V1.4.1 — Human Optical Review Harness</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.4.0.css">
+  <style>
+    :root {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0a0d14;
+      color: #f5f7fb;
+      --review-radius: 28px;
+      --review-line: color-mix(in srgb, currentColor 18%, transparent);
+      --review-muted: color-mix(in srgb, currentColor 68%, transparent);
+      --review-accent: #8ab4ff;
+      --review-panel: color-mix(in srgb, #111827 72%, transparent);
+      --review-shadow: 0 24px 80px rgba(0,0,0,.28);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: #090c12; }
+    button, select, input { font: inherit; }
+    button, select, input[type="text"] {
+      color: inherit;
+      background: color-mix(in srgb, #111827 86%, transparent);
+      border: 1px solid var(--review-line);
+      border-radius: 14px;
+      min-height: 44px;
+    }
+    button { padding: .65rem .9rem; cursor: pointer; }
+    button:hover { background: color-mix(in srgb, #22304a 88%, transparent); }
+    button:focus-visible, select:focus-visible, input:focus-visible, a:focus-visible {
+      outline: 3px solid var(--review-accent);
+      outline-offset: 3px;
+    }
+    select, input[type="text"] { padding: .65rem .75rem; width: 100%; }
+    .shell { width: min(1500px, 100%); margin: 0 auto; padding: 22px; }
+    .authority-banner {
+      display: grid;
+      gap: 8px;
+      border: 1px solid rgba(255, 191, 71, .58);
+      background: rgba(70, 43, 5, .56);
+      border-radius: 18px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+    }
+    .authority-banner strong { color: #ffd889; }
+    .authority-banner code { overflow-wrap: anywhere; }
+    .layout { display: grid; grid-template-columns: minmax(260px, 350px) minmax(0, 1fr); gap: 20px; align-items: start; }
+    .controls, .review-card {
+      border: 1px solid var(--review-line);
+      border-radius: var(--review-radius);
+      background: var(--review-panel);
+      box-shadow: var(--review-shadow);
+    }
+    .controls { padding: 18px; position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow: auto; }
+    .controls h1 { font-size: 1.05rem; margin: 0 0 4px; }
+    .controls p { color: var(--review-muted); line-height: 1.5; }
+    .field { display: grid; gap: 6px; margin: 13px 0; }
+    .field label, .group-title { font-size: .78rem; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; color: var(--review-muted); }
+    .toggles { display: grid; gap: 8px; }
+    .toggle {
+      display: flex; gap: 9px; align-items: center; min-height: 42px; padding: 7px 10px;
+      border: 1px solid var(--review-line); border-radius: 13px;
+    }
+    .toggle input { width: 20px; height: 20px; }
+    .scenario-buttons, .form-factor-buttons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .scenario-buttons button[aria-pressed="true"], .form-factor-buttons button[aria-pressed="true"] { border-color: var(--review-accent); background: rgba(72, 117, 188, .28); }
+    .review-column { min-width: 0; }
+    .review-meta {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; color: var(--review-muted); font-size: .83rem;
+    }
+    .pill { border: 1px solid var(--review-line); border-radius: 999px; padding: 5px 9px; background: rgba(10, 14, 23, .55); }
+    .simulation-warning { margin: 10px 0 14px; padding: 10px 12px; border-radius: 14px; background: rgba(56, 35, 3, .58); border: 1px solid rgba(255, 191, 71, .42); font-size: .86rem; }
+    .viewport-stage {
+      display: grid; place-items: center; min-height: 720px; overflow: auto;
+      border: 1px solid var(--review-line); border-radius: 30px; padding: 28px;
+      background: #05070c;
+    }
+    .device-frame {
+      --frame-w: min(1040px, 100%);
+      --frame-h: 660px;
+      width: var(--frame-w); min-height: var(--frame-h); max-width: 100%;
+      border: 1px solid rgba(255,255,255,.16); border-radius: 34px; overflow: hidden;
+      box-shadow: 0 40px 110px rgba(0,0,0,.42); transition: width .24s ease, min-height .24s ease, border-radius .24s ease;
+      position: relative;
+    }
+    .device-frame[data-form-factor="desktop"] { --frame-w: min(1040px, 100%); --frame-h: 660px; }
+    .device-frame[data-form-factor="mobile"] { --frame-w: 390px; --frame-h: 760px; border-radius: 44px; }
+    .device-frame[data-form-factor="tablet"] { --frame-w: 720px; --frame-h: 800px; border-radius: 38px; }
+    .device-frame[data-form-factor="tv"] { --frame-w: min(1180px, 100%); --frame-h: 650px; border-radius: 18px; }
+    .device-frame[data-form-factor="watch"] { --frame-w: 330px; --frame-h: 390px; border-radius: 72px; }
+    .device-frame[data-form-factor="foldable"] { --frame-w: 760px; --frame-h: 720px; border-radius: 38px; }
+    .scene { min-height: inherit; position: relative; overflow: hidden; isolation: isolate; transition: background .25s ease, color .25s ease; }
+    .scene::before, .scene::after { content: ""; position: absolute; inset: auto; border-radius: 999px; filter: blur(3px); opacity: .9; z-index: -2; }
+    .scene::before { width: 440px; height: 440px; left: -90px; top: -70px; background: radial-gradient(circle at 35% 35%, #79a8ff 0 12%, #6638cb 42%, transparent 73%); }
+    .scene::after { width: 520px; height: 520px; right: -140px; bottom: -180px; background: radial-gradient(circle at 35% 35%, #ffb05c 0 10%, #b63770 40%, transparent 72%); }
+    .scene[data-appearance="light"] { background: linear-gradient(145deg,#dfe9fb,#f9f2ee 48%,#d7e9f3); color: #111827; }
+    .scene[data-appearance="dark"] { background: linear-gradient(145deg,#11172a,#20172d 48%,#172a31); color: #f5f7fb; }
+    .scene[data-appearance="deep-dark"] { background: linear-gradient(145deg,#05070d,#0a0810 55%,#061012); color: #f7f8fb; }
+    .scene[data-complexity="simple"] .texture { opacity: .12; }
+    .scene[data-complexity="moderate"] .texture { opacity: .34; }
+    .scene[data-complexity="complex"] .texture { opacity: .72; }
+    .scene[data-luminance="bright"] { filter: brightness(1.12); }
+    .scene[data-luminance="dark"] { filter: brightness(.78); }
+    .texture { position: absolute; inset: 0; z-index: -1; pointer-events: none; background-image: radial-gradient(circle at 12% 78%, rgba(255,255,255,.34) 0 1px, transparent 2px), radial-gradient(circle at 67% 28%, rgba(255,255,255,.28) 0 1px, transparent 2px), repeating-linear-gradient(115deg, transparent 0 27px, rgba(255,255,255,.08) 28px 29px); background-size: 29px 31px, 41px 43px, auto; }
+    .motion-orb { position: absolute; width: 180px; height: 180px; border-radius: 50%; left: 12%; bottom: 12%; background: linear-gradient(135deg,#72f0d4,#5b5ee8); opacity: .58; animation: drift 5.5s ease-in-out infinite alternate; z-index: -1; }
+    @keyframes drift { to { transform: translate(300px,-170px) scale(1.25); filter: hue-rotate(50deg); } }
+    .scene[data-reduced-motion="true"] .motion-orb { animation: none; }
+    .scene-content { display: grid; gap: 16px; padding: clamp(18px,4vw,44px); min-height: inherit; align-content: center; }
+    .topline { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: .8rem; color: var(--review-muted); }
+    .brand-mark { display: inline-flex; align-items: center; gap: 9px; font-weight: 800; letter-spacing: -.02em; color: inherit; }
+    .crystal { width: 26px; height: 26px; border-radius: 9px 13px 9px 13px; background: linear-gradient(145deg,#b9ddff,#8c7cff 48%,#f2a7d8); box-shadow: inset 0 1px 1px rgba(255,255,255,.75), 0 8px 20px rgba(69,68,163,.28); transform: rotate(5deg); }
+    .review-card { position: relative; padding: clamp(20px,4vw,34px); background: color-mix(in srgb, currentColor 9%, transparent); overflow: hidden; }
+    .review-card::after { content: ""; position: absolute; inset: 0; background: var(--glz14-memory-tint); opacity: var(--glz14-memory-tint-influence); pointer-events: none; }
+    .review-card > * { position: relative; z-index: 1; }
+    .eyebrow { font-size: .76rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: .72; }
+    .review-card h2 { margin: 8px 0 8px; max-width: 15ch; font-size: clamp(2rem,5vw,4.4rem); letter-spacing: -.055em; line-height: .94; }
+    .review-card p { max-width: 62ch; line-height: 1.58; opacity: .78; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .primary { background: currentColor; color: color-mix(in srgb, currentColor 0%, #10141e); border: 0; font-weight: 750; }
+    .scene[data-appearance="light"] .primary { color: white; background: #18213a; }
+    .scene[data-appearance="dark"] .primary, .scene[data-appearance="deep-dark"] .primary { color: #10141e; background: #f3f6ff; }
+    .status-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; margin-top: 14px; }
+    .status-card { min-height: 84px; border: 1px solid color-mix(in srgb,currentColor 18%,transparent); border-radius: 17px; padding: 13px; background: color-mix(in srgb,currentColor 6%,transparent); }
+    .status-card strong { display: block; font-size: .78rem; margin-bottom: 6px; }
+    .critical { border-color: color-mix(in srgb,#ffb86b 70%,transparent); }
+    .microcopy { font-size: .74rem; opacity: .7; }
+    .state-readout { margin-top: 14px; font: 12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace; overflow-wrap: anywhere; padding: 12px; border-radius: 14px; background: rgba(0,0,0,.24); }
+    .check-list { margin-top: 16px; border-top: 1px solid var(--review-line); padding-top: 16px; }
+    .check-list summary { cursor: pointer; font-weight: 750; }
+    .check-list ul { columns: 2; padding-left: 20px; color: var(--review-muted); font-size: .82rem; line-height: 1.6; }
+    .pending-tag { color: #ffd889; font-weight: 800; }
+    @media (max-width: 880px) {
+      .shell { padding: 12px; }
+      .layout { grid-template-columns: 1fr; }
+      .controls { position: static; max-height: none; }
+      .viewport-stage { min-height: 580px; padding: 10px; }
+      .status-grid { grid-template-columns: 1fr; }
+      .check-list ul { columns: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="authority-banner" aria-label="Review authority notice">
+      <strong>Human review surface only — not acceptance evidence.</strong>
+      <span>This harness does not mark checks passed, does not create a human-evidence record, and does not establish V1.4.1 promotion eligibility.</span>
+      <span>Review target: <code id="revision">UNBOUND — add ?revision=&lt;40-hex-sha&gt;</code></span>
+      <span>Session: <code>V1.4.1 Human Review — Session 001 — Optical identity and readability</code></span>
+    </section>
+
+    <div class="layout">
+      <aside class="controls" aria-label="Review controls">
+        <h1>Optical review controls</h1>
+        <p>Change one variable at a time, then inspect readability, hierarchy, frost, tint, depth, and GoreeCloud identity. Record your observations separately; this page never records a pass.</p>
+
+        <div class="field">
+          <label for="appearance">Appearance</label>
+          <select id="appearance">
+            <option value="light">Light</option>
+            <option value="dark" selected>Dark</option>
+            <option value="deep-dark">Deep dark</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="complexity">Background complexity</label>
+          <select id="complexity">
+            <option value="simple">Simple</option>
+            <option value="moderate" selected>Moderate</option>
+            <option value="complex">Complex</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="luminance">Background luminance</label>
+          <select id="luminance">
+            <option value="dark">Dark</option>
+            <option value="mid" selected>Mid</option>
+            <option value="bright">Bright</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="daypart">Daypart</label>
+          <select id="daypart">
+            <option value="dawn">Dawn</option>
+            <option value="day" selected>Day</option>
+            <option value="dusk">Dusk</option>
+            <option value="night">Night</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="depth">Depth</label>
+          <select id="depth">
+            <option value="base">Base</option>
+            <option value="raised" selected>Raised</option>
+            <option value="overlay">Overlay</option>
+            <option value="modal">Modal</option>
+          </select>
+        </div>
+
+        <p class="group-title">Accessibility states</p>
+        <div class="toggles">
+          <label class="toggle"><input type="checkbox" id="reducedTransparency"> Reduced transparency</label>
+          <label class="toggle"><input type="checkbox" id="increasedContrast"> Increased contrast</label>
+          <label class="toggle"><input type="checkbox" id="forcedColors"> Forced colors</label>
+          <label class="toggle"><input type="checkbox" id="reducedMotion"> Reduced motion</label>
+          <label class="toggle"><input type="checkbox" id="memoryTint" checked> Bounded memory tint</label>
+          <label class="toggle"><input type="checkbox" id="adapterFailure"> Simulate adapter failure</label>
+        </div>
+
+        <p class="group-title">Scenario presets</p>
+        <div class="scenario-buttons" aria-label="Scenario presets">
+          <button type="button" data-scenario="calm">Calm / dark</button>
+          <button type="button" data-scenario="noisy">Noisy / bright</button>
+          <button type="button" data-scenario="night">Deep night</button>
+          <button type="button" data-scenario="accessible">Accessible solid</button>
+        </div>
+
+        <p class="group-title">Form-factor simulation</p>
+        <div class="form-factor-buttons" aria-label="Form-factor simulations">
+          <button type="button" data-form-factor="desktop" aria-pressed="true">Desktop</button>
+          <button type="button" data-form-factor="mobile" aria-pressed="false">Mobile</button>
+          <button type="button" data-form-factor="tablet" aria-pressed="false">Tablet</button>
+          <button type="button" data-form-factor="tv" aria-pressed="false">TV</button>
+          <button type="button" data-form-factor="watch" aria-pressed="false">Watch</button>
+          <button type="button" data-form-factor="foldable" aria-pressed="false">Foldable</button>
+        </div>
+
+        <details class="check-list" open>
+          <summary>Session 001 checks — all pending</summary>
+          <ul id="reviewChecks"></ul>
+        </details>
+      </aside>
+
+      <section class="review-column" aria-label="Review surface">
+        <div class="review-meta">
+          <span class="pill">Runtime: V1.4.1 Candidate</span>
+          <span class="pill">Stable CSS: V1.4.0</span>
+          <span class="pill">Network: local-only</span>
+          <span class="pill pending-tag">Human result: PENDING</span>
+        </div>
+        <div class="simulation-warning"><strong>Simulation boundary:</strong> viewport/form-factor buttons are visual preparation only. They are not physical-device evidence and cannot satisfy mobile, tablet, TV, watch, foldable, Android/OEM, or Linux qualification.</div>
+
+        <div class="viewport-stage">
+          <div class="device-frame" id="deviceFrame" data-form-factor="desktop">
+            <div class="scene" id="scene" data-appearance="dark" data-complexity="moderate" data-luminance="mid" data-reduced-motion="false">
+              <div class="texture" aria-hidden="true"></div>
+              <div class="motion-orb" aria-hidden="true"></div>
+              <div class="scene-content">
+                <div class="topline">
+                  <span class="brand-mark"><span class="crystal" aria-hidden="true"></span> GoreeCloud</span>
+                  <span>GLAZE UI V1.4.1 review scene</span>
+                </div>
+
+                <article class="review-card" id="opticalSurface">
+                  <div class="eyebrow">Optical Intelligence / Human Review</div>
+                  <h2>Clarity should survive the glass.</h2>
+                  <p>Use this deliberately mixed-content surface to judge whether frost adapts without obscuring text, whether semantic content stays dominant, and whether tint, warmth, depth, and motion feel recognizably Glaze UI rather than decorative noise.</p>
+                  <div class="actions">
+                    <button type="button" class="primary">Primary action</button>
+                    <button type="button">Secondary action</button>
+                    <button type="button" aria-label="More review actions">•••</button>
+                  </div>
+                  <div class="status-grid" aria-label="Semantic content stress cases">
+                    <div class="status-card"><strong>Readable label</strong><span>Small supporting text should stay legible over changing optical context.</span></div>
+                    <div class="status-card critical"><strong>Critical status</strong><span>Important state must remain visually protected from background interference.</span></div>
+                    <div class="status-card"><strong>Icon + text</strong><span>◆ &nbsp;Icon and label hierarchy should remain balanced.</span></div>
+                  </div>
+                  <p class="microcopy">Microcopy stress test · 12–13 px equivalent · inspect contrast, edge clarity, blur contamination, and tint intrusion.</p>
+                  <div class="state-readout" id="stateReadout" aria-live="polite">Runtime state pending…</div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script type="module">
+    import {createGlazeOpticalEngineV141Candidate} from '../../js/glaze-v1.4.1.candidate.mjs';
+
+    const HEX40 = /^[0-9a-f]{40}$/;
+    const revision = new URLSearchParams(location.search).get('revision') || '';
+    const revisionNode = document.querySelector('#revision');
+    if (HEX40.test(revision)) {
+      revisionNode.textContent = revision;
+      revisionNode.dataset.bound = 'true';
+    } else {
+      revisionNode.textContent = 'UNBOUND — review is not exact-revision evidence until ?revision=<40-hex-sha> is supplied';
+      revisionNode.dataset.bound = 'false';
+    }
+
+    const checks = [
+      'optical.content-aware-frost',
+      'optical.semantic-blur-protection',
+      'optical.environment-tint',
+      'optical.chromatic-depth',
+      'optical.environmental-color-memory',
+      'accessibility.reduced-transparency',
+      'accessibility.increased-contrast',
+      'accessibility.forced-colors',
+      'accessibility.reduced-motion',
+      'input.keyboard',
+      'input.pointer',
+      'polish.glass-quality',
+      'polish.depth-warmth',
+      'polish.visual-balance',
+      'identity.goreecloud-recognition'
+    ];
+    const list = document.querySelector('#reviewChecks');
+    for (const id of checks) {
+      const item = document.createElement('li');
+      item.textContent = `${id} — PENDING`;
+      list.append(item);
+    }
+
+    const $ = id => document.getElementById(id);
+    const controls = ['appearance','complexity','luminance','daypart','depth','reducedTransparency','increasedContrast','forcedColors','reducedMotion','memoryTint','adapterFailure'];
+
+    function inputs() {
+      return {
+        appearance: $('appearance').value,
+        backgroundComplexity: $('complexity').value,
+        backgroundLuminance: $('luminance').value,
+        daypart: $('daypart').value,
+        depth: $('depth').value,
+        semanticImportance: .88,
+        memoryTint: $('memoryTint').checked ? {css: 'rgb(112 124 238)', influence: .06} : null,
+        accessibility: {
+          reducedTransparency: $('reducedTransparency').checked,
+          increasedContrast: $('increasedContrast').checked,
+          forcedColors: $('forcedColors').checked,
+          reducedMotion: $('reducedMotion').checked
+        }
+      };
+    }
+
+    function engine() {
+      return createGlazeOpticalEngineV141Candidate({
+        signalAdapter: {
+          resolve() {
+            if ($('adapterFailure').checked) throw new Error('review-harness synthetic adapter fault');
+            return {};
+          }
+        }
+      });
+    }
+
+    function apply() {
+      const scene = $('scene');
+      const surface = $('opticalSurface');
+      const values = inputs();
+      scene.dataset.appearance = values.appearance;
+      scene.dataset.complexity = values.backgroundComplexity;
+      scene.dataset.luminance = values.backgroundLuminance;
+      scene.dataset.reducedMotion = String(values.accessibility.reducedMotion);
+      const resolved = engine().apply(surface, values);
+      $('stateReadout').textContent = [
+        `mode=${resolved.mode}`,
+        `adapter=${resolved.adapterStatus}`,
+        `frost=${resolved.frostStrength}`,
+        `blurScale=${resolved.blurScale}`,
+        `semanticProtection=${resolved.semanticProtection}`,
+        `depthShift=${resolved.depthHueShift}`,
+        `warmth=${resolved.warmth}`,
+        `memoryTint=${resolved.memoryTint ? resolved.memoryTint.influence : 0}`
+      ].join(' · ');
+    }
+
+    for (const id of controls) $(id).addEventListener('change', apply);
+
+    const presets = {
+      calm: {appearance:'dark', complexity:'simple', luminance:'dark', daypart:'day', depth:'raised', reducedTransparency:false, increasedContrast:false, forcedColors:false, reducedMotion:false, memoryTint:true, adapterFailure:false},
+      noisy: {appearance:'light', complexity:'complex', luminance:'bright', daypart:'dusk', depth:'overlay', reducedTransparency:false, increasedContrast:false, forcedColors:false, reducedMotion:false, memoryTint:true, adapterFailure:false},
+      night: {appearance:'deep-dark', complexity:'moderate', luminance:'dark', daypart:'night', depth:'modal', reducedTransparency:false, increasedContrast:false, forcedColors:false, reducedMotion:false, memoryTint:true, adapterFailure:false},
+      accessible: {appearance:'dark', complexity:'complex', luminance:'bright', daypart:'day', depth:'raised', reducedTransparency:true, increasedContrast:true, forcedColors:false, reducedMotion:true, memoryTint:false, adapterFailure:false}
+    };
+
+    function setPreset(name) {
+      const preset = presets[name];
+      for (const [key, value] of Object.entries(preset)) {
+        const node = $(key);
+        if (typeof value === 'boolean') node.checked = value;
+        else node.value = value;
+      }
+      document.querySelectorAll('[data-scenario]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.scenario === name)));
+      apply();
+    }
+
+    document.querySelectorAll('[data-scenario]').forEach(button => button.addEventListener('click', () => setPreset(button.dataset.scenario)));
+    document.querySelectorAll('[data-form-factor]').forEach(button => button.addEventListener('click', () => {
+      const factor = button.dataset.formFactor;
+      $('deviceFrame').dataset.formFactor = factor;
+      document.querySelectorAll('[data-form-factor]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+    }));
+
+    apply();
+  </script>
+</body>
+</html>

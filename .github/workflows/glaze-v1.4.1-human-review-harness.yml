@@ -1,0 +1,80 @@
+name: GLAZE UI V1.4.1 Human Review Harness
+
+on:
+  pull_request:
+    paths:
+      - 'contracts/v1.4.1/human-review-harness.contract.json'
+      - 'reference/v1.4.1/optical-human-review.html'
+      - 'scripts/verify_glaze_v1_4_1_human_review_harness.mjs'
+      - 'js/glaze-v1.4.1.candidate.mjs'
+      - 'js/glaze-v1.4.1-optical-engine.candidate.mjs'
+      - 'css/glaze-v1.4.0.css'
+      - 'contracts/v1.4.1/human-validation.contract.json'
+      - 'GLAZE_UI_V1_4_1_HARDENING.md'
+      - '.github/workflows/glaze-v1.4.1-human-review-harness.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'contracts/v1.4.1/human-review-harness.contract.json'
+      - 'reference/v1.4.1/optical-human-review.html'
+      - 'scripts/verify_glaze_v1_4_1_human_review_harness.mjs'
+      - 'js/glaze-v1.4.1.candidate.mjs'
+      - 'js/glaze-v1.4.1-optical-engine.candidate.mjs'
+      - 'css/glaze-v1.4.0.css'
+      - 'contracts/v1.4.1/human-validation.contract.json'
+      - 'GLAZE_UI_V1_4_1_HARDENING.md'
+      - '.github/workflows/glaze-v1.4.1-human-review-harness.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  review-harness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Verify exact revision
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+
+      - name: Check harness verifier syntax
+        run: node --check scripts/verify_glaze_v1_4_1_human_review_harness.mjs
+
+      - name: Verify local-only human review harness
+        run: node scripts/verify_glaze_v1_4_1_human_review_harness.mjs
+
+      - name: Preserve V1.4.1 optical runtime hardening
+        run: node scripts/verify_glaze_v1_4_1_optical_runtime.mjs
+
+      - name: Preserve planning-only packet boundary
+        run: node scripts/verify_glaze_v1_4_1_review_packet.mjs --self-test
+
+      - name: Preserve human-evidence authority
+        run: |
+          node scripts/verify_glaze_v1_4_1_human_validation_schema.mjs
+          node scripts/verify_glaze_v1_4_1_human_validation.mjs --source-only
+          node scripts/verify_glaze_v1_4_1_human_validation.mjs --self-test
+
+      - name: Preserve V1.4.0 Stable machine authority
+        run: node scripts/verify_glaze_v1_4_stable.mjs
+
+      - name: Verify validation did not mutate tracked source
+        run: test -z "$(git status --porcelain --untracked-files=no)"
+
+      - name: Report authority boundary
+        run: |
+          echo 'The V1.4.1 harness is a deterministic human-review surface only.'
+          echo 'Form-factor simulations are not physical-device evidence.'
+          echo 'CI cannot mark any human check passed, accepted, or promotion eligible.'
+          echo 'A real reviewer must inspect the exact-revision surface and separately author findings under the human-evidence protocol.'
