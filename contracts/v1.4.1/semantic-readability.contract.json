@@ -1,0 +1,30 @@
+{
+  "contract": "glaze-v1.4.1-semantic-readability",
+  "status": "candidate-hardening",
+  "failedHumanReviewRevision": "beb94657e7c69c6769745bf1a51389f165b47479",
+  "failedScenario": {
+    "appearance": "light",
+    "backgroundComplexity": "moderate",
+    "backgroundLuminance": "mid",
+    "daypart": "day",
+    "depth": "raised",
+    "semanticImportance": 0.88,
+    "memoryTint": {
+      "css": "rgb(112 124 238)",
+      "influence": 0.06
+    },
+    "formFactorSimulation": "mobile"
+  },
+  "requirements": {
+    "stableV140SourceMustRemainImmutable": true,
+    "semanticProtectionMustAffectMaterialPresentation": true,
+    "lightAppearanceMinimumSemanticSurfaceStrength": 0.85,
+    "solidAccessibleSemanticSurfaceStrength": 1,
+    "adapterFailureSemanticSurfaceStrength": 1,
+    "boundedAppearanceDatasetRequired": true,
+    "remoteContextRequired": false,
+    "telemetryRequired": false,
+    "humanReReviewRequired": true,
+    "automaticHumanPassForbidden": true
+  }
+}

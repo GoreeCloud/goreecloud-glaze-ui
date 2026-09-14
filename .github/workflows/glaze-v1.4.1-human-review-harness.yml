@@ -4,11 +4,16 @@ on:
   pull_request:
     paths:
       - 'contracts/v1.4.1/human-review-harness.contract.json'
+      - 'contracts/v1.4.1/semantic-readability.contract.json'
       - 'reference/v1.4.1/optical-human-review.html'
+      - 'reference/v1.4.1/session-001-followup-review.html'
       - 'scripts/verify_glaze_v1_4_1_human_review_harness.mjs'
+      - 'scripts/verify_glaze_v1_4_1_semantic_readability.mjs'
+      - 'scripts/verify_glaze_v1_4_1_followup_review_surface.mjs'
       - 'js/glaze-v1.4.1.candidate.mjs'
       - 'js/glaze-v1.4.1-optical-engine.candidate.mjs'
       - 'css/glaze-v1.4.0.css'
+      - 'css/glaze-v1.4.1.candidate.css'
       - 'contracts/v1.4.1/human-validation.contract.json'
       - 'GLAZE_UI_V1_4_1_HARDENING.md'
       - '.github/workflows/glaze-v1.4.1-human-review-harness.yml'
@@ -16,11 +21,16 @@ on:
     branches: [main]
     paths:
       - 'contracts/v1.4.1/human-review-harness.contract.json'
+      - 'contracts/v1.4.1/semantic-readability.contract.json'
       - 'reference/v1.4.1/optical-human-review.html'
+      - 'reference/v1.4.1/session-001-followup-review.html'
       - 'scripts/verify_glaze_v1_4_1_human_review_harness.mjs'
+      - 'scripts/verify_glaze_v1_4_1_semantic_readability.mjs'
+      - 'scripts/verify_glaze_v1_4_1_followup_review_surface.mjs'
       - 'js/glaze-v1.4.1.candidate.mjs'
       - 'js/glaze-v1.4.1-optical-engine.candidate.mjs'
       - 'css/glaze-v1.4.0.css'
+      - 'css/glaze-v1.4.1.candidate.css'
       - 'contracts/v1.4.1/human-validation.contract.json'
       - 'GLAZE_UI_V1_4_1_HARDENING.md'
       - '.github/workflows/glaze-v1.4.1-human-review-harness.yml'
@@ -48,11 +58,20 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Check harness verifier syntax
-        run: node --check scripts/verify_glaze_v1_4_1_human_review_harness.mjs
+      - name: Check harness and readability verifier syntax
+        run: |
+          node --check scripts/verify_glaze_v1_4_1_human_review_harness.mjs
+          node --check scripts/verify_glaze_v1_4_1_semantic_readability.mjs
+          node --check scripts/verify_glaze_v1_4_1_followup_review_surface.mjs
 
       - name: Verify local-only human review harness
         run: node scripts/verify_glaze_v1_4_1_human_review_harness.mjs
+
+      - name: Verify Session 001 follow-up review surface
+        run: node scripts/verify_glaze_v1_4_1_followup_review_surface.mjs
+
+      - name: Verify human-found light-mode readability regression is hardened
+        run: node scripts/verify_glaze_v1_4_1_semantic_readability.mjs
 
       - name: Preserve V1.4.1 optical runtime hardening
         run: node scripts/verify_glaze_v1_4_1_optical_runtime.mjs
@@ -75,6 +94,8 @@ jobs:
       - name: Report authority boundary
         run: |
           echo 'The V1.4.1 harness is a deterministic human-review surface only.'
+          echo 'The light-mode readability regression gate is machine hardening, not human acceptance.'
+          echo 'The Session 001 follow-up surface is planning/review infrastructure only.'
           echo 'Form-factor simulations are not physical-device evidence.'
           echo 'CI cannot mark any human check passed, accepted, or promotion eligible.'
-          echo 'A real reviewer must inspect the exact-revision surface and separately author findings under the human-evidence protocol.'
+          echo 'A real reviewer must inspect the exact-revision surface and separately author findings.'

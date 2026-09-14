@@ -4,8 +4,16 @@ import {
   glazeOpticalEngineV14
 } from './glaze-v1.4-optical-engine.mjs';
 
+const APPEARANCES = new Set(['light', 'dark', 'deep-dark']);
+
 function asObject(value) {
   return value && typeof value === 'object' ? value : {};
+}
+
+function clamp(value, min = 0, max = 1) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return min;
+  return Math.min(max, Math.max(min, number));
 }
 
 function notifyAdapterError(observer, error) {
@@ -52,9 +60,27 @@ function composeInputs(adapterState, overrides) {
   return merged;
 }
 
-function decorateResult(resolved, adapterStatus) {
+function effectiveAppearance(resolved, inputs) {
+  if (APPEARANCES.has(resolved.appearance)) return resolved.appearance;
+  if (APPEARANCES.has(inputs.appearance)) return inputs.appearance;
+  return 'light';
+}
+
+function semanticSurfaceStrength(resolved, appearance) {
+  if (resolved.mode === 'solid-accessible') return 1;
+
+  const protection = clamp(resolved.semanticProtection, 0.5, 1);
+  if (appearance === 'light') return clamp(0.58 + protection * 0.34, 0.75, 0.94);
+  if (appearance === 'deep-dark') return clamp(0.44 + protection * 0.30, 0.62, 0.82);
+  return clamp(0.40 + protection * 0.30, 0.60, 0.80);
+}
+
+function decorateResult(resolved, adapterStatus, inputs) {
+  const appearance = effectiveAppearance(resolved, inputs);
   return Object.freeze({
     ...resolved,
+    appearance,
+    semanticSurfaceStrength: semanticSurfaceStrength(resolved, appearance),
     adapterStatus,
     adapterFailureMode: adapterStatus === 'failed-safe' ? 'solid-accessible' : null
   });
@@ -64,12 +90,21 @@ function targetRoot(target) {
   return target?.documentElement || target;
 }
 
+function applyCandidatePresentation(element, resolved) {
+  element.dataset.glazeOpticalV141Appearance = resolved.appearance;
+  element.style.setProperty(
+    '--glz141-semantic-surface-strength',
+    `${(resolved.semanticSurfaceStrength * 100).toFixed(2)}%`
+  );
+}
+
 /**
  * GLAZE UI V1.4.1 Candidate optical-engine hardening.
  *
  * This wrapper preserves the V1.4.0 resolver as the optical authority and adds
- * an explicit fail-safe boundary around consumer signal adapters. It does not
- * collect context, telemetry, analytics, camera data, or remote state.
+ * explicit fail-safe adapter handling plus bounded semantic readability
+ * presentation state. It does not collect context, telemetry, analytics,
+ * camera data, or remote state.
  */
 export function createGlazeOpticalEngineV141Candidate(options = {}) {
   const input = asObject(options);
@@ -90,17 +125,21 @@ export function createGlazeOpticalEngineV141Candidate(options = {}) {
     telemetryRequired: false,
     remoteContextRequired: false,
     adapterFailurePolicy: 'solid-accessible',
+    semanticSurfaceProtection: true,
     resolve(overrides = {}) {
       const {adapterState, inputs} = stateAndInputs(overrides);
-      return decorateResult(resolveGlazeOptics(inputs), adapterState.status);
+      return decorateResult(resolveGlazeOptics(inputs), adapterState.status, inputs);
     },
     apply(target, overrides = {}) {
       const {adapterState, inputs} = stateAndInputs(overrides);
-      const resolved = applyGlazeOptics(target, inputs);
+      const stableResolved = applyGlazeOptics(target, inputs);
+      const resolved = decorateResult(stableResolved, adapterState.status, inputs);
       const element = targetRoot(target);
-      // Expose only bounded status, never the thrown error/message/stack.
+      // Expose only bounded status/presentation state, never raw adapter error
+      // details, messages, stacks, or untrusted context.
       element.dataset.glazeOpticalV141Adapter = adapterState.status;
-      return decorateResult(resolved, adapterState.status);
+      applyCandidatePresentation(element, resolved);
+      return resolved;
     }
   });
 }
@@ -115,6 +154,7 @@ export const glazeOpticalEngineV141Candidate = Object.freeze({
   adapterFailurePolicy: 'solid-accessible',
   adapterFailureAllowsBlur: false,
   adapterFailureAllowsDecorativeTint: false,
+  semanticSurfaceProtection: true,
   maxMemoryTintInfluence: glazeOpticalEngineV14.maxMemoryTintInfluence,
   humanAcceptanceAutomatic: false,
   patchPromotionAutomatic: false

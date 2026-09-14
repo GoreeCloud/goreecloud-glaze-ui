@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en" data-review-surface="v1.4.1-session-001-followup">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>GLAZE UI V1.4.1 — Session 001 Follow-up Human Review</title>
+  <link rel="stylesheet" href="../../css/glaze-v1.4.1.candidate.css">
+  <style>
+    :root { font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:#080b12; color:#f6f8fc; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; background:#080b12; }
+    button { font:inherit; }
+    .shell { width:min(1120px,100%); margin:auto; padding:18px; }
+    .authority { border:1px solid rgba(255,190,70,.58); background:rgba(70,43,5,.58); border-radius:20px; padding:16px 18px; line-height:1.45; margin-bottom:16px; }
+    .authority strong { color:#ffd889; display:block; margin-bottom:6px; }
+    .authority code { overflow-wrap:anywhere; }
+    .toolbar { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; margin-bottom:14px; }
+    .toolbar button { min-height:48px; padding:.75rem 1rem; border-radius:15px; border:1px solid rgba(255,255,255,.18); background:#121927; color:#f5f7fb; }
+    .toolbar button[aria-pressed="true"] { border-color:#88afff; background:#223657; }
+    .meta { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 14px; font-size:.82rem; color:#c3c9d4; }
+    .pill { border:1px solid rgba(255,255,255,.16); border-radius:999px; padding:5px 9px; }
+    .pending { color:#ffd889; }
+    .stage { border:1px solid rgba(255,255,255,.15); border-radius:30px; padding:20px; background:#05070c; overflow:hidden; }
+    .scene { --scene-color:#f5f7fb; position:relative; min-height:720px; overflow:hidden; border-radius:28px; color:var(--scene-color); isolation:isolate; }
+    .scene::before,.scene::after { content:""; position:absolute; border-radius:999px; z-index:-2; filter:blur(4px); opacity:.94; }
+    .scene::before { width:480px; height:480px; left:-130px; top:-120px; background:radial-gradient(circle at 35% 35%,#7db3ff 0 12%,#7447e5 42%,transparent 73%); }
+    .scene::after { width:540px; height:540px; right:-170px; bottom:-180px; background:radial-gradient(circle at 35% 35%,#ffb45f 0 10%,#d43d8b 40%,transparent 72%); }
+    .scene[data-appearance="light"] { --scene-color:#111827; background:linear-gradient(145deg,#dfe9fb,#fbf4ef 48%,#d7e9f3); }
+    .scene[data-appearance="dark"] { --scene-color:#f5f7fb; background:linear-gradient(145deg,#10162a,#21172e 48%,#172a31); }
+    .scene[data-appearance="deep-dark"] { --scene-color:#f7f8fb; background:linear-gradient(145deg,#05070d,#0b0812 55%,#061012); }
+    .texture { position:absolute; inset:0; z-index:-1; pointer-events:none; background-image:radial-gradient(circle at 12% 78%,rgba(255,255,255,.34) 0 1px,transparent 2px),radial-gradient(circle at 67% 28%,rgba(255,255,255,.28) 0 1px,transparent 2px),repeating-linear-gradient(115deg,transparent 0 27px,rgba(255,255,255,.08) 28px 29px); background-size:29px 31px,41px 43px,auto; }
+    .scene[data-complexity="simple"] .texture { opacity:.12; }
+    .scene[data-complexity="moderate"] .texture { opacity:.34; }
+    .scene[data-complexity="complex"] .texture { opacity:.72; }
+    .scene[data-luminance="bright"] { filter:brightness(1.12); }
+    .scene[data-luminance="dark"] { filter:brightness(.78); }
+    .motion-orb { position:absolute; width:170px; height:170px; border-radius:50%; left:9%; bottom:9%; background:linear-gradient(135deg,#72f0d4,#5b5ee8); opacity:.58; animation:drift 4.8s ease-in-out infinite alternate; z-index:-1; }
+    @keyframes drift { to { transform:translate(310px,-170px) scale(1.25); filter:hue-rotate(50deg); } }
+    .scene[data-reduced-motion="true"] .motion-orb { animation:none; transform:none; }
+    .content { padding:clamp(18px,5vw,52px); min-height:720px; display:grid; align-content:center; gap:16px; }
+    .topline { display:flex; justify-content:space-between; gap:12px; font-size:.82rem; font-weight:700; }
+    .brand { display:flex; align-items:center; gap:8px; }
+    .crystal { width:25px; height:25px; border-radius:9px 13px 9px 13px; background:linear-gradient(145deg,#b9ddff,#8c7cff 48%,#f2a7d8); box-shadow:inset 0 1px 1px rgba(255,255,255,.75),0 8px 20px rgba(69,68,163,.28); transform:rotate(5deg); }
+    .card { padding:clamp(22px,5vw,38px); border-radius:30px; border:1px solid color-mix(in srgb,currentColor 18%,transparent); box-shadow:0 25px 80px rgba(0,0,0,.22); }
+    .eyebrow { font-size:.76rem; font-weight:850; letter-spacing:.08em; text-transform:uppercase; opacity:.74; }
+    h1 { font-size:clamp(2.2rem,8vw,5.1rem); line-height:.93; letter-spacing:-.055em; margin:9px 0 12px; max-width:12ch; }
+    .lead { max-width:60ch; line-height:1.6; font-size:clamp(1rem,3vw,1.2rem); }
+    .actions { display:flex; flex-wrap:wrap; gap:10px; margin:18px 0; }
+    .actions button { min-height:48px; padding:.75rem 1rem; border-radius:15px; border:1px solid color-mix(in srgb,currentColor 20%,transparent); font-weight:750; }
+    .primary { background:#172440; color:white; }
+    .secondary { background:color-mix(in srgb,currentColor 10%,transparent); color:inherit; }
+    .status-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+    .status { min-height:102px; padding:14px; border-radius:18px; border:1px solid color-mix(in srgb,currentColor 18%,transparent); background:color-mix(in srgb,currentColor 7%,transparent); }
+    .status strong { display:block; margin-bottom:7px; }
+    .critical { border-color:color-mix(in srgb,#ffb86b 70%,transparent); }
+    .microcopy { font-size:.78rem; line-height:1.5; opacity:.78; margin-top:14px; }
+    .readout { margin-top:14px; padding:12px; border-radius:15px; background:rgba(0,0,0,.30); color:#f5f7fb; font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace; overflow-wrap:anywhere; }
+    .questions { margin-top:16px; padding:16px 18px; border-radius:20px; border:1px solid rgba(255,255,255,.14); background:#0f1521; color:#d9dee8; line-height:1.55; }
+    .questions strong { color:#fff; }
+    @media (max-width:700px) { .shell{padding:10px}.stage{padding:8px}.status-grid{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr 1fr}.content{padding:22px}.scene{min-height:700px}.content{min-height:700px} }
+    @media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; } }
+  </style>
+</head>
+<body>
+<main class="shell">
+  <section class="authority">
+    <strong>Human follow-up review surface — not acceptance evidence.</strong>
+    <div>Use this exact-revision surface for the remaining high-value Session 001 visual checks. The page never records a pass or creates human evidence.</div>
+    <div>Review target: <code id="revision">UNBOUND — add ?revision=&lt;40-hex-sha&gt;</code></div>
+  </section>
+
+  <div class="toolbar" aria-label="Follow-up review scenarios">
+    <button type="button" data-scenario="noisy" aria-pressed="true">Noisy / bright</button>
+    <button type="button" data-scenario="night" aria-pressed="false">Deep night</button>
+    <button type="button" data-scenario="accessible" aria-pressed="false">Accessible solid</button>
+    <button type="button" data-scenario="reduced" aria-pressed="false">Reduced motion</button>
+  </div>
+
+  <div class="meta">
+    <span class="pill">Runtime: V1.4.1 Candidate</span>
+    <span class="pill">Semantic surface: protected</span>
+    <span class="pill">Network: local-only</span>
+    <span class="pill pending">Human result: PENDING</span>
+  </div>
+
+  <section class="stage">
+    <div class="scene" id="scene" data-appearance="light" data-complexity="complex" data-luminance="bright" data-reduced-motion="false">
+      <div class="texture" aria-hidden="true"></div>
+      <div class="motion-orb" aria-hidden="true"></div>
+      <div class="content">
+        <div class="topline"><span class="brand"><span class="crystal" aria-hidden="true"></span>GoreeCloud</span><span id="scenarioLabel">Noisy / bright</span></div>
+        <article class="card" id="opticalSurface" data-glaze-semantic-surface="protected">
+          <div class="eyebrow">Optical Intelligence / Session 001 follow-up</div>
+          <h1>Clarity should survive every state.</h1>
+          <p class="lead">Judge readability, hierarchy, glass character, depth, warmth, tint, fallback polish, and whether the interface still feels unmistakably like Glaze UI when the optical context changes.</p>
+          <div class="actions"><button type="button" class="primary">Primary action</button><button type="button" class="secondary">Secondary action</button></div>
+          <div class="status-grid">
+            <div class="status"><strong>Readable label</strong><span>Supporting text should stay comfortably legible.</span></div>
+            <div class="status critical"><strong>Critical status</strong><span>Important state should stay visually protected.</span></div>
+            <div class="status"><strong>Icon + text</strong><span>◆ &nbsp;Hierarchy should remain balanced.</span></div>
+          </div>
+          <p class="microcopy">Microcopy stress test · inspect contrast, edge clarity, blur contamination, tint intrusion, motion dependence, and fallback quality.</p>
+          <div class="readout" id="readout">Runtime state pending…</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="questions">
+    <strong>Human questions:</strong> For each scenario, decide whether readability is comfortable, the glass remains polished, hierarchy stays clear, and the result still looks recognizably Glaze UI. For Reduced motion, also confirm the experience still communicates state without depending on animation. For Accessible solid, confirm the loss of transparency looks intentional rather than broken.
+  </section>
+</main>
+<script type="module">
+import {createGlazeOpticalEngineV141Candidate} from '../../js/glaze-v1.4.1.candidate.mjs';
+
+const HEX40 = /^[0-9a-f]{40}$/;
+const revision = new URLSearchParams(location.search).get('revision') || '';
+const revisionNode = document.querySelector('#revision');
+if (HEX40.test(revision)) { revisionNode.textContent = revision; revisionNode.dataset.bound = 'true'; }
+else { revisionNode.textContent = 'UNBOUND — exact-revision human review requires ?revision=<40-hex-sha>'; revisionNode.dataset.bound = 'false'; }
+
+const scenarios = {
+  noisy: {label:'Noisy / bright', appearance:'light', backgroundComplexity:'complex', backgroundLuminance:'bright', daypart:'dusk', depth:'overlay', memoryTint:{css:'rgb(112 124 238)',influence:.06}, accessibility:{reducedTransparency:false,increasedContrast:false,forcedColors:false,reducedMotion:false}},
+  night: {label:'Deep night', appearance:'deep-dark', backgroundComplexity:'moderate', backgroundLuminance:'dark', daypart:'night', depth:'modal', memoryTint:{css:'rgb(112 124 238)',influence:.06}, accessibility:{reducedTransparency:false,increasedContrast:false,forcedColors:false,reducedMotion:false}},
+  accessible: {label:'Accessible solid', appearance:'dark', backgroundComplexity:'complex', backgroundLuminance:'bright', daypart:'day', depth:'raised', memoryTint:null, accessibility:{reducedTransparency:true,increasedContrast:true,forcedColors:false,reducedMotion:true}},
+  reduced: {label:'Reduced motion', appearance:'dark', backgroundComplexity:'moderate', backgroundLuminance:'mid', daypart:'day', depth:'raised', memoryTint:{css:'rgb(112 124 238)',influence:.06}, accessibility:{reducedTransparency:false,increasedContrast:false,forcedColors:false,reducedMotion:true}}
+};
+
+function applyScenario(name) {
+  const value = scenarios[name];
+  const scene = document.querySelector('#scene');
+  const surface = document.querySelector('#opticalSurface');
+  scene.dataset.appearance = value.appearance;
+  scene.dataset.complexity = value.backgroundComplexity;
+  scene.dataset.luminance = value.backgroundLuminance;
+  scene.dataset.reducedMotion = String(value.accessibility.reducedMotion);
+  document.querySelector('#scenarioLabel').textContent = value.label;
+  document.querySelectorAll('[data-scenario]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.scenario === name)));
+  const engine = createGlazeOpticalEngineV141Candidate();
+  const resolved = engine.apply(surface, {...value, semanticImportance:.88});
+  document.querySelector('#readout').textContent = [
+    `scenario=${name}`,
+    `mode=${resolved.mode}`,
+    `adapter=${resolved.adapterStatus}`,
+    `appearance=${resolved.appearance}`,
+    `semanticProtection=${resolved.semanticProtection}`,
+    `surfaceStrength=${resolved.semanticSurfaceStrength}`,
+    `frost=${resolved.frostStrength}`,
+    `blurScale=${resolved.blurScale}`,
+    `warmth=${resolved.warmth}`,
+    `memoryTint=${resolved.memoryTint ? resolved.memoryTint.influence : 0}`,
+    `reducedMotion=${resolved.accessibility.reducedMotion}`
+  ].join(' · ');
+}
+
+document.querySelectorAll('[data-scenario]').forEach(button => button.addEventListener('click', () => applyScenario(button.dataset.scenario)));
+applyScenario('noisy');
+</script>
+</body>
+</html>
