@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en" data-review-surface="v1.4.1-session-001-accessibility-input">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>GLAZE UI V1.4.1 — Accessibility + Input Human Review</title>
+<link rel="stylesheet" href="../../css/glaze-v1.4.1.candidate.css">
+<style>
+:root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#080b12;color:#f6f8fc}*{box-sizing:border-box}body{margin:0;background:#080b12}.shell{width:min(980px,100%);margin:auto;padding:14px}.authority,.questions{border:1px solid rgba(255,190,70,.52);background:rgba(70,43,5,.52);border-radius:20px;padding:16px 18px;line-height:1.5;margin-bottom:14px}.authority strong{color:#ffd889;display:block}.toolbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:14px 0}.toolbar button,.test-button{min-height:50px;border-radius:15px;border:1px solid rgba(255,255,255,.2);background:#121927;color:#f6f8fc;font:inherit;padding:.8rem 1rem}.toolbar button[aria-pressed="true"]{background:#223657;border-color:#88afff}.meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}.pill{border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:6px 10px;color:#cbd2dd}.pending{color:#ffd889}.stage{border:1px solid rgba(255,255,255,.14);border-radius:28px;padding:14px;background:#05070c}.scene{position:relative;overflow:hidden;border-radius:25px;min-height:650px;background:linear-gradient(145deg,#10162a,#21172e 48%,#172a31);padding:28px}.scene::before,.scene::after{content:"";position:absolute;border-radius:50%;filter:blur(3px);opacity:.82;z-index:0}.scene::before{width:360px;height:360px;left:-90px;top:-80px;background:radial-gradient(circle,#79b7ff 0 14%,#7846e3 43%,transparent 73%)}.scene::after{width:420px;height:420px;right:-140px;bottom:-140px;background:radial-gradient(circle,#ffbd68 0 12%,#d6428d 42%,transparent 74%)}.card{position:relative;z-index:1;padding:clamp(22px,5vw,40px);border-radius:30px;color:#f8f9fc;border:1px solid rgba(255,255,255,.22);box-shadow:0 30px 80px rgba(0,0,0,.28)}.eyebrow{font-size:.77rem;text-transform:uppercase;letter-spacing:.08em;font-weight:850;opacity:.78}h1{font-size:clamp(2.1rem,8vw,4.6rem);line-height:.95;letter-spacing:-.05em;margin:.5rem 0 1rem}.lead{font-size:clamp(1rem,3vw,1.2rem);line-height:1.55}.status-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px}.status{padding:15px;border-radius:18px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08)}.status strong{display:block;margin-bottom:6px}.critical{border-color:#ffbd68}.interaction{margin-top:18px;padding:16px;border-radius:18px;border:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.18)}.interaction-row{display:flex;flex-wrap:wrap;gap:10px}.test-button:focus-visible{outline:4px solid #ffd76a;outline-offset:4px}.test-button[data-activated="true"]{background:#2d684f}.readout{margin-top:16px;padding:13px;border-radius:15px;background:rgba(0,0,0,.42);font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}.env{margin-top:12px;font-size:.86rem;line-height:1.5;color:#d0d5df}.env strong{color:#fff}.questions{margin-top:14px;background:#0f1521;border-color:rgba(255,255,255,.14);color:#d9dee8}.questions strong{color:#fff}@media(max-width:700px){.shell{padding:10px}.stage{padding:8px}.scene{padding:14px}.status-grid{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr 1fr}.card{padding:24px 20px}}
+@media(forced-colors:active){.scene,.card,.status,.interaction,.test-button{forced-color-adjust:auto;background:Canvas;color:CanvasText;border-color:CanvasText}.test-button:focus-visible{outline:3px solid Highlight}.critical{border-color:Highlight}}
+</style>
+</head>
+<body>
+<main class="shell">
+<section class="authority"><strong>Human review surface only — not acceptance evidence.</strong><div>This exact-revision surface prepares Increased contrast, Forced colors, Keyboard, and Pointer checks. Simulated states do not replace real OS/browser/input evidence.</div><div>Review target: <code id="revision">UNBOUND</code></div></section>
+<div class="toolbar" aria-label="Accessibility review modes">
+<button type="button" data-mode="contrast" aria-pressed="true">Increased contrast</button>
+<button type="button" data-mode="forced" aria-pressed="false">Forced-colors simulation</button>
+</div>
+<div class="meta"><span class="pill">Runtime: V1.4.1 Candidate</span><span class="pill">Network: local-only</span><span class="pill pending">Human result: PENDING</span></div>
+<section class="stage">
+<div class="scene" id="scene">
+<article class="card" id="surface" data-glaze-semantic-surface="protected">
+<div class="eyebrow">Accessibility + input / Session 001 continuation</div>
+<h1>Clarity must survive every access mode.</h1>
+<p class="lead">Judge contrast, hierarchy, fallback intent, focus visibility, and interaction state without treating a simulation as proof of a real operating-system mode.</p>
+<div class="status-grid">
+<div class="status"><strong>Readable label</strong><span>Body text should remain comfortably legible.</span></div>
+<div class="status critical"><strong>Critical state</strong><span>Important information must stay visually protected.</span></div>
+</div>
+<section class="interaction" aria-labelledby="interaction-title"><strong id="interaction-title">Interaction targets</strong><p>Use Tab/Shift+Tab + Enter/Space with a real keyboard when available. Use a mouse/trackpad pointer when available. Touch alone does not satisfy keyboard or pointer qualification.</p><div class="interaction-row"><button class="test-button" id="primaryTarget" type="button">Primary target</button><button class="test-button" id="secondaryTarget" type="button">Secondary target</button></div><div class="env" id="interactionStatus"><strong>Last activation:</strong> none</div></section>
+<div class="readout" id="readout">Runtime state pending…</div>
+<div class="env" id="environment"></div>
+</article>
+</div>
+</section>
+<section class="questions"><strong>Human questions:</strong> For Increased contrast, decide whether hierarchy and readability improve without making Glaze UI feel harsh or visually broken. For Forced colors, only mark the canonical check if the environment line reports <code>forced-colors: active</code>; otherwise this is preparation/simulation only. For Keyboard/Pointer, only mark those canonical checks if you actually use those input modalities and can see/operate every target.</section>
+</main>
+<script type="module">
+import {createGlazeOpticalEngineV141Candidate} from '../../js/glaze-v1.4.1.candidate.mjs';
+const HEX40=/^[0-9a-f]{40}$/;const revision=new URLSearchParams(location.search).get('revision')||'';const rev=document.querySelector('#revision');rev.textContent=HEX40.test(revision)?revision:'UNBOUND — add ?revision=<40-hex-sha>';rev.dataset.bound=String(HEX40.test(revision));
+const modes={
+ contrast:{label:'Increased contrast',appearance:'dark',backgroundComplexity:'complex',backgroundLuminance:'mid',daypart:'day',depth:'raised',memoryTint:{css:'rgb(112 124 238)',influence:.06},accessibility:{reducedTransparency:false,increasedContrast:true,forcedColors:false,reducedMotion:false}},
+ forced:{label:'Forced colors simulation',appearance:'dark',backgroundComplexity:'complex',backgroundLuminance:'mid',daypart:'day',depth:'raised',memoryTint:null,accessibility:{reducedTransparency:true,increasedContrast:true,forcedColors:true,reducedMotion:true}}
+};
+const realForced=matchMedia('(forced-colors: active)').matches;const realReduced=matchMedia('(prefers-reduced-motion: reduce)').matches;const anyPointer=matchMedia('(any-pointer: fine)').matches;const hover=matchMedia('(any-hover: hover)').matches;
+function applyMode(name){const value=modes[name];document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===name)));const engine=createGlazeOpticalEngineV141Candidate();const resolved=engine.apply(document.querySelector('#surface'),{...value,semanticImportance:.92});document.querySelector('#readout').textContent=[`mode=${name}`,`runtimeMode=${resolved.mode}`,`appearance=${resolved.appearance}`,`semanticProtection=${resolved.semanticProtection}`,`surfaceStrength=${resolved.semanticSurfaceStrength}`,`frost=${resolved.frostStrength}`,`blurScale=${resolved.blurScale}`,`forcedColorsFlag=${resolved.accessibility.forcedColors}`,`increasedContrastFlag=${resolved.accessibility.increasedContrast}`,`reducedMotion=${resolved.accessibility.reducedMotion}`].join(' · ');document.querySelector('#environment').innerHTML=`<strong>Real environment:</strong> forced-colors: ${realForced?'active':'inactive'} · prefers-reduced-motion: ${realReduced?'reduce':'no-preference'} · any-pointer:fine: ${anyPointer} · any-hover:hover: ${hover}`;}
+document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>applyMode(b.dataset.mode)));
+for(const id of ['primaryTarget','secondaryTarget']){const el=document.querySelector('#'+id);el.addEventListener('click',e=>{document.querySelectorAll('.test-button').forEach(x=>x.dataset.activated='false');el.dataset.activated='true';document.querySelector('#interactionStatus').innerHTML=`<strong>Last activation:</strong> ${id} · event=${e.detail===0?'keyboard/programmatic':'pointer/touch'}`;});}
+applyMode('contrast');
+</script>
+</body>
+</html>
