@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "product": "GLAZE UI V1.4.1 — Optical Runtime Hardening",
+  "version": "1.4.1-candidate",
+  "lifecycle": "candidate-hardening",
+  "stableBaseline": "1.4.0",
+  "stableEngine": "js/glaze-v1.4-optical-engine.mjs",
+  "stableEngineBlobSha": "b3961d6d3534732367704715666803bd8cd27894",
+  "stableEntrypoint": "js/glaze-v1.4.0.mjs",
+  "stableEntrypointBlobSha": "a39e7f7209533f5c5b4fe78ce496307fc7850bfc",
+  "candidateEngine": "js/glaze-v1.4.1-optical-engine.candidate.mjs",
+  "candidateEntrypoint": "js/glaze-v1.4.1.candidate.mjs",
+  "verifier": "scripts/verify_glaze_v1_4_1_optical_runtime.mjs",
+  "principle": "Consumer context-adapter faults must not escape the Glaze Optical Engine or silently preserve decorative optical context. Adapter failure collapses candidate runtime behavior to a solid-accessible state while preserving V1.4.0 Stable source unchanged.",
+  "rules": {
+    "v1.4.0StableSourceImmutable": true,
+    "adapterResolveExceptionMayEscape": false,
+    "adapterFailureMode": "solid-accessible",
+    "adapterFailureForcesReducedTransparency": true,
+    "adapterFailureForcesForcedColors": true,
+    "adapterFailureAllowsMemoryTint": false,
+    "adapterFailureAllowsDecorativeTint": false,
+    "adapterFailureAllowsBlur": false,
+    "consumerOverridesMayDisableFailureFallback": false,
+    "adapterErrorObserverOptional": true,
+    "adapterErrorObserverFailureMayEscape": false,
+    "telemetryRequired": false,
+    "remoteContextRequired": false,
+    "humanAcceptanceAutomatic": false,
+    "patchPromotionAutomatic": false
+  },
+  "requiredMachineChecks": [
+    "stable-baseline-remains-v1.4.0",
+    "stable-source-blob-identities-unchanged",
+    "normal-adapter-resolution",
+    "malformed-adapter-value-sanitization",
+    "adapter-exception-solid-accessible-fallback",
+    "adapter-exception-cannot-be-overridden",
+    "observer-receives-adapter-error",
+    "observer-exception-does-not-break-fallback",
+    "apply-writes-failure-status-without-error-detail",
+    "no-adapter-remains-normal-local-resolution",
+    "telemetry-and-remote-context-remain-unrequired"
+  ],
+  "nonClaims": [
+    "This machine contract is not human optical acceptance.",
+    "This machine contract is not physical-device acceptance.",
+    "This machine contract is not assistive-technology acceptance.",
+    "This machine contract does not promote V1.4.1."
+  ]
+}

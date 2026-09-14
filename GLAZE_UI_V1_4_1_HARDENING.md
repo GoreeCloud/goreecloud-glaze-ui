@@ -2,9 +2,11 @@
 
 **Lifecycle:** Planned follow-up  
 **Baseline:** GLAZE UI V1.4 / `1.4.0` Stable  
-**Purpose:** Human validation, human verification, physical-device qualification, and subjective optical polish.
+**Purpose:** Human validation, human verification, physical-device qualification, subjective optical polish, and additive optical-runtime hardening.
 
 V1.4.1 is the explicit home for human-dependent validation deferred from the V1.4.0 Stable release by owner direction. Deferral does not mean these checks passed; it means they are non-blocking for V1.4.0 lifecycle activation and remain open work for this patch track.
+
+V1.4.1 may also contain additive runtime hardening that preserves the accepted V1.4.0 Stable source unchanged. Machine-verifiable hardening does not replace or satisfy the human-dependent work below.
 
 ## Required human-validation work
 
@@ -18,13 +20,47 @@ V1.4.1 is the explicit home for human-dependent validation deferred from the V1.
 - Measure representative real-device performance, thermal/power behavior, animation smoothness, and degradation behavior.
 - Perform subjective polish review for glass quality, depth, warmth, animation/touch feel, visual balance, and GoreeCloud identity recognition.
 
+## Optical runtime hardening
+
+V1.4.0 already bounds malformed optical values after they are returned by a consumer context adapter. V1.4.1 additionally hardens the adapter invocation boundary itself.
+
+The V1.4.1 Candidate runtime must treat a thrown `signalAdapter.resolve()` exception as a failure to establish trusted contextual signal state. It must not propagate that adapter exception through ordinary Glaze optical resolution or application, and it must not silently retain decorative adaptive optics as though the context were trustworthy.
+
+The required failure behavior is:
+
+- collapse to the existing V1.4 `solid-accessible` optical mode;
+- force the Reduced Transparency and Forced Colors accessibility path after consumer overrides are composed;
+- disable blur and decorative memory tint;
+- prevent caller overrides from re-enabling decorative optics for that failed adapter resolution;
+- expose only the bounded adapter status `failed-safe` to applied DOM state, never raw error messages, stacks, or adapter details;
+- permit an optional local `onAdapterError` observer for consumer diagnostics without requiring telemetry or remote reporting;
+- swallow observer failures so a diagnostic callback cannot defeat the accessibility fallback;
+- leave V1.4.0 Stable source and runtime entrypoints byte-for-byte/Git-blob unchanged.
+
+The runtime hardening authority is:
+
+- `contracts/v1.4.1/optical-runtime-hardening.contract.json` — machine contract, Stable blob bindings, and fail-safe rules.
+- `js/glaze-v1.4.1-optical-engine.candidate.mjs` — additive hardened Candidate wrapper around the V1.4.0 resolver/apply authority.
+- `js/glaze-v1.4.1.candidate.mjs` — additive Candidate runtime entrypoint inheriting V1.4.0.
+- `scripts/verify_glaze_v1_4_1_optical_runtime.mjs` — machine verifier for adapter success, malformed values, thrown adapter faults, override resistance, observer faults, DOM-status privacy, Stable blob immutability, and non-claim boundaries.
+
+The V1.4.1 Candidate runtime is local and deterministic. It does not require telemetry, analytics, camera access, or remote context. Consumers remain responsible for the privacy and security authority of the signals they provide. The optional error observer is not a telemetry requirement and must not be interpreted as permission for remote reporting.
+
+Machine verification command:
+
+```sh
+node scripts/verify_glaze_v1_4_1_optical_runtime.mjs
+```
+
+Passing this runtime verifier proves only the bounded machine behavior described by the contract. It does not establish human optical quality, physical-device behavior, assistive-technology acceptance, real-device performance, or V1.4.1 release readiness.
+
 ## Evidence rule
 
-Every completed item must identify the tested build/revision, device or environment, reviewer, scope, result, and any accepted limitation. Automated evidence may support a review but must not be relabeled as human evidence.
+Every completed human item must identify the tested build/revision, device or environment, reviewer, scope, result, and any accepted limitation. Automated evidence may support a review but must not be relabeled as human evidence.
 
 V1.4.1 uses a structured multi-session evidence protocol so one record can combine review sessions across Android, Linux, desktop, mobile, tablet, TV, watch, foldable, accessibility, and performance environments without flattening them into one misleading global pass state.
 
-The protocol authority is:
+The human-evidence protocol authority is:
 
 - `contracts/v1.4.1/human-validation.contract.json` — canonical required-check matrix and fail-closed rules.
 - `schemas/v1.4.1-human-validation-record.schema.json` — Draft 2020-12 structural schema for editor/tool validation; schema validity alone is never human acceptance.
@@ -68,3 +104,5 @@ The schema validator and verifier's synthetic self-test are protocol testing onl
 V1.4.1 may be promoted only after its claimed human/manual/physical-device evidence is actually recorded and any release-blocking findings are resolved or explicitly scoped out of the supported claim. V1.4.1 must not retroactively rewrite V1.4.0 evidence.
 
 Promotion additionally requires the structured record to cover every canonical required check, contain no unresolved exceptions, contain no `pending`, `blocked`, or `fail` results, explicitly declare an accepted decision, explicitly declare promotion eligibility, and bind every contributing review session to the exact revision supplied to the promotion gate.
+
+Machine runtime hardening may remove release-blocking implementation defects, but it cannot satisfy or waive human-authority checks. V1.4.1 remains non-promotable until both its claimed machine hardening and its required real human evidence are valid for the governed release revision.

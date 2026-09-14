@@ -1,0 +1,67 @@
+name: GLAZE UI V1.4.1 Optical Runtime Hardening
+
+on:
+  pull_request:
+    paths:
+      - 'contracts/v1.4.1/optical-runtime-hardening.contract.json'
+      - 'js/glaze-v1.4.1-optical-engine.candidate.mjs'
+      - 'js/glaze-v1.4.1.candidate.mjs'
+      - 'scripts/verify_glaze_v1_4_1_optical_runtime.mjs'
+      - 'GLAZE_UI_V1_4_1_HARDENING.md'
+      - '.github/workflows/glaze-v1.4.1-optical-runtime.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'contracts/v1.4.1/optical-runtime-hardening.contract.json'
+      - 'js/glaze-v1.4.1-optical-engine.candidate.mjs'
+      - 'js/glaze-v1.4.1.candidate.mjs'
+      - 'scripts/verify_glaze_v1_4_1_optical_runtime.mjs'
+      - 'GLAZE_UI_V1_4_1_HARDENING.md'
+      - '.github/workflows/glaze-v1.4.1-optical-runtime.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  optical-runtime-hardening:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Verify exact revision
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+
+      - name: Check candidate runtime syntax
+        run: |
+          node --check js/glaze-v1.4.1-optical-engine.candidate.mjs
+          node --check js/glaze-v1.4.1.candidate.mjs
+          node --check scripts/verify_glaze_v1_4_1_optical_runtime.mjs
+
+      - name: Verify V1.4.1 optical runtime hardening
+        run: node scripts/verify_glaze_v1_4_1_optical_runtime.mjs
+
+      - name: Preserve V1.4.0 Stable machine authority
+        run: node scripts/verify_glaze_v1_4_stable.mjs
+
+      - name: Preserve V1.4.1 human-evidence protocol boundary
+        run: |
+          node scripts/verify_glaze_v1_4_1_human_validation_schema.mjs
+          node scripts/verify_glaze_v1_4_1_human_validation.mjs --source-only
+          node scripts/verify_glaze_v1_4_1_human_validation.mjs --self-test
+
+      - name: Report non-claim boundary
+        run: |
+          echo 'V1.4.1 optical runtime hardening is machine-verifiable candidate work only.'
+          echo 'This workflow does not claim human, physical-device, assistive-technology, performance, or subjective optical acceptance.'
+          echo 'V1.4.0 Stable source remains separately verified and immutable under the hardening contract.'
