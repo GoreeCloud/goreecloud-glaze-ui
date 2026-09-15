@@ -1,0 +1,270 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "version": "1.5.0-dev.1",
+  "lifecycle": "development",
+  "stableConsumerTarget": "1.4.1",
+  "developmentOnly": true,
+  "consumerAcceptanceEstablished": false,
+  "productionAcceptanceEstablished": false,
+  "repositoryLocalAcceptanceRequired": true,
+  "purpose": "Exercise the shared V1.5 resolution layer against purpose-specific semantics from real registered GoreeCloud consumers without changing their current Stable conformance target or claiming repository-local acceptance.",
+  "profiles": [
+    {
+      "id": "goreecloud-launcher-handheld",
+      "name": "GoreeCloud Launcher",
+      "repository": "GoreeCloud/goreecloud-launcher",
+      "surface": "Android HOME and application navigation",
+      "input": {
+        "providers": [
+          {
+            "id": "goreecloud-launcher-runtime",
+            "authority": "application",
+            "context": {
+              "layout": {"category": "compact"},
+              "task": {"kind": "launching"},
+              "interaction": {"mode": "direct"}
+            },
+            "capabilities": [
+              {"id": "application.launch", "domain": "application", "state": "available"}
+            ]
+          },
+          {
+            "id": "android-platform",
+            "authority": "platform",
+            "context": {
+              "input": {"primary": "touch"},
+              "device-posture": {"posture": "folded"},
+              "connectivity": {"class": "offline"},
+              "window-state": {"state": "foreground"}
+            },
+            "capabilities": [
+              {"id": "rendering.backdrop-blur", "domain": "rendering", "state": "available"}
+            ]
+          },
+          {
+            "id": "goreecloud-index",
+            "authority": "service",
+            "capabilities": [
+              {"id": "service.index-search", "domain": "service", "state": "available"}
+            ]
+          }
+        ],
+        "intent": {"supportsMultiPane": false},
+        "destinations": [
+          {"id": "home", "label": "Home"},
+          {"id": "apps", "label": "Apps"},
+          {"id": "launcher-settings", "label": "Launcher Settings"}
+        ],
+        "currentDestinationId": "home",
+        "actions": [
+          {"id": "launch-app", "label": "Launch app", "primary": true, "requiredCapabilities": ["application.launch"]},
+          {"id": "search-goreecloud", "label": "Search GoreeCloud", "requiredCapabilities": ["service.index-search"]}
+        ]
+      }
+    },
+    {
+      "id": "goreecloud-manager-desktop",
+      "name": "GoreeCloud Manager",
+      "repository": "GoreeCloud/goreecloud-manager",
+      "surface": "Desktop administrative and operational console",
+      "input": {
+        "providers": [
+          {
+            "id": "goreecloud-manager-runtime",
+            "authority": "application",
+            "context": {
+              "layout": {"category": "expanded"},
+              "task": {"kind": "configuring"},
+              "content": {"kind": "critical"}
+            },
+            "capabilities": [
+              {"id": "application.refresh", "domain": "application", "state": "available"}
+            ]
+          },
+          {
+            "id": "desktop-platform",
+            "authority": "platform",
+            "context": {
+              "input": {"primary": "keyboard"},
+              "runtime": {"performanceLevel": "normal"},
+              "connectivity": {"class": "online"},
+              "window-state": {"state": "foreground"}
+            },
+            "capabilities": [
+              {"id": "rendering.backdrop-blur", "domain": "rendering", "state": "available"}
+            ]
+          },
+          {
+            "id": "manager-policy",
+            "authority": "policy",
+            "capabilities": [
+              {"id": "authorization.manager-admin", "domain": "authorization", "state": "restricted"}
+            ]
+          }
+        ],
+        "intent": {"supportsMultiPane": true},
+        "destinations": [
+          {"id": "overview", "label": "Overview"},
+          {"id": "administration", "label": "Administration", "capabilityId": "authorization.manager-admin", "visibilityPolicy": "preserve"}
+        ],
+        "currentDestinationId": "administration",
+        "actions": [
+          {"id": "refresh-status", "label": "Refresh status", "primary": true, "requiredCapabilities": ["application.refresh"]},
+          {"id": "apply-administrative-change", "label": "Apply administrative change", "requiredCapabilities": ["authorization.manager-admin"], "consequential": true}
+        ]
+      }
+    },
+    {
+      "id": "goreecloud-reader-offline",
+      "name": "GoreeCloud Reader",
+      "repository": "GoreeCloud/goreecloud-reader",
+      "surface": "Reading library with local continuity while synchronization is offline",
+      "input": {
+        "providers": [
+          {
+            "id": "goreecloud-reader-runtime",
+            "authority": "application",
+            "context": {
+              "layout": {"category": "expanded"},
+              "task": {"kind": "reading"},
+              "content": {"kind": "text-heavy"}
+            },
+            "capabilities": [
+              {"id": "application.local-reading", "domain": "application", "state": "available"}
+            ]
+          },
+          {
+            "id": "reader-platform",
+            "authority": "platform",
+            "context": {
+              "input": {"primary": "touch"},
+              "connectivity": {"class": "offline"},
+              "window-state": {"state": "foreground"}
+            },
+            "capabilities": [
+              {"id": "rendering.backdrop-blur", "domain": "rendering", "state": "available"}
+            ]
+          },
+          {
+            "id": "reader-sync-service",
+            "authority": "service",
+            "capabilities": [
+              {"id": "service.library-sync", "domain": "service", "state": "offline"}
+            ]
+          }
+        ],
+        "intent": {"supportsMultiPane": true},
+        "destinations": [
+          {"id": "library", "label": "Library"},
+          {"id": "sync", "label": "Sync", "capabilityId": "service.library-sync", "visibilityPolicy": "preserve"}
+        ],
+        "currentDestinationId": "sync",
+        "actions": [
+          {"id": "continue-reading", "label": "Continue reading", "primary": true, "requiredCapabilities": ["application.local-reading"], "relevance": [{"domain": "connectivity", "key": "class", "values": ["offline"]}]},
+          {"id": "sync-library", "label": "Sync library", "requiredCapabilities": ["service.library-sync"], "fallbackActionId": "continue-reading", "stateMessages": {"offline": "Library synchronization is unavailable offline. Local reading remains available."}}
+        ]
+      }
+    },
+    {
+      "id": "wardveil-security-center",
+      "name": "GoreeCloud Security Center",
+      "repository": "GoreeCloud/goreecloud-wardveil",
+      "surface": "Wardveil Security Center restricted security action presentation",
+      "input": {
+        "providers": [
+          {
+            "id": "wardveil-security-center-runtime",
+            "authority": "application",
+            "context": {
+              "layout": {"category": "expanded"},
+              "task": {"kind": "configuring"},
+              "content": {"kind": "critical"}
+            },
+            "capabilities": [
+              {"id": "application.review-security", "domain": "application", "state": "available"}
+            ]
+          },
+          {
+            "id": "security-center-platform",
+            "authority": "platform",
+            "context": {
+              "input": {"primary": "pointer"},
+              "window-state": {"state": "foreground"}
+            },
+            "capabilities": [
+              {"id": "rendering.backdrop-blur", "domain": "rendering", "state": "available"}
+            ]
+          },
+          {
+            "id": "wardveil-security",
+            "authority": "security",
+            "capabilities": [
+              {"id": "authorization.quarantine", "domain": "authorization", "state": "restricted"}
+            ]
+          }
+        ],
+        "intent": {"supportsMultiPane": true},
+        "destinations": [
+          {"id": "security-overview", "label": "Security Overview"},
+          {"id": "quarantine", "label": "Quarantine", "capabilityId": "authorization.quarantine", "visibilityPolicy": "preserve"}
+        ],
+        "currentDestinationId": "security-overview",
+        "actions": [
+          {"id": "review-security", "label": "Review security", "primary": true, "requiredCapabilities": ["application.review-security"]},
+          {"id": "quarantine-item", "label": "Quarantine item", "requiredCapabilities": ["authorization.quarantine"], "consequential": true, "destructive": true}
+        ]
+      }
+    },
+    {
+      "id": "goreecloud-privacy-center",
+      "name": "GoreeCloud Privacy Center",
+      "repository": "GoreeCloud/goreecloud-privacy-shield",
+      "surface": "Privacy Shield data-use authorization presentation",
+      "input": {
+        "providers": [
+          {
+            "id": "privacy-center-runtime",
+            "authority": "application",
+            "context": {
+              "layout": {"category": "expanded"},
+              "task": {"kind": "configuring"},
+              "content": {"kind": "critical"}
+            },
+            "capabilities": [
+              {"id": "application.review-privacy", "domain": "application", "state": "available"}
+            ]
+          },
+          {
+            "id": "privacy-center-platform",
+            "authority": "platform",
+            "context": {
+              "input": {"primary": "pointer"},
+              "window-state": {"state": "foreground"}
+            },
+            "capabilities": [
+              {"id": "rendering.backdrop-blur", "domain": "rendering", "state": "available"}
+            ]
+          },
+          {
+            "id": "privacy-shield",
+            "authority": "privacy",
+            "capabilities": [
+              {"id": "authorization.data-use", "domain": "authorization", "state": "permission-required"}
+            ]
+          }
+        ],
+        "intent": {"supportsMultiPane": true},
+        "destinations": [
+          {"id": "privacy-overview", "label": "Privacy Overview"},
+          {"id": "data-use", "label": "Data Use", "capabilityId": "authorization.data-use", "visibilityPolicy": "preserve"}
+        ],
+        "currentDestinationId": "data-use",
+        "actions": [
+          {"id": "review-privacy", "label": "Review privacy", "primary": true, "requiredCapabilities": ["application.review-privacy"]},
+          {"id": "authorize-data-use", "label": "Authorize data use", "requiredCapabilities": ["authorization.data-use"], "consequential": true}
+        ]
+      }
+    }
+  ]
+}

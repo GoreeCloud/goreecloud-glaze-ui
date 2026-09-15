@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "version": "1.5.0-dev.1",
+  "lifecycle": "development",
+  "status": "required-representative-consumer-development-matrix",
+  "profiles": "contracts/v1.5/representative-consumers.dev.json",
+  "machineGate": "scripts/verify_glaze_v1_5_consumer_integration_development.mjs",
+  "consumerAcceptanceEstablished": false,
+  "repositoryLocalAcceptanceRequired": true,
+  "scenarios": [
+    {"id":"consumer.launcher.compact-touch-composition","category":"launcher","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"consumer.launcher.local-core-offline","category":"launcher","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"consumer.launcher.index-authority-preserved","category":"launcher","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"consumer.manager.desktop-critical-composition","category":"manager","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"consumer.manager.restricted-admin-visible","category":"manager","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"consumer.manager.no-automatic-admin-execution","category":"manager","machineCovered":true,"externalAcceptanceRequired":false},
+    {"id":"consumer.reader.reading-composition","category":"reader","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"consumer.reader.offline-local-fallback","category":"reader","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"consumer.reader.navigation-continuity","category":"reader","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"consumer.wardveil.security-authority-preserved","category":"security-authority","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"consumer.wardveil.restricted-quarantine-no-auto-execution","category":"security-authority","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"consumer.privacy-shield.authorization-authority-preserved","category":"privacy-authority","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"consumer.privacy-shield.permission-recovery-user-initiated","category":"privacy-authority","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"consumer.integration.shared-evidence-not-consumer-acceptance","category":"governance","machineCovered":true,"externalAcceptanceRequired":false}
+  ],
+  "promotionBoundary": {
+    "representativeProfilesChangeStableConsumerTarget": false,
+    "sharedMachineCoverageEstablishesConsumerConformance": false,
+    "sharedMachineCoverageQualifiesReleaseCandidate": false,
+    "sharedMachineCoverageQualifiesStable": false,
+    "repositoryLocalExactRevisionEvidenceRequired": true
+  }
+}

@@ -1,0 +1,97 @@
+name: GLAZE UI V1.5 Context and Capability Development
+
+on:
+  pull_request:
+    paths:
+      - 'GLAZE_UI_V1_5_DEVELOPMENT.md'
+      - 'contracts/v1.5/**'
+      - 'conformance/v1.5-*.json'
+      - 'registry/development/glaze-v1.5.0-dev.1.json'
+      - 'js/glaze-v1.5*.mjs'
+      - 'reference/v1.5/**'
+      - 'scripts/generate_glaze_v1_5_stabilization_review_packet.mjs'
+      - 'scripts/verify_glaze_v1_5_*development.mjs'
+      - '.github/workflows/glaze-v1.5-development.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: glaze-v1.5-development-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  STABLE_BASELINE_SHA: 4fab9da0fad2e5c974e0e66ec88632c61745751c
+
+jobs:
+  verify-development-contract:
+    name: Verify 1.5 development contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact checked-out revision
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${EXPECTED_SHA}"
+          git cat-file -e "${STABLE_BASELINE_SHA}^{commit}"
+          git merge-base --is-ancestor "${STABLE_BASELINE_SHA}" HEAD
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+
+      - name: Verify Stable 1.4.1 authority remains valid
+        run: node scripts/verify_glaze_v1_4_1_stable.mjs
+
+      - name: Verify Stable 1.4.1 release surface is byte-identical
+        shell: bash
+        run: |
+          set -euo pipefail
+          for path in \
+            VERSION \
+            registry/lifecycle.json \
+            GLAZE_UI_V1_4_1.md \
+            GLAZE_UI_V1_4_1_HARDENING.md \
+            acceptance/v1.4.1-stable.md \
+            css/glaze-v1.4.1.css \
+            js/glaze-v1.4.1.mjs \
+            js/glaze-v1.4.1-optical-engine.mjs; do
+            test "$(git rev-parse "${STABLE_BASELINE_SHA}:${path}")" = "$(git rev-parse "HEAD:${path}")"
+          done
+
+      - name: Verify V1.5 development contracts and core conformance matrix
+        run: node scripts/verify_glaze_v1_5_development.mjs
+
+      - name: Verify V1.5 adaptive actions and graceful degradation
+        run: node scripts/verify_glaze_v1_5_actions_development.mjs
+
+      - name: Verify V1.5 privacy-safe explainable adaptation diagnostics
+        run: node scripts/verify_glaze_v1_5_diagnostics_development.mjs
+
+      - name: Verify V1.5 unified context and capability resolution layer
+        run: node scripts/verify_glaze_v1_5_resolution_development.mjs
+
+      - name: Verify V1.5 representative GoreeCloud consumer integration profiles
+        run: node scripts/verify_glaze_v1_5_consumer_integration_development.mjs
+
+      - name: Verify V1.5 stabilization review planning boundary
+        run: |
+          node scripts/verify_glaze_v1_5_stabilization_review_development.mjs
+          node scripts/generate_glaze_v1_5_stabilization_review_packet.mjs --self-test
+
+      - name: Verify V1.5 human review harness boundary
+        run: node scripts/verify_glaze_v1_5_human_review_harness_development.mjs
+
+      - name: Verify validation did not mutate tracked source
+        run: git diff --exit-code -- .

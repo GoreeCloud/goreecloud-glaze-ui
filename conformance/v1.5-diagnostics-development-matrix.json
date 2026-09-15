@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "version": "1.5.0-dev.1",
+  "lifecycle": "development",
+  "stableBaseline": "1.4.1",
+  "status": "required-diagnostics-development-conformance-matrix",
+  "machineGate": "scripts/verify_glaze_v1_5_diagnostics_development.mjs",
+  "humanOrTargetRuntimeAcceptanceEstablished": false,
+  "scenarios": [
+    {"id":"diagnostics.composition-semantic-reasons","category":"explainability","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"diagnostics.navigation-continuity","category":"explainability","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"diagnostics.action-state-and-fallback","category":"explainability","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"diagnostics.optical-downgrade","category":"explainability","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"diagnostics.capability-authority-class","category":"provenance","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"diagnostics.raw-context-redacted","category":"privacy","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"diagnostics.provider-identity-redacted","category":"privacy","machineCovered":true,"externalAcceptanceRequired":true}
+  ],
+  "promotionBoundary": {
+    "machineCoverageAloneQualifiesReleaseCandidate": false,
+    "machineCoverageAloneQualifiesStable": false,
+    "exactRevisionHumanEvidenceRequiredWhereMarked": true,
+    "privacyReviewRequired": true
+  }
+}

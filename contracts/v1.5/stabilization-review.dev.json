@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "contractVersion": "1.5.0-dev.1",
+  "glazeUiVersion": "1.5.0-dev.1",
+  "releaseLifecycle": "Development",
+  "stableBaseline": "1.4.1",
+  "repository": "GoreeCloud/goreecloud-glaze-ui",
+  "authority": "review-planning-only",
+  "promotionEligible": false,
+  "consumerEligible": false,
+  "releaseCandidate": false,
+  "stable": false,
+  "purpose": "Define the minimum externally observed stabilization review areas for GLAZE UI V1.5 without manufacturing human, assistive-technology, device, privacy, performance, platform, Release Candidate, Stable, consumer, deployment, or production acceptance.",
+  "requiredEvidenceAreas": [
+    {
+      "id": "human-usability",
+      "label": "Human usability and state communication",
+      "checks": [
+        {
+          "id": "human-usability-state-explanations",
+          "description": "Verify that permission-required, restricted, offline, degraded, temporarily unavailable, unsupported, and unknown states are understandable without implying authorization or success."
+        },
+        {
+          "id": "human-usability-action-stability",
+          "description": "Verify that primary actions remain predictably ordered and that contextual adaptation does not create surprising or unsafe action movement."
+        },
+        {
+          "id": "human-usability-task-continuity",
+          "description": "Verify that navigation and composition changes preserve task continuity, current location, and understandable recovery behavior."
+        }
+      ]
+    },
+    {
+      "id": "assistive-technology-accessibility",
+      "label": "Accessibility and assistive technology",
+      "checks": [
+        {
+          "id": "accessibility-keyboard-focus",
+          "description": "Verify keyboard and directional navigation, visible focus, logical focus order, and focus preservation across adaptive state changes."
+        },
+        {
+          "id": "accessibility-semantic-announcement",
+          "description": "Verify accessible names, roles, states, relationships, and meaningful assistive-technology announcement of capability and availability changes."
+        },
+        {
+          "id": "accessibility-presentation-modes",
+          "description": "Verify Reduced Motion, Reduced Transparency, Increased Contrast or Forced Colors, large text, and applicable color-vision accommodations without semantic loss."
+        }
+      ]
+    },
+    {
+      "id": "target-device-runtime",
+      "label": "Representative target device and runtime",
+      "checks": [
+        {
+          "id": "runtime-representative-rendering",
+          "description": "Verify representative supported browser or native runtime rendering and interaction behavior on an exact V1.5 revision."
+        },
+        {
+          "id": "runtime-connectivity-continuity",
+          "description": "Verify offline, reconnecting, degraded-service, and runtime-downgrade behavior without false capability or success claims."
+        },
+        {
+          "id": "runtime-fallback-integrity",
+          "description": "Verify unsupported-effect and constrained-runtime fallbacks preserve semantics, usability, and authority boundaries."
+        }
+      ]
+    },
+    {
+      "id": "privacy-authorization",
+      "label": "Privacy and authorization boundary",
+      "checks": [
+        {
+          "id": "privacy-no-automatic-consent",
+          "description": "Verify Glaze UI does not automatically request permission, manufacture consent, broaden purpose, or execute privacy-sensitive fallback behavior."
+        },
+        {
+          "id": "privacy-diagnostic-minimization",
+          "description": "Verify diagnostics and adaptation summaries exclude credentials, private content, raw sensitive context, exact observation timestamps, and provider identity where not required."
+        },
+        {
+          "id": "privacy-authority-truthfulness",
+          "description": "Verify Privacy Shield, Wardveil Security, application, service, device, and other provider authority classes remain truthful, bounded, and fail closed on conflict or missing provenance."
+        }
+      ]
+    },
+    {
+      "id": "anti-jitter-performance",
+      "label": "Anti-jitter and performance",
+      "checks": [
+        {
+          "id": "performance-transition-stability",
+          "description": "Verify repeated context and capability transitions do not cause oscillation, visual jitter, focus churn, or unstable action ordering."
+        },
+        {
+          "id": "performance-constrained-mode",
+          "description": "Verify low-power or performance-constrained adaptation reduces presentation cost without changing capability truth or protected semantic meaning."
+        },
+        {
+          "id": "performance-representative-budget",
+          "description": "Verify representative interaction and rendering behavior remains within the approved performance budget for the reviewed environment."
+        }
+      ]
+    },
+    {
+      "id": "platform-posture-input-window",
+      "label": "Platform, posture, input, and window adaptation",
+      "checks": [
+        {
+          "id": "platform-posture-continuity",
+          "description": "Verify fold, unfold, posture, rotation, and other supported form-factor transitions preserve task and state continuity."
+        },
+        {
+          "id": "platform-input-fidelity",
+          "description": "Verify supported touch, pointer, keyboard, remote or directional, and other declared input modes receive appropriate Glaze UI interaction behavior."
+        },
+        {
+          "id": "platform-window-resilience",
+          "description": "Verify constrained and expanded window states adapt composition without losing critical actions, current destination, or semantic hierarchy."
+        }
+      ]
+    }
+  ],
+  "boundary": "This contract defines review obligations only. A generated or completed record is not lifecycle promotion authority by itself, and no review result may be inferred from machine checks or absent evidence."
+}

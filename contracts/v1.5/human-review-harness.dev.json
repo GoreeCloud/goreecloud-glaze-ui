@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "product": "GLAZE UI V1.5 — Human Review Harness",
+  "version": "1.5.0-dev.1",
+  "lifecycle": "Development",
+  "stableBaseline": "1.4.1",
+  "harness": "reference/v1.5/human-review-v2.html",
+  "candidateRuntime": "js/glaze-v1.5-resolution.dev.mjs",
+  "authority": "human-review-surface-only",
+  "networkPolicy": "repository-local-only",
+  "automaticHumanAcceptance": false,
+  "automaticPromotionEligibility": false,
+  "reviewChecks": [
+    "human-usability-state-explanations",
+    "human-usability-action-stability",
+    "human-usability-task-continuity",
+    "accessibility-keyboard-focus",
+    "accessibility-semantic-announcement"
+  ],
+  "requiredScenarios": [
+    "connectivity-online",
+    "connectivity-offline",
+    "authorization-permission-required",
+    "authorization-available",
+    "policy-restricted",
+    "policy-available",
+    "service-degraded",
+    "service-available",
+    "layout-compact",
+    "layout-expanded",
+    "reduced-motion-on",
+    "reduced-motion-off"
+  ],
+  "rules": {
+    "exactRevisionMustBeVisible": true,
+    "reviewSurfaceMustDisplayNonEvidenceNotice": true,
+    "reviewSurfaceMustDisplayDevelopmentBoundary": true,
+    "reviewSurfaceMustUseRealResolver": true,
+    "taskInputMustSurviveAdaptiveRerender": true,
+    "focusMustRemainOnStableControlsAcrossAdaptiveRerender": true,
+    "primaryActionOrderMustBeVisible": true,
+    "noRemoteAssets": true,
+    "noTelemetry": true,
+    "noAutomaticNavigation": true,
+    "noAutomaticPermissionRequest": true,
+    "noAutomaticConsequentialExecution": true,
+    "noAutomaticFallbackExecution": true,
+    "noAutomaticPassControls": true,
+    "noAutomaticEvidenceRecordGeneration": true
+  }
+}

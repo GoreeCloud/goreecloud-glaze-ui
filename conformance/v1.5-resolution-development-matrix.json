@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "version": "1.5.0-dev.1",
+  "lifecycle": "development",
+  "stableBaseline": "1.4.1",
+  "status": "required-resolution-development-conformance-matrix",
+  "machineGate": "scripts/verify_glaze_v1_5_resolution_development.mjs",
+  "humanOrTargetRuntimeAcceptanceEstablished": false,
+  "scenarios": [
+    {"id":"resolution.provider-snapshot-authority","category":"resolution","machineCovered":true,"externalAcceptanceRequired":false},
+    {"id":"resolution.context-composition","category":"resolution","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"resolution.navigation-capability","category":"resolution","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"resolution.action-capability","category":"resolution","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"resolution.control-state","category":"resolution","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"resolution.optical-accepted-state","category":"resolution","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"resolution.privacy-safe-diagnostics","category":"resolution","machineCovered":true,"externalAcceptanceRequired":true},
+    {"id":"resolution.conflict-fails-closed","category":"authority","machineCovered":true,"externalAcceptanceRequired":false},
+    {"id":"resolution.no-automatic-execution","category":"authority","machineCovered":true,"externalAcceptanceRequired":false},
+    {"id":"resolution.offline-local-fallback","category":"graceful-degradation","machineCovered":true,"externalAcceptanceRequired":true}
+  ],
+  "promotionBoundary": {
+    "machineCoverageAloneQualifiesReleaseCandidate": false,
+    "machineCoverageAloneQualifiesStable": false,
+    "exactRevisionHumanEvidenceRequiredWhereMarked": true,
+    "targetRuntimeEvidenceRequiredWhereMarked": true,
+    "privacyReviewRequired": true
+  }
+}
