@@ -6,6 +6,9 @@ on:
       - 'contracts/v1.4.1/optical-runtime-hardening.contract.json'
       - 'js/glaze-v1.4.1-optical-engine.candidate.mjs'
       - 'js/glaze-v1.4.1.candidate.mjs'
+      - 'css/glaze-v1.4.1.candidate.css'
+      - 'tests/glaze-v1.4.1-capability-aware-performance.test.mjs'
+      - 'reference/v1.4.1/session-005-capability-aware-retest.html'
       - 'scripts/verify_glaze_v1_4_1_optical_runtime.mjs'
       - 'GLAZE_UI_V1_4_1_HARDENING.md'
       - '.github/workflows/glaze-v1.4.1-optical-runtime.yml'
@@ -15,6 +18,9 @@ on:
       - 'contracts/v1.4.1/optical-runtime-hardening.contract.json'
       - 'js/glaze-v1.4.1-optical-engine.candidate.mjs'
       - 'js/glaze-v1.4.1.candidate.mjs'
+      - 'css/glaze-v1.4.1.candidate.css'
+      - 'tests/glaze-v1.4.1-capability-aware-performance.test.mjs'
+      - 'reference/v1.4.1/session-005-capability-aware-retest.html'
       - 'scripts/verify_glaze_v1_4_1_optical_runtime.mjs'
       - 'GLAZE_UI_V1_4_1_HARDENING.md'
       - '.github/workflows/glaze-v1.4.1-optical-runtime.yml'
@@ -50,6 +56,9 @@ jobs:
 
       - name: Verify V1.4.1 optical runtime hardening
         run: node scripts/verify_glaze_v1_4_1_optical_runtime.mjs
+
+      - name: Verify capability-aware performance contract
+        run: node --test tests/glaze-v1.4.1-capability-aware-performance.test.mjs
 
       - name: Preserve V1.4.0 Stable machine authority
         run: node scripts/verify_glaze_v1_4_stable.mjs

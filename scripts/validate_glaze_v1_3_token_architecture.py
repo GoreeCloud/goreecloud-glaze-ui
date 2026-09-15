@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the GLAZE UI V1.3 Adaptive Resonance token architecture workstream."""
+"""Validate the preserved GLAZE UI V1.3 Adaptive Resonance token architecture workstream."""
 from __future__ import annotations
 
 import json
@@ -7,7 +7,8 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-STABLE_VERSION = "1.2.0"
+STABLE_VERSION = "1.2.0"  # Historical V1.3 source baseline.
+V13_VERSION = "1.3.0"
 PRODUCT = "GLAZE UI V1.3 — Adaptive Resonance"
 CONTRACT_PATH = "contracts/v1.3/adaptive-resonance.candidate.json"
 TOKEN_PATHS = {
@@ -35,6 +36,16 @@ EXPECTED_NAMESPACES = {
 
 def load(path: str) -> Any:
     return json.loads((ROOT / path).read_text(encoding="utf-8"))
+
+
+def version_tuple(value: str) -> tuple[int, int, int] | None:
+    try:
+        parts = value.split(".")
+        if len(parts) != 3:
+            return None
+        return tuple(int(part) for part in parts)  # type: ignore[return-value]
+    except (AttributeError, ValueError):
+        return None
 
 
 def resolve_pointer(document: Any, pointer: str) -> Any:
@@ -67,11 +78,18 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == STABLE_VERSION, "VERSION must remain 1.2.0")
+    version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
     lifecycle = load("registry/lifecycle.json")
-    req(lifecycle.get("currentStable") == STABLE_VERSION, "currentStable must remain 1.2.0")
-    req(lifecycle.get("currentOfficial") == STABLE_VERSION, "currentOfficial must remain 1.2.0")
-    req(lifecycle.get("activeCandidate") is None, "token architecture must not activate V1.3 Candidate")
+    current_stable = lifecycle.get("currentStable")
+    current_official = lifecycle.get("currentOfficial")
+    req(version == current_stable == current_official, "VERSION/currentStable/currentOfficial must agree on the live current Stable release")
+    current_tuple = version_tuple(version)
+    v13_tuple = version_tuple(V13_VERSION)
+    req(current_tuple is not None and v13_tuple is not None and current_tuple >= v13_tuple, "live current Stable may not regress below V1.3.0")
+    retained_v13 = next((item for item in lifecycle.get("releases", []) if isinstance(item, dict) and item.get("version") == V13_VERSION), None)
+    req(bool(retained_v13) and retained_v13.get("status") == "stable", "V1.3.0 retained release record must remain Stable")
+    req(bool(retained_v13) and retained_v13.get("consumerEligible") is True, "V1.3.0 retained release record must preserve consumer eligibility")
+    req(bool(retained_v13) and retained_v13.get("stableBaseline") == STABLE_VERSION, "V1.3.0 retained release baseline must remain 1.2.0")
 
     contract = load(CONTRACT_PATH)
     req(contract.get("product") == PRODUCT, "architecture product identity mismatch")
@@ -190,7 +208,7 @@ def main() -> int:
         return 1
 
     print("GLAZE UI V1.3 Adaptive Resonance token architecture: PASS")
-    print("Boundary: six semantic token categories established; later adaptive runtimes remain unestablished; V1.2 remains Stable.")
+    print(f"Boundary: six historical V1.3 semantic token categories remain validated against their 1.2.0 source baseline; live current Stable is {version}.")
     return 0
 
 

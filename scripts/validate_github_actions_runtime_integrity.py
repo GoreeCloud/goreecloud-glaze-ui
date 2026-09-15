@@ -39,9 +39,6 @@ APPROVED_EXTERNAL_ACTIONS = {
     },
 }
 
-# Workflow steps may spell an action either as an indented `uses:` key after a
-# step name or in YAML's compact list-item form (`- uses:`). Both are security
-# relevant and must be covered by the same immutable-pin policy.
 USES = re.compile(r"^\s*(?:-\s*)?uses:\s*([^\s#]+)", re.MULTILINE)
 SHA = re.compile(r"^[0-9a-f]{40}$")
 NODE20_OVERRIDE = "ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION"
@@ -89,13 +86,19 @@ def validate() -> dict[str, object]:
             files_without_uses.append(relative)
             continue
         for ref in refs:
-            parsed = parse_external(ref)
+            try:
+                parsed = parse_external(ref)
+            except IntegrityError as error:
+                raise IntegrityError(f"{relative}: {error}") from error
             if parsed is None:
                 local_reusable.add(ref)
                 continue
             action, revision = parsed
             expected = APPROVED_EXTERNAL_ACTIONS[action]
-            require(revision == expected["sha"], f"{relative} pins {action} to {revision}, expected approved {expected['release']} SHA {expected['sha']}")
+            require(
+                revision == expected["sha"],
+                f"{relative} pins {action} to {revision}, expected approved {expected['release']} SHA {expected['sha']}",
+            )
             entry = observed.setdefault(action, {"count": 0, "workflows": []})
             entry["count"] = int(entry["count"]) + 1
             workflows = entry["workflows"]

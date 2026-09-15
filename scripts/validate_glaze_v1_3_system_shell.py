@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the Proposed GLAZE UI V1.3 System Shell and Control Center workstream."""
+"""Validate the preserved GLAZE UI V1.3 System Shell and Control Center workstream."""
 from __future__ import annotations
 
 import json
@@ -8,7 +8,8 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 PRODUCT = "GLAZE UI V1.3 — Adaptive Resonance"
-STABLE_VERSION = "1.2.0"
+STABLE_VERSION = "1.2.0"  # Historical V1.3 source baseline.
+V13_VERSION = "1.3.0"
 SHELL = "contracts/v1.3/system-shell.candidate.json"
 CONTROL = "contracts/v1.3/control-center.candidate.json"
 RUNTIME = "js/glaze-v1.3-system-shell.candidate.mjs"
@@ -23,6 +24,16 @@ MATERIAL = "contracts/v1.3/living-material-2.candidate.json"
 
 def load(path: str) -> Any:
     return json.loads((ROOT / path).read_text(encoding="utf-8"))
+
+
+def version_tuple(value: str) -> tuple[int, int, int] | None:
+    try:
+        parts = value.split(".")
+        if len(parts) != 3:
+            return None
+        return tuple(int(part) for part in parts)  # type: ignore[return-value]
+    except (AttributeError, ValueError):
+        return None
 
 
 def main() -> int:
@@ -41,11 +52,18 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    req((ROOT / "VERSION").read_text(encoding="utf-8").strip() == STABLE_VERSION, "VERSION must remain 1.2.0")
+    version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
     lifecycle = load("registry/lifecycle.json")
-    req(lifecycle.get("currentStable") == STABLE_VERSION, "currentStable must remain 1.2.0")
-    req(lifecycle.get("currentOfficial") == STABLE_VERSION, "currentOfficial must remain 1.2.0")
-    req(lifecycle.get("activeCandidate") is None, "System Shell work must not activate lifecycle Candidate")
+    current_stable = lifecycle.get("currentStable")
+    current_official = lifecycle.get("currentOfficial")
+    req(version == current_stable == current_official, "VERSION/currentStable/currentOfficial must agree on the live current Stable release")
+    current_tuple = version_tuple(version)
+    v13_tuple = version_tuple(V13_VERSION)
+    req(current_tuple is not None and v13_tuple is not None and current_tuple >= v13_tuple, "live current Stable may not regress below V1.3.0")
+    retained_v13 = next((item for item in lifecycle.get("releases", []) if isinstance(item, dict) and item.get("version") == V13_VERSION), None)
+    req(bool(retained_v13) and retained_v13.get("status") == "stable", "V1.3.0 retained release record must remain Stable")
+    req(bool(retained_v13) and retained_v13.get("consumerEligible") is True, "V1.3.0 retained release record must preserve consumer eligibility")
+    req(bool(retained_v13) and retained_v13.get("stableBaseline") == STABLE_VERSION, "V1.3.0 retained release baseline must remain 1.2.0")
 
     plan = load(PLAN)
     workstreams = {item.get("id"): item for item in plan.get("workstreams", [])}
@@ -184,7 +202,7 @@ def main() -> int:
         return 1
 
     print("GLAZE UI V1.3 System Shell + Control Center: PASS")
-    print("Boundary: adaptive shell framing and accessible Control Center editing are implemented without native-shell, persistence, sync, physical-device, lifecycle, or consumer acceptance claims.")
+    print(f"Boundary: preserved V1.3 adaptive shell framing and accessible Control Center editing remain validated against their 1.2.0 source baseline; live current Stable is {version}.")
     return 0
 
 

@@ -1,4 +1,4 @@
-name: GLAZE UI V1.3 Fresh Qualification and Candidate Readiness
+name: GLAZE UI V1.3 Historical Qualification Integrity
 
 on:
   pull_request:
@@ -8,6 +8,7 @@ on:
       - "registry/lifecycle.json"
       - "acceptance/v1.3-candidate.md"
       - "acceptance/v1.3-deferred-qualification.md"
+      - "acceptance/v1.3-stable.md"
       - "contracts/v1.3/**"
       - "evidence/v1.3/**"
       - "js/glaze-v1.3-qualification.candidate.mjs"
@@ -20,7 +21,6 @@ on:
       - "scripts/validate_glaze_v1_2_stable.py"
       - "scripts/validate_glaze_v1_2_documentation_versions.py"
       - "scripts/validate_glaze_v1_3_phase0.py"
-      - "scripts/validate_glaze_v1_3_migration.py"
       - "scripts/validate_glaze_v1_3_planned.py"
       - "scripts/validate_glaze_v1_3_qualification.py"
       - ".github/workflows/glaze-v1.3-qualification.yml"
@@ -35,6 +35,7 @@ on:
       - "registry/lifecycle.json"
       - "acceptance/v1.3-candidate.md"
       - "acceptance/v1.3-deferred-qualification.md"
+      - "acceptance/v1.3-stable.md"
       - "contracts/v1.3/**"
       - "evidence/v1.3/**"
       - "js/glaze-v1.3-qualification.candidate.mjs"
@@ -47,7 +48,6 @@ on:
       - "scripts/validate_glaze_v1_2_stable.py"
       - "scripts/validate_glaze_v1_2_documentation_versions.py"
       - "scripts/validate_glaze_v1_3_phase0.py"
-      - "scripts/validate_glaze_v1_3_migration.py"
       - "scripts/validate_glaze_v1_3_planned.py"
       - "scripts/validate_glaze_v1_3_qualification.py"
       - ".github/workflows/glaze-v1.3-qualification.yml"
@@ -55,7 +55,7 @@ on:
   workflow_dispatch:
     inputs:
       source_revision:
-        description: "Frozen promotion-candidate SHA to evaluate; defaults to the checked-out SHA"
+        description: "Revision to test against historical V1.3 evidence; defaults to the checked-out SHA"
         required: false
         type: string
 
@@ -67,7 +67,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  validate-v1-3-fresh-qualification:
+  validate-v1-3-historical-qualification:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -90,10 +90,9 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Compile V1.3 qualification validators and draft tooling
+      - name: Compile V1.3 historical qualification validators and tooling
         run: |
           python -m py_compile scripts/validate_glaze_v1_3_phase0.py
-          python -m py_compile scripts/validate_glaze_v1_3_migration.py
           python -m py_compile scripts/validate_glaze_v1_3_planned.py
           python -m py_compile scripts/validate_glaze_v1_3_qualification.py
           python -m py_compile scripts/validate_glaze_v1_2_documentation_versions.py
@@ -104,7 +103,7 @@ jobs:
       - name: Test fail-closed qualification draft preparation
         run: python scripts/test_prepare_glaze_v1_3_qualification_record.py
 
-      - name: Prove prepared drafts cannot satisfy qualification
+      - name: Prove prepared drafts cannot satisfy historical qualification
         env:
           CHECKED_OUT_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
@@ -130,25 +129,37 @@ jobs:
           assert result['consumerEligibilityGranted'] is False
           assert result['consumerConformanceGranted'] is False
           assert any('physical-device-native-platform-qualification' in blocker and 'status is not passed' in blocker for blocker in result['blockers'])
-          print('Prepared draft remains fail-closed and contributes 0 accepted qualification workstreams.')
+          print('Prepared draft remains fail-closed and contributes 0 accepted historical qualification workstreams.')
           PY
 
-      - name: Preserve V1.2 Stable authority
+      - name: Preserve retained V1.2 Stable provenance
         run: python scripts/validate_glaze_v1_2_stable.py
 
       - name: Validate current lifecycle documentation integrity
         run: python scripts/validate_glaze_v1_2_documentation_versions.py
 
-      - name: Preserve V1.3 pre-promotion boundary
+      - name: Preserve V1.3 historical Stable boundary
         run: python scripts/validate_glaze_v1_3_phase0.py
 
-      - name: Revalidate Migration and Consumer Boundary dependency
-        run: python scripts/validate_glaze_v1_3_migration.py
+      - name: Preserve V1.3 migration contract as historical provenance
+        run: |
+          python - <<'PY'
+          import json
+          lifecycle = json.load(open('registry/lifecycle.json', encoding='utf-8'))
+          migration = json.load(open('contracts/v1.3/migration.candidate.json', encoding='utf-8'))
+          assert lifecycle['currentStable'] == lifecycle['currentOfficial'] == '1.4.0'
+          assert lifecycle['plannedNext'] == '1.4.1-candidate'
+          assert migration['sourceStable'] == '1.2.0'
+          assert migration['targetVersion'] == '1.3.0-candidate'
+          assert migration['lifecycleAuthority'] is False
+          assert migration['consumerEligible'] is False
+          print('V1.3 migration Candidate contract is preserved as historical provenance and cannot override V1.4.0 live authority.')
+          PY
 
-      - name: Validate active qualification control plane and 55-rule visual-quality authority
+      - name: Validate preserved qualification control plane and 55-rule visual-quality authority
         run: python scripts/validate_glaze_v1_3_planned.py
 
-      - name: Validate V1.3 fresh qualification mechanism
+      - name: Validate V1.3 historical qualification evidence boundary
         run: python scripts/validate_glaze_v1_3_qualification.py
 
       - name: Check qualification runtime and evidence CLI syntax
@@ -156,10 +167,10 @@ jobs:
           node --check js/glaze-v1.3-qualification.candidate.mjs
           node --check scripts/evaluate_glaze_v1_3_qualification.mjs
 
-      - name: Test qualification readiness evaluator and evidence CLI
+      - name: Test preserved qualification evaluator and evidence CLI
         run: node --test tests/glaze-v1.3-qualification.test.mjs tests/glaze-v1.3-qualification-cli.test.mjs
 
-      - name: Audit real qualification evidence against selected source revision
+      - name: Audit historical qualification evidence fail-closed against selected revision
         env:
           REQUESTED_SOURCE_REVISION: ${{ inputs.source_revision }}
           CHECKED_OUT_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -177,10 +188,10 @@ jobs:
           assert result['candidateActivated'] is False
           assert result['consumerEligibilityGranted'] is False
           assert result['consumerConformanceGranted'] is False
-          print(f"Evidence readiness: {result['state']} ({result['acceptedWorkstreamCount']}/{result['requiredWorkstreamCount']})")
+          print(f"Historical evidence evaluator remains fail-closed: {result['state']} ({result['acceptedWorkstreamCount']}/{result['requiredWorkstreamCount']})")
           PY
 
-      - name: Audit pre-promotion V1.3 source namespace
+      - name: Audit V1.3 Candidate-era source namespace provenance
         run: |
           python scripts/audit_glaze_v1_3_namespace.py --output /tmp/glaze-v1.3-namespace.json
           python - <<'PY'
@@ -190,10 +201,10 @@ jobs:
           assert audit['qualificationEffect'] == 'inventory-only-no-pass'
           assert audit['officialCandidateEntrypoints']['css']['exists'] is False
           assert audit['officialCandidateEntrypoints']['runtime']['exists'] is False
-          print(f"Candidate-named source paths inventoried: {audit['counts']['candidateNamedPaths']}")
+          print(f"Candidate-era source paths inventoried without lifecycle authority: {audit['counts']['candidateNamedPaths']}")
           PY
 
-      - name: Parse qualification JSON authorities
+      - name: Parse preserved qualification JSON authorities
         run: |
           python - <<'PY'
           import json
@@ -212,17 +223,21 @@ jobs:
           assert len(quality['rules']) == 55
           assert quality['humanReviewRequired'] is True
           assert quality['automatedValidationSufficient'] is False
-          print('Qualification JSON authorities parse successfully; 55-rule visual-quality authority is present.')
+          print('Historical qualification JSON authorities parse successfully; 55-rule human-quality authority remains preserved.')
           PY
 
-      - name: Assert Candidate remains inactive
+      - name: Assert V1.4 remains live authority and V1.3 remains historical Stable
         run: |
           python - <<'PY'
           import json
           lifecycle = json.load(open('registry/lifecycle.json', encoding='utf-8'))
-          assert lifecycle['currentStable'] == '1.2.0'
-          assert lifecycle['currentOfficial'] == '1.2.0'
+          assert lifecycle['currentStable'] == '1.4.0'
+          assert lifecycle['currentOfficial'] == '1.4.0'
           assert lifecycle['activeCandidate'] is None
-          assert lifecycle['plannedNext'] == '1.3.0-candidate'
-          print('Candidate remains inactive; qualification readiness is not lifecycle promotion.')
+          assert lifecycle['plannedNext'] == '1.4.1-candidate'
+          release = next(item for item in lifecycle['releases'] if item['version'] == '1.3.0')
+          assert release['status'] == 'stable'
+          assert release['consumerEligible'] is True
+          assert release['stableBaseline'] == '1.2.0'
+          print('V1.4.0 remains current; V1.3.0 remains an auditable historical Stable rollback baseline.')
           PY

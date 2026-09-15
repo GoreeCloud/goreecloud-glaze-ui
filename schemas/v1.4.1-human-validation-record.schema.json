@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "GLAZE UI V1.4.1 Human Validation Record",
-  "description": "Structural schema for V1.4.1 human/manual/physical-device validation records. Passing this schema does not constitute human acceptance; promotion rules are enforced separately by the V1.4.1 verifier.",
+  "description": "Structural schema for V1.4.1 human/manual/physical-device validation records with fail-closed exact-revision evidence continuity. Passing this schema does not constitute human acceptance; promotion rules are enforced separately by the V1.4.1 verifier.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -12,36 +12,67 @@
     "repository",
     "evidenceType",
     "sessions",
+    "legacyEvidence",
+    "continuityAssessments",
     "exceptions",
     "decision",
     "promotionEligible",
     "summary"
   ],
   "properties": {
-    "schemaVersion": {"const": 1},
+    "schemaVersion": {"const": 2},
     "recordType": {"const": "glaze-v1.4.1-human-validation"},
     "glazeUiVersion": {"const": "1.4.1"},
     "baselineVersion": {"const": "1.4.0"},
     "repository": {"const": "GoreeCloud/goreecloud-glaze-ui"},
     "evidenceType": {"const": "human"},
-    "sessions": {
-      "type": "array",
-      "minItems": 1,
-      "items": {"$ref": "#/$defs/session"}
-    },
-    "exceptions": {
-      "type": "array",
-      "items": {"type": "string", "minLength": 1}
-    },
+    "sessions": {"type": "array", "items": {"$ref": "#/$defs/session"}},
+    "legacyEvidence": {"type": "array", "items": {"$ref": "#/$defs/legacyEvidence"}},
+    "continuityAssessments": {"type": "array", "items": {"$ref": "#/$defs/continuityAssessment"}},
+    "exceptions": {"type": "array", "items": {"type": "string", "minLength": 1}},
     "decision": {"enum": ["pending", "accepted", "rejected"]},
     "promotionEligible": {"type": "boolean"},
     "summary": {"type": "string", "minLength": 1}
   },
   "$defs": {
-    "stringArray": {
-      "type": "array",
-      "uniqueItems": true,
-      "items": {"type": "string", "minLength": 1}
+    "stringArray": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "checkId": {
+      "enum": [
+        "optical.content-aware-frost",
+        "optical.semantic-blur-protection",
+        "optical.environment-tint",
+        "optical.chromatic-depth",
+        "optical.environmental-color-memory",
+        "accessibility.reduced-transparency",
+        "accessibility.increased-contrast",
+        "accessibility.forced-colors",
+        "accessibility.reduced-motion",
+        "accessibility.large-text",
+        "accessibility.rtl",
+        "input.keyboard",
+        "input.touch",
+        "input.pointer",
+        "input.switch",
+        "input.voice",
+        "assistive-technology.supported-set",
+        "platform.android-oem",
+        "platform.linux-compositor-window",
+        "form-factor.desktop",
+        "form-factor.mobile",
+        "form-factor.tablet",
+        "form-factor.tv",
+        "form-factor.watch",
+        "form-factor.foldable",
+        "performance.real-device",
+        "performance.thermal-power",
+        "performance.animation-smoothness",
+        "performance.degradation",
+        "polish.glass-quality",
+        "polish.depth-warmth",
+        "polish.animation-touch-feel",
+        "polish.visual-balance",
+        "identity.goreecloud-recognition"
+      ]
     },
     "build": {
       "type": "object",
@@ -56,15 +87,7 @@
     "environment": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "platform",
-        "osVersion",
-        "device",
-        "formFactor",
-        "display",
-        "inputModalities",
-        "assistiveTechnologies"
-      ],
+      "required": ["platform", "osVersion", "device", "formFactor", "display", "inputModalities", "assistiveTechnologies"],
       "properties": {
         "platform": {"type": "string", "minLength": 1},
         "osVersion": {"type": "string", "minLength": 1},
@@ -80,44 +103,7 @@
       "additionalProperties": false,
       "required": ["id", "status", "scope", "finding", "limitations", "evidenceRefs"],
       "properties": {
-        "id": {
-          "enum": [
-            "optical.content-aware-frost",
-            "optical.semantic-blur-protection",
-            "optical.environment-tint",
-            "optical.chromatic-depth",
-            "optical.environmental-color-memory",
-            "accessibility.reduced-transparency",
-            "accessibility.increased-contrast",
-            "accessibility.forced-colors",
-            "accessibility.reduced-motion",
-            "accessibility.large-text",
-            "accessibility.rtl",
-            "input.keyboard",
-            "input.touch",
-            "input.pointer",
-            "input.switch",
-            "input.voice",
-            "assistive-technology.supported-set",
-            "platform.android-oem",
-            "platform.linux-compositor-window",
-            "form-factor.desktop",
-            "form-factor.mobile",
-            "form-factor.tablet",
-            "form-factor.tv",
-            "form-factor.watch",
-            "form-factor.foldable",
-            "performance.real-device",
-            "performance.thermal-power",
-            "performance.animation-smoothness",
-            "performance.degradation",
-            "polish.glass-quality",
-            "polish.depth-warmth",
-            "polish.animation-touch-feel",
-            "polish.visual-balance",
-            "identity.goreecloud-recognition"
-          ]
-        },
+        "id": {"$ref": "#/$defs/checkId"},
         "status": {"enum": ["pass", "fail", "blocked", "not_applicable", "pending"]},
         "scope": {"type": "string", "minLength": 1},
         "finding": {"type": ["string", "null"]},
@@ -136,11 +122,43 @@
         "reviewerRole": {"type": "string", "minLength": 1},
         "build": {"$ref": "#/$defs/build"},
         "environment": {"$ref": "#/$defs/environment"},
-        "results": {
-          "type": "array",
-          "minItems": 1,
-          "items": {"$ref": "#/$defs/result"}
-        }
+        "results": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/result"}}
+      }
+    },
+    "legacyEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "checkId", "status", "sourceRevision", "authorityRef", "governanceAuthorizationRef", "scope", "finding", "limitations", "provenanceGaps", "evidenceRefs"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "checkId": {"$ref": "#/$defs/checkId"},
+        "status": {"enum": ["pass", "not_applicable"]},
+        "sourceRevision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "authorityRef": {"type": "string", "minLength": 1},
+        "governanceAuthorizationRef": {"type": "string", "minLength": 1},
+        "scope": {"type": "string", "minLength": 1},
+        "finding": {"type": "string", "minLength": 1},
+        "limitations": {"$ref": "#/$defs/stringArray"},
+        "provenanceGaps": {"$ref": "#/$defs/stringArray"},
+        "evidenceRefs": {"$ref": "#/$defs/stringArray"}
+      }
+    },
+    "continuityAssessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "assessedAt", "assessor", "assessorRole", "sourceRevision", "targetRevision", "checkIds", "decision", "rationale", "changedPathsReviewed", "evidenceRefs"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "assessedAt": {"type": "string", "format": "date-time"},
+        "assessor": {"type": "string", "minLength": 1},
+        "assessorRole": {"type": "string", "minLength": 1},
+        "sourceRevision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "targetRevision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "checkIds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/checkId"}},
+        "decision": {"enum": ["unaffected", "affected", "inconclusive"]},
+        "rationale": {"type": "string", "minLength": 12},
+        "changedPathsReviewed": {"$ref": "#/$defs/stringArray"},
+        "evidenceRefs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
       }
     }
   }

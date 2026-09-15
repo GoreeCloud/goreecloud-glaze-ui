@@ -1,13 +1,15 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "recordType": "glaze-v1.4.1-human-validation",
   "glazeUiVersion": "1.4.1",
   "baselineVersion": "1.4.0",
   "repository": "GoreeCloud/goreecloud-glaze-ui",
   "evidenceType": "human",
   "sessions": [],
+  "legacyEvidence": [],
+  "continuityAssessments": [],
   "exceptions": [],
   "decision": "pending",
   "promotionEligible": false,
-  "summary": "Fail-closed V1.4.1 human-validation template. This template is not acceptance evidence. Create separate review sessions bound to exact tested revisions, devices/environments, named human reviewers, findings, limitations, and evidence references."
+  "summary": "Fail-closed V1.4.1 human-validation template. This template is not acceptance evidence. Human results must stay bound to their actual tested revisions. Historical results may apply to a promotion revision only through an approved fail-closed continuity assessment, and legacy evidence may be used only with exact source revision, immutable evidence references, explicit provenance gaps, and durable governance authorization."
 }

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
+import json
 import shutil
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -7,6 +8,14 @@ SOURCE = ROOT / "website"
 DIST = SOURCE / "dist"
 IDENTITY = ROOT / "assets" / "identity" / "official" / "facet"
 REFERENCE = ROOT / "reference"
+
+lifecycle = json.loads((ROOT / "registry" / "lifecycle.json").read_text(encoding="utf-8"))
+live_version = lifecycle.get("currentStable")
+live_release = next(
+    (item for item in lifecycle.get("releases", []) if isinstance(item, dict) and item.get("version") == live_version),
+    None,
+)
+live_product = str((live_release or {}).get("label", "GLAZE UI")).split(" — ", 1)[0].strip()
 
 if DIST.exists():
     shutil.rmtree(DIST)
@@ -21,8 +30,9 @@ for name in ("site.css", "identity.css", "site.js"):
 
 # This retained repository website subtree is a transitional publication/history
 # surface. It publishes the generic foundations and preserved V1.1 presentation
-# chain required by that snapshot; live lifecycle authority is GLAZE UI V1.2 / 1.2.0.
-# Canonical public static-site source lives in GoreeCloud/goreecloud-static-websites.
+# chain required by that snapshot; live lifecycle authority comes from the
+# repository lifecycle registry. Canonical public static-site source lives in
+# GoreeCloud/goreecloud-static-websites.
 for name in (
     "glaze.css",
     "glaze.controls.css",
@@ -55,6 +65,6 @@ shutil.copy2(REFERENCE / "v1-system-shell.html", DIST / "reference" / "v1-system
 
 print(
     f"Built {DIST.relative_to(ROOT)} as a transitional Design Center snapshot under "
-    "GLAZE UI V1.2 / 1.2.0 current Stable authority, using the explicitly retained "
+    f"{live_product} / {live_version} current Stable authority, using the explicitly retained "
     "V1.1 presentation asset chain"
 )

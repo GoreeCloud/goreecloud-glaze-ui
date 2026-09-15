@@ -87,7 +87,10 @@ def main() -> int:
     acceptance = (ROOT / "acceptance/v1.3-stable.md").read_text(encoding="utf-8")
     req("**Status:** Official Stable release" in acceptance, "V1.3 Stable acceptance must remain recorded")
     req("V1.3.1 deferred obligations" in acceptance, "V1.3 acceptance must preserve deferred V1.3.1 work")
-    req("not represented as passed" in acceptance, "V1.3 acceptance must preserve evidence integrity")
+    req(
+        "not represented as passed" in acceptance or "not rewritten as a pass" in acceptance,
+        "V1.3 acceptance must preserve evidence integrity",
+    )
 
     hardening = (ROOT / "GLAZE_UI_V1_3_1_HARDENING.md").read_text(encoding="utf-8")
     req("evidence pass" in hardening, "V1.3.1 hardening must reject fabricated evidence passes")

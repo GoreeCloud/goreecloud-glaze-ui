@@ -1,22 +1,23 @@
 #!/usr/bin/env python3
-"""Run frozen V1.2 Candidate-era validators under V1.2 Stable authority.
+"""Run frozen V1.2 Candidate-era validators against retained V1.2 source.
 
-GLAZE UI V1.2 Stable intentionally promoted the already-qualified Candidate
-source layer without renaming every Candidate-suffixed source file. Several
-pre-promotion validators contain valuable deep source assertions but also encode
-the historical global lifecycle state (V1.1 current Stable / V1.2 active
-Candidate). This runner keeps those validators unchanged as historical-source
-checks while validating the real Stable lifecycle first.
+GLAZE UI V1.2 Stable promoted an already-qualified Candidate source layer
+without renaming every Candidate-suffixed artifact. Historical validators still
+contain useful deep assertions, but many also encode the pre-promotion global
+state (V1.1 current Stable / V1.2 active Candidate).
 
-The historical VERSION/lifecycle projection is ephemeral, exists only inside the
-checkout, and is never committed or represented as release/qualification
-evidence.
+This runner verifies the repository's *current* Stable lifecycle authority and
+the retained V1.2 Stable record, then runs each frozen validator against an
+ephemeral Candidate-era VERSION/lifecycle projection. The projection exists
+only for historical source compatibility; it is never committed or represented
+as current release evidence.
 """
 from __future__ import annotations
 
 import copy
 import importlib.util
 import json
+import re
 import tempfile
 from pathlib import Path
 
@@ -37,24 +38,51 @@ def load_json(path: Path) -> dict:
     return value
 
 
+def release_for(lifecycle: dict, version: str) -> dict | None:
+    return next(
+        (
+            item
+            for item in lifecycle.get("releases", [])
+            if isinstance(item, dict) and item.get("version") == version
+        ),
+        None,
+    )
+
+
 def validate_live_stable() -> dict:
     version = LIVE_VERSION.read_text(encoding="utf-8").strip()
     lifecycle = load_json(LIVE_LIFECYCLE)
-    req(version == "1.2.0", "live VERSION must remain 1.2.0")
-    req(lifecycle.get("officialProductLabel") == "GLAZE UI V1.2", "live product label drifted")
-    req(lifecycle.get("currentStable") == "1.2.0", "live currentStable must remain 1.2.0")
-    req(lifecycle.get("currentOfficial") == "1.2.0", "live currentOfficial must remain 1.2.0")
-    req(lifecycle.get("activeCandidate") is None, "V1.2 Stable must not regain an active V1.2 Candidate")
-    req(lifecycle.get("plannedNext") == "1.3.0-candidate", "plannedNext must remain V1.3 Candidate")
-    stable = next(
-        (item for item in lifecycle.get("releases", []) if isinstance(item, dict) and item.get("version") == "1.2.0"),
-        None,
+
+    current_stable = lifecycle.get("currentStable")
+    current_official = lifecycle.get("currentOfficial")
+    req(version == current_stable, "VERSION must match live currentStable")
+    req(current_official == current_stable, "live currentOfficial must match currentStable")
+    req(isinstance(current_stable, str) and current_stable, "live currentStable must identify a release")
+
+    current = release_for(lifecycle, current_stable)
+    req(current is not None, "live currentStable release record is missing")
+    assert current is not None
+    req(current.get("status") == "stable", "live currentStable release must be Stable")
+    req(current.get("consumerEligible") is True, "live currentStable release must be consumer-eligible")
+    req(
+        lifecycle.get("officialProductLabel") == current.get("label"),
+        "live product label must match the current Stable release",
     )
-    req(stable is not None, "live V1.2 Stable release record is missing")
+
+    stable = release_for(lifecycle, "1.2.0")
+    req(stable is not None, "retained V1.2 Stable release record is missing")
     assert stable is not None
-    req(stable.get("status") == "stable", "live V1.2 release must remain Stable")
-    req(stable.get("consumerEligible") is True, "live V1.2 Stable must remain consumer-eligible")
+    req(stable.get("status") == "stable", "retained V1.2 release must remain Stable")
+    req(stable.get("consumerEligible") is True, "retained V1.2 Stable must remain consumer-eligible")
     req(stable.get("stableBaseline") == "1.1.0", "V1.2 rollback baseline must remain 1.1.0")
+    req(stable.get("contract") == "GLAZE_UI_V1_2.md", "V1.2 Stable contract binding drifted")
+    req(stable.get("webEntrypoint") == "css/glaze-v1.2.0.css", "V1.2 web entrypoint binding drifted")
+    req(stable.get("runtimeEntrypoint") == "js/glaze-v1.2.0.mjs", "V1.2 runtime entrypoint binding drifted")
+    anchor = stable.get("sourceQualificationAnchor")
+    req(
+        isinstance(anchor, str) and re.fullmatch(r"[0-9a-f]{40}", anchor) is not None,
+        "V1.2 source qualification anchor must remain a 40-character commit SHA",
+    )
     return lifecycle
 
 
@@ -185,5 +213,8 @@ def run_legacy_promoted_source(legacy_filename: str) -> int:
         result = module.main()
 
     print(f"Promoted-source compatibility: PASS ({legacy_filename})")
-    print("Authority: live V1.2 is Stable; historical lifecycle data was ephemeral validator-fixture state only.")
+    print(
+        "Authority: current global Stable lifecycle was verified independently; "
+        "V1.2 Candidate-era lifecycle data was ephemeral validator-fixture state only."
+    )
     return 0 if result is None else int(result)

@@ -24,6 +24,13 @@ def sha40(value):
     return isinstance(value, str) and len(value) == 40 and all(ch in "0123456789abcdef" for ch in value)
 
 
+def semver_tuple(value: str):
+    try:
+        return tuple(int(part) for part in value.split("."))
+    except (AttributeError, ValueError):
+        return None
+
+
 def main() -> int:
     errors = []
 
@@ -50,11 +57,20 @@ def main() -> int:
             print(f"- {e}")
         return 1
 
-    req((ROOT / "VERSION").read_text().strip() == STABLE, "VERSION must be 1.3.0")
     lifecycle = load("registry/lifecycle.json")
-    req(lifecycle.get("currentStable") == STABLE and lifecycle.get("currentOfficial") == STABLE,
-        "V1.3.0 must remain Stable/current official")
-    req(lifecycle.get("activeCandidate") is None, "no V1.3 Candidate may remain active after Stable release")
+    current = lifecycle.get("currentStable")
+    version = (ROOT / "VERSION").read_text().strip()
+    req(current == lifecycle.get("currentOfficial") == version,
+        "VERSION/currentStable/currentOfficial must agree on the live current release")
+    current_tuple = semver_tuple(current)
+    stable_tuple = semver_tuple(STABLE)
+    req(current_tuple is not None and stable_tuple is not None and current_tuple >= stable_tuple,
+        "live current Stable may not regress below V1.3.0")
+
+    release = next((item for item in lifecycle.get("releases", []) if item.get("version") == STABLE), None)
+    req(bool(release), "lifecycle must retain the V1.3.0 historical release record")
+    req(bool(release) and release.get("status") == "stable", "V1.3.0 historical record must remain Stable")
+    req(bool(release) and release.get("consumerEligible") is True, "V1.3.0 historical consumer eligibility must remain recorded")
 
     matrix = load("contracts/v1.3/qualification-matrix.json")
     items = {item.get("id"): item for item in matrix.get("workstreams", []) if isinstance(item, dict)}
@@ -86,7 +102,8 @@ def main() -> int:
     hardening = (ROOT / "GLAZE_UI_V1_3_1_HARDENING.md").read_text()
     req("Historical Candidate Qualification Ledger" in candidate, "Candidate ledger must be historical/superseded")
     req("V1.3.1" in deferred and "V1.3.1" in hardening, "deferred qualification must be carried into V1.3.1")
-    req("not represented as passed" in stable, "Stable acceptance must reject fabricated qualification passes")
+    req("not represented as passed" in stable or "not rewritten as a pass" in stable,
+        "Stable acceptance must reject fabricated qualification passes")
 
     if errors:
         print("GLAZE UI V1.3 qualification boundary validation FAILED:")
@@ -95,7 +112,7 @@ def main() -> int:
         return 1
 
     print("GLAZE UI V1.3 qualification boundary: PASS")
-    print("Historical qualification records are preserved; unresolved work is V1.3.1 follow-up and is not represented as passed V1.3.0 evidence.")
+    print(f"Historical qualification records are preserved while live current Stable remains {current}; unresolved V1.3.1 work is not represented as passed V1.3.0 evidence.")
     return 0
 
 

@@ -1,4 +1,4 @@
-name: GLAZE UI V1.2 Stable
+name: GLAZE UI V1.2 Retained Stable Integrity
 
 on:
   pull_request:
@@ -9,13 +9,10 @@ on:
       - "css/glaze-v1.2.0.css"
       - "js/glaze-v1.2.0.mjs"
       - "acceptance/v1.2-stable.md"
-      - "acceptance/v1.3-deferred-qualification.md"
-      - "contracts/v1.3/**"
-      - "tokens/glaze-v1.json"
-      - "consumers/**"
-      - "CONSUMERS.md"
+      - "tokens/glaze-v1.2-**"
       - "scripts/validate_glaze_v1.py"
       - "scripts/validate_glaze_v1_2_stable.py"
+      - ".github/workflows/glaze-v1.2-stable.yml"
   push:
     branches: [main]
     paths:
@@ -25,28 +22,43 @@ on:
       - "css/glaze-v1.2.0.css"
       - "js/glaze-v1.2.0.mjs"
       - "acceptance/v1.2-stable.md"
-      - "acceptance/v1.3-deferred-qualification.md"
-      - "contracts/v1.3/**"
-      - "tokens/glaze-v1.json"
-      - "consumers/**"
-      - "CONSUMERS.md"
+      - "tokens/glaze-v1.2-**"
       - "scripts/validate_glaze_v1.py"
       - "scripts/validate_glaze_v1_2_stable.py"
+      - ".github/workflows/glaze-v1.2-stable.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  stable-source:
+  retained-stable-source:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - name: Check out exact revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
-      - run: python scripts/validate_glaze_v1.py
-      - run: |
-          test "$(cat VERSION)" = "1.2.0"
-          echo "V1.2 Stable is a bounded design-system release; V1.3 deferred qualifications are not represented as passed."
+          check-latest: false
+
+      - name: Verify exact revision
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+
+      - name: Validate live Stable authority and retained V1.2 source
+        run: |
+          python scripts/validate_glaze_v1.py
+          python scripts/validate_glaze_v1_2_stable.py
+          python scripts/validate_glaze_v1_2_candidate.py
+
+      - name: Report authority boundary
+        run: |
+          echo 'V1.2 remains retained Stable provenance and rollback history.'
+          echo 'This workflow derives current global Stable authority from VERSION/registry lifecycle and never moves it back to V1.2.'
+          echo 'No V1.4.1 human, native-platform, physical-device, or promotion acceptance is implied.'

@@ -1,0 +1,106 @@
+name: GLAZE UI V1.4.1 Promotion Evidence Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+jobs:
+  promotion-evidence:
+    if: ${{ github.event.pull_request.body && contains(github.event.pull_request.body, '<!-- glaze-v1.4.1-promotion-gate -->') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact pull-request head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+
+      - name: Verify exact promotion revision
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+
+      - name: Verify promotion protocol before loading human evidence
+        run: |
+          node --check scripts/verify_glaze_v1_4_1_human_validation.mjs
+          node --check scripts/verify_glaze_v1_4_1_human_validation_schema.mjs
+          node scripts/verify_glaze_v1_4_1_human_validation_schema.mjs
+          node scripts/verify_glaze_v1_4_1_human_validation.mjs --source-only
+          node scripts/verify_glaze_v1_4_1_human_validation.mjs --self-test
+          node scripts/verify_glaze_v1_4_stable.mjs
+
+      - name: Retrieve durable promotion evidence comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          API_URL: ${{ github.api_url }}
+          REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          curl --fail-with-body --silent --show-error --retry 3 \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "${API_URL}/repos/${REPOSITORY}/issues/${PR_NUMBER}/comments?per_page=100" \
+            > "${RUNNER_TEMP}/v1.4.1-promotion-comments.json"
+
+      - name: Extract exactly one governed evidence record
+        env:
+          EVIDENCE_MARKER: GLAZE-V1.4.1-PROMOTION-EVIDENCE-V3-GZIP-BASE64
+        run: |
+          node <<'NODE'
+          const crypto = require('node:crypto');
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const zlib = require('node:zlib');
+          const commentsPath = path.join(process.env.RUNNER_TEMP, 'v1.4.1-promotion-comments.json');
+          const recordPath = path.join(process.env.RUNNER_TEMP, 'v1.4.1-human-evidence.json');
+          const comments = JSON.parse(fs.readFileSync(commentsPath, 'utf8'));
+          const marker = process.env.EVIDENCE_MARKER;
+          const matches = comments.filter(comment =>
+            typeof comment?.body === 'string' && comment.body.startsWith(`${marker}\n`)
+          );
+          if (matches.length !== 1) {
+            throw new Error(`Expected exactly one ${marker} comment; found ${matches.length}.`);
+          }
+          const remainder = matches[0].body.slice(marker.length).trim();
+          const fenced = remainder.match(/^```text\s*\n([A-Za-z0-9+/=\r\n]+)\n```$/);
+          if (!fenced) {
+            throw new Error('Promotion evidence comment must contain exactly one fenced base64 payload after the marker.');
+          }
+          const compressed = Buffer.from(fenced[1].replace(/\s+/g, ''), 'base64');
+          const jsonText = zlib.gunzipSync(compressed).toString('utf8');
+          const record = JSON.parse(jsonText);
+          fs.writeFileSync(recordPath, `${JSON.stringify(record, null, 2)}\n`, {flag: 'wx'});
+          const digest = crypto.createHash('sha256').update(jsonText).digest('hex');
+          console.log(`Loaded governed promotion evidence from ${matches[0].html_url}`);
+          console.log(`Uncompressed evidence sha256:${digest}`);
+          NODE
+
+      - name: Run canonical fail-closed V1.4.1 promotion gate
+        run: |
+          node scripts/verify_glaze_v1_4_1_human_validation.mjs \
+            --record "${RUNNER_TEMP}/v1.4.1-human-evidence.json" \
+            --promotion \
+            --expected-revision "${{ github.event.pull_request.head.sha }}"
+
+      - name: Record verified gate result
+        run: |
+          {
+            echo '### GLAZE UI V1.4.1 promotion evidence gate'
+            echo
+            echo '- Canonical human-validation promotion verifier: **PASS**'
+            echo '- Exact promotion revision: `${{ github.event.pull_request.head.sha }}`'
+            echo '- V1.4.0 Stable-preservation verifier: **PASS**'
+            echo '- Evidence source: governed PR comment marked `GLAZE-V1.4.1-PROMOTION-EVIDENCE-V3-GZIP-BASE64`'
+            echo
+            echo 'This gate establishes evidence eligibility for this exact source revision only. Merge, release creation, and Stable lifecycle promotion remain separate governed transitions.'
+          } >> "${GITHUB_STEP_SUMMARY}"

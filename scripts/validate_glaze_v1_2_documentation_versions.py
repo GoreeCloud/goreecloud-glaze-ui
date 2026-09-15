@@ -1,9 +1,17 @@
 #!/usr/bin/env python3
-"""Audit current V1.2 Stable lifecycle/version language across tracked text sources."""
+"""Audit current lifecycle/version authority while preserving retained V1.2 history.
+
+This validator originated while V1.2 was globally current. It now serves as a
+retained-release integrity check: live current authority is derived from
+`registry/lifecycle.json`/`VERSION`, while prior release documentation and
+source remain historical Stable provenance. It must never move global authority
+back to an older release.
+"""
 from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -13,31 +21,37 @@ LIFECYCLE = ROOT / "registry" / "lifecycle.json"
 VERSION = ROOT / "VERSION"
 
 CURRENT_AUTHORITY_DOCS = {
-    "README.md": ("current Stable",),
-    "CONTRIBUTING.md": ("current Stable", "Proposed / qualification-active"),
-    "GLAZE_UI_V1_2.md": ("Stable",),
-    "CONFORMANCE.md": ("conformance target",),
-    "ACCEPTANCE.md": ("current Stable",),
-    "ADOPTION.md": ("adoption target",),
-    "ENFORCEMENT.md": ("consumer-conformance target",),
-    "website/README.md": ("current Stable",),
-    "ICON_CONSTRUCTION.md": ("Current Stable product authority",),
-    "ICON_IDENTITY.md": ("Current Stable product authority",),
+    "README.md": ("current Official", "Stable"),
+    "CONTRIBUTING.md": ("Stable",),
+    "CONFORMANCE.md": ("conformance",),
+    "ACCEPTANCE.md": ("Stable",),
+    "ADOPTION.md": ("adoption",),
+    "ENFORCEMENT.md": ("consumer",),
+    "website/README.md": ("Stable",),
+    "ICON_CONSTRUCTION.md": ("Stable",),
+    "ICON_IDENTITY.md": ("Stable",),
 }
 
-HISTORICAL_DOCS = (
-    "GLAZE_UI_V1_0.md",
-    "GLAZE_UI_V1_1.md",
-    "GLAZE_UI_V1_1_CANDIDATE.md",
+RETAINED_V12_DOCS = (
+    "GLAZE_UI_V1_2.md",
     "GLAZE_UI_V1_2_CANDIDATE.md",
     "MIGRATION_V1_1_TO_V1_2.md",
-    "releases/1.0.0.md",
-    "acceptance/v1.1-release-candidate.md",
-    "acceptance/v1.1-specification-candidate.md",
+    "acceptance/v1.2-stable.md",
 )
 
+# These are release snapshots, migration records, acceptance records, or
+# explicitly retained validators. Their "current" wording describes the
+# authority at the time of the recorded release and must not be reinterpreted as
+# live authority after later governed promotions.
 HISTORICAL_SOURCE_PATHS = {
+    "GLAZE_UI_V1_1.md",
+    "GLAZE_UI_V1_3.md",
+    "GLAZE_UI_V1_3_1_HARDENING.md",
+    "MIGRATION_V1_2_TO_V1_3.md",
     "acceptance/v1.1-rendered-web-evidence.json",
+    "acceptance/v1.1-stable.md",
+    "acceptance/v1.3-deferred-qualification.md",
+    "acceptance/v1.3-stable.md",
     "scripts/glaze_v1_2_promoted_source_runner.py",
     "scripts/promote_glaze_v1_1_stable.py",
     "scripts/validate_evidence_presentation.py",
@@ -53,34 +67,19 @@ HISTORICAL_SOURCE_PATHS = {
     "scripts/validate_glaze_v1_2_migration_legacy.py",
 }
 
-HISTORICAL_PREPROMOTION_VALIDATORS = {
-    "validate_glaze_v1_2_android_accessibility_source.py",
-    "validate_glaze_v1_2_assistive_technology_qualification.py",
-    "validate_glaze_v1_2_device_performance_qualification.py",
-    "validate_glaze_v1_2_exact_head_readiness.py",
-    "validate_glaze_v1_2_human_optical_review_packet.py",
-    "validate_glaze_v1_2_human_optical_review_record.py",
-    "validate_glaze_v1_2_linux_window_adaptation_source.py",
-    "validate_glaze_v1_2_living_glaze_rendered.py",
-    "validate_glaze_v1_2_native_optical.py",
-    "validate_glaze_v1_2_native_personalization_source.py",
-    "validate_glaze_v1_2_personalization_appearance_rendered.py",
-    "validate_glaze_v1_2_personalization_readiness.py",
-    "validate_glaze_v1_2_release_promotion.py",
-}
-
 HISTORICAL_QUALIFIERS = (
     "historical", "at the time", "at publication", "then-current", "superseded",
     "not current", "does not define the current", "does not override the current",
     "was current", "was the current", "previous stable", "prior stable", "rollback",
+    "retained", "provenance", "formerly current",
 )
 STRONG_CURRENT_CLAIMS = (
     "sole current", "current official target", "current stable", "current product identity",
     "current product version", "current product baseline", "current application target",
     "current adoption target", "current conformance target", "current target",
     "all current glaze ui work targets",
-    "currentstable", "currentofficial", "officialproductlabel",
 )
+SEMVER = re.compile(r"(?<!\d)(\d+)\.(\d+)\.(\d+)(?:-[0-9a-z.-]+)?(?!\d)", re.I)
 
 
 def fail(message: str) -> None:
@@ -123,28 +122,37 @@ def release_for(lifecycle: dict[str, Any], version: str) -> dict[str, Any]:
     raise AssertionError("unreachable")
 
 
-def historical_record(relative: str, text: str) -> bool:
-    """Return whether a tracked source is explicitly historical/provenance-only."""
-    if relative in HISTORICAL_DOCS or relative in HISTORICAL_SOURCE_PATHS:
+def version_tuple(value: str) -> tuple[int, int, int] | None:
+    match = SEMVER.search(value)
+    if not match:
+        return None
+    return tuple(int(part) for part in match.groups())
+
+
+def historical_record(relative: str, text: str, current_version: str) -> bool:
+    """Return whether a tracked source is explicitly retained/provenance-only."""
+    if relative in HISTORICAL_SOURCE_PATHS or relative in RETAINED_V12_DOCS:
         return True
 
-    path = Path(relative)
-    lowered = relative.lower()
-    name = path.name.lower()
-
-    if relative.startswith("acceptance/v1.1") or relative.startswith("contracts/v1.1/"):
-        return True
-    if relative.startswith("releases/1.1") or relative.startswith("reference/v1.1/"):
-        return True
-    if relative.startswith("scripts/") and name in HISTORICAL_PREPROMOTION_VALIDATORS:
-        return True
-    if "candidate" in name or ".candidate." in lowered or "release-candidate" in lowered:
-        return True
+    lowered_path = relative.lower()
+    name = Path(relative).name.lower()
     if name.endswith("_legacy.py") or name.endswith("-legacy.py"):
         return True
+    if "candidate" in name or ".candidate." in lowered_path or "release-candidate" in lowered_path:
+        return True
+    if relative.startswith("acceptance/v1.") or relative.startswith("releases/1."):
+        # Versioned acceptance/release records are provenance. Live authority is
+        # checked independently through current front-door documents.
+        return True
+    if relative.startswith(("contracts/v1.0/", "contracts/v1.1/", "contracts/v1.2/", "contracts/v1.3/")):
+        return True
+    if relative.startswith(("reference/v1.0/", "reference/v1.1/", "reference/v1.2/", "reference/v1.3/")):
+        return True
+    if relative.startswith("scripts/validate_glaze_v1_") and not relative.startswith("scripts/validate_glaze_v1_4"):
+        return True
 
-    preamble = text[:1600].lower()
-    return "historical record" in preamble or "historical status" in preamble or "superseded" in preamble
+    preamble = text[:1800].lower()
+    return any(marker in preamble for marker in ("historical record", "historical status", "superseded", "retained stable"))
 
 
 def main() -> int:
@@ -159,81 +167,82 @@ def main() -> int:
     active_candidate = lifecycle.get("activeCandidate")
     planned_next = lifecycle.get("plannedNext")
 
-    if current_stable != "1.2.0" or current_official != "1.2.0" or version != "1.2.0":
-        fail("VERSION/currentStable/currentOfficial must agree on V1.2 Stable / 1.2.0")
-    if active_candidate is not None:
-        fail("V1.2 Stable must not retain an active V1.2 Candidate")
-    if planned_next != "1.3.0-candidate":
-        fail("plannedNext must identify the deferred V1.3 Candidate track")
+    if not isinstance(current_stable, str) or not current_stable:
+        fail("currentStable must identify a live release")
+    if version != current_stable or current_official != current_stable:
+        fail("VERSION/currentStable/currentOfficial must agree on the live current Stable release")
 
-    stable_release = release_for(lifecycle, "1.2.0")
-    previous_release = release_for(lifecycle, "1.1.0")
-    if stable_release.get("status") != "stable" or stable_release.get("consumerEligible") is not True:
-        fail("V1.2 must remain Stable and consumer-eligible at the design-system release level")
-    if stable_release.get("stableBaseline") != "1.1.0":
-        fail("V1.2 rollback baseline must remain 1.1.0")
-    if previous_release.get("status") != "stable" or previous_release.get("consumerEligible") is not True:
-        fail("V1.1 rollback release record must remain intact")
-
-    stable_label = stable_release.get("label")
+    current_release = release_for(lifecycle, current_stable)
+    if current_release.get("status") != "stable" or current_release.get("consumerEligible") is not True:
+        fail("live currentStable release must be Stable and consumer-eligible")
+    stable_label = current_release.get("label")
     if not isinstance(stable_label, str) or not stable_label:
-        fail("V1.2 Stable release label is missing")
+        fail("live current Stable release label is missing")
+    if lifecycle.get("officialProductLabel") != stable_label:
+        fail("officialProductLabel must match the live current Stable release")
+
+    retained_v12 = release_for(lifecycle, "1.2.0")
+    if retained_v12.get("status") != "stable" or retained_v12.get("consumerEligible") is not True:
+        fail("retained V1.2 release must remain an intact Stable release record")
+    if retained_v12.get("stableBaseline") != "1.1.0":
+        fail("retained V1.2 rollback baseline must remain 1.1.0")
+    anchor = retained_v12.get("sourceQualificationAnchor")
+    if not isinstance(anchor, str) or re.fullmatch(r"[0-9a-f]{40}", anchor) is None:
+        fail("retained V1.2 sourceQualificationAnchor must remain a 40-character commit SHA")
 
     for relative, required_phrases in CURRENT_AUTHORITY_DOCS.items():
         text = read_text(relative)
-        if "1.2.0" not in text and "GLAZE UI V1.2" not in text:
-            fail(f"{relative} does not identify V1.2 current authority")
+        if current_stable not in text and stable_label not in text:
+            fail(f"{relative} does not identify live current Stable authority {current_stable}")
         for phrase in required_phrases:
             if phrase.lower() not in text.lower():
                 fail(f"{relative} missing lifecycle phrase {phrase!r}")
 
-    for relative in HISTORICAL_DOCS:
+    for relative in RETAINED_V12_DOCS:
         text = read_text(relative)
-        preamble = text[:1400].lower()
-        if "historical" not in preamble and "superseded" not in preamble:
-            fail(f"{relative} must identify itself as historical or superseded near its preamble")
-        if "GLAZE UI V1.2" not in text[:2200] and "1.2.0" not in text[:2200]:
-            fail(f"{relative} must point to V1.2 as the current Stable successor near its preamble")
+        if "1.2.0" not in text and "GLAZE UI V1.2" not in text:
+            fail(f"retained V1.2 provenance file lost its V1.2 identity: {relative}")
 
     sources = tracked_text_sources()
     stale_findings: list[dict[str, Any]] = []
-    historical_markers = ("glaze ui v1.0", "glaze ui v1.1", "1.0.0", "1.1.0", "1.2.0-candidate")
-    validator_relative = "scripts/validate_glaze_v1_2_documentation_versions.py"
+    current_tuple = version_tuple(current_stable)
     for relative, text in sources.items():
-        if relative == validator_relative:
+        if relative == "scripts/validate_glaze_v1_2_documentation_versions.py":
             continue
-        is_history = historical_record(relative, text)
+        is_history = historical_record(relative, text, current_stable)
         for line_number, line in enumerate(text.splitlines(), start=1):
             lowered = line.lower()
-            if not any(marker in lowered for marker in historical_markers):
-                continue
             if not any(claim in lowered for claim in STRONG_CURRENT_CLAIMS):
                 continue
             if is_history or any(qualifier in lowered for qualifier in HISTORICAL_QUALIFIERS):
+                continue
+            versions = [version_tuple(match.group(0)) for match in SEMVER.finditer(line)]
+            older_versions = [item for item in versions if item and current_tuple and item < current_tuple]
+            if not older_versions:
                 continue
             stale_findings.append({"path": relative, "line": line_number, "text": line.strip()[:240]})
 
     if stale_findings:
         preview = "; ".join(f"{item['path']}:{item['line']} {item['text']}" for item in stale_findings[:20])
-        fail(f"obsolete lifecycle/version authority language found: {preview}")
+        fail(f"obsolete current-authority language found: {preview}")
 
     report = {
-        "schemaVersion": 6,
+        "schemaVersion": 8,
         "status": "pass",
         "currentOfficial": current_official,
         "currentStable": current_stable,
         "currentStableLabel": stable_label,
         "activeCandidate": active_candidate,
         "plannedNext": planned_next,
-        "previousStableRollback": "1.1.0",
+        "retainedV12Status": retained_v12.get("status"),
+        "retainedV12SourceQualificationAnchor": anchor,
         "auditedTrackedUtf8TextFiles": len(sources),
         "currentAuthorityDocuments": sorted(CURRENT_AUTHORITY_DOCS),
-        "historicalDocumentsExplicitlyQualified": list(HISTORICAL_DOCS),
-        "historicalPrePromotionValidators": sorted(HISTORICAL_PREPROMOTION_VALIDATORS),
+        "retainedV12Documents": list(RETAINED_V12_DOCS),
+        "historicalSourcePaths": sorted(HISTORICAL_SOURCE_PATHS),
         "obsoleteLifecycleAuthorityFindings": 0,
-        "scopeRule": "Historical Candidate/RC/release and superseded pre-promotion qualification records are preserved as provenance, while current V1.2 authority surfaces remain fail-closed against superseded lifecycle claims.",
-        "contributingRule": "CONTRIBUTING.md is a current authority surface and must identify V1.2 / 1.2.0 as Stable while V1.3 remains Proposed / qualification-active until governed promotion.",
-        "deferredQualificationRule": "V1.3 deferral does not convert unperformed V1.2 human/manual/physical qualification into passed evidence.",
+        "scopeRule": "Live authority is derived from current lifecycle/VERSION state. Retained earlier Stable/release records are provenance and may not override the current Stable release.",
+        "promotionRule": "This retained-release documentation audit does not promote V1.2, V1.4.1, or any other lifecycle state.",
     }
     rendered = json.dumps(report, indent=2, sort_keys=True) + "\n"
     if args.output:

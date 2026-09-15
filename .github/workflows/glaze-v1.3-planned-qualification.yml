@@ -1,4 +1,4 @@
-name: GLAZE UI V1.3 Qualification Control Plane
+name: GLAZE UI V1.3 Historical Qualification Control Plane
 
 on:
   pull_request:
@@ -74,31 +74,37 @@ jobs:
           python -m py_compile scripts/validate_glaze_v1_3_planned.py
           python -m py_compile scripts/validate_glaze_v1_2_documentation_versions.py
 
-      - name: Validate qualification control plane and 55-rule quality authority
+      - name: Validate preserved qualification control plane and 55-rule quality authority
         run: python scripts/validate_glaze_v1_3_planned.py
 
       - name: Validate current lifecycle documentation integrity
         run: python scripts/validate_glaze_v1_2_documentation_versions.py
 
-      - name: Test qualification readiness quality gates
+      - name: Test preserved qualification readiness quality gates
         run: node --test tests/glaze-v1.3-qualification.test.mjs
 
-      - name: Preserve pre-promotion lifecycle boundary
+      - name: Preserve current V1.4 authority and historical V1.3 qualification boundary
         run: |
-          test "$(cat VERSION)" = "1.2.0"
+          test "$(cat VERSION)" = "1.4.0"
           python - <<'PY'
           import json
           lifecycle = json.load(open('registry/lifecycle.json', encoding='utf-8'))
-          assert lifecycle['currentStable'] == '1.2.0'
-          assert lifecycle['currentOfficial'] == '1.2.0'
+          assert lifecycle['currentStable'] == '1.4.0'
+          assert lifecycle['currentOfficial'] == '1.4.0'
           assert lifecycle['activeCandidate'] is None
-          assert lifecycle['plannedNext'] == '1.3.0-candidate'
+          assert lifecycle['plannedNext'] == '1.4.1-candidate'
+          release = next(item for item in lifecycle['releases'] if item['version'] == '1.3.0')
+          assert release['status'] == 'stable'
+          assert release['consumerEligible'] is True
+          assert release['stableBaseline'] == '1.2.0'
           plan = json.load(open('contracts/v1.3/deferred-qualification.plan.json', encoding='utf-8'))
           quality = json.load(open('contracts/v1.3/quality-rules.candidate.json', encoding='utf-8'))
-          assert plan['lifecycle'] in {'planned', 'qualification-active'}
+          assert plan['lifecycle'] == 'follow-up-active'
+          assert plan['targetVersion'] == '1.3.1-candidate'
+          assert plan['sourceStable'] == '1.3.0'
           assert plan['qualityContract'] == 'contracts/v1.3/quality-rules.candidate.json'
           assert len(quality['rules']) == 55
           assert quality['humanReviewRequired'] is True
           assert quality['automatedValidationSufficient'] is False
-          print('V1.3 qualification may collect fresh evidence; visual quality is human-gated and lifecycle promotion remains separate.')
+          print('V1.3 qualification control-plane history remains auditable; V1.4.0 remains current and no historical record promotes lifecycle state.')
           PY

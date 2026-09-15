@@ -94,29 +94,72 @@ node scripts/verify_glaze_v1_4_1_review_packet.mjs \
 
 The packet verifier checks canonical contract/schema parity, exact 34-check coverage, pending-only state, empty generated findings/evidence, absence of human-authority fields, and `promotionEligible: false`. It then invokes the actual V1.4.1 human-evidence verifier and requires that verifier to reject the planning packet as evidence.
 
-After real review, do **not** simply relabel the packet or change `promotionEligible`. Human-authorized findings must be recorded in the separate human-validation record format with the real reviewer identity, role, review timestamp, tested build/revision, environment, findings, limitations, and evidence references required by the human-evidence protocol.
+After real review, do **not** simply relabel the packet or change `promotionEligible`. New structured human sessions must preserve the real reviewer identity, role, review timestamp, tested build/revision, environment, findings, limitations, and evidence references required by the human-evidence protocol.
 
 ## Evidence rule
 
-Every completed human item must identify the tested build/revision, device or environment, reviewer, scope, result, and any accepted limitation. Automated evidence may support a review but must not be relabeled as human evidence.
+Human authority remains mandatory. Automated evidence may support a review but must not be relabeled as human evidence. Existing human evidence must never be rewritten to claim a revision, environment, reviewer, or timestamp that was not actually recorded.
 
-V1.4.1 uses a structured multi-session evidence protocol so one record can combine review sessions across Android, Linux, desktop, mobile, tablet, TV, watch, foldable, accessibility, and performance environments without flattening them into one misleading global pass state.
+V1.4.1 uses a structured evidence protocol so one promotion record can combine direct structured sessions, authorized pre-ledger human evidence, and explicit source-impact continuity assessments without flattening them into one misleading global pass state.
 
 The human-evidence protocol authority is:
 
-- `contracts/v1.4.1/human-validation.contract.json` — canonical required-check matrix and fail-closed rules.
+- `contracts/v1.4.1/human-validation.contract.json` — canonical required-check matrix and fail-closed evidence-continuity rules.
 - `schemas/v1.4.1-human-validation-record.schema.json` — Draft 2020-12 structural schema for editor/tool validation; schema validity alone is never human acceptance.
 - `acceptance/v1.4.1-human-validation.template.json` — deliberately pending template; never acceptance evidence by itself.
 - `scripts/verify_glaze_v1_4_1_human_validation_schema.mjs` — contract/schema/template parity verifier.
-- `scripts/verify_glaze_v1_4_1_human_validation.mjs` — machine validation of evidence authority, coverage, revision binding, and promotion eligibility.
+- `scripts/verify_glaze_v1_4_1_human_validation.mjs` — machine validation of human evidence authority, historical continuity, legacy provenance boundaries, coverage, and promotion eligibility.
 
-Each human review session must identify the exact tested source revision, build/artifact identity, timestamp with timezone, named reviewer and role, platform, OS version, device/environment, form factor, display context, relevant input modalities, assistive technologies, findings, limitations, and evidence references.
+### Direct structured human sessions
 
-A check may be marked `not_applicable` only with an explicit rationale. `pending`, `blocked`, or `fail` cannot satisfy promotion. A claimed `pass` or `fail` requires at least one evidence reference. Machine-generated supporting artifacts can be referenced, but the record itself must remain human-authorized.
+Each newly recorded human review session must identify the exact tested source revision, build/artifact identity, timestamp with timezone, named reviewer and role, platform, OS version, device/environment, form factor, display context, relevant input modalities, assistive technologies, findings, limitations, and evidence references.
+
+A check may be marked `not_applicable` only with an explicit rationale. A claimed `pass` or `fail` requires at least one evidence reference. Machine-generated supporting artifacts can be referenced, but the result authority itself must remain human.
+
+### Evidence continuity
+
+Evidence continuity prevents unnecessary duplicate testing without weakening exact-revision truth.
+
+A historical human `pass` or `not_applicable` may apply to a later promotion revision only when a separate continuity assessment proves that the behavior relevant to that exact check was unaffected between the exact historical source revision and the exact promotion target revision.
+
+A continuity assessment must:
+
+- bind one exact 40-character source revision to one exact 40-character target revision;
+- identify the specific canonical check IDs covered;
+- identify its assessment authority and role;
+- include an explicit timestamp with timezone;
+- record a substantive source-impact rationale;
+- identify the changed paths reviewed;
+- include durable evidence references for the source-impact analysis; and
+- conclude exactly one of `unaffected`, `affected`, or `inconclusive`.
+
+Only `unaffected` can carry a positive historical human result forward. `affected` and `inconclusive` fail closed and require new applicable human evidence for that check. Missing, mismatched, duplicate, or wrong-target continuity also fails closed.
+
+Continuity is **not human evidence** and does not change the historical result's tested revision. It is release-governance evidence establishing whether that already-valid human result remains applicable to the target candidate. A continuity assessment can never transform a historical `fail`, `blocked`, or `pending` result into a promotable result.
+
+If a check has a direct result on the promotion revision, any direct `fail`, `blocked`, or `pending` state blocks promotion for that check even if an older PASS exists.
+
+### Authorized pre-ledger legacy evidence
+
+Some V1.4.1 human checks were completed before the structured evidence ledger captured every metadata field. The project owner explicitly authorized a narrow compatibility path for these already-completed reviews so missing tracker metadata does not force duplicate human testing by itself.
+
+A legacy evidence item is valid only when all of the following are true:
+
+- the human PASS or explicit N/A outcome is durably recorded;
+- the exact tested 40-character source revision is known and preserved;
+- the item cites a durable human-authority reference;
+- the item cites the durable project-owner governance authorization for the legacy path;
+- scope, finding, limitations, and evidence references are recorded;
+- every missing historical provenance field is explicitly listed as a provenance gap; and
+- no reviewer identity, device/environment, timestamp, or other missing fact is guessed, reconstructed, or fabricated.
+
+Legacy evidence with an unknown tested revision is not promotable. When a legacy result predates the promotion revision, it still requires an `unaffected` continuity assessment before it can contribute to promotion.
+
+This compatibility path does not lower the substantive human acceptance bar. It preserves truthful historical evidence while separating missing recordkeeping metadata from the actual PASS/N/A outcome.
 
 ### Verification
 
-Validate the schema/contract parity, protocol, and synthetic negative tests without claiming human acceptance:
+Validate the schema/contract parity, protocol, and synthetic fail-closed tests without claiming human acceptance:
 
 ```sh
 node scripts/verify_glaze_v1_4_1_human_validation_schema.mjs
@@ -130,21 +173,28 @@ Validate a real record without asserting patch promotion:
 node scripts/verify_glaze_v1_4_1_human_validation.mjs --record path/to/human-record.json
 ```
 
-Run the fail-closed promotion gate only when a real record exists and the exact reviewed implementation revision is known:
+Run the fail-closed promotion gate only when a real record exists and the exact governed promotion revision is known:
 
 ```sh
 node scripts/verify_glaze_v1_4_1_human_validation.mjs \
   --record path/to/human-record.json \
   --promotion \
-  --expected-revision <40-character-reviewed-revision>
+  --expected-revision <40-character-promotion-revision>
 ```
 
-The schema validator and verifier's synthetic self-test are protocol testing only. They are never human evidence, never physical-device evidence, and never V1.4.1 acceptance.
+The schema validator, verifier self-test, continuity assessment, and source-impact tooling are never substitutes for human evidence. They only determine structural validity and whether an already-recorded positive human result remains applicable to a later exact revision.
 
 ## Patch acceptance
 
-V1.4.1 may be promoted only after its claimed human/manual/physical-device evidence is actually recorded and any release-blocking findings are resolved or explicitly scoped out of the supported claim. V1.4.1 must not retroactively rewrite V1.4.0 evidence.
+V1.4.1 may be promoted only after every canonical required check has truthful human PASS/N/A authority and any release-blocking findings are resolved or explicitly scoped out of the supported claim. V1.4.1 must not retroactively rewrite V1.4.0 evidence.
 
-Promotion additionally requires the structured record to cover every canonical required check, contain no unresolved exceptions, contain no `pending`, `blocked`, or `fail` results, explicitly declare an accepted decision, explicitly declare promotion eligibility, and bind every contributing review session to the exact revision supplied to the promotion gate.
+Promotion additionally requires the structured record to:
 
-Machine runtime hardening may remove release-blocking implementation defects, and review-packet tooling may prepare real review work, but neither can satisfy or waive human-authority checks. V1.4.1 remains non-promotable until both its claimed machine hardening and its required real human evidence are valid for the governed release revision.
+- cover every canonical required check;
+- contain no unresolved exceptions;
+- contain no direct `pending`, `blocked`, or `fail` result on the promotion revision;
+- explicitly declare an accepted decision;
+- explicitly declare promotion eligibility; and
+- establish each check on the exact promotion revision either through a direct positive human result or through a positive historical human result plus an approved `unaffected` continuity assessment bound to that promotion revision.
+
+Machine runtime hardening may remove release-blocking implementation defects, review-packet tooling may prepare real review work, and continuity may prevent unnecessary duplicate testing, but none of them can manufacture or waive human authority. V1.4.1 remains non-promotable until both its claimed machine hardening and its required real human evidence are valid for the governed release revision.

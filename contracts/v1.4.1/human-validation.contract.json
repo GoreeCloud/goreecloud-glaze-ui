@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "contractType": "glaze-v1.4.1-human-validation",
   "version": "1.4.1-candidate",
   "baselineVersion": "1.4.0",
@@ -43,12 +43,18 @@
   ],
   "rules": {
     "automatedEvidenceMaySupportButNeverSatisfyHumanAuthority": true,
-    "everyCompletedCheckRequiresHumanReviewer": true,
+    "everyCompletedCheckRequiresHumanReviewerOrAuthorizedLegacyAttestation": true,
     "everyCompletedCheckRequiresExactTestedRevision": true,
-    "everyCompletedCheckRequiresDeviceOrEnvironment": true,
+    "everyCompletedCheckRequiresDeviceOrEnvironmentUnlessLegacyProvenanceGapIsExplicitlyRecorded": true,
     "notApplicableRequiresExplicitRationale": true,
     "promotionRequiresNoPendingBlockedOrFailedChecks": true,
     "promotionRequiresExplicitExpectedRevision": true,
+    "historicalPassMayCarryForwardOnlyThroughApprovedContinuityAssessment": true,
+    "continuityAssessmentMustBindExactSourceAndTargetRevisions": true,
+    "continuityAssessmentMustFailClosedOnAffectedOrInconclusiveBehavior": true,
+    "continuityAssessmentDoesNotRelabelHistoricalEvidenceAsCurrentRevisionHumanEvidence": true,
+    "legacyEvidenceRequiresExactRevisionAndDurableGovernanceAuthorization": true,
+    "legacyEvidenceMayNotInventMissingReviewerEnvironmentOrTimestampMetadata": true,
     "v140EvidenceMustNotBeRewritten": true
   }
 }

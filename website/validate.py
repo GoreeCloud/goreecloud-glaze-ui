@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import hashlib
+import json
 import re
 import subprocess
 import sys
@@ -14,9 +15,24 @@ IDENTITY = ROOT / "assets" / "identity" / "official" / "facet"
 # af8b70387bdaedb8d8388a1660b2d2ca29548fe2. The visual geometry is unchanged;
 # this checksum reflects the corrected approved accessible title metadata.
 CANONICAL_SHA256 = "82d3bdc331a96593873ca4d327e3b46d561d1ca96e653cef71e0c5e42fa1a31c"
-LIVE_PRODUCT = "GLAZE UI V1.2"
-LIVE_VERSION = "1.2.0"
 TRANSITIONAL_ASSET_VERSION = "1.1.0"
+
+lifecycle = json.loads((ROOT / "registry" / "lifecycle.json").read_text(encoding="utf-8"))
+version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+LIVE_VERSION = lifecycle.get("currentStable")
+if not isinstance(LIVE_VERSION, str) or not LIVE_VERSION:
+    raise SystemExit("current Stable authority is missing from registry/lifecycle.json")
+if version != LIVE_VERSION or lifecycle.get("currentOfficial") != LIVE_VERSION:
+    raise SystemExit("VERSION/currentStable/currentOfficial must agree for Design Center validation")
+live_release = next(
+    (item for item in lifecycle.get("releases", []) if isinstance(item, dict) and item.get("version") == LIVE_VERSION),
+    None,
+)
+if not live_release or live_release.get("status") != "stable" or live_release.get("consumerEligible") is not True:
+    raise SystemExit("current Design Center authority must resolve to a consumer-eligible Stable release")
+LIVE_PRODUCT = str(live_release.get("label", "")).split(" — ", 1)[0].strip()
+if not LIVE_PRODUCT:
+    raise SystemExit("current Stable release label is missing")
 
 for name in ("index.html", "404.html", "site.css", "identity.css", "site.js", "_headers", "build.py"):
     if not (SITE / name).is_file():
@@ -37,7 +53,7 @@ if not mark.is_file() or hashlib.sha256(mark.read_bytes()).hexdigest() != CANONI
 
 # The repository website subtree is retained as transitional deployment/history
 # material. Its build remains reproducible from the retained V1.1-era asset chain,
-# while lifecycle/product copy must point to the live V1.2 Stable authority.
+# while lifecycle/product copy must point to the live Stable authority.
 subprocess.run([sys.executable, str(SITE / "build.py")], cwd=ROOT, check=True)
 
 required = (
@@ -108,7 +124,7 @@ for text in (
     f"<strong>{LIVE_VERSION}</strong>",
     "Current Stable authority",
     "transitional deployment/history material",
-    "V1.1-era presentation assets",
+    "older presentation assets",
     "GoreeCloud/goreecloud-static-websites",
     "Solid where you read. Glazed where you interact.",
     "Workspace → Application → System Overlay → System Panel → Critical System",
