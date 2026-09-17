@@ -47,12 +47,21 @@ def release_for(lifecycle: dict, version: str) -> dict | None:
     )
 
 
+def current_family_prefix(version: str) -> str | None:
+    """Return the family-level Glaze product-label prefix for a release version."""
+    match = re.fullmatch(r"(\d+)\.(\d+)\.\d+(?:[-+][0-9A-Za-z.-]+)?", version)
+    if not match:
+        return None
+    return f"GLAZE UI V{match.group(1)}.{match.group(2)}"
+
+
 def validate_live_stable_lifecycle(lifecycle: dict) -> None:
     """Validate current global authority plus the retained V1.2 release record.
 
     A historical-release validator must not require V1.2 to remain the global
-    current Stable after V1.3/V1.4 promotion. It instead verifies that the live
-    current pointers are internally coherent and that V1.2's immutable Stable
+    current Stable after V1.3/V1.4/V1.5 promotion. It instead verifies that the
+    live current pointers are internally coherent, that the family-level product
+    label matches the current Stable family, and that V1.2's immutable Stable
     record and source bindings remain intact.
     """
     current_stable = lifecycle.get("currentStable")
@@ -65,9 +74,16 @@ def validate_live_stable_lifecycle(lifecycle: dict) -> None:
     assert current_release is not None
     req(current_release.get("status") == "stable", "currentStable lifecycle record must be Stable")
     req(current_release.get("consumerEligible") is True, "currentStable release must remain consumer-eligible")
+
+    family_prefix = current_family_prefix(current_stable)
+    official_label = lifecycle.get("officialProductLabel")
+    req(family_prefix is not None, "currentStable must be a semantic release version")
     req(
-        lifecycle.get("officialProductLabel") == current_release.get("label"),
-        "officialProductLabel must match the current Stable release label",
+        isinstance(official_label, str)
+        and bool(official_label.strip())
+        and family_prefix is not None
+        and official_label.startswith(family_prefix),
+        "officialProductLabel must identify the current Stable product family",
     )
 
     release = release_for(lifecycle, "1.2.0")

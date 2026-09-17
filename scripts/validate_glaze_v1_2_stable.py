@@ -26,6 +26,22 @@ def release_for(lifecycle: dict, version: str):
     )
 
 
+def current_family_prefix(version: str) -> str | None:
+    """Return the marketing-family prefix for a semantic release version.
+
+    ``officialProductLabel`` is intentionally a family-level product label (for
+    example ``GLAZE UI V1.5 — ...``), while ``currentStable`` can advance through
+    patch releases such as 1.5.1. A retained-release validator must therefore
+    verify family coherence without requiring the family label to equal the
+    patch release's own release-specific label.
+    """
+
+    match = re.fullmatch(r"(\d+)\.(\d+)\.\d+(?:[-+][0-9A-Za-z.-]+)?", version)
+    if not match:
+        return None
+    return f"GLAZE UI V{match.group(1)}.{match.group(2)}"
+
+
 def main() -> int:
     errors: list[str] = []
 
@@ -45,7 +61,17 @@ def main() -> int:
     current = release_for(lifecycle, current_stable) if isinstance(current_stable, str) else None
     req(bool(current) and current.get("status") == "stable", "live currentStable record must be Stable")
     req(bool(current) and current.get("consumerEligible") is True, "live currentStable record must be consumer-eligible")
-    req(bool(current) and lifecycle.get("officialProductLabel") == current.get("label"), "officialProductLabel must match live currentStable")
+
+    family_prefix = current_family_prefix(current_stable) if isinstance(current_stable, str) else None
+    official_label = lifecycle.get("officialProductLabel")
+    req(family_prefix is not None, "currentStable must be a semantic release version")
+    req(
+        isinstance(official_label, str)
+        and bool(official_label.strip())
+        and family_prefix is not None
+        and official_label.startswith(family_prefix),
+        "officialProductLabel must identify the live currentStable product family",
+    )
 
     retained = release_for(lifecycle, RETAINED_VERSION)
     req(bool(retained) and retained.get("status") == "stable", "retained lifecycle must contain Stable 1.2.0")

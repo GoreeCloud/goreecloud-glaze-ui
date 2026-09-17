@@ -49,6 +49,14 @@ def release_for(lifecycle: dict, version: str) -> dict | None:
     )
 
 
+def current_family_prefix(version: str) -> str | None:
+    """Return the family-level Glaze product-label prefix for a release version."""
+    match = re.fullmatch(r"(\d+)\.(\d+)\.\d+(?:[-+][0-9A-Za-z.-]+)?", version)
+    if not match:
+        return None
+    return f"GLAZE UI V{match.group(1)}.{match.group(2)}"
+
+
 def validate_live_stable() -> dict:
     version = LIVE_VERSION.read_text(encoding="utf-8").strip()
     lifecycle = load_json(LIVE_LIFECYCLE)
@@ -64,9 +72,16 @@ def validate_live_stable() -> dict:
     assert current is not None
     req(current.get("status") == "stable", "live currentStable release must be Stable")
     req(current.get("consumerEligible") is True, "live currentStable release must be consumer-eligible")
+
+    family_prefix = current_family_prefix(current_stable)
+    official_label = lifecycle.get("officialProductLabel")
+    req(family_prefix is not None, "live currentStable must be a semantic release version")
     req(
-        lifecycle.get("officialProductLabel") == current.get("label"),
-        "live product label must match the current Stable release",
+        isinstance(official_label, str)
+        and bool(official_label.strip())
+        and family_prefix is not None
+        and official_label.startswith(family_prefix),
+        "live product label must identify the current Stable product family",
     )
 
     stable = release_for(lifecycle, "1.2.0")

@@ -94,7 +94,12 @@ jobs:
           current_release = next(item for item in lifecycle['releases'] if item.get('version') == current)
           assert current_release.get('status') == 'stable'
           assert current_release.get('consumerEligible') is True
-          assert lifecycle.get('officialProductLabel') == current_release.get('label')
+
+          current_match = re.fullmatch(r'(\d+)\.(\d+)\.\d+(?:[-+][0-9A-Za-z.-]+)?', current or '')
+          assert current_match is not None
+          family_prefix = f"GLAZE UI V{current_match.group(1)}.{current_match.group(2)}"
+          official_label = lifecycle.get('officialProductLabel')
+          assert isinstance(official_label, str) and official_label.startswith(family_prefix)
 
           retained = next(item for item in lifecycle['releases'] if item.get('version') == '1.2.0')
           assert retained.get('status') == 'stable'
@@ -108,6 +113,7 @@ jobs:
               'repository': 'GoreeCloud/goreecloud-glaze-ui',
               'revision': os.environ['GLAZE_SOURCE_REVISION'],
               'liveCurrentStable': current,
+              'officialProductLabel': official_label,
               'retainedRelease': '1.2.0',
               'retainedStatus': retained.get('status'),
               'retainedSourceQualificationAnchor': retained.get('sourceQualificationAnchor'),

@@ -131,6 +131,14 @@ def version_tuple(value: str) -> tuple[int, int, int] | None:
     return tuple(int(part) for part in match.groups())
 
 
+def current_family_prefix(value: str) -> str | None:
+    """Return the family-level Glaze product-label prefix for a release version."""
+    match = SEMVER.fullmatch(value)
+    if not match:
+        return None
+    return f"GLAZE UI V{match.group(1)}.{match.group(2)}"
+
+
 def historical_record(relative: str, text: str, current_version: str) -> bool:
     """Return whether a tracked source is explicitly retained/provenance-only."""
     if relative in HISTORICAL_SOURCE_PATHS or relative in RETAINED_V12_DOCS:
@@ -180,8 +188,17 @@ def main() -> int:
     stable_label = current_release.get("label")
     if not isinstance(stable_label, str) or not stable_label:
         fail("live current Stable release label is missing")
-    if lifecycle.get("officialProductLabel") != stable_label:
-        fail("officialProductLabel must match the live current Stable release")
+
+    family_prefix = current_family_prefix(current_stable)
+    official_product_label = lifecycle.get("officialProductLabel")
+    if family_prefix is None:
+        fail("currentStable must be a semantic release version")
+    if (
+        not isinstance(official_product_label, str)
+        or not official_product_label.strip()
+        or not official_product_label.startswith(family_prefix)
+    ):
+        fail("officialProductLabel must identify the live current Stable product family")
 
     retained_v12 = release_for(lifecycle, "1.2.0")
     if retained_v12.get("status") != "stable" or retained_v12.get("consumerEligible") is not True:
@@ -229,11 +246,12 @@ def main() -> int:
         fail(f"obsolete current-authority language found: {preview}")
 
     report = {
-        "schemaVersion": 8,
+        "schemaVersion": 9,
         "status": "pass",
         "currentOfficial": current_official,
         "currentStable": current_stable,
         "currentStableLabel": stable_label,
+        "officialProductLabel": official_product_label,
         "activeCandidate": active_candidate,
         "plannedNext": planned_next,
         "retainedV12Status": retained_v12.get("status"),
@@ -243,7 +261,7 @@ def main() -> int:
         "retainedV12Documents": list(RETAINED_V12_DOCS),
         "historicalSourcePaths": sorted(HISTORICAL_SOURCE_PATHS),
         "obsoleteLifecycleAuthorityFindings": 0,
-        "scopeRule": "Live authority is derived from current lifecycle/VERSION state. Retained earlier Stable/release records are provenance and may not override the current Stable release.",
+        "scopeRule": "Live authority is derived from current lifecycle/VERSION state and a family-level officialProductLabel. Retained earlier Stable/release records are provenance and may not override the current Stable release.",
         "promotionRule": "This retained-release documentation audit does not promote V1.2, V1.4.1, or any other lifecycle state.",
     }
     rendered = json.dumps(report, indent=2, sort_keys=True) + "\n"
