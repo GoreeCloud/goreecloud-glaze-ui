@@ -1,7 +1,6 @@
 name: Glaze V1.2 Living Glaze Candidate
 on:
-  push:
-  pull_request:
+  workflow_dispatch:
 jobs:
   living-glaze:
     runs-on: ubuntu-latest

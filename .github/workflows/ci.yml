@@ -1,14 +1,21 @@
-name: GLAZE UI V1.1 CI
+name: GLAZE UI Current Stable CI
 
 on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
-  validate-v1:
+  validate-current-stable:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check out exact revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.12'
@@ -16,49 +23,30 @@ jobs:
         run: |
           python -m py_compile scripts/validate_github_actions_runtime_integrity.py
           python scripts/validate_github_actions_runtime_integrity.py
-      - name: Validate current GLAZE UI V1.1 Stable contract
-        run: python scripts/validate_glaze_v1.py
-      - name: Validate V1.2 Frosted Neutral Candidate track
-        run: python scripts/validate_glaze_v1_2_candidate.py
-      - name: Validate V1.2 implementation and migration control plane
-        run: python scripts/validate_glaze_v1_2_migration.py
-      - name: Validate V1.2 legacy Aura token retirement
-        run: python scripts/validate_glaze_v1_2_legacy_aura_retirement.py
-      - name: Validate rendered V1.2 Frosted Optical foundation
-        run: python scripts/validate_glaze_v1_2_optical_rendered.py
-      - name: Validate rendered V1.2 Frosted Optical chrome
-        run: python scripts/validate_glaze_v1_2_chrome_rendered.py
-      - name: Validate rendered V1.2 Crystal Icon System
-        run: python scripts/validate_glaze_v1_2_crystal_icons_rendered.py
-      - name: Validate rendered V1.2 Glaze Sans Optical typography
-        run: python scripts/validate_glaze_v1_2_typography_rendered.py
-      - name: Validate rendered V1.2 spatial foundation
-        run: python scripts/validate_glaze_v1_2_spatial_rendered.py
-      - name: Validate rendered V1.2 Frosted Neutral Candidate
-        run: python scripts/validate_glaze_v1_2_rendered.py
-      - name: Upload V1.2 Frosted Neutral rendered evidence
-        if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: glaze-v1.2-frosted-neutral-rendered
-          path: artifacts/glaze-v1.2-*.png
-          if-no-files-found: warn
-      - name: Validate V1 Design Center publication
+      - name: Validate Glaze UI v1.4.0 Stable contract
+        run: node scripts/verify_glaze_v1_4_stable.mjs
+      - name: Check v1.4 Stable runtime syntax
+        run: |
+          node --check js/glaze-v1.4.0.mjs
+          node --check js/glaze-v1.4-optical-engine.mjs
+      - name: Validate Design Center publication
         run: python website/validate.py
-      - name: Validate Design Center mobile-first source contract
+      - name: Validate Design Center responsive source contract
         run: python scripts/validate_design_center_responsive.py
       - name: Validate rendered Design Center Mobile UI
         run: python scripts/validate_design_center_mobile.py
-      - name: Upload Design Center Mobile UI review evidence
+      - name: Upload automated Design Center evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: design-center-mobile-ui
+          name: design-center-mobile-ui-${{ github.event.pull_request.head.sha || github.sha }}
           path: artifacts/design-center-mobile-*.png
           if-no-files-found: warn
-      - name: Check V1 runtime syntax
-        run: node --check js/glaze-v1.1.0.mjs
+          retention-days: 30
 
+  # Historical V1.2 candidate qualification remains branch-scoped. It does not
+  # define the health of the current Stable release and should only execute when
+  # its archived candidate branch is explicitly exercised.
   validate-v1-2-linux-gtk-candidate:
     if: >-
       (github.event_name == 'pull_request' && github.head_ref == 'feat/glaze-v1.2-linux-native') ||
@@ -75,7 +63,7 @@ jobs:
           python3 -m py_compile reference/v1.2/native/linux-gtk/app.py
           python3 -m py_compile scripts/validate_glaze_v1_2_linux_runtime.py
           python3 -m json.tool reference/v1.2/native/linux-gtk/material-contract.json >/dev/null
-      - name: Preserve current Stable and V1.2 Candidate source contracts
+      - name: Preserve V1.2 historical Candidate source contracts
         run: |
           python3 scripts/validate_glaze_v1.py
           python3 scripts/validate_glaze_v1_2_candidate.py

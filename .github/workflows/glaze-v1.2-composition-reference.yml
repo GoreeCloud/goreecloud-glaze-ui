@@ -1,8 +1,7 @@
 name: Glaze V1.2 Composition Reference Library Candidate
 
 on:
-  push:
-  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read

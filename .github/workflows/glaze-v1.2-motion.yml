@@ -1,8 +1,7 @@
 name: Glaze V1.2 Motion and Connected Transformation Candidate
 
 on:
-  push:
-  pull_request:
+  workflow_dispatch:
 
 jobs:
   motion-rendered:
