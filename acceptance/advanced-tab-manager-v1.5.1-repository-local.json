@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "recordType": "advanced-tab-manager-glaze-v1.5.1-repository-local-acceptance",
+  "consumer": "GoreeCloud Advanced Tab Manager",
+  "repository": "GoreeCloud/goreecloud-firefox-extensions",
+  "componentPath": "extensions/advanced-tab-manager/",
+  "glazeTargetVersion": "1.5.1",
+  "consumerSourceRevision": "677967fa56baef8ec7816d9101d10fed02d2e862",
+  "acceptedUnsignedXpiSha256": "9c0f44926ac1d2f213fd07f82dd18fa11bd54ceebc6cd871898fe82b962a5b02",
+  "sharedGlazeAuthorityReviewed": {
+    "repository": "GoreeCloud/goreecloud-glaze-ui",
+    "revision": "af0d0d3e85aaf46e83a2baa64aab914fd96a7e98",
+    "officialStableVersion": "1.5.1",
+    "reviewedImplementationAnchor": "ee1032a0822ab8e103f8afe48e5c1859fde65cc9",
+    "qualificationAnchor": "5b59d0e36950d737dba35b58ae58058684e0831b"
+  },
+  "decision": "accepted-v1",
+  "acceptedV1Authorized": true,
+  "productionEligible": false,
+  "stableProductPromotionAllowed": false,
+  "repositoryLocalEvidence": {
+    "releaseQualificationRunId": 35349058086,
+    "releaseQualificationArtifactId": 10548916127,
+    "firefoxRuntimeRunId": 35349057860,
+    "firefoxRuntimeArtifactId": 10548971150,
+    "firefoxVersion": "155.0",
+    "stableSecurityBlockers": "passed",
+    "glazeQualificationStatus": "accepted-v1",
+    "controlledFirefoxRuntimeChecks": 11,
+    "result": "passed"
+  },
+  "applicableConsumerAcceptance": {
+    "semanticSystemColors": true,
+    "reducedTransparency": true,
+    "forcedColors": true,
+    "keyboardFocus": true,
+    "responsiveConstrainedWindow": true,
+    "accessibleSemantics": true,
+    "authorityBoundaryPreserved": true,
+    "privacyMinimizedDiagnostics": true,
+    "automaticPermissionRequest": false,
+    "automaticConsequentialExecution": false,
+    "lifecycleTruthEmbeddedInRuntime": false
+  },
+  "nonInheritedSharedEvidence": {
+    "sharedPerformanceAcceptanceInherited": false,
+    "sharedPostureAcceptanceInherited": false,
+    "sharedProductionAcceptanceInherited": false
+  },
+  "releaseBoundary": {
+    "mozillaSigningEstablishedByThisRecord": false,
+    "signedPersistentRestartEstablishedByThisRecord": false,
+    "productStableStatusEstablishedByThisRecord": false,
+    "productionEligibilityEstablishedByThisRecord": false
+  },
+  "summary": "Advanced Tab Manager has fresh repository-local GLAZE UI 1.5.1 consumer acceptance for its constrained Firefox surfaces. The evidence is exact-source/candidate bound and preserves presentation, accessibility, privacy, and authority boundaries without inheriting shared performance/posture observations or granting product Stable/production status."
+}

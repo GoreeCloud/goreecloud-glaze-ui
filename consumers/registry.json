@@ -3,7 +3,7 @@
   "officialBaseline": "1.5.1",
   "officialProductLabel": "GLAZE UI V1.5 — Contextual + Capability Awareness",
   "requiredConsumerVersion": "1.5.1",
-  "auditedAt": "2026-09-16",
+  "auditedAt": "2026-09-18",
   "statusVocabulary": ["adoption-required", "unverified", "accepted-v1"],
   "enforcement": {
     "officialCurrentRequired": true,
@@ -23,6 +23,7 @@
     {"name":"GoreeCloud Browser","repository":"GoreeCloud/goreecloud-browser","status":"adoption-required","targetVersion":null,"requiredTargetVersion":"1.5.1","referenceRevision":null,"evidence":null,"productionEligible":false,"notes":"Fresh repository-local V1.5.1 adoption and acceptance evidence is required."},
     {"name":"GoreeCloud Security Center","repository":"GoreeCloud/goreecloud-wardveil","status":"adoption-required","targetVersion":null,"requiredTargetVersion":"1.5.1","referenceRevision":null,"evidence":null,"productionEligible":false,"notes":"Fresh repository-local V1.5.1 adoption and acceptance evidence is required; Wardveil remains security-truth authority."},
     {"name":"GoreeCloud Privacy Center","repository":"GoreeCloud/goreecloud-privacy-shield","status":"adoption-required","targetVersion":null,"requiredTargetVersion":"1.5.1","referenceRevision":null,"evidence":null,"productionEligible":false,"notes":"Fresh repository-local V1.5.1 adoption and acceptance evidence is required; Privacy Shield remains privacy-truth authority."},
-    {"name":"GoreeCloud Reader","repository":"GoreeCloud/goreecloud-reader","status":"adoption-required","targetVersion":null,"requiredTargetVersion":"1.5.1","referenceRevision":null,"evidence":null,"productionEligible":false,"notes":"Existing V1.5 Development compatibility evidence does not equal Stable consumer adoption; fresh repository-local V1.5.1 web, Android/native, accessibility, workflow, rollback, performance, and product production acceptance remain separate obligations."}
+    {"name":"GoreeCloud Reader","repository":"GoreeCloud/goreecloud-reader","status":"adoption-required","targetVersion":null,"requiredTargetVersion":"1.5.1","referenceRevision":null,"evidence":null,"productionEligible":false,"notes":"Existing V1.5 Development compatibility evidence does not equal Stable consumer adoption; fresh repository-local V1.5.1 web, Android/native, accessibility, workflow, rollback, performance, and product production acceptance remain separate obligations."},
+    {"name":"GoreeCloud Advanced Tab Manager","repository":"GoreeCloud/goreecloud-firefox-extensions","status":"accepted-v1","targetVersion":"1.5.1","requiredTargetVersion":"1.5.1","referenceRevision":"677967fa56baef8ec7816d9101d10fed02d2e862","evidence":"acceptance/advanced-tab-manager-v1.5.1-repository-local.json","productionEligible":false,"notes":"Fresh repository-local GLAZE UI V1.5.1 acceptance is recorded for the constrained Firefox surfaces. Shared performance/posture evidence is not inherited, and this registry entry does not establish Mozilla signing, product Stable status, deployment, or production eligibility."}
   ]
 }
