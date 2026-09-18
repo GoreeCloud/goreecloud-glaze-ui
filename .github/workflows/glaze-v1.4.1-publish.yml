@@ -1,0 +1,201 @@
+name: GLAZE UI V1.4.1 Stable Publication
+
+on:
+  pull_request:
+    paths:
+      - 'releases/1.4.1.md'
+      - '.github/workflows/glaze-v1.4.1-publish.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'releases/1.4.1.md'
+      - '.github/workflows/glaze-v1.4.1-publish.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: glaze-v1.4.1-stable-publication
+  cancel-in-progress: false
+
+env:
+  RELEASE_TAG: v1.4.1
+  RELEASE_TITLE: GLAZE UI V1.4.1 — Stable
+  STABLE_INTEGRATION_SHA: 4fab9da0fad2e5c974e0e66ec88632c61745751c
+
+jobs:
+  verify-release-source:
+    name: Verify exact V1.4.1 publication source
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact checked-out revision and Stable ancestry
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${EXPECTED_SHA}"
+          git cat-file -e "${STABLE_INTEGRATION_SHA}^{commit}"
+          git merge-base --is-ancestor "${STABLE_INTEGRATION_SHA}" HEAD
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+
+      - name: Verify immutable V1.4.1 Stable implementation and authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(cat VERSION | tr -d '\r\n')" = "1.4.1"
+          for path in \
+            VERSION \
+            registry/lifecycle.json \
+            consumers/registry.json \
+            GLAZE_UI_V1_4_1.md \
+            GLAZE_UI_V1_4_1_HARDENING.md \
+            acceptance/v1.4.1-stable.md \
+            css/glaze-v1.4.1.css \
+            js/glaze-v1.4.1.mjs \
+            js/glaze-v1.4.1-optical-engine.mjs; do
+            test "$(git rev-parse "${STABLE_INTEGRATION_SHA}:${path}")" = "$(git rev-parse "HEAD:${path}")"
+          done
+
+      - name: Verify current Stable lifecycle record
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          lifecycle = json.loads(Path('registry/lifecycle.json').read_text(encoding='utf-8'))
+          assert lifecycle['currentOfficial'] == '1.4.1'
+          assert lifecycle['currentStable'] == '1.4.1'
+          assert lifecycle['activeCandidate'] is None
+          assert lifecycle['activePatchReleaseCandidate'] is None
+          release = next(item for item in lifecycle['releases'] if item['version'] == '1.4.1')
+          assert release['status'] == 'stable'
+          assert release['consumerEligible'] is True
+          assert release['stableBaseline'] == '1.4.0'
+          PY
+
+      - name: Run V1.4.1 release authority validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/verify_glaze_v1_4_1_stable.mjs
+          node scripts/verify_glaze_v1_4_stable.mjs
+          node scripts/verify_glaze_v1_4_1_optical_runtime.mjs
+          node scripts/verify_glaze_v1_4_1_human_validation_schema.mjs
+          node scripts/verify_glaze_v1_4_1_human_validation.mjs --source-only
+          node scripts/verify_glaze_v1_4_1_human_validation.mjs --self-test
+          python3 scripts/validate_glaze_v1_2_documentation_versions.py
+          python3 scripts/validate_consumer_summary.py
+          python3 scripts/validate_github_actions_runtime_integrity.py
+
+      - name: Verify publication notes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f releases/1.4.1.md
+          grep -Fq 'Machine version:** `1.4.1`' releases/1.4.1.md
+          grep -Fq 'Stable integration commit: `4fab9da0fad2e5c974e0e66ec88632c61745751c`' releases/1.4.1.md
+          grep -Fq 'downstream GoreeCloud application' releases/1.4.1.md
+
+      - name: Verify validation did not mutate tracked source
+        run: git diff --exit-code -- .
+
+  publish:
+    name: Publish exact V1.4.1 tag and GitHub Release
+    if: github.event_name == 'push'
+    needs: verify-release-source
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact publication revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Publish exact annotated tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor "${STABLE_INTEGRATION_SHA}" "${GITHUB_SHA}"
+          git fetch origin --tags --force
+          existing_direct="$(git ls-remote origin "refs/tags/${RELEASE_TAG}" | awk '{print $1}')"
+          existing_peeled="$(git ls-remote origin "refs/tags/${RELEASE_TAG}^{}" | awk '{print $1}')"
+          if [ -n "${existing_direct}" ]; then
+            if [ -n "${existing_peeled}" ]; then
+              test "${existing_peeled}" = "${GITHUB_SHA}"
+            else
+              test "${existing_direct}" = "${GITHUB_SHA}"
+            fi
+            echo "${RELEASE_TAG} already exists at the intended V1.4.1 publication revision."
+          else
+            git config user.name "GoreeCloud Release Automation"
+            git config user.email "295260680+GoreeCloud@users.noreply.github.com"
+            git tag -a "${RELEASE_TAG}" "${GITHUB_SHA}" -m "${RELEASE_TITLE}"
+            git push origin "refs/tags/${RELEASE_TAG}"
+          fi
+
+      - name: Prepare exact release notes
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp releases/1.4.1.md "${RUNNER_TEMP}/release-notes.md"
+          {
+            echo
+            echo '## Publication identity'
+            echo
+            echo "- Release tag: \`${RELEASE_TAG}\`"
+            echo "- Exact release source commit: \`${GITHUB_SHA}\`"
+            echo "- Stable integration commit: \`${STABLE_INTEGRATION_SHA}\`"
+            echo '- Distribution form: annotated Git tag + GitHub Release'
+          } >> "${RUNNER_TEMP}/release-notes.md"
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view "${RELEASE_TAG}" >/dev/null 2>&1; then
+            existing="$(gh release view "${RELEASE_TAG}" --json tagName,name,isDraft,isPrerelease --jq '[.tagName,.name,(.isDraft|tostring),(.isPrerelease|tostring)] | @tsv')"
+            expected="${RELEASE_TAG}\t${RELEASE_TITLE}\tfalse\tfalse"
+            test "${existing}" = "${expected}"
+            echo "GitHub Release already exists with the intended Stable identity."
+          else
+            gh release create "${RELEASE_TAG}" \
+              --verify-tag \
+              --title "${RELEASE_TITLE}" \
+              --notes-file "${RUNNER_TEMP}/release-notes.md" \
+              --latest
+          fi
+
+      - name: Verify published distribution identity
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          peeled="$(git ls-remote origin "refs/tags/${RELEASE_TAG}^{}" | awk '{print $1}')"
+          direct="$(git ls-remote origin "refs/tags/${RELEASE_TAG}" | awk '{print $1}')"
+          if [ -n "${peeled}" ]; then
+            test "${peeled}" = "${GITHUB_SHA}"
+          else
+            test "${direct}" = "${GITHUB_SHA}"
+          fi
+          gh release view "${RELEASE_TAG}" --json url,tagName,name,isDraft,isPrerelease,publishedAt,targetCommitish
